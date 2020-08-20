@@ -36,7 +36,6 @@ public:
                               BOOL enableComponentReuseOptimizations = YES,
                               BOOL shouldCollectTreeNodeCreationInformation = NO,
                               BOOL alwaysBuildRenderTree = NO,
-                              BOOL shouldSkipControllerRegistrationOnRenderToNil = NO,
                               CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone,
                               BOOL enforceCKComponentSubclasses = YES);
   ~CKThreadLocalComponentScope();
@@ -75,8 +74,6 @@ public:
   const CKComponentCoalescingMode coalescingMode;
 
   const BOOL enforceCKComponentSubclasses;
-
-  const BOOL shouldSkipControllerRegistrationOnRenderToNil;
 
   void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled = NO);
   void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled, BOOL ancestorHasStateUpdate);

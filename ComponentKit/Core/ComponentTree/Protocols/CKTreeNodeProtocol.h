@@ -67,9 +67,6 @@ struct CKBuildComponentTreeParams {
 
   // The current coalescing mode.
   CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
-
-  // If controller registration should be skipped when rendering to nil.
-  BOOL shouldSkipControllerRegistrationOnRenderToNil = NO;
 };
 
 #endif

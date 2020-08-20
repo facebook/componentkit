@@ -29,9 +29,7 @@ static auto toInitialStateCreator(id (^initialStateCreator)(void), Class compone
 CKComponentScope::~CKComponentScope()
 {
   if (_threadLocalScope != nullptr) {
-    [_scopeHandle resolveAndRegisterInScopeRoot:_threadLocalScope->newScopeRoot
-        shouldSkipControllerRegistrationOnRenderToNil:
-        _threadLocalScope->shouldSkipControllerRegistrationOnRenderToNil];
+    [_scopeHandle resolveAndRegisterInScopeRoot:_threadLocalScope->newScopeRoot];
 
     if (_threadLocalScope->systraceListener) {
       auto const componentTypeName = _scopeHandle.componentTypeName ?: "UnkownTypeName";

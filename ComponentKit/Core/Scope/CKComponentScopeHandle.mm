@@ -171,10 +171,9 @@
 }
 
 - (void)resolveAndRegisterInScopeRoot:(CKComponentScopeRoot *)scopeRoot
-shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil
 {
   [self resolveInScopeRoot:scopeRoot];
-  [self registerInScopeRoot:scopeRoot shouldSkipControllerRegistrationOnRenderToNil:shouldSkipControllerRegistrationOnRenderToNil];
+  [self registerInScopeRoot:scopeRoot];
 }
 
 - (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot
@@ -192,30 +191,12 @@ shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistra
   _resolved = YES;
 }
 
-- (void)registerInScopeRoot:(CKComponentScopeRoot *)scopeRoot shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil
+- (void)registerInScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
-  // Strong ref: _acquiredComponent may be nil when rendering-to-nil as the
-  // handle won't be acquired.
-  const auto acquiredComponent = _acquiredComponent;
-
   // Register after scope handle resolution so the controller can be accessed
   // in the predicates.
-  [scopeRoot registerComponent:acquiredComponent];
-
-  if (shouldSkipControllerRegistrationOnRenderToNil) {
-    if (acquiredComponent != nil) {
-      // Only register the controller if we're not rendering to nil.
-      [scopeRoot registerComponentController:_controller];
-    } else {
-      // We've rendered to nil - clear out the controller. It will be re-allocated on
-      // the next non-nil render.
-      _controller = nil;
-    }
-  } else {
-    // Always register the controller in the scope root if it's present - inc.
-    // when rendering to nil.
-    [scopeRoot registerComponentController:_controller];
-  }
+  [scopeRoot registerComponent:_acquiredComponent];
+  [scopeRoot registerComponentController:_controller];
 }
 
 - (CKScopedResponder *)scopedResponder

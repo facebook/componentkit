@@ -102,7 +102,6 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                           enableComponentReuseOptimizations,
                                           shouldCollectTreeNodeCreationInformation,
                                           globalConfig.alwaysBuildRenderTree,
-                                          globalConfig.shouldSkipControllerRegistrationWhenRenderingToNil,
                                           coalescingMode);
 
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
@@ -126,7 +125,6 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
       .shouldCollectTreeNodeCreationInformation = shouldCollectTreeNodeCreationInformation,
       .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .coalescingMode = coalescingMode,
-      .shouldSkipControllerRegistrationOnRenderToNil = globalConfig.shouldSkipControllerRegistrationWhenRenderingToNil,
     };
 
     // Build the component tree from the render function.

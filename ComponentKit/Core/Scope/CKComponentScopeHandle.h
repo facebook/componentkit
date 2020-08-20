@@ -53,12 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 /** Registers the component and its controller in the scope root */
-- (void)registerInScopeRoot:(CKComponentScopeRoot *)scopeRoot
-shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil;
+- (void)registerInScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 /** Resolves the component and registers the component and its controller in the scope root */
-- (void)resolveAndRegisterInScopeRoot:(CKComponentScopeRoot *)scopeRoot
-shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil;
+- (void)resolveAndRegisterInScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 /** Acquire component if possible, assert if the scope handle is wrong */
 - (BOOL)acquireFromComponent:(id<CKComponentProtocol>)component;
