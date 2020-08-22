@@ -705,6 +705,9 @@ auto operator!=(None, const Optional<T>& rhs) noexcept -> bool {
   return rhs.hasValue();
 }
 
+template <typename T>
+auto makeOptional(T &&value) { return Optional<T>{std::forward<T>(value)}; }
+
 } // namespace CK
 
 #endif
