@@ -10,7 +10,8 @@
 
 #import "CKComponentScopeHandle.h"
 
-#include <mutex>
+#import <mutex>
+#import <stdatomic.h>
 
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKScopeTreeNode.h>
@@ -43,9 +44,9 @@
                componentTypeName:(const char *)componentTypeName
                     initialState:(id)initialState
 {
-  static int32_t nextGlobalIdentifier = 0;
+  static _Atomic(CKComponentScopeHandleIdentifier) nextGlobalIdentifier = 0;
   return [self initWithListener:listener
-               globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
+               globalIdentifier:atomic_fetch_add(&nextGlobalIdentifier, 1) + 1
                  rootIdentifier:rootIdentifier
               componentTypeName:componentTypeName
                           state:initialState
@@ -220,8 +221,8 @@
 - (instancetype)init
 {
   if (self = [super init]) {
-    static CKScopedResponderUniqueIdentifier nextIdentifier = 0;
-    _uniqueIdentifier = OSAtomicIncrement32(&nextIdentifier);
+    static _Atomic(CKScopedResponderUniqueIdentifier) nextIdentifier = 0;
+    _uniqueIdentifier = atomic_fetch_add(&nextIdentifier, 1) + 1;
   }
 
   return self;
