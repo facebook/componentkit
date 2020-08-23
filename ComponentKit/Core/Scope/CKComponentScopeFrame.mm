@@ -12,7 +12,6 @@
 
 #import <algorithm>
 #import <unordered_map>
-#import <libkern/OSAtomic.h>
 
 #import "CKAssert.h"
 #import "CKComponentScopeHandle.h"

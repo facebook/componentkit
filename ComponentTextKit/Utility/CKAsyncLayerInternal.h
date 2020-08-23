@@ -10,6 +10,7 @@
 
 #import <ComponentKit/CKAsyncLayer.h>
 #import <ComponentKit/CKAsyncTransaction.h>
+#import <stdatomic.h>
 
 @class CKAsyncTransaction;
 
@@ -19,7 +20,7 @@
 
 @interface CKAsyncLayer ()
 {
-  int32_t _displaySentinel;
+  _Atomic(int32_t) _displaySentinel;
 }
 
 /**

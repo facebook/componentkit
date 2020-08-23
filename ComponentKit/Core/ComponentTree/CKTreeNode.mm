@@ -18,6 +18,7 @@
 #import <ComponentKit/CKRootTreeNode.h>
 
 #include <tuple>
+#import <stdatomic.h>
 
 #import "CKMutex.h"
 #import "CKThreadLocalComponentScope.h"
@@ -39,7 +40,7 @@
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  static int32_t nextGlobalIdentifier = 0;
+  static _Atomic(CKTreeNodeIdentifier) nextGlobalIdentifier = 0;
 
   if (self = [super init]) {
     _component = component;
@@ -52,7 +53,7 @@
     if (previousNode) {
       _nodeIdentifier = previousNode.nodeIdentifier;
     } else {
-      _nodeIdentifier = OSAtomicIncrement32(&nextGlobalIdentifier);
+      _nodeIdentifier = atomic_fetch_add(&nextGlobalIdentifier, 1) + 1;
     }
 
     if (component.scopeHandle) {
