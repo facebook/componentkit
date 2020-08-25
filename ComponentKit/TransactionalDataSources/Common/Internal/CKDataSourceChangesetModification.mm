@@ -73,10 +73,8 @@ using namespace CKComponentControllerHelper;
     CKExceptionInfoSetValueForKey(@"ck_data_source_state", oldState.description);
     CKExceptionInfoSetValueForKey(
       @"assert_message",
-      ([NSString stringWithFormat:@"<force_category:%@:force_category> Raised %@ applying modification: %@",
-       oldState.contentsFingerprint,
-       exception.name,
-       exception.reason])
+      ([NSString stringWithFormat:@"<force_category:%@:force_category> Raised an exception applying modification",
+       oldState.contentsFingerprint])
     );
     [exception raise];
   }
