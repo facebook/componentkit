@@ -105,7 +105,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
         _registeredComponentControllers[predicate] = hashTable;
       }
 
-      CKWarn([hashTable containsObject:componentController] == NO, @"Double registration of component controller %@ (%@)", componentController.class, componentController.component.className);
+      CKWarn([hashTable containsObject:componentController] == NO, @"Double registration of component controller %@", componentController.class);
       [hashTable addObject:componentController];
     }
   }
