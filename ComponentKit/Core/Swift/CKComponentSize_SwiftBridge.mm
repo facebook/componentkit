@@ -14,14 +14,19 @@
 #import <ComponentKit/CKCasting.h>
 #import <ComponentKit/CKDimension_SwiftBridge+Internal.h>
 
+static auto toRelativeDimention(CKDimension_SwiftBridge *_Nullable swiftDimension) {
+  return swiftDimension != nil ? swiftDimension.dimension : CKRelativeDimension();
+}
+
 @implementation CKComponentSize_SwiftBridge {
   CKComponentSize _size;
 }
 
 - (instancetype)initWithComponentSize:(const CKComponentSize &)componentSize
 {
-  self = [super init];
-  _size = componentSize;
+  if (self = [super init]) {
+    _size = componentSize;
+  }
   return self;
 }
 
@@ -44,12 +49,12 @@
 {
   return
   [self initWithComponentSize:{
-    .width = width.dimension,
-    .height = height.dimension,
-    .minWidth = minWidth.dimension,
-    .minHeight = minHeight.dimension,
-    .maxWidth = maxWidth.dimension,
-    .maxHeight = maxHeight.dimension,
+    .width = toRelativeDimention(width),
+    .height = toRelativeDimention(height),
+    .minWidth = toRelativeDimention(minWidth),
+    .minHeight = toRelativeDimention(minHeight),
+    .maxWidth = toRelativeDimention(maxWidth),
+    .maxHeight = toRelativeDimention(maxHeight),
   }];
 }
 

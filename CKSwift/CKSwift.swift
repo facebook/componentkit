@@ -56,18 +56,18 @@ public struct ComponentSize: Hashable {
     componentSize = ComponentSizeSwiftBridge(size: size)
   }
 
-  public init(width: Dimension = Dimension(),
-              height: Dimension = Dimension(),
-              minWidth: Dimension = Dimension(),
-              minHeight: Dimension = Dimension(),
-              maxWidth: Dimension = Dimension(),
-              maxHeight: Dimension = Dimension()) {
-    componentSize = ComponentSizeSwiftBridge(width: width.dimension,
-                                             height: height.dimension,
-                                             minWidth: minWidth.dimension,
-                                             minHeight: minHeight.dimension,
-                                             maxWidth: maxWidth.dimension,
-                                             maxHeight: maxHeight.dimension)
+  public init(width: Dimension? = nil,
+              height: Dimension? = nil,
+              minWidth: Dimension? = nil,
+              minHeight: Dimension? = nil,
+              maxWidth: Dimension? = nil,
+              maxHeight: Dimension? = nil) {
+    componentSize = ComponentSizeSwiftBridge(width: width?.dimension,
+                                             height: height?.dimension,
+                                             minWidth: minWidth?.dimension,
+                                             minHeight: minHeight?.dimension,
+                                             maxWidth: maxWidth?.dimension,
+                                             maxHeight: maxHeight?.dimension)
   }
 }
 

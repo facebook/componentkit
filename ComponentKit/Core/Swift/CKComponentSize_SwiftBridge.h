@@ -17,12 +17,12 @@ NS_SWIFT_NAME(ComponentSizeSwiftBridge)
 @interface CKComponentSize_SwiftBridge : NSObject
 
 - (instancetype)initWithSize:(CGSize)size;
-- (instancetype)initWithWidth:(CKDimension_SwiftBridge *)width
-                       height:(CKDimension_SwiftBridge *)height
-                     minWidth:(CKDimension_SwiftBridge *)minWidth
-                    minHeight:(CKDimension_SwiftBridge *)minHeight
-                     maxWidth:(CKDimension_SwiftBridge *)maxWidth
-                    maxHeight:(CKDimension_SwiftBridge *)maxHeight;
+- (instancetype)initWithWidth:(CKDimension_SwiftBridge *_Nullable)width
+                       height:(CKDimension_SwiftBridge *_Nullable)height
+                     minWidth:(CKDimension_SwiftBridge *_Nullable)minWidth
+                    minHeight:(CKDimension_SwiftBridge *_Nullable)minHeight
+                     maxWidth:(CKDimension_SwiftBridge *_Nullable)maxWidth
+                    maxHeight:(CKDimension_SwiftBridge *_Nullable)maxHeight;
 
 @end
 
