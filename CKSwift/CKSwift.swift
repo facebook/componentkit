@@ -91,6 +91,10 @@ public struct ViewConfiguration {
         view[keyPath: keyPath] = value
       }
     }
+
+    init(componentViewAttribute: ComponentViewAttributeSwiftBridge) {
+      self.componentViewAttribute = componentViewAttribute
+    }
   }
 
   public struct LayerAttribute {
@@ -108,6 +112,27 @@ public struct ViewConfiguration {
   public init<View: UIView>(viewClass: View.Type, attributes: [Attribute<View>], layerAttributes: [LayerAttribute] = []) {
     viewConfiguration = ComponentViewConfigurationSwiftBridge(viewClass: viewClass,
                                                               attributes: attributes.map { $0.componentViewAttribute } + layerAttributes.map { $0.componentViewAttribute })
+  }
+}
+
+public extension ViewConfiguration.Attribute {
+
+  /// Creates a view configuration attribute linked to tap gesture recognizer.
+  /// - Parameter tapHandler: The closure to execute when the gesture fires.
+  init(tapHandler: @escaping (UIGestureRecognizer) -> Void) {
+    self.init(componentViewAttribute: .init(tapHandler: tapHandler))
+  }
+
+  /// Creates a view configuration attribute linked to pan gesture recognizer.
+  /// - Parameter panHandler: The closure to execute when the gesture fires.
+  init(panHandler: @escaping (UIGestureRecognizer) -> Void) {
+    self.init(componentViewAttribute: .init(panHandler: panHandler))
+  }
+
+  /// Creates a view configuration attribute linked to long press gesture recognizer.
+  /// - Parameter longPressHandler: The closure to execute when the gesture fires.
+  init(longPressHandler: @escaping (UIGestureRecognizer) -> Void) {
+    self.init(componentViewAttribute: .init(longPressHandler: longPressHandler))
   }
 }
 

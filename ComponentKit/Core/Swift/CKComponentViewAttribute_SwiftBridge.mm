@@ -12,6 +12,7 @@
 #import <ComponentKit/CKComponentViewAttribute_SwiftBridge+Internal.h>
 
 #import <ComponentKit/CKCasting.h>
+#import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKDelayedInitialisationWrapper.h>
 
 @implementation CKComponentViewAttribute_SwiftBridge {
@@ -58,6 +59,29 @@
 - (NSUInteger)hash
 {
   return std::hash<CKComponentViewAttribute>{}(_viewAttribute);
+}
+
+#pragma mark - Gestures
+
+- (instancetype)initWithAttributeProvider:(CKComponentViewAttributeValue (*)(CKAction<UIGestureRecognizer *>))provider
+                                  handler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
+{
+  return [self initWithViewAttribute:provider(CKAction<UIGestureRecognizer *>::actionFromSenderlessBlock(handler)).first];
+}
+
+- (instancetype)initWithTapHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
+{
+  return [self initWithAttributeProvider:&CKComponentTapGestureAttribute handler:handler];
+}
+
+- (instancetype)initWithPanHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
+{
+  return [self initWithAttributeProvider:&CKComponentPanGestureAttribute handler:handler];
+}
+
+- (instancetype)initWithLongPressHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
+{
+  return [self initWithAttributeProvider:&CKComponentLongPressGestureAttribute handler:handler];
 }
 
 @end
