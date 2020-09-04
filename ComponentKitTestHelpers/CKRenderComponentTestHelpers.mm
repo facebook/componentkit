@@ -176,7 +176,7 @@
 }
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children
 {
-  auto const c = [super newWithView:{} size:{}];
+  auto const c = [super new];
   if (c) {
     c->_children = children;
   }

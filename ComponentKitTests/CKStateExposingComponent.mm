@@ -20,7 +20,7 @@
 + (instancetype)new
 {
   CKComponentScope scope(self);
-  CKStateExposingComponent *c = [super newWithView:{} size:{}];
+  CKStateExposingComponent *c = [super new];
   if (c) {
     c->_state = scope.state();
   }

@@ -116,7 +116,7 @@
   CKComponentScope scope(self, identifier, ^{
     return title;
   });
-  return [super newWithView:{} size:{}];
+  return [super new];
 }
 
 + (Class<CKComponentControllerProtocol>)controllerClass
