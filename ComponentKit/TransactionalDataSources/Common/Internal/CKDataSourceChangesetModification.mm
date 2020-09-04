@@ -77,6 +77,16 @@ using namespace CKComponentControllerHelper;
        oldState.contentsFingerprint])
     );
     [exception raise];
+  } @catch (...) {
+    CKExceptionInfoSetValueForKey(@"ck_changeset", _changeset.description);
+    CKExceptionInfoSetValueForKey(@"ck_user_info", _userInfo.description);
+    CKExceptionInfoSetValueForKey(@"ck_data_source_state", oldState.description);
+    CKExceptionInfoSetValueForKey(
+      @"assert_message",
+      ([NSString stringWithFormat:@"<force_category:%@:force_category> Raised an unknown c++ exception applying modification",
+       oldState.contentsFingerprint])
+    );
+    throw;
   }
 }
 
