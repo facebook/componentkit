@@ -91,8 +91,8 @@ public struct LayerAttribute {
   }
 }
 
-public struct ViewConfiguration<View: UIView> {
-  public struct Attribute {
+public struct ViewConfiguration {
+  public struct Attribute<View: UIView> {
     let componentViewAttribute: ComponentViewAttributeSwiftBridge
 
     public init<Value>(_ keyPath: ReferenceWritableKeyPath<View, Value>, _ value: Value) {
@@ -105,14 +105,14 @@ public struct ViewConfiguration<View: UIView> {
 
   let viewConfiguration: ComponentViewConfigurationSwiftBridge
 
-  public init(viewClass: View.Type, attributes: [Attribute], layerAttributes: [LayerAttribute] = []) {
+  public init<View: UIView>(viewClass: View.Type, attributes: [Attribute<View>], layerAttributes: [LayerAttribute] = []) {
     viewConfiguration = ComponentViewConfigurationSwiftBridge(viewClass: viewClass,
                                                               attributes: attributes.map { $0.componentViewAttribute } + layerAttributes.map { $0.componentViewAttribute })
   }
 }
 
 public extension Component {
-  convenience init<View: UIView>(view: ViewConfiguration<View>, size: ComponentSize) {
+  convenience init(view: ViewConfiguration, size: ComponentSize) {
     self.init(viewConfig: view.viewConfiguration, componentSize: size.componentSize)
   }
 }
