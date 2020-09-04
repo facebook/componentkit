@@ -81,16 +81,6 @@ private extension KeyPath where Root: NSObject {
   }
 }
 
-public struct LayerAttribute {
-  let componentViewAttribute: ComponentViewAttributeSwiftBridge
-
-  public init<Value>(_ keyPath: ReferenceWritableKeyPath<CALayer, Value>, _ value: Value) {
-    componentViewAttribute = ComponentViewAttributeSwiftBridge(identifier: "layer" + keyPath.asString) { view in
-      view.layer[keyPath: keyPath] = value
-    }
-  }
-}
-
 public struct ViewConfiguration {
   public struct Attribute<View: UIView> {
     let componentViewAttribute: ComponentViewAttributeSwiftBridge
@@ -99,6 +89,16 @@ public struct ViewConfiguration {
       componentViewAttribute = ComponentViewAttributeSwiftBridge(identifier: keyPath.asString) { v in
         let view = v as! View
         view[keyPath: keyPath] = value
+      }
+    }
+  }
+
+  public struct LayerAttribute {
+    let componentViewAttribute: ComponentViewAttributeSwiftBridge
+
+    public init<Value>(_ keyPath: ReferenceWritableKeyPath<CALayer, Value>, _ value: Value) {
+      componentViewAttribute = ComponentViewAttributeSwiftBridge(identifier: "layer" + keyPath.asString) { view in
+        view.layer[keyPath: keyPath] = value
       }
     }
   }
