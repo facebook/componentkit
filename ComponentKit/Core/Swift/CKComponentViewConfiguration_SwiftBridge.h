@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 __attribute__((objc_subclassing_restricted))
-NS_SWIFT_NAME(ComponentViewConfiguration)
+NS_SWIFT_NAME(ComponentViewConfigurationSwiftBridge)
 @interface CKComponentViewConfiguration_SwiftBridge : NSObject
 
 - (instancetype)initWithViewClass:(Class)viewClass;

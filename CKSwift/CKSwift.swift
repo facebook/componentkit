@@ -12,18 +12,18 @@ import ComponentKit
 import UIKit
 
 public struct Dimension: Hashable {
-  let dimension: ComponentKit.Dimension
+  let dimension: DimensionSwiftBridge
 
   public init() {
-    dimension = ComponentKit.Dimension()
+    dimension = DimensionSwiftBridge()
   }
 
   public init(points: CGFloat) {
-    dimension = ComponentKit.Dimension(points: points)
+    dimension = DimensionSwiftBridge(points: points)
   }
 
   public init(percent: CGFloat) {
-    dimension = ComponentKit.Dimension(percent: percent)
+    dimension = DimensionSwiftBridge(percent: percent)
   }
 }
 
@@ -50,10 +50,10 @@ public typealias ComponentHostingView = ComponentKit.ComponentHostingView
 public typealias ComponentHostingViewDelegate = ComponentKit.ComponentHostingViewDelegate
 
 public struct ComponentSize: Hashable {
-  let componentSize: ComponentKit.ComponentSize
+  let componentSize: ComponentSizeSwiftBridge
 
   public init(size: CGSize) {
-    componentSize = ComponentKit.ComponentSize(size: size)
+    componentSize = ComponentSizeSwiftBridge(size: size)
   }
 
   public init(width: Dimension = Dimension(),
@@ -62,12 +62,12 @@ public struct ComponentSize: Hashable {
               minHeight: Dimension = Dimension(),
               maxWidth: Dimension = Dimension(),
               maxHeight: Dimension = Dimension()) {
-    componentSize = ComponentKit.ComponentSize(width: width.dimension,
-                                               height: height.dimension,
-                                               minWidth: minWidth.dimension,
-                                               minHeight: minHeight.dimension,
-                                               maxWidth: maxWidth.dimension,
-                                               maxHeight: maxHeight.dimension)
+    componentSize = ComponentSizeSwiftBridge(width: width.dimension,
+                                             height: height.dimension,
+                                             minWidth: minWidth.dimension,
+                                             minHeight: minHeight.dimension,
+                                             maxWidth: maxWidth.dimension,
+                                             maxHeight: maxHeight.dimension)
   }
 }
 
@@ -82,10 +82,10 @@ private extension KeyPath where Root: NSObject {
 }
 
 public struct LayerAttribute {
-  let componentViewAttribute: ComponentViewAttribute
+  let componentViewAttribute: ComponentViewAttributeSwiftBridge
 
   public init<Value>(_ keyPath: ReferenceWritableKeyPath<CALayer, Value>, _ value: Value) {
-    componentViewAttribute = ComponentViewAttribute(identifier: "layer" + keyPath.asString) { view in
+    componentViewAttribute = ComponentViewAttributeSwiftBridge(identifier: "layer" + keyPath.asString) { view in
       view.layer[keyPath: keyPath] = value
     }
   }
@@ -93,21 +93,21 @@ public struct LayerAttribute {
 
 public struct ViewConfiguration<View: UIView> {
   public struct Attribute {
-    let componentViewAttribute: ComponentViewAttribute
+    let componentViewAttribute: ComponentViewAttributeSwiftBridge
 
     public init<Value>(_ keyPath: ReferenceWritableKeyPath<View, Value>, _ value: Value) {
-      componentViewAttribute = ComponentViewAttribute(identifier: keyPath.asString) { v in
+      componentViewAttribute = ComponentViewAttributeSwiftBridge(identifier: keyPath.asString) { v in
         let view = v as! View
         view[keyPath: keyPath] = value
       }
     }
   }
 
-  let viewConfiguration: ComponentKit.ComponentViewConfiguration
+  let viewConfiguration: ComponentViewConfigurationSwiftBridge
 
   public init(viewClass: View.Type, attributes: [Attribute], layerAttributes: [LayerAttribute] = []) {
-    viewConfiguration = ComponentViewConfiguration(viewClass: viewClass,
-                                                   attributes: attributes.map { $0.componentViewAttribute } + layerAttributes.map { $0.componentViewAttribute })
+    viewConfiguration = ComponentViewConfigurationSwiftBridge(viewClass: viewClass,
+                                                              attributes: attributes.map { $0.componentViewAttribute } + layerAttributes.map { $0.componentViewAttribute })
   }
 }
 
