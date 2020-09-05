@@ -1075,6 +1075,10 @@
 		D4F2164B2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
 		D4FBC0F02437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4FBC0F12437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D601E93724FFECC8004007C0 /* CKTransitionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */; };
+		D601E93824FFECC8004007C0 /* CKTransitionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */; };
+		D601E93924FFECC8004007C0 /* CKTransitionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D601E93624FFECC8004007C0 /* CKTransitionComponent.h */; };
+		D601E93A24FFECC8004007C0 /* CKTransitionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D601E93624FFECC8004007C0 /* CKTransitionComponent.h */; };
 		D608DF9E232E2E9B00CD90D9 /* CKVariantTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */; };
 		D608DF9F232E2E9B00CD90D9 /* CKVariantTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */; };
 		D60C2DA922B98355001F502B /* CKNonNullTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D60C2DA822B98355001F502B /* CKNonNullTests.mm */; };
@@ -2033,6 +2037,8 @@
 		D4EEE0F323E1E6F800D1ED7E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS13.2.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCoalescedSpecSupport.h; sourceTree = "<group>"; };
 		D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKReusableComponentProtocol.h; sourceTree = "<group>"; };
+		D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransitionComponent.mm; sourceTree = "<group>"; };
+		D601E93624FFECC8004007C0 /* CKTransitionComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKTransitionComponent.h; sourceTree = "<group>"; };
 		D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKVariantTests.mm; sourceTree = "<group>"; };
 		D60C2DA822B98355001F502B /* CKNonNullTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKNonNullTests.mm; sourceTree = "<group>"; };
 		D6146C2A239C48D9006B95C4 /* OverlayLayoutComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OverlayLayoutComponentBuilder.h; sourceTree = "<group>"; };
@@ -2818,6 +2824,8 @@
 				D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */,
 				72E3B004244C9D20006BEEF0 /* AutoSizedImageComponentBuilder.h */,
 				72E3B00F244C9D21006BEEF0 /* AutoSizedImageComponentBuilder.mm */,
+				D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */,
+				D601E93624FFECC8004007C0 /* CKTransitionComponent.h */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -3385,6 +3393,7 @@
 				D4BC574523E3765C0075D688 /* CKMountable.h in Headers */,
 				D6A0CF8822844556000CC4D0 /* CKAnimation.h in Headers */,
 				7227043323423332009A82A6 /* CKBuildComponentResult.h in Headers */,
+				D601E93A24FFECC8004007C0 /* CKTransitionComponent.h in Headers */,
 				03B8B4DF1D2A346F00EDFF59 /* CKComponent.h in Headers */,
 				03B8B4E11D2A346F00EDFF59 /* CKComponentController.h in Headers */,
 				D4BC575B23E3765C0075D688 /* CKRequired.h in Headers */,
@@ -3670,6 +3679,7 @@
 				C58C31C9247D81EC0009B8E7 /* CKFatal.h in Headers */,
 				D0B47D3F1CBD948E00BB33CE /* CKDataSourceAppliedChanges.h in Headers */,
 				72C410672241659F0025D6B5 /* CKComponentAttachControllerInternal.h in Headers */,
+				D601E93924FFECC8004007C0 /* CKTransitionComponent.h in Headers */,
 				23770A1322EB205E00858140 /* CKSystraceScope.h in Headers */,
 				2327615122EB069F007FF24A /* CKSystraceListener.h in Headers */,
 				D4BC574C23E3765C0075D688 /* CKViewConfiguration.h in Headers */,
@@ -4656,6 +4666,7 @@
 				D6E07817243618A100541390 /* FlexboxComponentBuilder.mm in Sources */,
 				D4D9CF022342AECE00D1BA22 /* CKTransitions.mm in Sources */,
 				D6EF79F623ECC6E600230005 /* CKDimension_SwiftBridge.mm in Sources */,
+				D601E93824FFECC8004007C0 /* CKTransitionComponent.mm in Sources */,
 				03B8B4A61D2A346F00EDFF59 /* CKDataSourceConfiguration.mm in Sources */,
 				03B8B4A71D2A346F00EDFF59 /* CKDataSourceItem.mm in Sources */,
 				03B8B4A81D2A346F00EDFF59 /* CKDataSourceListenerAnnouncer.mm in Sources */,
@@ -5007,6 +5018,7 @@
 				ACFAD6B32245759200D6E051 /* YGValue.cpp in Sources */,
 				D0B47CC51CBD943400BB33CE /* CKDataSourceUpdateConfigurationModification.mm in Sources */,
 				D0B47CC61CBD943400BB33CE /* CKDataSourceUpdateStateModification.mm in Sources */,
+				D601E93724FFECC8004007C0 /* CKTransitionComponent.mm in Sources */,
 				D616A2BD20BED2D100695472 /* CKComponentTreeDiff.mm in Sources */,
 				D6EF79F923ECC6E600230005 /* CKComponentSize_SwiftBridge.mm in Sources */,
 				72647CE22368D2E10072F330 /* CKInvalidChangesetOperationType.mm in Sources */,
