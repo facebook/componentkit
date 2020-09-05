@@ -85,12 +85,10 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return [self initWithView:{} size:{}];
 }
 
-- (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
-                        swiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+- (instancetype)initWithViewConfig:(CKComponentViewConfiguration_SwiftBridge *)viewConfig
+                     componentSize:(CKComponentSize_SwiftBridge *)size
 {
-  const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};
-  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
-  return [self initWithView:view size:size];
+  return [self initWithView:viewConfig.viewConfig size:size.componentSize];
 }
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view

@@ -136,14 +136,8 @@ public extension ViewConfiguration.Attribute {
   }
 }
 
-// MARK: - CKComponent
-
 public extension Component {
-  /// Creates a new component.
-  /// - Parameters:
-  ///   - view: The view configuration to be used by the component.
-  ///   - size: The size to be used by the component.
-  convenience init(view: ViewConfiguration? = nil, size: ComponentSize? = nil) {
-    self.init(__swiftView: view?.viewConfiguration, swiftSize: size?.componentSize)
+  convenience init(view: ViewConfiguration, size: ComponentSize) {
+    self.init(viewConfig: view.viewConfiguration, componentSize: size.componentSize)
   }
 }

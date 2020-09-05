@@ -28,20 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Component)
 @interface CKComponent : NSObject <CKMountable, CKComponentProtocol>
 
-#if CK_SWIFT
+- (instancetype)initWithViewConfig:(CKComponentViewConfiguration_SwiftBridge *)viewConfig
+                     componentSize:(CKComponentSize_SwiftBridge *)size CK_SWIFT_DESIGNATED_INITIALIZER;
 
-- (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView
-                        swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize NS_REFINED_FOR_SWIFT NS_DESIGNATED_INITIALIZER;
++ (instancetype)new CK_SWIFT_UNAVAILABLE;
 
-#else
+#if CK_NOT_SWIFT
 
-/**
- @param view A struct describing the view for this component. Pass {} to specify that no view should be created.
- @param size A size constraint that should apply to this component. Pass {} to specify no size constraint.
-
- @example A component that renders a red square:
- [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{100, 100}]
-*/
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
                         size:(const CKComponentSize &)size NS_DESIGNATED_INITIALIZER;
 
@@ -69,12 +62,13 @@ NS_SWIFT_NAME(Component)
 
 #if CK_SWIFT
 #define CK_COMPONENT_INIT_UNAVAILABLE \
-  - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView \
-                          swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize NS_UNAVAILABLE;
+  - (instancetype)init NS_UNAVAILABLE
 #else
 #define CK_COMPONENT_INIT_UNAVAILABLE \
+  + (instancetype)new NS_UNAVAILABLE; \
   + (instancetype)newWithView:(const CKComponentViewConfiguration &)view \
                          size:(const CKComponentSize &)size NS_UNAVAILABLE; \
+  - (instancetype)init NS_UNAVAILABLE; \
   - (instancetype)initWithView:(const CKComponentViewConfiguration &)view \
                           size:(const CKComponentSize &)size NS_UNAVAILABLE;
 #endif

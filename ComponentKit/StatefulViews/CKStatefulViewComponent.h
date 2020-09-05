@@ -27,10 +27,10 @@ struct CKStatefulViewComponentAccessibility {
  */
 @interface CKStatefulViewComponent : CKComponent
 
-CK_COMPONENT_INIT_UNAVAILABLE;
-
 + (instancetype)newWithSize:(const CKComponentSize &)size
               accessibility:(const CKStatefulViewComponentAccessibility &)accessibility;
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
 

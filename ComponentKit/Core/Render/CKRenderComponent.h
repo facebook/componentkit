@@ -20,8 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CKRenderComponent : CKComponent <CKRenderWithChildComponentProtocol>
 
-CK_COMPONENT_INIT_UNAVAILABLE;
-
 /**
  Returns a child component that needs to be rendered from this component.
 

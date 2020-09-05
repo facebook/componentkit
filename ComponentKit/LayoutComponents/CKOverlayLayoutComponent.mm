@@ -30,7 +30,7 @@
     return nil;
   }
   CKComponentPerfScope perfScope(self);
-  CKOverlayLayoutComponent *c = [super new];
+  CKOverlayLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
     c->_overlay = overlay;
     c->_component = component;
