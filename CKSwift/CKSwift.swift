@@ -147,3 +147,24 @@ public extension Component {
     self.init(__swiftView: view?.viewConfiguration, swiftSize: size?.componentSize)
   }
 }
+
+// MARK: - CKCompositeComponent
+
+public extension CompositeComponent {
+  /// Create a new composite component.
+  /// - Parameters:
+  ///   - view: The view configuration to be used by the component.
+  ///   - component: The component to wrap.
+  convenience init(view: ViewConfiguration? = nil, component: Mountable) {
+    self.init(__swiftView: view?.viewConfiguration, component: component)
+  }
+
+  /// Creates a new composite component, conditionally.
+  /// - Parameters:
+  ///   - view: The view configuration to be used by the component.
+  ///   - component: The optional component to wrap.
+  convenience init?(view: ViewConfiguration? = nil, component: Mountable?) {
+    guard let component = component else { return nil }
+    self.init(__swiftView: view?.viewConfiguration, component: component)
+  }
+}

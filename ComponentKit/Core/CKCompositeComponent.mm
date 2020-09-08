@@ -18,6 +18,7 @@
 #import "CKComponentSubclass.h"
 #import "CKIterableHelpers.h"
 #import "CKRenderHelpers.h"
+#import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
 
 @implementation CKCompositeComponent
 {
@@ -53,9 +54,11 @@
   return self;
 }
 
-- (instancetype _Nullable)initWithComponent:(id<CKMountable> _Nullable)component
+- (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView
+                        component:(id<CKMountable>)component
 {
-  return [self initWithView:{} component:component];
+  const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};
+  return [self initWithView:view component:component];
 }
 
 + (instancetype)newWithComponent:(id<CKMountable>)component
