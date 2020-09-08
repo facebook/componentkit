@@ -64,11 +64,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-  CK_NOT_DESIGNATED_INITIALIZER();
-}
-
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
 {

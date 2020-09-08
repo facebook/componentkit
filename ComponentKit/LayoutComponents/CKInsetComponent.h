@@ -39,6 +39,10 @@
  */
 @interface CKInsetComponent : CKLayoutComponent
 
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 /** Convenience that calls +newWithView:insets:component: with {} for view. */
 + (instancetype)newWithInsets:(UIEdgeInsets)insets component:(CKComponent *)child;
 

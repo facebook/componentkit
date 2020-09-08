@@ -77,11 +77,6 @@
   return c;
 }
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
-{
-  CK_NOT_DESIGNATED_INITIALIZER();
-}
-
 - (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize

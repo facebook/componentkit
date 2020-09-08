@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKComponentHostingViewDelegate.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
@@ -56,8 +56,9 @@ typedef CKComponent * _Nullable(*CKComponentProviderFn)(ModelType _Nullable, Con
 - (void)hostingViewWillAppear;
 - (void)hostingViewDidDisappear;
 
-- (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
-- (instancetype)initWithFrame:(CGRect)frame CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
+CK_INIT_UNAVAILABLE;
+
+- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 
 @end
 

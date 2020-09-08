@@ -23,6 +23,10 @@
  */
 @interface CKBackgroundLayoutComponent : CKLayoutComponent
 
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 /**
  @param component A child that is laid out to determine the size of this component. If this is nil, then this method
         returns nil.
@@ -30,9 +34,6 @@
  */
 + (instancetype)newWithComponent:(CKComponent *)component
                       background:(CKComponent *)background;
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
 

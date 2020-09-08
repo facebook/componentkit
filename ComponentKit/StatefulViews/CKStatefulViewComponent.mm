@@ -12,12 +12,6 @@
 
 @implementation CKStatefulViewComponent
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
-{
-  [NSException raise:NSInvalidArgumentException format:@"Not designated initializer."];
-  return nil;
-}
-
 + (instancetype)newWithSize:(const CKComponentSize &)size
               accessibility:(const CKStatefulViewComponentAccessibility &)accessibility
 {

@@ -30,6 +30,8 @@ typedef NS_ENUM(NSInteger, CKComponentSizeRangeFlexibility) {
  */
 @interface CKComponentFlexibleSizeRangeProvider : NSObject <CKComponentSizeRangeProviding>
 
+CK_INIT_UNAVAILABLE;
+
 /**
  Returns a new instance of the receiver that calculates size ranges based on the
  specified `flexibility` mode.

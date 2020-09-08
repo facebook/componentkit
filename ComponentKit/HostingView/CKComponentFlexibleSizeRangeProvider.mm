@@ -22,11 +22,6 @@
   return [[self alloc] initWithFlexibility:flexibility];
 }
 
-- (instancetype)init
-{
-  CK_NOT_DESIGNATED_INITIALIZER();
-}
-
 - (instancetype)initWithFlexibility:(CKComponentSizeRangeFlexibility)flexibility
 {
   if (self = [super init]) {

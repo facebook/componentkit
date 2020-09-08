@@ -23,11 +23,12 @@
  */
 @interface CKOverlayLayoutComponent : CKLayoutComponent
 
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 + (instancetype)newWithComponent:(CKComponent *)component
                          overlay:(CKComponent *)overlay;
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
 

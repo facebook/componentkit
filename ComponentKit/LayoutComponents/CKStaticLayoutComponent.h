@@ -42,6 +42,10 @@ struct CKStaticLayoutComponentChild {
  */
 @interface CKStaticLayoutComponent : CKLayoutComponent
 
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 /**
  @param view Passed to the super class initializer.
  @param children Children to be positioned at fixed positions.
@@ -54,9 +58,6 @@ struct CKStaticLayoutComponentChild {
  Convenience that does not have a view or size.
  */
 + (instancetype)newWithChildren:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children;
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
 

@@ -349,6 +349,10 @@ extern const struct CKStackComponentLayoutExtraKeys {
  */
 @interface CKFlexboxComponent : CKLayoutComponent
 
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 /**
  @param view A view configuration, or {} for no view.
  @param size A size, or {} for the default size.
@@ -359,9 +363,6 @@ extern const struct CKStackComponentLayoutExtraKeys {
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
 

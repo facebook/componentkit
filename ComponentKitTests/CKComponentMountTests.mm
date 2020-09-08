@@ -25,6 +25,11 @@
 @end
 
 @interface CKDontMountChildrenComponent : CKLayoutComponent
+
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 + (instancetype)newWithChild:(CKComponent *)child;
 @end
 

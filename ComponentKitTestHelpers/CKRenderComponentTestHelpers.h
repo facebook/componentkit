@@ -56,6 +56,11 @@ struct CKTestRenderComponentProps {
 
 // A helper class that inherits from 'CKTestLayoutComponent'; render the component froms the initializer
 @interface CKTestLayoutComponent : CKLayoutComponent
+
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @end
 

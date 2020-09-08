@@ -5,6 +5,11 @@
 #import <ComponentKit/CKLayoutComponent.h>
 
 @interface CKClippingComponent : CKLayoutComponent
+
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 + (instancetype)newWithComponent:(CKComponent *)child
                             size:(const CKComponentSize &)size
                clippedDimensions:(CK::ClippingComponentDimensions)dimensions;
@@ -51,7 +56,7 @@
                       relativeToParentSize:(CGSize)parentSize
 {
   auto const resolvedRange = constrainedSize.intersect(size.resolve(parentSize));
-  
+
   // Non-const to enable the move out of lambda.
   auto childLayout = [_component layoutThatFits:resolvedRange parentSize:parentSize];
 
@@ -66,7 +71,7 @@
     };
     return [_component layoutThatFits:unconstrainedSize parentSize:parentSize];
   }();
-  
+
   return {
     self,
     // This component will always have the "normal" size as if the child *was* always constrained.

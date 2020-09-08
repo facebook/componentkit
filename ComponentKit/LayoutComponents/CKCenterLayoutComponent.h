@@ -39,6 +39,10 @@ typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentSizingOptions) {
 /** Lays out a single child component and position it so that it is centered into the layout bounds. */
 @interface CKCenterLayoutComponent : CKLayoutComponent
 
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 /**
  @param centeringOptions see CKCenterLayoutComponentCenteringOptions.
  @param sizingOptions see CKCenterLayoutComponentSizingOptions.

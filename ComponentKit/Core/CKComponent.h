@@ -65,10 +65,8 @@ NS_SWIFT_NAME(Component)
   - (instancetype)init NS_UNAVAILABLE
 #else
 #define CK_COMPONENT_INIT_UNAVAILABLE \
-  + (instancetype)new NS_UNAVAILABLE; \
   + (instancetype)newWithView:(const CKComponentViewConfiguration &)view \
                          size:(const CKComponentSize &)size NS_UNAVAILABLE; \
-  - (instancetype)init NS_UNAVAILABLE; \
   - (instancetype)initWithView:(const CKComponentViewConfiguration &)view \
                           size:(const CKComponentSize &)size NS_UNAVAILABLE;
 #endif

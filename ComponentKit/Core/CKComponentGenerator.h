@@ -95,8 +95,9 @@ struct CKComponentGeneratorOptions {
  */
 @interface CKComponentGenerator : NSObject
 
+CK_INIT_UNAVAILABLE;
+
 - (instancetype)initWithOptions:(const CKComponentGeneratorOptions &)options NS_DESIGNATED_INITIALIZER;
-- (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 /**
  Updates the model used to render the component.

@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 
 
-#import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKComponentSize.h>
 
 typedef NS_ENUM(NSUInteger, CKComponentHostingViewWrapperType) {
@@ -24,15 +24,15 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewWrapperType) {
 
 @interface CKComponentHostingViewTestModel : NSObject
 
+CK_INIT_UNAVAILABLE;
+
 - (instancetype)initWithColor:(UIColor *)color
                          size:(const CKComponentSize &)size;
 
 - (instancetype)initWithColor:(UIColor *)color
                          size:(const CKComponentSize &)size
                   wrapperType:(CKComponentHostingViewWrapperType)wrapperType
-        willGenerateComponent:(void(^)())willGenerateComponent;
-
-- (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
+        willGenerateComponent:(void(^)())willGenerateComponent NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, strong, readonly) UIColor *color;
 @property (nonatomic, readonly) CKComponentSize size;

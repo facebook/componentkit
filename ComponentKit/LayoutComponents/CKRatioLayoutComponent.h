@@ -38,6 +38,10 @@
  **/
 @interface CKRatioLayoutComponent : CKLayoutComponent
 
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 + (instancetype)newWithRatio:(CGFloat)ratio
                         size:(const CKComponentSize &)size
                    component:(CKComponent *)component;

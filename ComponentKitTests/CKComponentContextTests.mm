@@ -31,6 +31,11 @@
 @end
 
 @interface CKContextTestWithChildrenComponent : CKLayoutComponent
+
+CK_INIT_UNAVAILABLE;
+
+CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
+
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @property (nonatomic, assign) std::vector<CKComponent *>children;
 @end

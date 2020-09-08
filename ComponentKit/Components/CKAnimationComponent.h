@@ -8,6 +8,8 @@
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKMacros.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  @c CKAnimationComponent is a wrapper component similar to @c CKCompositeComponent, which allows developers to specify
  animations to be used as an initial mount animation and / or a final unmount animation. It can be used to
@@ -26,33 +28,35 @@
  */
 @interface CKAnimationComponent : CKCompositeComponent
 
+CK_COMPONENT_INIT_UNAVAILABLE;
+
+CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE;
+
 /**
  @param component Component to animate.
  @param initial Animation that will be applied to the component when it is first mounted.
  */
-+ (instancetype)newWithComponent:(CKComponent *)component
-                  onInitialMount:(CK::Animation::Initial)initial;
++ (nullable instancetype)newWithComponent:(CKComponent *_Nullable)component
+                           onInitialMount:(CK::Animation::Initial)initial;
 
 /**
  @param component Component to animate.
  @param final Animation that will be applied to the component when it is no longer in the mounted hierarchy.
  */
-+ (instancetype)newWithComponent:(CKComponent *)component
-                  onFinalUnmount:(CK::Animation::Final)final;
++ (nullable instancetype)newWithComponent:(CKComponent *_Nullable)component
+                          onFinalUnmount:(CK::Animation::Final)final;
 
 /**
  @param component Component to animate.
  @param initial Animation that will be applied to the component when it is first mounted.
  @param final Animation that will be applied to the component when it is no longer in the mounted hierarchy.
  */
-+ (instancetype)newWithComponent:(CKComponent *)component
-                  onInitialMount:(CK::Animation::Initial)initial
-                  onFinalUnmount:(CK::Animation::Final)final;
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view component:(CKComponent *)component CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
-+ (instancetype)newWithComponent:(CKComponent *)component CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
++ (nullable instancetype)newWithComponent:(CKComponent *_Nullable)component
+                           onInitialMount:(CK::Animation::Initial)initial
+                           onFinalUnmount:(CK::Animation::Final)final;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -68,11 +68,6 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
   return c;
 }
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
-{
-  CK_NOT_DESIGNATED_INITIALIZER();
-}
-
 /**
  Inset will compute a new constrained size for it's child after applying insets and re-positioning
  the child to respect the inset.
