@@ -151,16 +151,16 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
     static_assert(componentIsSet, "Required property 'component' is not set.");
 
     if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass)) {
-      return [CKInsetComponent newWithView:{std::move(this->_viewClass),
-                                            std::move(this->_attributes),
-                                            std::move(this->_accessibilityCtx),
-                                            this->_blockImplicitAnimations}
-                                    insets:_insets
-                                 component:_component];
+      return [[CKInsetComponent alloc] initWithView:{std::move(this->_viewClass),
+                                                     std::move(this->_attributes),
+                                                     std::move(this->_accessibilityCtx),
+                                                     this->_blockImplicitAnimations}
+                                             insets:_insets
+                                          component:_component];
     } else if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig)) {
-      return [CKInsetComponent newWithView:this->_viewConfig insets:_insets component:_component];
+      return [[CKInsetComponent alloc] initWithView:this->_viewConfig insets:_insets component:_component];
     } else {
-      return [CKInsetComponent newWithInsets:_insets component:_component];
+      return [[CKInsetComponent alloc] initWithView:{} insets:_insets component:_component];
     }
   }
 

@@ -43,3 +43,40 @@ public extension CompositeComponent {
     self.init(__swiftView: view?.viewConfiguration, component: component)
   }
 }
+
+// MARK: InsetComponent
+
+public extension InsetComponent {
+  /// Creates a new inset component.
+  /// - Parameters:
+  ///   - insets: The inset to use for `component`
+  ///   - view: The view configuration to be used by the component.
+  ///   - component: The component to inset.
+  convenience init(
+    insets: UIEdgeInsets,
+    view: ViewConfiguration? = nil,
+    component: Component) {
+    self.init(
+      __swiftView: view?.viewConfiguration,
+      insets: insets,
+      component: component
+    )
+  }
+
+  /// Creates a new inset component, conditionally.
+  /// - Parameters:
+  ///   - insets: The inset to use for `component`
+  ///   - view: The view configuration to be used by the component.
+  ///   - component: The optional component to inset.
+  convenience init?(
+    insets: UIEdgeInsets,
+    view: ViewConfiguration? = nil,
+    component: Component?) {
+    guard let component = component else { return nil }
+    self.init(
+      __swiftView: view?.viewConfiguration,
+      insets: insets,
+      component: component
+    )
+  }
+}

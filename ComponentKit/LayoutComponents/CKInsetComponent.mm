@@ -19,6 +19,7 @@
 
 #import "CKComponentSubclass.h"
 #import "ComponentLayoutContext.h"
+#import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
 
 @interface CKInsetComponent ()
 {
@@ -47,25 +48,47 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
 
 @implementation CKInsetComponent
 
-+ (instancetype)newWithInsets:(UIEdgeInsets)insets component:(CKComponent *)component
-{
-  return [self newWithView:{} insets:insets component:component];
-}
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                     insets:(UIEdgeInsets)insets
-                  component:(CKComponent *)component
+- (instancetype)initWithView:(const CKComponentViewConfiguration &)view
+                      insets:(UIEdgeInsets)insets
+                   component:(CKComponent *)component
 {
   if (component == nil) {
     return nil;
   }
-  CKComponentPerfScope perfScope(self);
-  CKInsetComponent *c = [super newWithView:view size:{}];
+  CKComponentPerfScope perfScope(self.class);
+  CKInsetComponent *c = [super initWithView:view size:{}];
   if (c) {
     c->_insets = insets;
     c->_component = component;
   }
   return c;
+}
+
+- (instancetype)initWithInsets:(UIEdgeInsets)insets
+                     component:(CKComponent *_Nullable)component
+{
+  return [self initWithView:{} insets:insets component:component];
+}
+
++ (instancetype)newWithInsets:(UIEdgeInsets)insets
+                    component:(CKComponent *_Nullable)component
+{
+  return [[self alloc] initWithView:{} insets:insets component:component];
+}
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                     insets:(UIEdgeInsets)insets
+                  component:(CKComponent *_Nullable)component
+{
+  return [[self alloc] initWithView:view insets:insets component:component];
+}
+
+- (nullable instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
+                                   insets:(UIEdgeInsets)insets
+                                component:(CKComponent *_Nullable)component
+{
+  const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};
+  return [self initWithView:view insets:insets component:component];
 }
 
 /**
