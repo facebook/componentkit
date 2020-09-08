@@ -209,7 +209,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
   // Simulate a component tree creation with a DIFFRENT child
   auto const root2 = [[CKRenderTreeNode alloc] init];
-  auto const component2 = [CKRenderComponent newWithView:{} size:{}];
+  auto const component2 = [CKRenderComponent new];
   CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
                                                                 parent:root2
                                                         previousParent:root1
@@ -231,7 +231,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
   // Simulate first component tree creation
   auto const root1 = [[CKRenderTreeNode alloc] init];
-  auto const component1 = [CKTreeNodeTest_RenderComponent_WithState newWithView:{} size:{}];
+  auto const component1 = [CKTreeNodeTest_RenderComponent_WithState new];
   CKTreeNode *childNode = [[CKRenderTreeNode alloc] initWithComponent:component1
                                                                parent:root1
                                                        previousParent:nil
@@ -245,7 +245,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
   // Simulate a component tree creation due to a state update
   auto const root2 = [[CKRenderTreeNode alloc] init];
-  auto const component2 = [CKTreeNodeTest_RenderComponent_WithState newWithView:{} size:{}];
+  auto const component2 = [CKTreeNodeTest_RenderComponent_WithState new];
 
   // Simulate a state update
   auto const newState = @2;
@@ -503,7 +503,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
   // Simulate a component tree creation with a DIFFRENT child
   id<CKTreeNodeWithChildrenProtocol> root2 = [self newTreeNodeWithChild];
-  auto const component2 = [CKRenderComponent newWithView:{} size:{}];
+  auto const component2 = [CKRenderComponent new];
   CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
                                                                 parent:root2
                                                         previousParent:root1
@@ -524,11 +524,11 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 {
   return @1;
 }
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
+
++ (instancetype)new
 {
   CKComponentScope scope(self);
-  return [super newWithView:view size:size];
+  return [super new];
 }
 @end
 

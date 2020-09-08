@@ -198,7 +198,7 @@ auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) 
 - (CKComponent *)render:(id)state
 {
   _isRenderFunctionCalled = YES;
-  return [CKLifecycleTestComponent newWithView:{} size:{}];
+  return [CKLifecycleTestComponent new];
 }
 
 - (BOOL)shouldComponentUpdate:(id<CKReusableComponentProtocol>)component

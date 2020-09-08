@@ -21,6 +21,8 @@ struct CKComponentSize;
  */
 @interface CKImageComponent : CKComponent
 
+CK_COMPONENT_INIT_UNAVAILABLE;
+
 /**
  Uses a static layout with the given image size and applies additional attributes.
  */

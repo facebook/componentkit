@@ -955,7 +955,7 @@ private:
     } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::size)) {
       return [CKComponent newWithView:{} size:this->_size];
     } else {
-      return [CKComponent newWithView:{} size:{}];
+      return [CKComponent new];
     }
   }
 };

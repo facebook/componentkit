@@ -25,13 +25,12 @@
 @interface CKLayoutTestComponent : CKComponent
 @end
 @implementation CKLayoutTestComponent
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
++ (instancetype)new
 {
   // Just a hack for the test as we don't really care about this scope id in this case.
   static int counter = 0;
   CKComponentScope scope (self, @(counter++));
-  return [super newWithView:view size:size];
+  return [super new];
 }
 + (Class<CKComponentControllerProtocol>)controllerClass
 {
@@ -101,7 +100,7 @@ static NSArray<CKComponent *>* createChildrenArray(BOOL scoped) {
   NSMutableArray<CKComponent *> *components = [NSMutableArray array];
   for (NSUInteger i=0; i<5; i++) {
     if (scoped) {
-      [components addObject:[CKLayoutTestComponent newWithView:{} size:{}]];
+      [components addObject:[CKLayoutTestComponent new]];
     } else {
       [components addObject:CK::ComponentBuilder()
                                 .build()];

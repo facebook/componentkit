@@ -245,7 +245,7 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 }
 + (instancetype)newWithComponent:(CKComponent *)component
 {
-  auto const c = [super newWithView:{} size:{}];
+  auto const c = [super new];
   if (c) {
     c->_component = component;
   }

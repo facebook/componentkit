@@ -65,7 +65,7 @@
 {
   CKComponentScope scope(self);
 
-  CKTestScopeActionComponent *c = [super newWithView:{} size:{}];
+  CKTestScopeActionComponent *c = [super new];
   if (c) {
     if (useComponentAsTarget) {
       c->_action = {c, @selector(actionMethod:context:)};
@@ -120,7 +120,7 @@
 {
   CKComponentScope scope(self);
 
-  CKTestControllerScopeActionComponent *c = [super newWithView:{} size:{}];
+  CKTestControllerScopeActionComponent *c = [super new];
   if (c) {
     if (useComponentAsTarget) {
       c->_action = {c, @selector(actionMethod:context:)};

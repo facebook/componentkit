@@ -29,7 +29,7 @@
     return nil;
   }
   CKComponentPerfScope perfScope(self);
-  CKBackgroundLayoutComponent *c = [super newWithView:{} size:{}];
+  CKBackgroundLayoutComponent *c = [super new];
   if (c) {
     c->_component = component;
     c->_background = background;
