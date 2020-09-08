@@ -28,7 +28,25 @@
                     insertedSections:(NSIndexSet *)insertedSections
                        insertedItems:(NSDictionary *)insertedItems
 {
+  return [self initWithOriginName:@"not_set"
+                     updatedItems:updatedItems
+                     removedItems:removedItems
+                  removedSections:removedSections
+                       movedItems:movedItems
+                 insertedSections:insertedSections
+                    insertedItems:insertedItems];
+}
+
+- (instancetype)initWithOriginName:(NSString *)originName
+                      updatedItems:(NSDictionary *)updatedItems
+                      removedItems:(NSSet *)removedItems
+                   removedSections:(NSIndexSet *)removedSections
+                        movedItems:(NSDictionary *)movedItems
+                  insertedSections:(NSIndexSet *)insertedSections
+                     insertedItems:(NSDictionary *)insertedItems
+{
   if (self = [super init]) {
+    _originName = [originName copy] ?: @"nil";
     _updatedItems = [updatedItems copy] ?: @{};
     _removedItems = [removedItems copy] ?: [NSSet set];
     _removedSections = [removedSections copy] ?: [NSIndexSet indexSet];
@@ -94,9 +112,26 @@
   NSDictionary *_movedItems;
   NSIndexSet *_insertedSections;
   NSDictionary *_insertedItems;
+  NSString *_originName;
 }
 
-+ (instancetype)dataSourceChangeset { return [[self alloc] init]; }
+- (instancetype)initWithOriginName:(NSString *)originName {
+  self = [super init];
+  if (self) {
+    _originName = originName;
+  }
+  return self;
+}
+
++ (instancetype)dataSourceChangeset {
+  return [CKDataSourceChangesetBuilder dataSourceChangesetWithOriginName:@"changeset_builder_default"];
+}
+
++ (instancetype)dataSourceChangesetWithOriginName:(NSString *)originName {
+  CKDataSourceChangesetBuilder * builder = [[self alloc] initWithOriginName:originName];
+  return builder;
+}
+
 - (instancetype)withUpdatedItems:(NSDictionary *)updatedItems { _updatedItems = updatedItems; return self;}
 - (instancetype)withRemovedItems:(NSSet *)removedItems { _removedItems = removedItems; return self; }
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections { _removedSections = removedSections; return self; }
@@ -106,7 +141,8 @@
 
 - (CKDataSourceChangeset *)build
 {
-  return [[CKDataSourceChangeset alloc] initWithUpdatedItems:_updatedItems
+  return [[CKDataSourceChangeset alloc] initWithOriginName:_originName
+                                              updatedItems:_updatedItems
                                                                       removedItems:_removedItems
                                                                    removedSections:_removedSections
                                                                         movedItems:_movedItems

@@ -363,7 +363,7 @@ using namespace CKComponentControllerHelper;
                                              insertedIndexPaths:[NSSet setWithArray:[initialInsertedItems allKeys]]
                                                        userInfo:_userInfo];
   CKDataSourceChangeset *appliedChangeset =
-  [[[[[[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+  [[[[[[[[CKDataSourceChangesetBuilder dataSourceChangesetWithOriginName:@"data_source_split_changeset_modification"]
          withUpdatedItems:initialUpdatedItems]
         withRemovedItems:[_changeset removedItems]]
        withRemovedSections:[_changeset removedSections]]
@@ -568,7 +568,7 @@ static CKDataSourceChangeset *createDeferredChangeset(NSDictionary<NSIndexPath *
   if (insertedItems.count == 0 && updatedItems.count == 0) {
     return nil;
   }
-  return [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+  return [[[[CKDataSourceChangesetBuilder dataSourceChangesetWithOriginName:@"data_source_split_changeset_modification_deffered"]
             withUpdatedItems:updatedItems]
            withInsertedItems:insertedItems]
           build];

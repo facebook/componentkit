@@ -69,6 +69,7 @@ using namespace CKComponentControllerHelper;
     return [self __changeFromState:oldState];
   } @catch (NSException *exception) {
     CKExceptionInfoSetValueForKey(@"ck_changeset", _changeset.description);
+    CKExceptionInfoSetValueForKey(@"ck_changeset_origin", _changeset.originName);
     CKExceptionInfoSetValueForKey(@"ck_user_info", _userInfo.description);
     CKExceptionInfoSetValueForKey(@"ck_data_source_state", oldState.description);
     CKExceptionInfoSetValueForKey(
@@ -79,6 +80,7 @@ using namespace CKComponentControllerHelper;
     [exception raise];
   } @catch (...) {
     CKExceptionInfoSetValueForKey(@"ck_changeset", _changeset.description);
+    CKExceptionInfoSetValueForKey(@"ck_changeset_origin", _changeset.originName);
     CKExceptionInfoSetValueForKey(@"ck_user_info", _userInfo.description);
     CKExceptionInfoSetValueForKey(@"ck_data_source_state", oldState.description);
     CKExceptionInfoSetValueForKey(

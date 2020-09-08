@@ -20,7 +20,14 @@
 /** A helper object that allows you to build changesets. */
 @interface CKDataSourceChangesetBuilder<__covariant ModelType> : NSObject
 
+/** Deprecated. Use -dataSourceChangesetWithOriginName: instead */
 + (instancetype)dataSourceChangeset;
+
+/**
+@param originName A string that uniquely identifies the places in the program where changeset is generated. Used for debugging purpose.
+*/
++ (instancetype)dataSourceChangesetWithOriginName:(NSString *)originName;
+
 - (instancetype)withUpdatedItems:(NSDictionary<NSIndexPath *, ModelType> *)updatedItems;
 - (instancetype)withRemovedItems:(NSSet *)removedItems;
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections;

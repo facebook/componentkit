@@ -16,7 +16,7 @@
 
 /** Internal interface since this class is usually only consumed internally. */
 @interface CKDataSourceChangeset<__covariant ModelType> ()
-
+@property (nonatomic, copy, readonly) NSString *originName; // Use for debugging purpose only.
 @property (nonatomic, copy, readonly) NSDictionary *updatedItems;
 @property (nonatomic, copy, readonly) NSSet *removedItems;
 @property (nonatomic, copy, readonly) NSIndexSet *removedSections;
@@ -25,6 +25,7 @@
 @property (nonatomic, copy, readonly) NSDictionary *insertedItems;
 
 /**
+ Deprecated. Use -initWithOriginName:updatedItems:removedItems:removedSections:movedItems:insertedSections:insertedItems: instead.
  Designated initializer. Any parameter may be nil.
  @param updatedItems Mapping from NSIndexPath to updated model.
  @param removedItems Set of NSIndexPath.
@@ -33,12 +34,30 @@
  @param insertedSections NSIndexSet of section indices.
  @param insertedItems Mapping from NSIndexPath to new model.
  */
-- (instancetype)initWithUpdatedItems:(NSDictionary<NSIndexPath *, ModelType> *)updatedItems
-                        removedItems:(NSSet<NSIndexPath *> *)removedItems
+- (instancetype)initWithUpdatedItems:(NSDictionary *)updatedItems
+                        removedItems:(NSSet *)removedItems
                      removedSections:(NSIndexSet *)removedSections
-                          movedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems
+                          movedItems:(NSDictionary *)movedItems
                     insertedSections:(NSIndexSet *)insertedSections
-                       insertedItems:(NSDictionary<NSIndexPath *, ModelType> *)insertedItems;
+                       insertedItems:(NSDictionary *)insertedItems;
+
+/**
+ Designated initializer. Any parameter may be nil.
+ @param originName A string that uniquely identifies the places in the program where changeset is generated. Used for debugging purpose.
+ @param updatedItems Mapping from NSIndexPath to updated model.
+ @param removedItems Set of NSIndexPath.
+ @param removedSections NSIndexSet of section indices.
+ @param movedItems Mapping from NSIndexPath to NSIndexPath.
+ @param insertedSections NSIndexSet of section indices.
+ @param insertedItems Mapping from NSIndexPath to new model.
+ */
+- (instancetype)initWithOriginName:(NSString *)originName
+                      updatedItems:(NSDictionary *)updatedItems
+                      removedItems:(NSSet *)removedItems
+                   removedSections:(NSIndexSet *)removedSections
+                        movedItems:(NSDictionary *)movedItems
+                  insertedSections:(NSIndexSet *)insertedSections
+                     insertedItems:(NSDictionary *)insertedItems;
 
 - (BOOL)isEmpty;
 

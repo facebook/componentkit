@@ -76,6 +76,11 @@
                    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:1] : @"C"}] build].isEmpty);
 }
 
+- (void)testOriginName {
+  NSString *testOrigin = @"test_origin";
+  XCTAssertEqualObjects([[CKDataSourceChangesetBuilder dataSourceChangesetWithOriginName:testOrigin] build].originName, testOrigin);
+}
+
 @end
 
 @interface CKDataSourceChangesetTests_Description: XCTestCase

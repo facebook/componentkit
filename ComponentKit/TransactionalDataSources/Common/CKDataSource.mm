@@ -311,7 +311,7 @@
     }
   }];
   if (ip != nil) {
-    const auto changeset = [[[CKDataSourceChangesetBuilder dataSourceChangeset] withUpdatedItems:@{ip: model}] build];
+    const auto changeset = [[[CKDataSourceChangesetBuilder dataSourceChangesetWithOriginName:@"ck_data_source"] withUpdatedItems:@{ip: model}] build];
     [self applyChangeset:changeset mode:CKUpdateModeSynchronous userInfo:@{}];
   }
 }
