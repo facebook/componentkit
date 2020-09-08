@@ -56,15 +56,17 @@
 	
 
 	
-	<optgroup label="Class Methods">
+
+	
+	<optgroup label="Instance Methods">
 		
-		<option value="//api/name/newWithInsets:component:">+ newWithInsets:component:</option>
+		<option value="//api/name/initWithInsets:component:">- initWithInsets:component:</option>
 		
-		<option value="//api/name/newWithView:insets:component:">+ newWithView:insets:component:</option>
+		<option value="//api/name/initWithSwiftView:insets:component:">- initWithSwiftView:insets:component:</option>
+		
+		<option value="//api/name/initWithView:insets:component:">- initWithView:insets:component:</option>
 		
 	</optgroup>
-	
-
 	
 	
 </select>
@@ -132,8 +134,8 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/newWithInsets:component:" title="newWithInsets:component:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/newWithInsets:component:">+&nbsp;newWithInsets:component:</a></code>
+	<a name="//api/name/initWithSwiftView:insets:component:" title="initWithSwiftView:insets:component:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithSwiftView:insets:component:">&ndash;&nbsp;initWithSwiftView:insets:component:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -143,14 +145,36 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Convenience that calls +newWithView:insets:component: with {} for view.</p>
+				<p>Passed to CKComponent +newWithView:size:. The view, if any, will extend outside the insets.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>+ (instancetype)newWithInsets:(UIEdgeInsets)<em>insets</em> component:(CKComponent *)<em>child</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)<em>swiftView</em> insets:(UIEdgeInsets)<em>insets</em> component:(CKComponent *_Nullable)<em>component</em></code></div>
 
 		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>insets</code></th>
+						<td><p>The amount of space to inset on each side.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>The wrapped child component to inset. If nil, this method returns nil.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>view</code></th>
+						<td><p>Passed to CKComponent +newWithView:size:. The view, if any, will extend outside the insets.</p></td>
+					</tr>
+				
+				</table>
+			</div>
 			
 
 			
@@ -173,8 +197,8 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/newWithView:insets:component:" title="newWithView:insets:component:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/newWithView:insets:component:">+&nbsp;newWithView:insets:component:</a></code>
+	<a name="//api/name/initWithView:insets:component:" title="initWithView:insets:component:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithView:insets:component:">&ndash;&nbsp;initWithView:insets:component:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -189,7 +213,7 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>+ (instancetype)newWithView:(const CKComponentViewConfiguration &amp;)<em>view</em> insets:(UIEdgeInsets)<em>insets</em> component:(CKComponent *)<em>component</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithView:(const CKComponentViewConfiguration &amp;)<em>view</em> insets:(UIEdgeInsets)<em>insets</em> component:(CKComponent *_Nullable)<em>component</em></code></div>
 
 		    
 			
@@ -201,6 +225,64 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 						<th scope="row" class="argument-name"><code>view</code></th>
 						<td><p>Passed to CKComponent +newWithView:size:. The view, if any, will extend outside the insets.</p></td>
 					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>insets</code></th>
+						<td><p>The amount of space to inset on each side.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>The wrapped child component to inset. If nil, this method returns nil.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKInsetComponent.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/initWithInsets:component:" title="initWithInsets:component:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithInsets:component:">&ndash;&nbsp;initWithInsets:component:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The amount of space to inset on each side.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithInsets:(UIEdgeInsets)<em>insets</em> component:(CKComponent *_Nullable)<em>component</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>insets</code></th>
@@ -250,7 +332,7 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-09-04</p>
+						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-09-07</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
