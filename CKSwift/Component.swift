@@ -80,3 +80,46 @@ public extension InsetComponent {
     )
   }
 }
+
+// MARK: CenterLayoutComponent
+
+public extension CenterLayoutComponent {
+  /// Creates a new center layout component.
+  /// - Parameters:
+  ///   - centeringOptions: The centering options to use.
+  ///   - sizingOptions: The sizing options to use.
+  ///   - size: The size to use.
+  ///   - component: The component to centre.
+  convenience init(
+    centeringOptions: CenteringOptions = [],
+    sizingOptions: SizingOptions = [],
+    size: ComponentSize? = nil,
+    component: Component) {
+    self.init(
+      __centeringOptions: centeringOptions,
+      sizingOptions: sizingOptions,
+      child: component,
+      swiftSize: size?.componentSize
+    )
+  }
+
+  /// Creates a new center layout component, conditionally.
+  /// - Parameters:
+  ///   - centeringOptions: The centering options to use.
+  ///   - sizingOptions: The sizing options to use.
+  ///   - size: The size to use.
+  ///   - component: The optional component to centre.
+  convenience init?(
+    centeringOptions: CenteringOptions = [],
+    sizingOptions: SizingOptions = [],
+    size: ComponentSize? = nil,
+    component: Component?) {
+    guard let component = component else { return nil }
+    self.init(
+      __centeringOptions: centeringOptions,
+      sizingOptions: sizingOptions,
+      child: component,
+      swiftSize: size?.componentSize
+    )
+  }
+}

@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentPerfScope.h>
 #import <ComponentKit/CKInternalHelpers.h>
 
+#import "CKComponentSize_SwiftBridge+Internal.h"
 #import "CKComponentSubclass.h"
 #import "ComponentUtilities.h"
 
@@ -23,19 +24,42 @@
   CKComponent *_child;
 }
 
-+ (instancetype)newWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
-                          sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
-                                  child:(CKComponent *)child
-                                   size:(const CKComponentSize &)size
+- (instancetype)initWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
+                           sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
+                                   child:(CKComponent *)child
+                               swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
 {
-  CKComponentPerfScope perfScope(self);
-  CKCenterLayoutComponent *c = [super newWithView:{} size:size];
+  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  return [self initWithCenteringOptions:centeringOptions
+                          sizingOptions:sizingOptions
+                                  child:child
+                                   size:size];
+}
+
+- (instancetype)initWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
+                           sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
+                                   child:(CKComponent *)child
+                                    size:(const CKComponentSize &)size
+{
+  CKComponentPerfScope perfScope(self.class);
+  CKCenterLayoutComponent *c = [super initWithView:{} size:size];
   if (c) {
     c->_centeringOptions = centeringOptions;
     c->_sizingOptions = sizingOptions;
     c->_child = child;
   }
   return c;
+}
+
++ (instancetype)newWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
+                          sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
+                                  child:(CKComponent *_Nullable)child
+                                   size:(const CKComponentSize &)size
+{
+  return [[self alloc] initWithCenteringOptions:centeringOptions
+                                  sizingOptions:sizingOptions
+                                          child:child
+                                           size:size];
 }
 
 - (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

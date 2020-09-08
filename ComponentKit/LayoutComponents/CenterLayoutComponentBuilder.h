@@ -76,15 +76,15 @@ private:
     static_assert(childIsSet, "Required property 'child' is not set.");
 
     if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBaseSizeOnlyPropId::size)) {
-      return [CKCenterLayoutComponent newWithCenteringOptions:_centeringOptions
-                                                sizingOptions:_sizingOptions
-                                                        child:_child
-                                                         size:this->_size];
+      return [[CKCenterLayoutComponent alloc] initWithCenteringOptions:_centeringOptions
+                                                         sizingOptions:_sizingOptions
+                                                                 child:_child
+                                                                  size:this->_size];
     } else {
-      return [CKCenterLayoutComponent newWithCenteringOptions:_centeringOptions
-                                                sizingOptions:_sizingOptions
-                                                        child:_child
-                                                         size:{}];
+      return [[CKCenterLayoutComponent alloc] initWithCenteringOptions:_centeringOptions
+                                                         sizingOptions:_sizingOptions
+                                                                 child:_child
+                                                                  size:{}];
     }
   }
 
