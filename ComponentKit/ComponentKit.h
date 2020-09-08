@@ -36,6 +36,11 @@
 #import <ComponentKit/CKCollectionViewDataSource.h>
 #import <ComponentKit/CKCollectionViewDataSourceInternal.h>
 #import <ComponentKit/CKCollectionViewDataSourceListener.h>
+#import <ComponentKit/CKIdValueWrapper.h>
+#import <ComponentKit/CKIdValueWrapperInternal.h>
+#import <ComponentKit/CKWritingDirection.h>
+#import <ComponentKit/CKDelayedInitialisationWrapper.h>
+#import <ComponentKit/CKComponentCreationValidation.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAccessibility.h>
 #import <ComponentKit/CKComponentAccessibilityContext.h>
