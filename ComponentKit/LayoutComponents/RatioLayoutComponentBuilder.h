@@ -86,13 +86,13 @@ class __attribute__((__may_alias__)) RatioLayoutComponentBuilder
     static_assert(componentIsSet, "Required property 'component' is not set.");
 
     if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBaseSizeOnlyPropId::size)) {
-      return [CKRatioLayoutComponent newWithRatio:_ratio
-                                             size:this->_size
-                                        component:_component];
+      return [[CKRatioLayoutComponent alloc] initWithRatio:_ratio
+                                                 size:this->_size
+                                                 component:_component];
     } else {
-      return [CKRatioLayoutComponent newWithRatio:_ratio
-                                             size:{}
-                                        component:_component];
+      return [[CKRatioLayoutComponent alloc] initWithRatio:_ratio
+                                                      size:{}
+                                                 component:_component];
     }
   }
 

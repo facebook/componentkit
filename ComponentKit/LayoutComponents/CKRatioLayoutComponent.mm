@@ -18,27 +18,46 @@
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKSizeAssert.h>
 
+#import "CKComponentSize_SwiftBridge+Internal.h"
+
 @implementation CKRatioLayoutComponent
 {
   CGFloat _ratio;
   CKComponent *_component;
 }
 
-+ (instancetype)newWithRatio:(CGFloat)ratio
-                        size:(const CKComponentSize &)size
-                   component:(CKComponent *)component
+- (instancetype)initWithRatio:(CGFloat)ratio
+                    swiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+                    component:(CKComponent *)component
+{
+  const auto finalRatio = ratio <= 0 ? 1 : ratio;
+  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  return [self initWithRatio:finalRatio size:size component:component];
+}
+
+- (instancetype)initWithRatio:(CGFloat)ratio
+                         size:(const CKComponentSize &)size
+                    component:(CKComponent *)component
+
 {
   CKAssert(ratio > 0, @"Ratio should be strictly positive, but received %f", ratio);
   if (ratio <= 0 || component == nil) {
     return nil;
   }
-  CKComponentPerfScope perfScope(self);
-  CKRatioLayoutComponent *c = [self newWithView:{} size:size];
-  if (c) {
-    c->_ratio = ratio;
-    c->_component = component;
+  CKComponentPerfScope perfScope(self.class);
+  if (self = [super initWithView:{} size:size]) {
+    _ratio = ratio;
+    _component = component;
   }
-  return c;
+
+  return self;
+}
+
++ (instancetype)newWithRatio:(CGFloat)ratio
+                        size:(const CKComponentSize &)size
+                   component:(CKComponent *_Nullable)component
+{
+  return [[self alloc] initWithRatio:ratio size:size component:component];
 }
 
 - (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

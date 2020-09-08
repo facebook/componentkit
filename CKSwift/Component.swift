@@ -123,3 +123,38 @@ public extension CenterLayoutComponent {
     )
   }
 }
+
+// MARK: CKRatioLayoutComponent
+
+public extension RatioLayoutComponent {
+  /// Creates a new ratio layout component.
+  /// - Parameters:
+  ///   - ratio: The ratio to use. If smaller or equal to 0, 1 will be used instead.
+  ///   - size: The size to use.
+  ///   - component: The component to layout.
+  convenience init(
+    ratio: CGFloat,
+    size: ComponentSize? = nil,
+    component: Component) {
+    self.init(
+      __ratio: ratio,
+      swiftSize: size?.componentSize,
+      component: component)
+  }
+
+  /// Creates a new ratio layout component, conditionally.
+  /// - Parameters:
+  ///   - ratio: The ratio to use. If smaller or equal to 0, 1 will be used instead.
+  ///   - size: The size to use.
+  ///   - component: The optional component to layout.
+  convenience init?(
+    ratio: CGFloat,
+    size: ComponentSize? = nil,
+    component: Component?) {
+    guard let component = component else { return nil }
+    self.init(
+      __ratio: ratio,
+      swiftSize: size?.componentSize,
+      component: component)
+  }
+}
