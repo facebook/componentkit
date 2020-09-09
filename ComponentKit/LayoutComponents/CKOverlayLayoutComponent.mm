@@ -23,19 +23,24 @@
   CKComponent *_component;
 }
 
+- (instancetype)initWithComponent:(CKComponent *)component overlay:(CKComponent *)overlay
+{
+  CKComponentPerfScope perfScope(self.class);
+  if (self = [super initWithView:{} size:{}]) {
+    self->_overlay = overlay;
+    self->_component = component;
+  }
+  return self;
+}
+
 + (instancetype)newWithComponent:(CKComponent *)component
                          overlay:(CKComponent *)overlay
 {
   if (component == nil) {
     return nil;
   }
-  CKComponentPerfScope perfScope(self);
-  CKOverlayLayoutComponent *c = [super new];
-  if (c) {
-    c->_overlay = overlay;
-    c->_component = component;
-  }
-  return c;
+
+  return [[self alloc] initWithComponent:component overlay:overlay];
 }
 
 #pragma mark - CKMountable
