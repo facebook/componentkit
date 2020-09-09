@@ -286,6 +286,12 @@ static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponen
       _childrenCopy = copy;
     }
   }
+  // Forcing the crash here to find more about the issue.
+  // https://fburl.com/tasks/oahenjua
+  for (int i = 0; i < _children.size(); ++i) {
+    _children[i] = {};
+  }
+
 #endif
 }
 
