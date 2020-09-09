@@ -18,3 +18,4 @@ public typealias ComponentHostingView = ComponentKit.ComponentHostingView
 public typealias ComponentHostingViewDelegate = ComponentKit.ComponentHostingViewDelegate
 public typealias BackgroundLayoutComponent = ComponentKit.BackgroundLayoutComponent
 public typealias OverlayLayoutComponent = ComponentKit.OverlayLayoutComponent
+public typealias FlexboxComponent = ComponentKit.FlexboxComponent

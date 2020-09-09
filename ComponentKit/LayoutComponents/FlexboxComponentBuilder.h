@@ -853,38 +853,38 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     }
 
     if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig, ComponentBuilderBasePropId::size)) {
-      return [CKFlexboxComponent newWithView:this->_viewConfig
-                                        size:this->_size
-                                       style:this->_style
-                                    children:std::move(this->_children)];
+      return [[CKFlexboxComponent alloc] initWithView:this->_viewConfig
+                                                 size:this->_size
+                                                style:this->_style
+                                             children:std::move(this->_children)];
     } else if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass, ComponentBuilderBasePropId::size)) {
-      return [CKFlexboxComponent newWithView:{std::move(this->_viewClass),
-                                              std::move(this->_attributes),
-                                              std::move(this->_accessibilityCtx),
-                                              this->_blockImplicitAnimations}
-                                        size:this->_size
-                                       style:this->_style
-                                    children:std::move(this->_children)];
+      return [[CKFlexboxComponent alloc] initWithView:{std::move(this->_viewClass),
+                                                       std::move(this->_attributes),
+                                                       std::move(this->_accessibilityCtx),
+                                                       this->_blockImplicitAnimations}
+                                                 size:this->_size
+                                                style:this->_style
+                                             children:std::move(this->_children)];
     } else if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig)) {
-      return [CKFlexboxComponent newWithView:this->_viewConfig
-                                        size:{}
-                                       style:this->_style
-                                    children:std::move(this->_children)];
+      return [[CKFlexboxComponent alloc] initWithView:this->_viewConfig
+                                                 size:{}
+                                                style:this->_style
+                                             children:std::move(this->_children)];
     } else if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass)) {
-      return [CKFlexboxComponent newWithView:{std::move(this->_viewClass),
-                                              std::move(this->_attributes),
-                                              std::move(this->_accessibilityCtx),
-                                              this->_blockImplicitAnimations}
-                                        size:{}
-                                       style:this->_style
-                                    children:std::move(this->_children)];
+      return [[CKFlexboxComponent alloc] initWithView:{std::move(this->_viewClass),
+                                                       std::move(this->_attributes),
+                                                       std::move(this->_accessibilityCtx),
+                                                       this->_blockImplicitAnimations}
+                                                 size:{}
+                                                style:this->_style
+                                             children:std::move(this->_children)];
     } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::size)) {
-      return [CKFlexboxComponent newWithView:{}
-                                        size:this->_size
-                                       style:this->_style
-                                    children:std::move(this->_children)];
+      return [[CKFlexboxComponent alloc] initWithView:{}
+                                                 size:this->_size
+                                                style:this->_style
+                                             children:std::move(this->_children)];
     } else {
-      return [CKFlexboxComponent newWithView:{} size:{} style:this->_style children:std::move(this->_children)];
+      return [[CKFlexboxComponent alloc] initWithView:{} size:{} style:this->_style children:std::move(this->_children)];
     }
   }
 

@@ -14,27 +14,32 @@
 
 #import <vector>
 
+#endif
+
 #import <ComponentKit/CKContainerWrapper.h>
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKOptional.h>
+#import <ComponentKit/CKComponentSize_SwiftBridge.h>
 
-typedef NS_ENUM(NSInteger, CKFlexboxDirection) {
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NS_CLOSED_ENUM(NSInteger, CKFlexboxDirection) {
   CKFlexboxDirectionColumn,
   CKFlexboxDirectionRow,
   CKFlexboxDirectionColumnReverse,
   CKFlexboxDirectionRowReverse,
-};
+} NS_SWIFT_NAME(CKFlexboxComponentStyle_SwiftBridge.Direction);
 
 /** Layout direction is used to support RTL */
-typedef NS_ENUM(NSInteger, CKLayoutDirection) {
+typedef NS_CLOSED_ENUM(NSInteger, CKLayoutDirection) {
   CKLayoutDirectionApplicationDirection,
   CKLayoutDirectionLTR,
   CKLayoutDirectionRTL,
-};
+} NS_SWIFT_NAME(CKFlexboxComponentStyle_SwiftBridge.LayoutDirection);
 
 /** If no children are flexible, how should this component justify its children in the available space? */
-typedef NS_ENUM(NSInteger, CKFlexboxJustifyContent) {
+typedef NS_CLOSED_ENUM(NSInteger, CKFlexboxJustifyContent) {
   /**
    On overflow, children overflow out of this component's bounds on the right/bottom side.
    On underflow, children are left/top-aligned within this component's bounds.
@@ -64,9 +69,9 @@ typedef NS_ENUM(NSInteger, CKFlexboxJustifyContent) {
    The space before, between, and after the lines are all of equal size.
    */
   CKFlexboxJustifyContentSpaceEvenly,
-};
+} NS_SWIFT_NAME(CKFlexboxComponentStyle_SwiftBridge.JustifyContent);
 
-typedef NS_ENUM(NSInteger, CKFlexboxAlignItems) {
+typedef NS_CLOSED_ENUM(NSInteger, CKFlexboxAlignItems) {
   /** Expand children to fill cross axis */
   CKFlexboxAlignItemsStretch,
   /** Align children to start of cross axis */
@@ -77,9 +82,9 @@ typedef NS_ENUM(NSInteger, CKFlexboxAlignItems) {
   CKFlexboxAlignItemsCenter,
   /** Align children such that their baselines align */
   CKFlexboxAlignItemsBaseline,
-};
+} NS_SWIFT_NAME(CKFlexboxComponentStyle_SwiftBridge.AlignItems);
 
-typedef NS_ENUM(NSInteger, CKFlexboxAlignContent) {
+typedef NS_CLOSED_ENUM(NSInteger, CKFlexboxAlignContent) {
   /** Align lines to start of container */
   CKFlexboxAlignContentStart,
   /** Align lines to end of container */
@@ -92,13 +97,13 @@ typedef NS_ENUM(NSInteger, CKFlexboxAlignContent) {
   CKFlexboxAlignContentSpaceAround,
   /** Expand lines to fill container */
   CKFlexboxAlignContentStretch,
-};
+} NS_SWIFT_NAME(CKFlexboxComponentStyle_SwiftBridge.AlignContent);
 
 /**
  Each child may override their parent stack's cross axis alignment.
  @see CKFlexboxAlignItems
  */
-typedef NS_ENUM(NSInteger, CKFlexboxAlignSelf) {
+typedef NS_CLOSED_ENUM(NSInteger, CKFlexboxAlignSelf) {
   /** Inherit alignment value from containing stack. */
   CKFlexboxAlignSelfAuto,
   CKFlexboxAlignSelfStart,
@@ -106,23 +111,25 @@ typedef NS_ENUM(NSInteger, CKFlexboxAlignSelf) {
   CKFlexboxAlignSelfCenter,
   CKFlexboxAlignSelfBaseline,
   CKFlexboxAlignSelfStretch,
-};
+} NS_SWIFT_NAME(CKFlexboxChild_SwiftBridge.AlignSelf);
 
-typedef NS_ENUM(NSInteger, CKFlexboxWrap) {
+typedef NS_CLOSED_ENUM(NSInteger, CKFlexboxWrap) {
   /** Children are not wrapped */
   CKFlexboxWrapNoWrap,
   /** Children are wrapped if necessary */
   CKFlexboxWrapWrap,
   /** Children are wrapped if necessary in reverse order of lines */
   CKFlexboxWrapWrapReverse,
-};
+} NS_SWIFT_NAME(CKFlexboxComponentStyle_SwiftBridge.Wrap);
 
-typedef NS_ENUM(NSInteger, CKFlexboxPositionType) {
+typedef NS_CLOSED_ENUM(NSInteger, CKFlexboxPositionType) {
   /** Specifies the type of position children are stacked in */
   CKFlexboxPositionTypeRelative,
   /** With the absolute position, child is positioned relative to parent */
   CKFlexboxPositionTypeAbsolute,
-};
+} NS_SWIFT_NAME(FlexboxComponent.PositionType);
+
+#if CK_NOT_SWIFT
 
 struct CKFlexboxPosition {
   CKFlexboxPositionType type;
@@ -267,7 +274,7 @@ struct CKFlexboxComponentStyle {
 };
 
 struct CKFlexboxComponentChild {
-  CKComponent *component;
+  CKComponent *_Nullable component;
   /** Additional space to place before the component in the stacking direction. Overriden by any margins in the stacking direction. */
   CGFloat spacingBefore;
   /** Additional space to place after the component in the stacking direction. Overriden by any margins in the stacking direction. */
@@ -336,6 +343,42 @@ extern const struct CKStackComponentLayoutExtraKeys {
   NSString * const hadOverflow;
 } CKStackComponentLayoutExtraKeys;
 
+#endif
+
+NS_SWIFT_NAME(FlexboxComponent.Child)
+@interface CKFlexboxChild_SwiftBridge : NSObject
+
+CK_INIT_UNAVAILABLE;
+
+- (instancetype)initWithComponent:(CKComponent *_Nullable)component
+                    spacingBefore:(CGFloat)spacingBefore
+                     spacingAfter:(CGFloat)spacingAfter
+                         flexGrow:(CGFloat)flexGrow
+                       flexShrink:(CGFloat)flexShrink
+                        alignSelf:(CKFlexboxAlignSelf)alignSelf
+                           zIndex:(NSInteger)zIndex
+                  sizeConstraints:(CKComponentSize_SwiftBridge *_Nullable)sizeConstraints
+                  useTextRounding:(BOOL)useTextRounding
+              useHeightAsBaseline:(BOOL)useHeightAsBaseline NS_DESIGNATED_INITIALIZER NS_REFINED_FOR_SWIFT;
+
+@end
+
+NS_SWIFT_NAME(FlexboxComponent.Style)
+@interface CKFlexboxComponentStyle_SwiftBridge : NSObject
+
+CK_INIT_UNAVAILABLE;
+
+- (instancetype)initWithDirection:(CKFlexboxDirection)direction
+                          spacing:(CGFloat)spacing
+                   justifyContent:(CKFlexboxJustifyContent)justifyContent
+                       alignItems:(CKFlexboxAlignItems)alignItems
+                     alignContent:(CKFlexboxAlignContent)alignContent
+                             wrap:(CKFlexboxWrap)wrap
+                  layoutDirection:(CKLayoutDirection)layoutDirection
+                 useDeepYogaTrees:(BOOL)useDeepYogaTrees NS_DESIGNATED_INITIALIZER NS_REFINED_FOR_SWIFT;
+
+@end
+
 /**
  @uidocs https://fburl.com/CKFlexboxComponent:ca56
 
@@ -347,13 +390,17 @@ extern const struct CKStackComponentLayoutExtraKeys {
  layout configurations and can generate CKFlexboxComponent code for you
 
  */
+NS_SWIFT_NAME(FlexboxComponent)
 @interface CKFlexboxComponent : CKLayoutComponent
 
 CK_INIT_UNAVAILABLE;
 
 CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 
+#if CK_NOT_SWIFT
+
 /**
+ DEPRECATED - Do not use. Use CK::FlexboxComponentBuilder  instead.
  @param view A view configuration, or {} for no view.
  @param size A size, or {} for the default size.
  @param style Specifies how children are laid out.
@@ -364,8 +411,22 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
 
-@end
+- (instancetype)initWithView:(const CKComponentViewConfiguration &)view
+                        size:(const CKComponentSize &)size
+                       style:(const CKFlexboxComponentStyle &)style
+                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children NS_DESIGNATED_INITIALIZER;
 
-#import <ComponentKit/FlexboxComponentBuilder.h>
+#else
+
+- (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView
+                       swiftStyle:(CKFlexboxComponentStyle_SwiftBridge *_Nullable)swiftStyle
+                        swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
+                    swiftChildren:(NSArray<CKFlexboxChild_SwiftBridge *> *)swiftChildren NS_REFINED_FOR_SWIFT NS_DESIGNATED_INITIALIZER;
 
 #endif
+
+@end
+
+NS_ASSUME_NONNULL_END
+
+#import <ComponentKit/FlexboxComponentBuilder.h>

@@ -28,6 +28,8 @@
 #import "CKComponentSubclass.h"
 #import "CKCompositeComponent.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
+#import "CKComponentSize_SwiftBridge+Internal.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
   .hadOverflow = @"hadOverflow"
@@ -52,6 +54,122 @@ const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
 template class std::vector<CKFlexboxComponentChild>;
 
 @implementation CKFlexboxChildCachedLayout
+
+@end
+
+@implementation CKFlexboxChild_SwiftBridge {
+  @package
+  CKComponent *_component;
+  CGFloat _spacingBefore;
+  CGFloat _spacingAfter;
+  // TODO: Support margin
+  // TODO: Support padding
+  CGFloat _flexGrow;
+  CGFloat _flexShrink;
+  // TODO: Support flexBasis
+  CKFlexboxAlignSelf _alignSelf;
+  // TODO: Support position
+  NSInteger _zIndex;
+  // TODO: Support aspectRatio
+  CKComponentSize _sizeConstraints;
+  BOOL _useTextRounding;
+  BOOL _useHeightAsBaseline;
+}
+
+- (instancetype)initWithComponent:(CKComponent *)component
+                    spacingBefore:(CGFloat)spacingBefore
+                     spacingAfter:(CGFloat)spacingAfter
+                         flexGrow:(CGFloat)flexGrow
+                       flexShrink:(CGFloat)flexShrink
+                        alignSelf:(CKFlexboxAlignSelf)alignSelf
+                           zIndex:(NSInteger)zIndex
+                  sizeConstraints:(CKComponentSize_SwiftBridge *)sizeConstraints
+                  useTextRounding:(BOOL)useTextRounding
+              useHeightAsBaseline:(BOOL)useHeightAsBaseline
+{
+  if (self = [super init]) {
+    _component = component;
+    _spacingBefore = spacingBefore;
+    _spacingAfter = spacingAfter;
+    _flexGrow = flexGrow;
+    _flexShrink = flexShrink;
+    _alignSelf = alignSelf;
+    _zIndex = zIndex;
+    if (sizeConstraints != nil) {
+      _sizeConstraints = sizeConstraints.componentSize;
+    }
+    _useTextRounding = useTextRounding;
+    _useHeightAsBaseline = useHeightAsBaseline;
+  }
+
+  return self;
+}
+
+- (CKFlexboxComponentChild)child
+{
+  return {
+    .component = _component,
+    .spacingBefore = _spacingBefore,
+    .spacingAfter = _spacingAfter,
+    // TODO: Support for .margin
+    // TODO: Support for .padding
+    .flexGrow = _flexGrow,
+    .flexShrink = _flexShrink,
+    // TODO: Support for .flexBasis
+    .alignSelf = _alignSelf,
+    .zIndex = _zIndex,
+    .sizeConstraints = _sizeConstraints,
+    .useTextRounding = _useTextRounding,
+    .useHeightAsBaseline = _useHeightAsBaseline,
+  };
+}
+
+@end
+
+@implementation CKFlexboxComponentStyle_SwiftBridge {
+  CKFlexboxDirection _direction;
+  CGFloat _spacing;
+  CKFlexboxJustifyContent _justifyContent;
+  CKFlexboxAlignItems _alignItems;
+  CKFlexboxAlignContent _alignContent;
+  CKFlexboxWrap _wrap;
+  // TODO: Support padding
+  // TODO: Support _border;
+  CKLayoutDirection _layoutDirection;
+  BOOL _useDeepYogaTrees;
+}
+
+- (instancetype)initWithDirection:(CKFlexboxDirection)direction
+                          spacing:(CGFloat)spacing
+                   justifyContent:(CKFlexboxJustifyContent)justifyContent
+                       alignItems:(CKFlexboxAlignItems)alignItems
+                     alignContent:(CKFlexboxAlignContent)alignContent
+                             wrap:(CKFlexboxWrap)wrap
+                  layoutDirection:(CKLayoutDirection)layoutDirection
+                 useDeepYogaTrees:(BOOL)useDeepYogaTrees
+{
+  if (self = [super init]) {
+    _justifyContent = justifyContent;
+    _alignItems = alignItems;
+    _alignContent = alignContent;
+    _wrap = wrap;
+    _layoutDirection = layoutDirection;
+    _useDeepYogaTrees = useDeepYogaTrees;
+  }
+  return self;
+}
+
+- (CKFlexboxComponentStyle)style
+{
+  return {
+    .justifyContent = _justifyContent,
+    .alignItems = _alignItems,
+    .alignContent = _alignContent,
+    .wrap = _wrap,
+    .layoutDirection = _layoutDirection,
+    .useDeepYogaTrees = _useDeepYogaTrees,
+  };
+}
 
 @end
 
@@ -96,31 +214,51 @@ static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponen
 
 #endif
 
+- (instancetype)initWithView:(const CKComponentViewConfiguration &)view
+                        size:(const CKComponentSize &)size
+                       style:(const CKFlexboxComponentStyle &)style
+                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+{
+  CKComponentPerfScope perfScope(self.class);
+  if (self = [super initWithView:view size:size]) {
+    _style = style;
+    _children = children.take();
+
+#if CK_ASSERTIONS_ENABLED
+    if (CKReadGlobalConfig().shouldPerformFlexboxExtraAssertions) {
+      _barrier = 42;
+      _childrenSize = _children.size();
+      for (const auto& child : _children) {
+        // Forcibly create a copy of each `CKFlexboxComponentChild` which will in turn generate arc traffic on `child.component`.
+        // The intention is that the arc traffic will acess if the pointers are valid arc pointers.
+        _childrenCopy.push_back(child);
+      }
+      _description = _makeDescription(_children);
+    }
+#endif
+  }
+  return self;
+}
+
+- (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
+                       swiftStyle:(CKFlexboxComponentStyle_SwiftBridge *)swiftStyle
+                        swiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+                    swiftChildren:(NSArray<CKFlexboxChild_SwiftBridge *> *)swiftChildren
+{
+  const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};
+  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  const auto style = swiftStyle != nil ? [swiftStyle style] : CKFlexboxComponentStyle{};
+  return [self initWithView:view size:size style:style children:CK::map(swiftChildren, [](const CKFlexboxChild_SwiftBridge *swiftChild){
+    return swiftChild.child;
+  })];
+}
+
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
-  CKComponentPerfScope perfScope(self);
-  auto const component = [super newWithView:view size:size];
-  if (component) {
-    component->_style = style;
-    component->_children = children.take();
-
-#if CK_ASSERTIONS_ENABLED
-  if (CKReadGlobalConfig().shouldPerformFlexboxExtraAssertions) {
-    component->_barrier = 42;
-    component->_childrenSize = component->_children.size();
-    for (const auto& child : component->_children) {
-      // Forcibly create a copy of each `CKFlexboxComponentChild` which will in turn generate arc traffic on `child.component`.
-      // The intention is that the arc traffic will acess if the pointers are valid arc pointers.
-      component->_childrenCopy.push_back(child);
-    }
-    component->_description = _makeDescription(component->_children);
-  }
-#endif
-  }
-  return component;
+  return [[self alloc] initWithView:view size:size style:style children:std::move(children)];
 }
 
 - (void)dealloc
