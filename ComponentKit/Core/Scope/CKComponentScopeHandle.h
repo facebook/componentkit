@@ -10,8 +10,6 @@
 
 #import <ComponentKit/CKDefines.h>
 
-#if CK_NOT_SWIFT
-
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
@@ -31,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol CKTreeNodeProtocol;
 
 @interface CKComponentScopeHandle : NSObject
+
+#if CK_NOT_SWIFT
 
 /** Creates a conceptually brand new scope handle */
 - (instancetype)initWithListener:(id<CKComponentStateListener> _Nullable)listener
@@ -88,7 +88,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) CKScopedResponder *scopedResponder;
 
+#endif
+
 @end
+
+#if CK_NOT_SWIFT
 
 template<>
 struct std::hash<CKComponentScopeHandle *>
@@ -127,6 +131,6 @@ typedef int CKScopedResponderKey;
 
 @end
 
-NS_ASSUME_NONNULL_END
-
 #endif
+
+NS_ASSUME_NONNULL_END
