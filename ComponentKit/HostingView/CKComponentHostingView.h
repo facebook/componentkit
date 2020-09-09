@@ -59,6 +59,7 @@ typedef CKComponent * _Nullable(*CKComponentProviderFn)(ModelType _Nullable, Con
 CK_INIT_UNAVAILABLE;
 
 - (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+- (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
 
 @end
 

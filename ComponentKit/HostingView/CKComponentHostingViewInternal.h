@@ -42,7 +42,7 @@ struct CKComponentHostingViewOptions {
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                      options:(const CKComponentHostingViewOptions &)options;
+                                      options:(const CKComponentHostingViewOptions &)options NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, strong, readonly) UIView *containerView;
 
