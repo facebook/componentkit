@@ -70,6 +70,16 @@ public struct ViewConfiguration {
     viewConfiguration = ComponentViewConfigurationSwiftBridge(viewClass: viewClass,
                                                               attributes: attributes.map { $0.componentViewAttribute } + layerAttributes.map { $0.componentViewAttribute })
   }
+
+#if swift(>=5.1)
+  /// Creates a new configuration.
+  /// - Parameters:
+  ///   - viewClass: The view class to use.
+  ///   - attributes: The view/layer attributes.
+  public init<View: UIView>(viewClass: View.Type, @ViewConfigurationAttributeBuilder<View> attributes: () -> [ComponentViewAttributeSwiftBridge]) {
+    viewConfiguration = ComponentViewConfigurationSwiftBridge(viewClass: viewClass, attributes: attributes())
+  }
+#endif
 }
 
 public extension ViewConfiguration.Attribute {
@@ -92,3 +102,20 @@ public extension ViewConfiguration.Attribute {
     self.init(componentViewAttribute: .init(longPressHandler: longPressHandler))
   }
 }
+
+#if swift(>=5.1)
+@_functionBuilder
+public struct ViewConfigurationAttributeBuilder<View: UIView> {
+  public static func buildBlock(_ partialResults: ComponentViewAttributeSwiftBridge...) -> [ComponentViewAttributeSwiftBridge] {
+    partialResults
+  }
+
+  public static func buildExpression<Value>(_ attr: (key: ReferenceWritableKeyPath<View, Value>, value: Value)) -> ComponentViewAttributeSwiftBridge {
+    ViewConfiguration.Attribute<View>(attr.key, attr.value).componentViewAttribute
+  }
+
+  public static func buildExpression<Value>(_ attr: (key: ReferenceWritableKeyPath<CALayer, Value>, value: Value)) -> ComponentViewAttributeSwiftBridge {
+    ViewConfiguration.LayerAttribute(attr.key, attr.value).componentViewAttribute
+  }
+}
+#endif
