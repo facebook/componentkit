@@ -1073,6 +1073,10 @@
 		D4EEE0F823E1E91A00D1ED7E /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04977E51CC4145E0046CBCC /* OCMock.framework */; };
 		D4F2164A2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
 		D4F2164B2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
+		D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F543B9250784A2008F17A8 /* ComponentSize.swift */; };
+		D4F543C8250784A2008F17A8 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F543C4250784A2008F17A8 /* Component.swift */; };
+		D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F543C5250784A2008F17A8 /* Dimension.swift */; };
+		D4F543CA250784A2008F17A8 /* ViewConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */; };
 		D4FBC0F02437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4FBC0F12437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D601E93724FFECC8004007C0 /* CKTransitionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */; };
@@ -2036,6 +2040,10 @@
 		D4EEE0F123E1E6E800D1ED7E /* TVUIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVUIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS13.2.sdk/System/Library/Frameworks/TVUIKit.framework; sourceTree = DEVELOPER_DIR; };
 		D4EEE0F323E1E6F800D1ED7E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS13.2.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCoalescedSpecSupport.h; sourceTree = "<group>"; };
+		D4F543B9250784A2008F17A8 /* ComponentSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentSize.swift; sourceTree = "<group>"; };
+		D4F543C4250784A2008F17A8 /* Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
+		D4F543C5250784A2008F17A8 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
+		D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewConfiguration.swift; sourceTree = "<group>"; };
 		D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKReusableComponentProtocol.h; sourceTree = "<group>"; };
 		D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransitionComponent.mm; sourceTree = "<group>"; };
 		D601E93624FFECC8004007C0 /* CKTransitionComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKTransitionComponent.h; sourceTree = "<group>"; };
@@ -3303,6 +3311,10 @@
 		D4BC578123E37A1B0075D688 /* CKSwift */ = {
 			isa = PBXGroup;
 			children = (
+				D4F543C4250784A2008F17A8 /* Component.swift */,
+				D4F543B9250784A2008F17A8 /* ComponentSize.swift */,
+				D4F543C5250784A2008F17A8 /* Dimension.swift */,
+				D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */,
 				D4BC578223E37A1B0075D688 /* CKSwift.h */,
 				D4BC579D23E37A240075D688 /* CKSwift.swift */,
 				D4BC57C423E387510075D688 /* CKSwift.xcconfig */,
@@ -5127,7 +5139,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4BC579E23E37A240075D688 /* CKSwift.swift in Sources */,
+				D4F543C8250784A2008F17A8 /* Component.swift in Sources */,
 				D6BA03C624144B8400D13A21 /* ComponentHostingViewController.swift in Sources */,
+				D4F543CA250784A2008F17A8 /* ViewConfiguration.swift in Sources */,
+				D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */,
+				D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
