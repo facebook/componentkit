@@ -22,19 +22,26 @@
   CKComponent *_background;
 }
 
+- (instancetype)initWithComponent:(CKComponent *)component
+                       background:(CKComponent *)background
+{
+  CKComponentPerfScope perfScope(self.class);
+  if (self = [super initWithView:{} size:{}]) {
+    _component = component;
+    _background = background;
+  }
+
+  return self;
+}
+
 + (instancetype)newWithComponent:(CKComponent *)component
                       background:(CKComponent *)background
 {
   if (component == nil) {
     return nil;
   }
-  CKComponentPerfScope perfScope(self);
-  CKBackgroundLayoutComponent *c = [super new];
-  if (c) {
-    c->_component = component;
-    c->_background = background;
-  }
-  return c;
+
+  return [[self alloc] initWithComponent:component background:background];
 }
 
 - (unsigned int)numberOfChildren
