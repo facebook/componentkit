@@ -11,20 +11,81 @@
 #import "CKLabelComponent.h"
 
 #import <ComponentKit/CKTextComponent.h>
+#import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
+#import "CKComponentViewAttribute_SwiftBridge+Internal.h"
+#import "CKComponentSize_SwiftBridge+Internal.h"
 
 @implementation CKLabelComponent
 
-+ (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
-                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                                  size:(const CKComponentSize &)size
+- (instancetype)initWithText:(NSString *)text
+            truncationString:(NSString *)truncationString
+                        font:(UIFont *)font
+                       color:(UIColor *)color
+               lineBreakMode:(NSLineBreakMode )lineBreakMode
+        maximumNumberOfLines:(NSUInteger )maximumNumberOfLines
+                shadowOffset:(CGSize )shadowOffset
+                 shadowColor:(UIColor *)shadowColor
+               shadowOpacity:(CGFloat )shadowOpacity
+                shadowRadius:(CGFloat )shadowRadius
+                   alignment:(NSTextAlignment )alignment
+         firstLineHeadIndent:(CGFloat )firstLineHeadIndent
+                  headIndent:(CGFloat )headIndent
+                  tailIndent:(CGFloat )tailIndent
+          lineHeightMultiple:(CGFloat )lineHeightMultiple
+           maximumLineHeight:(CGFloat )maximumLineHeight
+           minimumLineHeight:(CGFloat )minimumLineHeight
+                 lineSpacing:(CGFloat )lineSpacing
+            paragraphSpacing:(CGFloat )paragraphSpacing
+      paragraphSpacingBefore:(CGFloat )paragraphSpacingBefore
+                   swiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+             swiftAttributes:(NSArray<CKComponentViewAttribute_SwiftBridge *> *)swiftAttributes
+
+{
+  const auto labelAttributes = CKLabelAttributes{
+    .string = text,
+    .font = font,
+    .color = color,
+    .lineBreakMode = lineBreakMode,
+    .maximumNumberOfLines = maximumNumberOfLines,
+    .shadowOffset = shadowOffset,
+    .shadowColor = shadowColor,
+    .shadowOpacity = shadowOpacity,
+    .shadowRadius = shadowRadius,
+    .alignment = alignment,
+    .firstLineHeadIndent = firstLineHeadIndent,
+    .headIndent = headIndent,
+    .tailIndent = tailIndent,
+    .lineHeightMultiple = lineHeightMultiple,
+    .maximumLineHeight = maximumLineHeight,
+    .minimumLineHeight = minimumLineHeight,
+    .lineSpacing = lineSpacing,
+    .paragraphSpacing = paragraphSpacing,
+    .paragraphSpacingBefore = paragraphSpacingBefore,
+  };
+  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  return [self initWithLabelAttributes:labelAttributes
+                        viewAttributes:CKSwiftComponentViewAttributeArrayToMap(swiftAttributes)
+                                  size:size];
+}
+
+- (instancetype)initWithLabelAttributes:(const CKLabelAttributes &)attributes
+                         viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
+                                   size:(const CKComponentSize &)size
 {
   CKViewComponentAttributeValueMap copiedMap = viewAttributes;
-  return [super newWithComponent:
+  return [super initWithView:{} component:
           [CKTextComponent
            newWithTextAttributes:textKitAttributes(attributes)
            viewAttributes:std::move(copiedMap)
            options:{.accessibilityContext = {.isAccessibilityElement = @(YES)}}
            size:size]];
+}
+
++ (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
+                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
+                                  size:(const CKComponentSize &)size
+{
+  return [[self alloc] initWithLabelAttributes:attributes viewAttributes:viewAttributes size:size];;
 }
 
 static const CKTextKitAttributes textKitAttributes(const CKLabelAttributes &labelAttributes)
