@@ -66,7 +66,7 @@ public struct ViewConfiguration {
   ///   - viewClass: The view class to use.
   ///   - attributes: The view attributes.
   ///   - layerAttributes: The layer attribues.
-  public init<View: UIView>(viewClass: View.Type, attributes: [Attribute<View>], layerAttributes: [LayerAttribute] = []) {
+  public init<View: UIView>(viewClass: View.Type, attributes: [Attribute<View>] = [], layerAttributes: [LayerAttribute] = []) {
     viewConfiguration = ComponentViewConfigurationSwiftBridge(viewClass: viewClass,
                                                               attributes: attributes.map { $0.componentViewAttribute } + layerAttributes.map { $0.componentViewAttribute })
   }
@@ -108,6 +108,10 @@ public extension ViewConfiguration.Attribute {
 public struct ViewConfigurationAttributeBuilder<View: UIView> {
   public static func buildBlock(_ partialResults: ComponentViewAttributeSwiftBridge...) -> [ComponentViewAttributeSwiftBridge] {
     partialResults
+  }
+
+  public static func buildExpression(_ attr: ViewConfiguration.Attribute<View>) -> ComponentViewAttributeSwiftBridge {
+    attr.componentViewAttribute
   }
 
   public static func buildExpression<Value>(_ attr: (key: ReferenceWritableKeyPath<View, Value>, value: Value)) -> ComponentViewAttributeSwiftBridge {
