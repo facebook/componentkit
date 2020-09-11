@@ -13,9 +13,13 @@ import UIKit
 
 // Re-export the type to avoid importing ComponentKit directly and ambiguities in type lookup
 public typealias SizeRange = ComponentKit.SizeRange
-public typealias Component = ComponentKit.Component
 public typealias ComponentHostingView = ComponentKit.ComponentHostingView
 public typealias ComponentHostingViewDelegate = ComponentKit.ComponentHostingViewDelegate
+public typealias Component = ComponentKit.Component
+public typealias CompositeComponent = ComponentKit.CompositeComponent
 public typealias BackgroundLayoutComponent = ComponentKit.BackgroundLayoutComponent
 public typealias OverlayLayoutComponent = ComponentKit.OverlayLayoutComponent
 public typealias FlexboxComponent = ComponentKit.FlexboxComponent
+public typealias InsetComponent = ComponentKit.InsetComponent
+public typealias CenterLayoutComponent = ComponentKit.CenterLayoutComponent
+public typealias RatioLayoutComponent = ComponentKit.RatioLayoutComponent
