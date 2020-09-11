@@ -355,6 +355,7 @@ CK_INIT_UNAVAILABLE;
                      spacingAfter:(CGFloat)spacingAfter
                          flexGrow:(CGFloat)flexGrow
                        flexShrink:(CGFloat)flexShrink
+                   swiftFlexBasis:(CKDimension_SwiftBridge *_Nullable)swiftFlexBasis
                         alignSelf:(CKFlexboxAlignSelf)alignSelf
                            zIndex:(NSInteger)zIndex
                   sizeConstraints:(CKComponentSize_SwiftBridge *_Nullable)sizeConstraints

@@ -30,6 +30,7 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
 #import "CKComponentSize_SwiftBridge+Internal.h"
+#import "CKDimension_SwiftBridge+Internal.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
   .hadOverflow = @"hadOverflow"
@@ -66,7 +67,7 @@ template class std::vector<CKFlexboxComponentChild>;
   // TODO: Support padding
   CGFloat _flexGrow;
   CGFloat _flexShrink;
-  // TODO: Support flexBasis
+  CKDimension_SwiftBridge *_swiftFlexBasis;
   CKFlexboxAlignSelf _alignSelf;
   // TODO: Support position
   NSInteger _zIndex;
@@ -81,6 +82,7 @@ template class std::vector<CKFlexboxComponentChild>;
                      spacingAfter:(CGFloat)spacingAfter
                          flexGrow:(CGFloat)flexGrow
                        flexShrink:(CGFloat)flexShrink
+                   swiftFlexBasis:(CKDimension_SwiftBridge *)swiftFlexBasis
                         alignSelf:(CKFlexboxAlignSelf)alignSelf
                            zIndex:(NSInteger)zIndex
                   sizeConstraints:(CKComponentSize_SwiftBridge *)sizeConstraints
@@ -93,6 +95,7 @@ template class std::vector<CKFlexboxComponentChild>;
     _spacingAfter = spacingAfter;
     _flexGrow = flexGrow;
     _flexShrink = flexShrink;
+    _swiftFlexBasis = swiftFlexBasis;
     _alignSelf = alignSelf;
     _zIndex = zIndex;
     if (sizeConstraints != nil) {
@@ -107,6 +110,7 @@ template class std::vector<CKFlexboxComponentChild>;
 
 - (CKFlexboxComponentChild)child
 {
+  const auto flexBasis = _swiftFlexBasis != nil ? _swiftFlexBasis.dimension : CKRelativeDimension{};
   return {
     .component = _component,
     .spacingBefore = _spacingBefore,
@@ -115,7 +119,7 @@ template class std::vector<CKFlexboxComponentChild>;
     // TODO: Support for .padding
     .flexGrow = _flexGrow,
     .flexShrink = _flexShrink,
-    // TODO: Support for .flexBasis
+    .flexBasis = flexBasis,
     .alignSelf = _alignSelf,
     .zIndex = _zIndex,
     .sizeConstraints = _sizeConstraints,
