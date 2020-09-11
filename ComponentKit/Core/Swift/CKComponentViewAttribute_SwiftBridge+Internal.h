@@ -22,4 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+auto CKSwiftComponentViewAttributeArrayToMap(NSArray<CKComponentViewAttribute_SwiftBridge *> *_Nullable swiftAttributes) -> CKViewComponentAttributeValueMap;
+
 NS_ASSUME_NONNULL_END

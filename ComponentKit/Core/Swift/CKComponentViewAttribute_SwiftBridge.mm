@@ -85,3 +85,16 @@
 }
 
 @end
+
+auto CKSwiftComponentViewAttributeArrayToMap(NSArray<CKComponentViewAttribute_SwiftBridge *> *swiftAttributes) -> CKViewComponentAttributeValueMap
+{
+  auto attrMap = CKViewComponentAttributeValueMap{};
+  attrMap.reserve(swiftAttributes.count);
+  for (CKComponentViewAttribute_SwiftBridge *swiftAttribute in swiftAttributes) {
+    attrMap.insert({
+      swiftAttribute.viewAttribute,
+      @YES // Bogus value, not actually used
+    });
+  }
+  return attrMap;
+}

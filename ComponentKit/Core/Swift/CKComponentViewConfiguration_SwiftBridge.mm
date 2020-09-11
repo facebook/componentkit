@@ -27,22 +27,9 @@
   return [self initWithViewConfiguration:{viewClass}];
 }
 
-static auto attributeMapFromSwiftAttributes(NSArray<CKComponentViewAttribute_SwiftBridge *> *attributes) -> CKViewComponentAttributeValueMap
-{
-  auto attrMap = CKViewComponentAttributeValueMap{};
-  attrMap.reserve(attributes.count);
-  for (CKComponentViewAttribute_SwiftBridge *attr in attributes) {
-    attrMap.insert({
-      attr.viewAttribute,
-      @YES // Bogus value, not actually used
-    });
-  }
-  return attrMap;
-}
-
 - (instancetype)initWithViewClass:(Class)viewClass attributes:(NSArray<CKComponentViewAttribute_SwiftBridge *> *)attributes
 {
-  return [self initWithViewConfiguration:{viewClass, attributeMapFromSwiftAttributes(attributes)}];
+  return [self initWithViewConfiguration:{viewClass, CKSwiftComponentViewAttributeArrayToMap(attributes)}];
 }
 
 - (instancetype)initWithViewConfiguration:(const CKComponentViewConfiguration &)viewConfig
