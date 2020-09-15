@@ -11,6 +11,7 @@
 #import "CKFlexboxComponent.h"
 
 #import <ComponentKit/CKComponentPerfScope.h>
+#import <ComponentKit/CKExceptionInfoScopedValue.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKInternalHelpers.h>
@@ -188,6 +189,7 @@ template class std::vector<CKFlexboxComponentChild>;
   std::vector<CKFlexboxComponentChild> _childrenCopy;
   std::size_t _childrenSize;
   NSArray<NSString *> *_description;
+  NSArray<NSString *> *_childrenDescription;
 #endif
 }
 
@@ -207,10 +209,14 @@ static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponen
 
   [items addObject:@"----- Children -------"];
 
+  [items addObjectsFromArray:_makeChildrenDescription(children)];
+  return items;
+}
+
+static NSArray<NSString *> *_makeChildrenDescription(const std::vector<CKFlexboxComponentChild>& children) {
+  NSMutableArray<NSString *> *const items = [NSMutableArray new];
   for (const auto& child : children) {
-    if (child.component.className != nil) {
-      [items addObject:child.component.className];
-    }
+    [items addObject:[NSString stringWithFormat:@"%@ %@", [child.component description], child.component.className]];
   }
 
   return items;
@@ -239,6 +245,7 @@ static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponen
       }
       _description = _makeDescription(_children);
     }
+    _childrenDescription = _makeChildrenDescription(_children);
 #endif
   }
   return self;
@@ -293,6 +300,8 @@ static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponen
   // Forcing the crash here to find more about the issue.
   // https://fburl.com/tasks/oahenjua
   for (int i = 0; i < _children.size(); ++i) {
+    NSString *const childDescription = i < _childrenDescription.count ? _childrenDescription[i] : @"<out of bounds>";
+    const CKExceptionInfoScopedValue corruptedChild{@"ck_corrupted_flexbox_child", childDescription};
     _children[i] = {};
   }
 
