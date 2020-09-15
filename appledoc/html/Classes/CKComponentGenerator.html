@@ -60,15 +60,17 @@
 	
 	<optgroup label="Instance Methods">
 		
+		<option value="//api/name/forceReloadInNextGeneration">- forceReloadInNextGeneration</option>
+		
 		<option value="//api/name/generateComponentAsynchronously">- generateComponentAsynchronously</option>
 		
 		<option value="//api/name/generateComponentSynchronously">- generateComponentSynchronously</option>
 		
-		<option value="//api/name/ignoreComponentReuseInNextGeneration">- ignoreComponentReuseInNextGeneration</option>
-		
 		<option value="//api/name/scopeRoot">- scopeRoot</option>
 		
 		<option value="//api/name/setScopeRoot:">- setScopeRoot:</option>
+		
+		<option value="//api/name/updateAccessibilityStatus:">- updateAccessibilityStatus:</option>
 		
 		<option value="//api/name/updateContext:">- updateContext:</option>
 		
@@ -251,6 +253,47 @@ All APIs should be called on the <code>affinedQueue</code> that is passed in fro
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/updateAccessibilityStatus:" title="updateAccessibilityStatus:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateAccessibilityStatus:">&ndash;&nbsp;updateAccessibilityStatus:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Set to indicate if the assistive technologies are enabled.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)updateAccessibilityStatus:(BOOL)<em>accessibilityEnabled</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentGenerator.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/generateComponentSynchronously" title="generateComponentSynchronously"></a>
 	<h3 class="method-title"><code><a href="#//api/name/generateComponentSynchronously">&ndash;&nbsp;generateComponentSynchronously</a></code>
 </h3>
@@ -335,8 +378,8 @@ finishes generation.</p>
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/ignoreComponentReuseInNextGeneration" title="ignoreComponentReuseInNextGeneration"></a>
-	<h3 class="method-title"><code><a href="#//api/name/ignoreComponentReuseInNextGeneration">&ndash;&nbsp;ignoreComponentReuseInNextGeneration</a></code>
+	<a name="//api/name/forceReloadInNextGeneration" title="forceReloadInNextGeneration"></a>
+	<h3 class="method-title"><code><a href="#//api/name/forceReloadInNextGeneration">&ndash;&nbsp;forceReloadInNextGeneration</a></code>
 </h3>
 
 	<div class="method-info">
@@ -346,13 +389,13 @@ finishes generation.</p>
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Ignore component reuse in next component generation.
+				<p>Force a complete components reload (ignoring all reuse options) in next component generation.
 This should be used if you are going to update <code>CKComponentContext</code> in the hierarchy.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (void)ignoreComponentReuseInNextGeneration</code></div>
+			<div class="method-subsection method-declaration"><code>- (void)forceReloadInNextGeneration</code></div>
 
 		    
 			
