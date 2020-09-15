@@ -34,10 +34,11 @@ CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> prev
   const auto componentFactory = ^{
     return componentProvider(model, context);
   };
+  auto const buildTrigger = CKBuildComponentTrigger(previousRoot, stateUpdates, !enableComponentReuseOptimizations, NO);
   const CKBuildComponentResult result = CKBuildComponent(previousRoot,
                                                          stateUpdates,
                                                          componentFactory,
-                                                         enableComponentReuseOptimizations);
+                                                         buildTrigger);
   const auto rootLayout = CKComputeRootComponentLayout(result.component,
                                                        sizeRange,
                                                        [result.scopeRoot analyticsListener],

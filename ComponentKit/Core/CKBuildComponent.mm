@@ -23,8 +23,10 @@
 #import "CKComponentCreationValidation.h"
 
 namespace CKBuildComponentHelpers {
+  // This will be removed after all conversions (superseded by CKBuildComponentTrigger(...))
   auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
                        const CKComponentStateUpdateMap &stateUpdates,
+                       BOOL enableComponentReuseOptimizations,
                        BOOL treeHasPropsUpdate) -> CKBuildTrigger
   {
     CKBuildTrigger trigger = CKBuildTriggerNone;
@@ -36,6 +38,10 @@ namespace CKBuildComponentHelpers {
 
       if (stateUpdates.empty() || treeHasPropsUpdate) {
         trigger |= CKBuildTriggerPropsUpdate;
+      }
+
+      if (!enableComponentReuseOptimizations) {
+        trigger |= CKBuildTriggerEnvironmentUpdate;
       }
     }
 
@@ -82,17 +88,33 @@ namespace CKBuildComponentHelpers {
   }
 }
 
+auto CKBuildComponentTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
+                             const CKComponentStateUpdateMap &stateUpdates,
+                             BOOL treeNeedsReflow,
+                             BOOL treeHasPropsUpdate) -> CKBuildTrigger
+{
+  return CKBuildComponentHelpers::getBuildTrigger(scopeRoot, stateUpdates, !treeNeedsReflow, treeHasPropsUpdate);
+}
+
+CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
+                                        const CKComponentStateUpdateMap &stateUpdates,
+                                        NS_NOESCAPE CKComponent *(^componentFactory)(void))
+{
+  auto const buildTrigger = CKBuildComponentTrigger(previousRoot, stateUpdates, NO, NO);
+  return CKBuildComponent(previousRoot, stateUpdates, componentFactory, buildTrigger, CKReadGlobalConfig().coalescingMode);
+}
+
 CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
-                                        BOOL enableComponentReuseOptimizations,
-                                        BOOL treeHasPropsUpdate,
+                                        CKBuildTrigger buildTrigger,
                                         CKComponentCoalescingMode coalescingMode)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
 
-  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates, treeHasPropsUpdate);
+  auto const enableComponentReuseOptimizations = (buildTrigger & CKBuildTriggerEnvironmentUpdate) != CKBuildTriggerEnvironmentUpdate;
+
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot];
 

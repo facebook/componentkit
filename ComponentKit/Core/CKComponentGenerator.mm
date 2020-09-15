@@ -186,13 +186,14 @@ private:
 {
   return
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
-    const auto enableComponentReuse = inputs.enableComponentReuse;
+    const auto treeNeedsReflow = !(inputs.enableComponentReuse);
     inputs.enableComponentReuse = YES;
+    auto const buildTrigger = CKBuildComponentTrigger(inputs.scopeRoot, inputs.stateUpdates, treeNeedsReflow, inputs.didUpdateModelOrContext());
     __block CK::DelayedInitialisationWrapper<CKBuildComponentResult> result;
     CKPerformWithCurrentTraitCollection(inputs.traitCollection, ^{
       result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
         return _componentProvider(inputs.model(), inputs.context());
-      }, enableComponentReuse, inputs.didUpdateModelOrContext());
+      }, buildTrigger);
     });
     _applyResult(result,
                  inputs,
@@ -215,13 +216,13 @@ private:
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     CKSystraceScope generationScope(asyncGeneration);
     __block std::shared_ptr<const CKBuildComponentResult> result = nullptr;
+    auto const buildTrigger = CKBuildComponentTrigger(inputs->scopeRoot, inputs->stateUpdates, !(inputs->enableComponentReuse), inputs->didUpdateModelOrContext());
     CKPerformWithCurrentTraitCollection(inputs->traitCollection, ^{
       result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
         inputs->scopeRoot,
         inputs->stateUpdates,
         ^{ return componentProvider(inputs->model(), inputs->context()); },
-        inputs->enableComponentReuse,
-        inputs->didUpdateModelOrContext()
+        buildTrigger
       ));
     });
     const auto addedComponentControllers =

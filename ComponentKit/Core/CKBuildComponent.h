@@ -30,8 +30,24 @@ namespace CKBuildComponentHelpers {
    */
   auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
                        const CKComponentStateUpdateMap &stateUpdates,
+                       BOOL enableComponentReuseOptimizations,
                        BOOL treeHasPropsUpdate) -> CKBuildTrigger;
 }
+
+/**
+ Used to derive the build trigger that issued a new component hierarchy.
+
+ @param scopeRoot The scope root that is associated with the component .hierarchy
+ @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
+ @param treeNeedsReflow Indicates that the tree needs a complete reflow, ignoring all reuse optimizations.
+ @param treeHasPropsUpdate Indicates that the tree has some updated props.
+ @return The related build trigger given the in input parameters
+ */
+
+auto CKBuildComponentTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
+                             const CKComponentStateUpdateMap &stateUpdates,
+                             BOOL treeNeedsReflow,
+                             BOOL treeHasPropsUpdate) -> CKBuildTrigger;
 
 /**
  Used to construct a component hierarchy. This is necessary to configure the thread-local state so that components
@@ -40,16 +56,27 @@ namespace CKBuildComponentHelpers {
  @param previousRoot The previous scope root that was associated with the cell.
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
- @param enableComponentReuseOptimizations If `NO`, all the comopnents will be regenerated (no component reuse optimiztions). `YES` by
- default.
- @param treeHasPropsUpdate Should be set to YES when the tree props were update.
+ */
+
+CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
+                                        const CKComponentStateUpdateMap &stateUpdates,
+                                        NS_NOESCAPE CKComponent *(^componentFactory)(void));
+
+
+/**
+ Used to construct a component hierarchy. This is necessary to configure the thread-local state so that components
+ can be properly connected to a scope root.
+
+ @param previousRoot The previous scope root that was associated with the cell.
+ @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
+ @param componentFactory A block that constructs your component. Must not be nil.
+ @param buildTrigger An enum that indicates why the components tree have been (re)generated
  @param coalescingMode Defines the coalescing mode to use for the current component tree.
  */
 CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
-                                        BOOL enableComponentReuseOptimizations = YES,
-                                        BOOL treeHasPropsUpdate = NO,
+                                        CKBuildTrigger buildTrigger,
                                         CKComponentCoalescingMode coalescingMode = CKReadGlobalConfig().coalescingMode);
 
 #endif
