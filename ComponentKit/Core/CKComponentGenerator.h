@@ -115,6 +115,11 @@ CK_INIT_UNAVAILABLE;
 - (void)updateTraitCollection:(UITraitCollection *)traitCollection;
 
 /**
+ Set to indicate if the assistive technologies are enabled.
+*/
+- (void)updateAccessibilityStatus:(BOOL)accessibilityEnabled;
+
+/**
  Generate component synchronously on affined queue and return the result.
  */
 - (CKBuildComponentResult)generateComponentSynchronously;
@@ -127,10 +132,10 @@ CK_INIT_UNAVAILABLE;
 - (void)generateComponentAsynchronously;
 
 /**
- Ignore component reuse in next component generation.
+ Force a complete components reload (ignoring all reuse options) in next component generation.
  This should be used if you are going to update `CKComponentContext` in the hierarchy.
  */
-- (void)ignoreComponentReuseInNextGeneration;
+- (void)forceReloadInNextGeneration;
 
 /**
  The underlying scope root that is maintained by `CKComponentGenerator`.

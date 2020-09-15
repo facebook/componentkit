@@ -98,7 +98,7 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
   XCTAssertFalse(((CKTestRenderComponent *)result1.component).didReuseComponent);
   const auto result2 = [componentGenerator generateComponentSynchronously];
   XCTAssertTrue(((CKTestRenderComponent *)result2.component).didReuseComponent);
-  [componentGenerator ignoreComponentReuseInNextGeneration];
+  [componentGenerator forceReloadInNextGeneration];
   const auto result3 = [componentGenerator generateComponentSynchronously];
   XCTAssertFalse(((CKTestRenderComponent *)result3.component).didReuseComponent);
 }

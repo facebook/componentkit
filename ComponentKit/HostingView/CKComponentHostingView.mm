@@ -223,7 +223,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 - (void)reloadWithMode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  [_componentGenerator ignoreComponentReuseInNextGeneration];
+  [_componentGenerator forceReloadInNextGeneration];
   [self _setNeedsUpdateWithMode:mode];
 }
 

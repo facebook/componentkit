@@ -32,8 +32,7 @@ static void *kAffinedQueueKey = &kAffinedQueueKey;
 struct CKComponentGeneratorInputs {
   CK::NonNull<CKComponentScopeRoot *> scopeRoot;
   CKComponentStateUpdateMap stateUpdates;
-  BOOL enableComponentReuse;
-  UITraitCollection *traitCollection;
+  BOOL forceReloadInNextGeneration{NO};
 
   CKComponentGeneratorInputs(CK::NonNull<CKComponentScopeRoot *> scopeRoot) : scopeRoot(std::move(scopeRoot)) { }
 
@@ -47,12 +46,26 @@ struct CKComponentGeneratorInputs {
     _context = context;
   }
 
+  void updateTraitCollection(UITraitCollection *traitCollection) {
+    _didUpdateTraitCollection = _didUpdateTraitCollection || !CKObjectIsEqual(traitCollection, _traitCollection);
+    _traitCollection = [traitCollection copy];
+  }
+
+  void updateAccessibilityStatus(BOOL isAccessibilityEnabled) {
+    _didAccessibilityChange = _didAccessibilityChange || (isAccessibilityEnabled != _isAccessibilityEnabled);
+    _isAccessibilityEnabled = isAccessibilityEnabled;
+  }
+
   id<NSObject> model() const {
     return _model;
   }
 
   id<NSObject> context() const {
     return _context;
+  }
+
+  UITraitCollection *traitCollection() const {
+    return _traitCollection;
   }
 
   BOOL didUpdateModelOrContext() const {
@@ -64,20 +77,45 @@ struct CKComponentGeneratorInputs {
       _model == i._model &&
       _context == i._context &&
       stateUpdates == i.stateUpdates &&
-      enableComponentReuse == i.enableComponentReuse &&
-      _didUpdateModelOrContext == i._didUpdateModelOrContext;
+      forceReloadInNextGeneration == i.forceReloadInNextGeneration &&
+      _didUpdateModelOrContext == i._didUpdateModelOrContext &&
+      CKObjectIsEqual(_traitCollection, i._traitCollection) &&
+      _isAccessibilityEnabled == i._isAccessibilityEnabled;
   }
 
   void reset(CK::NonNull<CKComponentScopeRoot *> newScopeRoot) {
     scopeRoot = newScopeRoot;
     stateUpdates = {};
     _didUpdateModelOrContext = NO;
+    _didAccessibilityChange = NO;
+    _didUpdateTraitCollection = NO;
+  }
+
+  CKReflowTrigger reflowTrigger(CKBuildTrigger buildTrigger) const {
+    if ((buildTrigger & CKBuildTriggerEnvironmentUpdate) == 0) {
+      return CKReflowTriggerNone;
+    }
+    CKReflowTrigger reflowTrigger = CKReflowTriggerNone;
+    if (_didUpdateTraitCollection) {
+      reflowTrigger |= CKReflowTriggerUIContext;
+    }
+    if (_didAccessibilityChange) {
+      reflowTrigger |= CKReflowTriggerAccessibility;
+    }
+    if (forceReloadInNextGeneration) {
+      reflowTrigger |= CKReflowTriggerReload;
+    }
+    return reflowTrigger;
   }
 
 private:
   id<NSObject> _model;
   id<NSObject> _context;
+  UITraitCollection *_traitCollection;
+  BOOL _isAccessibilityEnabled;
   BOOL _didUpdateModelOrContext;
+  BOOL _didUpdateTraitCollection;
+  BOOL _didAccessibilityChange;
 };
 
 /**
@@ -164,7 +202,14 @@ private:
 - (void)updateTraitCollection:(UITraitCollection *)traitCollection
 {
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
-    inputs.traitCollection = [traitCollection copy];
+    inputs.updateTraitCollection(traitCollection);
+  });
+}
+
+- (void)updateAccessibilityStatus:(BOOL)accessibilityEnabled
+{
+  _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
+    inputs.updateAccessibilityStatus(accessibilityEnabled);
   });
 }
 
@@ -186,14 +231,17 @@ private:
 {
   return
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
-    const auto treeNeedsReflow = !(inputs.enableComponentReuse);
-    inputs.enableComponentReuse = YES;
+    const auto treeNeedsReflow = inputs.forceReloadInNextGeneration;
+    inputs.forceReloadInNextGeneration = NO;
     auto const buildTrigger = CKBuildComponentTrigger(inputs.scopeRoot, inputs.stateUpdates, treeNeedsReflow, inputs.didUpdateModelOrContext());
+    auto const reflowReason = inputs.reflowTrigger(buildTrigger);
     __block CK::DelayedInitialisationWrapper<CKBuildComponentResult> result;
-    CKPerformWithCurrentTraitCollection(inputs.traitCollection, ^{
+    CKPerformWithCurrentTraitCollection(inputs.traitCollection(), ^{
       result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
         return _componentProvider(inputs.model(), inputs.context());
-      }, buildTrigger);
+      },
+      buildTrigger,
+      reflowReason);
     });
     _applyResult(result,
                  inputs,
@@ -216,13 +264,15 @@ private:
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     CKSystraceScope generationScope(asyncGeneration);
     __block std::shared_ptr<const CKBuildComponentResult> result = nullptr;
-    auto const buildTrigger = CKBuildComponentTrigger(inputs->scopeRoot, inputs->stateUpdates, !(inputs->enableComponentReuse), inputs->didUpdateModelOrContext());
-    CKPerformWithCurrentTraitCollection(inputs->traitCollection, ^{
+    auto const buildTrigger = CKBuildComponentTrigger(inputs->scopeRoot, inputs->stateUpdates, inputs->forceReloadInNextGeneration, inputs->didUpdateModelOrContext());
+    auto const reflowReason = inputs->reflowTrigger(buildTrigger);
+    CKPerformWithCurrentTraitCollection(inputs->traitCollection(), ^{
       result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
         inputs->scopeRoot,
         inputs->stateUpdates,
         ^{ return componentProvider(inputs->model(), inputs->context()); },
-        buildTrigger
+        buildTrigger,
+        reflowReason
       ));
     });
     const auto addedComponentControllers =
@@ -243,7 +293,7 @@ private:
       // If the inputs haven't changed, apply the result; otherwise, retry.
       const auto shouldRetry = strongSelf->_inputsStore->acquireInputs(^(CKComponentGeneratorInputs &_inputs){
         if (_inputs == *inputs) {
-          _inputs.enableComponentReuse = YES;
+          _inputs.forceReloadInNextGeneration = NO;
           _applyResult(*result,
                        _inputs,
                        addedComponentControllers != nullptr ? *addedComponentControllers : std::vector<CKComponentController *>{},
@@ -268,10 +318,10 @@ private:
   });
 }
 
-- (void)ignoreComponentReuseInNextGeneration
+- (void)forceReloadInNextGeneration
 {
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
-    inputs.enableComponentReuse = NO;
+    inputs.forceReloadInNextGeneration = YES;
   });
 }
 
