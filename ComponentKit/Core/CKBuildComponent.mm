@@ -107,23 +107,19 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
 
-  auto const enableComponentReuseOptimizations = (buildTrigger & CKBuildTriggerEnvironmentUpdate) != CKBuildTriggerEnvironmentUpdate;
-
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot];
 
   CKThreadLocalComponentScope threadScope(previousRoot,
                                           stateUpdates,
                                           buildTrigger,
-                                          enableComponentReuseOptimizations,
                                           shouldCollectTreeNodeCreationInformation,
                                           globalConfig.alwaysBuildRenderTree,
                                           coalescingMode);
 
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger
-                                            stateUpdates:stateUpdates
-                       enableComponentReuseOptimizations:enableComponentReuseOptimizations];
+                                            stateUpdates:stateUpdates];
 #if CK_ASSERTIONS_ENABLED
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceBuild]);
 #endif
@@ -139,7 +135,6 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
       .buildTrigger = buildTrigger,
       .systraceListener = threadScope.systraceListener,
       .shouldCollectTreeNodeCreationInformation = shouldCollectTreeNodeCreationInformation,
-      .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .coalescingMode = coalescingMode,
     };
 
@@ -154,7 +149,6 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                            buildTrigger:buildTrigger
                                            stateUpdates:stateUpdates
                                               component:component
-                      enableComponentReuseOptimizations:enableComponentReuseOptimizations
                                         boundsAnimation:boundsAnimation];
   [newScopeRoot setRootComponent:component];
   return {

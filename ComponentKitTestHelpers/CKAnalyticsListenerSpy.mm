@@ -19,7 +19,6 @@ using namespace CK::AnalyticsListenerSpy;
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                buildTrigger:(CKBuildTrigger)buildTrigger
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-          enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
 {
   _willBuildComponentTreeHitCount++;
 }
@@ -28,7 +27,6 @@ using namespace CK::AnalyticsListenerSpy;
                               buildTrigger:(CKBuildTrigger)buildTrigger
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component
-        enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
                            boundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
 {
   _didBuildComponentTreeHitCount++;

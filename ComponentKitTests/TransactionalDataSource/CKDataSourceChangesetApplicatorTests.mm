@@ -319,7 +319,6 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                buildTrigger:(CKBuildTrigger)buildTrigger
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-          enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
 {
   if (@available(iOS 13.0, tvOS 13.0, *)) {
     _currentTraitCollection = [UITraitCollection currentTraitCollection];
@@ -331,7 +330,6 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
                               buildTrigger:(CKBuildTrigger)buildTrigger
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component
-         enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
                            boundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
 {
 

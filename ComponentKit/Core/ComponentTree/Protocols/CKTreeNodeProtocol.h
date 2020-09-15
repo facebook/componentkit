@@ -62,9 +62,6 @@ struct CKBuildComponentTreeParams {
   // Collect tree node information for logging.
   BOOL shouldCollectTreeNodeCreationInformation;
 
-  // When disabled, all the comopnents will be regenerated (no component reuse optimiztions). Enabled by default.
-  BOOL enableComponentReuseOptimizations = YES;
-
   // The current coalescing mode.
   CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
 };

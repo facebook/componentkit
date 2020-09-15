@@ -116,8 +116,8 @@ namespace CKRenderInternal {
       return NO;
     }
 
-    // Check if the reuse components optimizations are off.
-    if (!params.enableComponentReuseOptimizations) {
+    // Disable any sort of reuse when environmental changes
+    if (params.buildTrigger & CKBuildTriggerEnvironmentUpdate) {
       return NO;
     }
 
@@ -131,7 +131,7 @@ namespace CKRenderInternal {
         // 2. No direct parent has a state update
         // 3. Not a coalesced state & props update.
         if (!parentHasStateUpdate &&
-            params.buildTrigger == CKBuildTriggerStateUpdate) {
+            (params.buildTrigger & CKBuildTriggerPropsUpdate) == 0) {
           // Faster state update optimizations.
           return CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent, params, didReuseBlock);
         }
@@ -139,7 +139,7 @@ namespace CKRenderInternal {
         // - The component is not dirty, but the parent has a state update or tree props were updated.
         return (CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params, didReuseBlock));
       }
-    } else if (params.buildTrigger == CKBuildTriggerPropsUpdate) {
+    } else if (params.buildTrigger & CKBuildTriggerPropsUpdate) {
       // Will be used for coalesced props & state updates too.
       return CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params, didReuseBlock);
     }

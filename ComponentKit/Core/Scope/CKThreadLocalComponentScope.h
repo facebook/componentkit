@@ -33,7 +33,6 @@ public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                               const CKComponentStateUpdateMap &updates,
                               CKBuildTrigger trigger = CKBuildTriggerNone,
-                              BOOL enableComponentReuseOptimizations = YES,
                               BOOL shouldCollectTreeNodeCreationInformation = NO,
                               BOOL alwaysBuildRenderTree = NO,
                               CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone,
@@ -66,8 +65,6 @@ public:
   NSUInteger componentAllocations;
 
   const CKTreeNodeDirtyIds treeNodeDirtyIds;
-
-  const BOOL enableComponentReuseOptimizations;
 
   const BOOL shouldCollectTreeNodeCreationInformation;
 
