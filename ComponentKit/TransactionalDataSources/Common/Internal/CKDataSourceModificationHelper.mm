@@ -25,7 +25,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> prev
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
-                                        BOOL enableComponentReuseOptimizations)
+                                        CKReflowTrigger reflowTrigger)
 {
   CKExceptionInfoScopedValue modelValue{@"ck_data_source_item_model", NSStringFromClass([model class]) ?: @"Nil"};
   CKExceptionInfoScopedValue contextValue{@"ck_data_source_item_context", NSStringFromClass([context class]) ?: @"Nil"};
@@ -34,11 +34,14 @@ CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> prev
   const auto componentFactory = ^{
     return componentProvider(model, context);
   };
-  auto const buildTrigger = CKBuildComponentTrigger(previousRoot, stateUpdates, !enableComponentReuseOptimizations, NO);
+
+  auto const treeNeedsReflow = reflowTrigger != CKBuildTriggerNone;
+  auto const buildTrigger = CKBuildComponentTrigger(previousRoot, stateUpdates, treeNeedsReflow, NO);
   const CKBuildComponentResult result = CKBuildComponent(previousRoot,
                                                          stateUpdates,
                                                          componentFactory,
-                                                         buildTrigger);
+                                                         buildTrigger,
+                                                         reflowTrigger);
   const auto rootLayout = CKComputeRootComponentLayout(result.component,
                                                        sizeRange,
                                                        [result.scopeRoot analyticsListener],

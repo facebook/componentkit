@@ -20,6 +20,7 @@
 #import <ComponentKit/CKDataSourceConfiguration.h>
 #import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKSizeRange.h>
+#import <ComponentKit/CKBuildTrigger.h>
 
 CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
@@ -27,6 +28,6 @@ CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> prev
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
-                                        BOOL enableComponentReuseOptimizations = YES);
+                                        CKReflowTrigger reflowTrigger = CKReflowTriggerNone);
 
 #endif
