@@ -612,7 +612,7 @@ static bool hasChildWithRelativePositioning(const CKFlexboxComponentChild &child
       return rLastRelativeChild.base() - 1;
   })();
 
-  for (auto iterator = _children.begin(); iterator != _children.end(); ++iterator) {
+  for (auto iterator = _children.cbegin(); iterator != _children.cend(); ++iterator) {
     const CKFlexboxComponentChild &child = *iterator;
     if (!child.component) {
       continue;
