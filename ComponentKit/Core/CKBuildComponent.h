@@ -70,13 +70,15 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
  @param previousRoot The previous scope root that was associated with the cell.
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
- @param buildTrigger An enum that indicates why the components tree have been (re)generated
+ @param buildTrigger An enum that indicates why the component tree has been (re)generated
+ @param reflowTrigger An enum that indicates why the components tree has been reflown. Defaults to CKReflowTriggerNone, indicating there is no reflow.
  @param coalescingMode Defines the coalescing mode to use for the current component tree.
  */
 CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         CKBuildTrigger buildTrigger,
+                                        CKReflowTrigger reflowTrigger = CKReflowTriggerNone,
                                         CKComponentCoalescingMode coalescingMode = CKReadGlobalConfig().coalescingMode);
 
 #endif

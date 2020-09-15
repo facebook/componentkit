@@ -108,6 +108,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         CKBuildTrigger buildTrigger,
+                                        CKReflowTrigger reflowTrigger,
                                         CKComponentCoalescingMode coalescingMode)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
