@@ -22,18 +22,6 @@
 @class CKComponentScopeRoot;
 @class CKComponent;
 
-namespace CKBuildComponentHelpers {
-  /**
-   Depending on the scope root and the list of state updates the proper build trigger is derived.
-
-   @return The related build trigger given the in input parameters
-   */
-  auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
-                       const CKComponentStateUpdateMap &stateUpdates,
-                       BOOL enableComponentReuseOptimizations,
-                       BOOL treeHasPropsUpdate) -> CKBuildTrigger;
-}
-
 /**
  Used to derive the build trigger that issued a new component hierarchy.
 
@@ -71,14 +59,14 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
  @param buildTrigger An enum that indicates why the component tree has been (re)generated
- @param reflowTrigger An enum that indicates why the components tree has been reflown. Defaults to CKReflowTriggerNone, indicating there is no reflow.
+ @param reflowTrigger An enum that indicates why the components tree has been reflown.
  @param coalescingMode Defines the coalescing mode to use for the current component tree.
  */
 CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         CKBuildTrigger buildTrigger,
-                                        CKReflowTrigger reflowTrigger = CKReflowTriggerNone,
+                                        CKReflowTrigger reflowTrigger,
                                         CKComponentCoalescingMode coalescingMode = CKReadGlobalConfig().coalescingMode);
 
 #endif

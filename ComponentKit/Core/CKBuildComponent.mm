@@ -23,31 +23,6 @@
 #import "CKComponentCreationValidation.h"
 
 namespace CKBuildComponentHelpers {
-  // This will be removed after all conversions (superseded by CKBuildComponentTrigger(...))
-  auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
-                       const CKComponentStateUpdateMap &stateUpdates,
-                       BOOL enableComponentReuseOptimizations,
-                       BOOL treeHasPropsUpdate) -> CKBuildTrigger
-  {
-    CKBuildTrigger trigger = CKBuildTriggerNone;
-
-    if ([scopeRoot rootComponent] != nil) {
-      if (stateUpdates.empty() == false) {
-        trigger |= CKBuildTriggerStateUpdate;
-      }
-
-      if (stateUpdates.empty() || treeHasPropsUpdate) {
-        trigger |= CKBuildTriggerPropsUpdate;
-      }
-
-      if (!enableComponentReuseOptimizations) {
-        trigger |= CKBuildTriggerEnvironmentUpdate;
-      }
-    }
-
-    return trigger;
-  }
-
   /**
    Computes and returns the bounds animations for the transition from a prior generation's scope root.
    */
@@ -93,7 +68,25 @@ auto CKBuildComponentTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
                              BOOL treeNeedsReflow,
                              BOOL treeHasPropsUpdate) -> CKBuildTrigger
 {
-  return CKBuildComponentHelpers::getBuildTrigger(scopeRoot, stateUpdates, !treeNeedsReflow, treeHasPropsUpdate);
+  CKBuildTrigger trigger = CKBuildTriggerNone;
+
+    if ([scopeRoot rootComponent] != nil) {
+      if (stateUpdates.empty() == false) {
+        trigger |= CKBuildTriggerStateUpdate;
+      }
+
+      if (treeHasPropsUpdate) {
+        trigger |= CKBuildTriggerPropsUpdate;
+      }
+
+      if (treeNeedsReflow) {
+        trigger |= CKBuildTriggerEnvironmentUpdate;
+      } else if (stateUpdates.empty()) {
+        trigger |= CKBuildTriggerPropsUpdate;
+      }
+    }
+
+    return trigger;
 }
 
 CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
