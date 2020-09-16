@@ -10,6 +10,7 @@
 
 
 #import <ComponentKit/CKLayoutComponent.h>
+#import <ComponentKit/CKDefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

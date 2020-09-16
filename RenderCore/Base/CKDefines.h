@@ -27,4 +27,4 @@
 #endif
 
 #define CK_INIT_UNAVAILABLE \
-  - (instancetype)init NS_UNAVAILABLE;
+  - (instancetype)init NS_UNAVAILABLE
