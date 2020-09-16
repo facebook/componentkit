@@ -65,28 +65,30 @@ namespace CKBuildComponentHelpers {
 
 auto CKBuildComponentTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
                              const CKComponentStateUpdateMap &stateUpdates,
-                             BOOL treeNeedsReflow,
+                             BOOL treeEnvironmentChanged,
                              BOOL treeHasPropsUpdate) -> CKBuildTrigger
 {
   CKBuildTrigger trigger = CKBuildTriggerNone;
 
-    if ([scopeRoot rootComponent] != nil) {
-      if (stateUpdates.empty() == false) {
-        trigger |= CKBuildTriggerStateUpdate;
-      }
-
-      if (treeHasPropsUpdate) {
-        trigger |= CKBuildTriggerPropsUpdate;
-      }
-
-      if (treeNeedsReflow) {
-        trigger |= CKBuildTriggerEnvironmentUpdate;
-      } else if (stateUpdates.empty()) {
-        trigger |= CKBuildTriggerPropsUpdate;
-      }
+  if ([scopeRoot rootComponent] != nil) {
+    if (stateUpdates.empty() == false) {
+      trigger |= CKBuildTriggerStateUpdate;
     }
 
-    return trigger;
+    if (treeHasPropsUpdate) {
+      trigger |= CKBuildTriggerPropsUpdate;
+    }
+
+    if (treeEnvironmentChanged) {
+      trigger |= CKBuildTriggerEnvironmentUpdate;
+    } else if (stateUpdates.empty()) {
+      trigger |= CKBuildTriggerPropsUpdate;
+    }
+  } else {
+    CKCAssert(stateUpdates.empty(), @"No previous scope root but state updates");
+  }
+
+  return trigger;
 }
 
 CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,

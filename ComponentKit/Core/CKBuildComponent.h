@@ -27,14 +27,14 @@
 
  @param scopeRoot The scope root that is associated with the component .hierarchy
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
- @param treeNeedsReflow Indicates that the tree needs a complete reflow, ignoring all reuse optimizations.
+ @param treeEnvironmentChanged Indicates that the tree needs a complete reflow because env changed (results in ignoring all reuse optimizations).
  @param treeHasPropsUpdate Indicates that the tree has some updated props.
  @return The related build trigger given the in input parameters
  */
 
 auto CKBuildComponentTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
                              const CKComponentStateUpdateMap &stateUpdates,
-                             BOOL treeNeedsReflow,
+                             BOOL treeEnvironmentChanged,
                              BOOL treeHasPropsUpdate) -> CKBuildTrigger;
 
 /**
