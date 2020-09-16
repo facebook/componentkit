@@ -143,6 +143,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 }
 
 - (void)didInit {
+  CKAssertMainThread();
 #if CK_ASSERTIONS_ENABLED
   CKWarn(_lifecycleState == CKComponentControllerAllocated,
          @"Did init called but controller (%@) was: %td", self.class, _lifecycleState);
@@ -150,19 +151,56 @@ static NSString *componentStateName(CKComponentControllerState state)
 #endif
 }
 
-- (void)willMount {}
-- (void)didMount {}
-- (void)willRemount {}
-- (void)didRemount {}
-- (void)willUnmount {}
-- (void)didUnmount {}
-- (void)willUpdateComponent {}
-- (void)didUpdateComponent {}
-- (void)componentWillRelinquishView {}
-- (void)componentDidAcquireView {}
-- (void)componentTreeWillAppear {}
-- (void)componentTreeDidDisappear {}
+- (void)willMount {
+  CKAssertMainThread();
+}
+
+- (void)didMount {
+  CKAssertMainThread();
+}
+
+- (void)willRemount {
+  CKAssertMainThread();
+}
+
+- (void)didRemount {
+  CKAssertMainThread();
+}
+
+- (void)willUnmount {
+  CKAssertMainThread();
+}
+
+- (void)didUnmount {
+  CKAssertMainThread();
+}
+
+- (void)willUpdateComponent {
+  CKAssertMainThread();
+}
+
+- (void)didUpdateComponent {
+  CKAssertMainThread();
+}
+
+- (void)componentWillRelinquishView {
+  CKAssertMainThread();
+}
+
+- (void)componentDidAcquireView {
+  CKAssertMainThread();
+}
+
+- (void)componentTreeWillAppear {
+  CKAssertMainThread();
+}
+
+- (void)componentTreeDidDisappear {
+  CKAssertMainThread();
+}
+
 - (void)invalidateController {
+  CKAssertMainThread();
 #if CK_ASSERTIONS_ENABLED
   CKWarnWithCategory(_lifecycleState == CKComponentControllerInitialized ||
                      (_lifecycleState == CKComponentControllerAllocated &&
