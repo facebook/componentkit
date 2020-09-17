@@ -369,11 +369,11 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
    */
   auto &child(NS_RELEASES_ARGUMENT CKComponent *c)
   {
-    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
-      _children.push_back(_currentChild);
+    if (!PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _currentChild = {c};
     }
 
-    _currentChild = {c};
+    _children.push_back(_currentChild);
     return reinterpret_cast<FlexboxComponentBuilder<PropsBitmap | FlexboxComponentPropId::hasActiveChild> &>(*this);
   }
 
