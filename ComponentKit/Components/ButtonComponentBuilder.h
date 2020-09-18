@@ -520,12 +520,31 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
    matches a given event mask.
 
    @param events  Events that should trigger the action.
-   @param action  An selector to send.
+   @param action  A selector to send.
 
    @note  Calling this method on a builder that already has a complete set of options specified using \c options() will
    trigger a compilation error.
    */
   auto &onControlEvents(UIControlEvents events, SEL action)
+  {
+    constexpr auto onControlEventsOverridesExistingOptions =
+      PropBitmap::isSet(PropsBitmap, ButtonComponentPropId::options);
+    static_assert(!onControlEventsOverridesExistingOptions, "Setting 'onControlEvents' overrides existing options");
+    _options.attributes.insert(CKComponentActionAttribute(action, events));
+    return reinterpret_cast<ButtonComponentBuilder<PropsBitmap | ButtonComponentPropId::anyOption> &>(*this);
+  }
+
+  /**
+   Specifies an action that should be invoked when the component's view receives any event that
+   matches a given event mask.
+
+   @param events  Events that should trigger the action.
+   @param action  An action to invoke.
+
+   @note  Calling this method on a builder that already has a complete set of options specified using \c options() will
+   trigger a compilation error.
+   */
+  auto &onControlEvents(UIControlEvents events, CKAction<> action)
   {
     constexpr auto onControlEventsOverridesExistingOptions =
       PropBitmap::isSet(PropsBitmap, ButtonComponentPropId::options);
