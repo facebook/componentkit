@@ -112,10 +112,10 @@ private:
   id<NSObject> _model;
   id<NSObject> _context;
   UITraitCollection *_traitCollection;
-  BOOL _isAccessibilityEnabled;
-  BOOL _didUpdateModelOrContext;
-  BOOL _didUpdateTraitCollection;
-  BOOL _didAccessibilityChange;
+  BOOL _isAccessibilityEnabled{NO};
+  BOOL _didUpdateModelOrContext{NO};
+  BOOL _didUpdateTraitCollection{NO};
+  BOOL _didAccessibilityChange{NO};
 };
 
 /**
