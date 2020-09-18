@@ -28,10 +28,10 @@
           [CKInsetComponent
            newWithInsets:{.left = 20, .right = 20}
            component:
-           [CKCenterLayoutComponent
-            newWithCenteringOptions:CKCenterLayoutComponentCenteringY
-            sizingOptions:CKCenterLayoutComponentSizingOptionMinimumY
-            child:
+           CK::CenterLayoutComponentBuilder()
+            .centeringOptions(CKCenterLayoutComponentCenteringY)
+            .sizingOptions(CKCenterLayoutComponentSizingOptionMinimumY)
+            .child(
             [CKBackgroundLayoutComponent
              newWithComponent:
              [CKInsetComponent
@@ -82,8 +82,8 @@
                 }
               }
               size:{}]]
-            size:{}]]];
-
+            )
+            .build()]];
 }
 
 @end
