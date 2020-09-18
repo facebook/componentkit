@@ -71,12 +71,6 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
                                    child:(CKComponent *_Nullable)child
                                     size:(const CKComponentSize &)size NS_DESIGNATED_INITIALIZER;
 
-// DEPRECATED - Do not use. Use CK::CenterLayoutComponentBuilder instead.
-+ (instancetype)newWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
-                          sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
-                                  child:(CKComponent *_Nullable)child
-                                   size:(const CKComponentSize &)size;
-
 #endif
 
 @end

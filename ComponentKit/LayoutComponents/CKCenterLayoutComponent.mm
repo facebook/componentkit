@@ -51,17 +51,6 @@
   return c;
 }
 
-+ (instancetype)newWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
-                          sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
-                                  child:(CKComponent *_Nullable)child
-                                   size:(const CKComponentSize &)size
-{
-  return [[self alloc] initWithCenteringOptions:centeringOptions
-                                  sizingOptions:sizingOptions
-                                          child:child
-                                           size:size];
-}
-
 - (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   // If we have a finite size in any direction, pass this so that the child can
