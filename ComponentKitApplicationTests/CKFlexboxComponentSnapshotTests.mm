@@ -2016,10 +2016,11 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
   // If cross axis stretching occurred *before* flexing, then the blue child would be stretched to 3000 points tall.
   // Instead it should be stretched to 300 points tall, matching the red child and not overlapping the green inset.
   CKComponent *c =
-  [CKInsetComponent
-   newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}}
-   insets:{10, 10, 10, 10}
-   component:
+  CK::InsetComponentBuilder()
+  .viewClass(UIView.class)
+  .backgroundColor(UIColor.greenColor)
+  .insets({10, 10, 10, 10})
+  .component(
    [CKFlexboxComponent
     newWithView:{}
     size:{}
@@ -2041,7 +2042,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
         .flexGrow = 1,
         .flexShrink = 1,
       },
-    }]];
+    }]
+  ).build();
 
   static CKSizeRange kSize = {{300, 0}, {300, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);

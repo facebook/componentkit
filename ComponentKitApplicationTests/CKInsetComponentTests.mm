@@ -67,9 +67,9 @@ static NSString *nameForInsets(UIEdgeInsets insets)
     UIEdgeInsets insets = insetsForCombination(combination, 10);
     CKComponent *component = [CKInsetTestBackgroundComponent
                               newWithComponent:
-                              [CKInsetComponent
-                               newWithInsets:insets
-                               component:[CKInsetTestBlockComponent newWithColor:[UIColor greenColor] size:{10,10}]]];
+                              CK::InsetComponentBuilder()
+                               .insets(insets)
+                               .component([CKInsetTestBlockComponent newWithColor:[UIColor greenColor] size:{10,10}]).build()];
     static CKSizeRange kVariableSize = {{0, 0}, {300, 300}};
     CKSnapshotVerifyComponent(component, kVariableSize, nameForInsets(insets));
   }
@@ -81,9 +81,9 @@ static NSString *nameForInsets(UIEdgeInsets insets)
     UIEdgeInsets insets = insetsForCombination(combination, 10);
     CKComponent *component = [CKInsetTestBackgroundComponent
                               newWithComponent:
-                              [CKInsetComponent
-                               newWithInsets:insets
-                               component:[CKInsetTestBlockComponent newWithColor:[UIColor greenColor] size:{10,10}]]];
+                              CK::InsetComponentBuilder()
+                               .insets(insets)
+                               .component([CKInsetTestBlockComponent newWithColor:[UIColor greenColor] size:{10,10}]).build()];
     static CKSizeRange kFixedSize = {{300, 300}, {300, 300}};
     CKSnapshotVerifyComponent(component, kFixedSize, nameForInsets(insets));
   }
@@ -96,9 +96,9 @@ static NSString *nameForInsets(UIEdgeInsets insets)
     UIEdgeInsets insets = insetsForCombination(combination, 0);
     CKComponent *component = [CKInsetTestBackgroundComponent
                               newWithComponent:
-                              [CKInsetComponent
-                               newWithInsets:insets
-                               component:[CKInsetTestBlockComponent newWithColor:[UIColor greenColor] size:{10,10}]]];
+                              CK::InsetComponentBuilder()
+                               .insets(insets)
+                               .component([CKInsetTestBlockComponent newWithColor:[UIColor greenColor] size:{10,10}]).build()];
     static CKSizeRange kFixedSize = {{300, 300}, {300, 300}};
     CKSnapshotVerifyComponent(component, kFixedSize, nameForInsets(insets));
   }
