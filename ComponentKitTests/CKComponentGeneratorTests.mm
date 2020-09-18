@@ -138,7 +138,7 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
 
   [result1.component updateState:^(id currentState) { return currentState; } mode:CKUpdateModeSynchronous];
 
-  const auto event = analyticsListenerSpy->_events.front();
+  const auto event = analyticsListenerSpy.events.front();
   event.match([&](CK::AnalyticsListenerSpy::DidReceiveStateUpdate drsu){
     XCTAssertEqual(drsu.handle, result1.component.scopeHandle);
     XCTAssertEqual(drsu.rootID, [result1.scopeRoot globalIdentifier]);

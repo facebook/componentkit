@@ -103,7 +103,7 @@ struct CKComponentTestAttachResult {
                                                                    .view = [UIView new],
                                                                    .analyticsListener = spy});
 
-  XCTAssertEqual(spy->_willCollectAnimationsHitCount, 1);
+  XCTAssertEqual(spy.willCollectAnimationsHitCount, 1);
 }
 
 - (void)test_WhenMountsLayout_ReportsDidCollectAnimationsEvent
@@ -123,7 +123,7 @@ struct CKComponentTestAttachResult {
                                                                    .view = [UIView new],
                                                                    .analyticsListener = spy});
 
-  XCTAssertEqual(spy->_didCollectAnimationsHitCount, 1);
+  XCTAssertEqual(spy.didCollectAnimationsHitCount, 1);
 }
 
 - (void)testDetachingAllComponents

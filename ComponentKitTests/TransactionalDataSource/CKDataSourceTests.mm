@@ -454,7 +454,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
                           metadata:{}
                               mode:CKUpdateModeSynchronous];
 
-  const auto event = analyticsListenerSpy->_events.front();
+  const auto event = analyticsListenerSpy.events.front();
   event.match([&](CK::AnalyticsListenerSpy::DidReceiveStateUpdate drsu){
     XCTAssertEqual(drsu.handle, handle);
     XCTAssertEqual(drsu.rootID, [item.scopeRoot globalIdentifier]);

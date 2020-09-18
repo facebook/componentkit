@@ -275,7 +275,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   const auto constrainedSize = CGSizeMake(100, 100);
   [view sizeThatFits:constrainedSize];
   [view sizeThatFits:constrainedSize];
-  XCTAssertEqual(_analyticsListenerSpy->_willLayoutComponentTreeHitCount, 2);
+  XCTAssertEqual(_analyticsListenerSpy.willLayoutComponentTreeHitCount, 2);
 }
 
 - (void)testSizeCache_CachedSizeIsNotUsedIfConstrainedSizesAreDifferent
@@ -288,7 +288,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   const auto constrainedSize2 = CGSizeMake(200, 200);
   [view sizeThatFits:constrainedSize1];
   [view sizeThatFits:constrainedSize2];
-  XCTAssertEqual(_analyticsListenerSpy->_willLayoutComponentTreeHitCount, 3);
+  XCTAssertEqual(_analyticsListenerSpy.willLayoutComponentTreeHitCount, 3);
 }
 
 - (void)testSizeCache_CacheSizeIsNotUsedIfComponentIsUpdated
@@ -300,7 +300,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   [view sizeThatFits:constrainedSize];
   [view updateModel:nil mode:CKUpdateModeSynchronous];
   [view sizeThatFits:constrainedSize];
-  XCTAssertEqual(_analyticsListenerSpy->_willLayoutComponentTreeHitCount, 3);
+  XCTAssertEqual(_analyticsListenerSpy.willLayoutComponentTreeHitCount, 3);
 }
 
 - (void)testUpdateModel_ComponentIsReused
@@ -352,7 +352,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
     .analyticsListener = _analyticsListenerSpy,
   }];
 
-  XCTAssertEqual(_analyticsListenerSpy->_willCollectAnimationsHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy.willCollectAnimationsHitCount, 1);
 }
 
 - (void)test_WhenMountsLayout_ReportsDidCollectAnimationsEvent
@@ -362,7 +362,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
     .analyticsListener = _analyticsListenerSpy,
   }];
 
-  XCTAssertEqual(_analyticsListenerSpy->_didCollectAnimationsHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy.didCollectAnimationsHitCount, 1);
 }
 
 - (void)test_LayoutAndGenerationOfComponentAreOnMainThreadWhenAsyncUpdateIsTriggeredWithoutInitialSize
@@ -373,8 +373,8 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   }];
   [hostingView updateModel:nil mode:CKUpdateModeAsynchronous];
   [hostingView layoutIfNeeded];
-  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);
-  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy.didLayoutComponentTreeHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy.didMountComponentHitCount, 1);
 }
 
 - (void)test_LayoutAndGenerationOfComponentAreNotOnMainThreadWhenAsyncUpdateIsTriggeredWithInitialSize
@@ -386,13 +386,13 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   }];
   [hostingView updateModel:nil mode:CKUpdateModeAsynchronous];
   [hostingView layoutIfNeeded];
-  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 0);
-  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 0);
+  XCTAssertEqual(_analyticsListenerSpy.didLayoutComponentTreeHitCount, 0);
+  XCTAssertEqual(_analyticsListenerSpy.didMountComponentHitCount, 0);
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     [hostingView layoutIfNeeded];
-    return _analyticsListenerSpy->_didLayoutComponentTreeHitCount == 1
-    && _analyticsListenerSpy->_didMountComponentHitCount == 1;
+    return _analyticsListenerSpy.didLayoutComponentTreeHitCount == 1
+    && _analyticsListenerSpy.didMountComponentHitCount == 1;
   }));
 }
 
@@ -405,8 +405,8 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   }];
   [hostingView updateModel:nil mode:CKUpdateModeSynchronous];
   [hostingView layoutIfNeeded];
-  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);
-  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy.didLayoutComponentTreeHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy.didMountComponentHitCount, 1);
 }
 
 - (void)test_CurrentTraitCollectionIsCorrectInBackgroundQueueWhenTraitCollectionIsSet
@@ -425,7 +425,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
     XCTAssertEqual(currentTraitCollection.userInterfaceIdiom, hostingView.traitCollection.userInterfaceIdiom);
     [hostingView updateContext:nil mode:CKUpdateModeAsynchronous];
     CKRunRunLoopUntilBlockIsTrue(^BOOL{
-      return _analyticsListenerSpy->_didBuildComponentTreeHitCount == 2;
+      return _analyticsListenerSpy.didBuildComponentTreeHitCount == 2;
     });
     XCTAssertEqual(currentTraitCollection.userInterfaceIdiom, hostingView.traitCollection.userInterfaceIdiom);
   }

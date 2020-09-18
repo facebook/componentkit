@@ -26,20 +26,18 @@ using Event = Variant<DidReceiveStateUpdate>;
 }
 }
 
-@interface CKAnalyticsListenerSpy: NSObject <CKAnalyticsListener> {
-  @package
-  NSInteger _willBuildComponentTreeHitCount;
-  NSInteger _didBuildComponentTreeHitCount;
-  NSInteger _willLayoutComponentTreeHitCount;
-  NSInteger _didLayoutComponentTreeHitCount;
-  NSInteger _willCollectAnimationsHitCount;
-  NSInteger _didCollectAnimationsHitCount;
-  NSInteger _willMountComponentHitCount;
-  NSInteger _didMountComponentHitCount;
-  NSInteger _viewAllocationsCount;
+@interface CKAnalyticsListenerSpy: NSObject <CKAnalyticsListener>
 
-  std::vector<CK::AnalyticsListenerSpy::Event> _events;
-}
+@property(atomic, readonly) NSInteger willBuildComponentTreeHitCount;
+@property(atomic, readonly) NSInteger didBuildComponentTreeHitCount;
+@property(atomic, readonly) NSInteger willLayoutComponentTreeHitCount;
+@property(atomic, readonly) NSInteger didLayoutComponentTreeHitCount;
+@property(atomic, readonly) NSInteger willCollectAnimationsHitCount;
+@property(atomic, readonly) NSInteger didCollectAnimationsHitCount;
+@property(atomic, readonly) NSInteger willMountComponentHitCount;
+@property(atomic, readonly) NSInteger didMountComponentHitCount;
+@property(atomic, readonly) NSInteger viewAllocationsCount;
+@property(atomic, readonly) std::vector<CK::AnalyticsListenerSpy::Event> events;
 
 @end
 
