@@ -13,7 +13,7 @@ import ComponentKit
 /// Represents a component desired size relative to the size of its parent.
 public struct ComponentSize: Hashable {
   /// The Objective-C bridgeable type.
-  let componentSize: ComponentSizeSwiftBridge
+  public let componentSize: ComponentSizeSwiftBridge
 
   /// Creates a new component size.
   /// - Parameter size: The CKSize to derive the size from.

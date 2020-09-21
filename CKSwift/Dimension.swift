@@ -13,7 +13,7 @@ import ComponentKit
 /// A dimension relative to constraints to be provided in the future.
 public struct Dimension: Hashable {
   /// The Objective-C bridgeable type.
-  let dimension: DimensionSwiftBridge
+  public let dimension: DimensionSwiftBridge
 
   /// Creates a default dimension.
   public init() {

@@ -726,6 +726,7 @@
 		D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81C2314A893004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
+		D42B76292516858200DAC4D5 /* LabelComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76282516858200DAC4D5 /* LabelComponent.swift */; };
 		D42B77322517675100DAC4D5 /* CKLabelComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C411CBD92C200BB33CE /* CKLabelComponent.mm */; };
 		D42B773F2517675100DAC4D5 /* CKTextComponentLayerHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C471CBD92C200BB33CE /* CKTextComponentLayerHighlighter.mm */; };
 		D42B77412517675100DAC4D5 /* CKTextComponentView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C491CBD92C200BB33CE /* CKTextComponentView.mm */; };
@@ -920,6 +921,7 @@
 		D461755925177E00004FC1A4 /* ComponentTextKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */; };
 		D46328BB2415486600E5B7DA /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D46328BA2415486600E5B7DA /* CKLinkable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D46328BC2415486600E5B7DA /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D46328BA2415486600E5B7DA /* CKLinkable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D486BB6E2517A04A00D167E7 /* LabelComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D486BAB8251796B100D167E7 /* LabelComponent.swift */; };
 		D48D24E324B88B6600E3BFC4 /* CKWritingDirection.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D24D724B88B6500E3BFC4 /* CKWritingDirection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D48D24E424B88B6600E3BFC4 /* CKWritingDirection.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D24D724B88B6500E3BFC4 /* CKWritingDirection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D48D24E524B88B6600E3BFC4 /* CKWritingDirection.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D24E224B88B6600E3BFC4 /* CKWritingDirection.mm */; };
@@ -1971,6 +1973,7 @@
 		D44B215024B73DFE0019E851 /* CKIdValueWrapperInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKIdValueWrapperInternal.h; sourceTree = "<group>"; };
 		D4548D49251772C30038B9A4 /* ComponentTextKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComponentTextKit.h; sourceTree = "<group>"; };
 		D46328BA2415486600E5B7DA /* CKLinkable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLinkable.h; sourceTree = "<group>"; };
+		D486BAB8251796B100D167E7 /* LabelComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelComponent.swift; sourceTree = "<group>"; };
 		D48D24D724B88B6500E3BFC4 /* CKWritingDirection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKWritingDirection.h; sourceTree = "<group>"; };
 		D48D24E224B88B6600E3BFC4 /* CKWritingDirection.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKWritingDirection.mm; sourceTree = "<group>"; };
 		D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKAnimationComponent+Internal.h"; sourceTree = "<group>"; };
@@ -3285,6 +3288,7 @@
 			isa = PBXGroup;
 			children = (
 				D42B78D425176C9400DAC4D5 /* CKTextSwift.swift */,
+				D486BAB8251796B100D167E7 /* LabelComponent.swift */,
 				D42B78D525176C9400DAC4D5 /* CKTextSwift.h */,
 				D42B78D625176C9400DAC4D5 /* CKTextSwift.xcconfig */,
 				D42B78D825176C9400DAC4D5 /* Info.plist */,
@@ -5156,6 +5160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D486BB6E2517A04A00D167E7 /* LabelComponent.swift in Sources */,
 				D42B78D925176C9400DAC4D5 /* CKTextSwift.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
