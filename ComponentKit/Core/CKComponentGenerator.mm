@@ -71,6 +71,10 @@ struct CKComponentGeneratorInputs {
   BOOL didUpdateModelOrContext() const {
     return _didUpdateModelOrContext;
   }
+  
+  BOOL treeNeedsReflow() const {
+    return forceReloadInNextGeneration || _didAccessibilityChange || _didUpdateTraitCollection;
+  }
 
   bool operator==(const CKComponentGeneratorInputs &i) const {
     return scopeRoot == i.scopeRoot &&
@@ -112,7 +116,7 @@ private:
   id<NSObject> _model;
   id<NSObject> _context;
   UITraitCollection *_traitCollection;
-  BOOL _isAccessibilityEnabled{NO};
+  CK::Optional<BOOL> _isAccessibilityEnabled = CK::none;
   BOOL _didUpdateModelOrContext{NO};
   BOOL _didUpdateTraitCollection{NO};
   BOOL _didAccessibilityChange{NO};
@@ -231,10 +235,10 @@ private:
 {
   return
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
-    const auto treeNeedsReflow = inputs.forceReloadInNextGeneration;
-    inputs.forceReloadInNextGeneration = NO;
+    const auto treeNeedsReflow = inputs.treeNeedsReflow();
     auto const buildTrigger = CKBuildComponentTrigger(inputs.scopeRoot, inputs.stateUpdates, treeNeedsReflow, inputs.didUpdateModelOrContext());
     auto const reflowReason = inputs.reflowTrigger(buildTrigger);
+    inputs.forceReloadInNextGeneration = NO;
     __block CK::DelayedInitialisationWrapper<CKBuildComponentResult> result;
     CKPerformWithCurrentTraitCollection(inputs.traitCollection(), ^{
       result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
@@ -264,7 +268,7 @@ private:
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     CKSystraceScope generationScope(asyncGeneration);
     __block std::shared_ptr<const CKBuildComponentResult> result = nullptr;
-    auto const buildTrigger = CKBuildComponentTrigger(inputs->scopeRoot, inputs->stateUpdates, inputs->forceReloadInNextGeneration, inputs->didUpdateModelOrContext());
+    auto const buildTrigger = CKBuildComponentTrigger(inputs->scopeRoot, inputs->stateUpdates, inputs->treeNeedsReflow(), inputs->didUpdateModelOrContext());
     auto const reflowReason = inputs->reflowTrigger(buildTrigger);
     CKPerformWithCurrentTraitCollection(inputs->traitCollection(), ^{
       result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(

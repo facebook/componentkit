@@ -56,6 +56,9 @@ typedef CKComponent * _Nullable(*CKComponentProviderFn)(ModelType _Nullable, Con
 - (void)hostingViewWillAppear;
 - (void)hostingViewDidDisappear;
 
+/** Updates the accessibility status. */
+- (void)updateAccessibilityStatus:(BOOL)accessibilityStatus mode:(CKUpdateMode)mode;
+
 CK_INIT_UNAVAILABLE;
 
 - (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;

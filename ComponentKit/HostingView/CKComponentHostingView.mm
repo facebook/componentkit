@@ -17,6 +17,7 @@
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKRootTreeNode.h>
+#import <ComponentKit/CKComponentAccessibility.h>
 
 #import <algorithm>
 #import <vector>
@@ -211,6 +212,13 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   [self _setNeedsUpdateWithMode:mode];
 }
 
+- (void)updateAccessibilityStatus:(BOOL)accessibilityStatus mode:(CKUpdateMode)mode
+{
+  CKAssertMainThread();
+  [_componentGenerator updateAccessibilityStatus:accessibilityStatus];
+  [self _setNeedsUpdateWithMode:mode];
+}
+
 - (void)applyResult:(const CKBuildComponentResult &)result
 {
   CKAssertMainThread();
@@ -307,6 +315,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     }
     // Sync trait collection in `componentGenerator` before building the next generation.
     [_componentGenerator updateTraitCollection:self.traitCollection];
+    [_componentGenerator updateAccessibilityStatus:CK::Component::Accessibility::IsAccessibilityEnabled()];
     [_componentGenerator generateComponentAsynchronously];
   });
 }
@@ -341,6 +350,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   _isSynchronouslyUpdatingComponent = YES;
   // Sync trait collection in `componentGenerator` before building the next generation.
   [_componentGenerator updateTraitCollection:self.traitCollection];
+  [_componentGenerator updateAccessibilityStatus:CK::Component::Accessibility::IsAccessibilityEnabled()];
   const auto result = [_componentGenerator generateComponentSynchronously];
   [self _applyResult:result];
   _isSynchronouslyUpdatingComponent = NO;
