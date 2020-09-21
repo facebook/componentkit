@@ -29,7 +29,7 @@
 
 - (instancetype)initWithViewClass:(Class)viewClass attributes:(NSArray<CKComponentViewAttribute_SwiftBridge *> *)attributes
 {
-  return [self initWithViewConfiguration:{viewClass, CKSwiftComponentViewAttributeArrayToMap(attributes)}];
+  return [self initWithViewConfiguration:{viewClass, CKComponentViewAttribute_SwiftBridgeToMap(attributes)}];
 }
 
 - (instancetype)initWithViewConfiguration:(const CKComponentViewConfiguration &)viewConfig

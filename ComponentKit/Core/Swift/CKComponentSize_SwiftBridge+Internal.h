@@ -9,10 +9,12 @@
  */
 
 #import <ComponentKit/CKComponentSize_SwiftBridge.h>
-
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKComponentSize.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+#if CK_NOT_SWIFT
 
 @interface CKComponentSize_SwiftBridge ()
 
@@ -21,5 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (const CKComponentSize &)componentSize;
 
 @end
+
+#endif
 
 NS_ASSUME_NONNULL_END

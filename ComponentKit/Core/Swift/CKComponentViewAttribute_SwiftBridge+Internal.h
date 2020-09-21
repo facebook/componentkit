@@ -9,10 +9,12 @@
  */
 
 #import <ComponentKit/CKComponentViewAttribute_SwiftBridge.h>
-
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKComponentViewAttribute.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+#if CK_NOT_SWIFT
 
 @interface CKComponentViewAttribute_SwiftBridge ()
 
@@ -22,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-auto CKSwiftComponentViewAttributeArrayToMap(NSArray<CKComponentViewAttribute_SwiftBridge *> *_Nullable swiftAttributes) -> CKViewComponentAttributeValueMap;
+auto CKComponentViewAttribute_SwiftBridgeToMap(NSArray<CKComponentViewAttribute_SwiftBridge *> *_Nullable swiftAttributes) -> CKViewComponentAttributeValueMap;
+
+#endif
 
 NS_ASSUME_NONNULL_END

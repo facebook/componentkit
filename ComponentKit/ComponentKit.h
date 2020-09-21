@@ -81,13 +81,16 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentSize_SwiftBridge.h>
+#import <ComponentKit/CKComponentSize_SwiftBridge+Internal.h>
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
 #import <ComponentKit/CKComponentSpecContext.h>
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentViewAttribute_SwiftBridge.h>
+#import <ComponentKit/CKComponentViewAttribute_SwiftBridge+Internal.h>
 #import <ComponentKit/CKComponentViewClass.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge.h>
+#import <ComponentKit/CKComponentViewConfiguration_SwiftBridge+Internal.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKContainerWrapper.h>
 #import <ComponentKit/CKDataSource.h>
@@ -105,6 +108,7 @@
 #import <ComponentKit/CKDictionary.h>
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKDimension_SwiftBridge.h>
+#import <ComponentKit/CKDimension_SwiftBridge+Internal.h>
 #import <ComponentKit/CKDispatch.h>
 #import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKFatal.h>
@@ -144,6 +148,7 @@
 #import <ComponentKit/CKScopeTreeNode.h>
 #import <ComponentKit/CKSizeRange.h>
 #import <ComponentKit/CKSizeRange_SwiftBridge.h>
+#import <ComponentKit/CKSizeRange_SwiftBridge+Internal.h>
 #import <ComponentKit/CKStatefulViewComponent.h>
 #import <ComponentKit/CKStatefulViewComponentController.h>
 #import <ComponentKit/CKStatelessComponent.h>

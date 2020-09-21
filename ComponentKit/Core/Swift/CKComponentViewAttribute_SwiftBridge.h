@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <ComponentKit/CKComponentViewAttribute.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

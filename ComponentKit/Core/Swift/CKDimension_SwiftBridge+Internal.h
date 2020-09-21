@@ -9,10 +9,12 @@
  */
 
 #import <ComponentKit/CKDimension_SwiftBridge.h>
-
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKDimension.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+#if CK_NOT_SWIFT
 
 @interface CKDimension_SwiftBridge ()
 
@@ -21,5 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (const CKRelativeDimension &)dimension;
 
 @end
+
+#endif
 
 NS_ASSUME_NONNULL_END

@@ -86,7 +86,7 @@
 
 @end
 
-auto CKSwiftComponentViewAttributeArrayToMap(NSArray<CKComponentViewAttribute_SwiftBridge *> *swiftAttributes) -> CKViewComponentAttributeValueMap
+auto CKComponentViewAttribute_SwiftBridgeToMap(NSArray<CKComponentViewAttribute_SwiftBridge *> *swiftAttributes) -> CKViewComponentAttributeValueMap
 {
   auto attrMap = CKViewComponentAttributeValueMap{};
   attrMap.reserve(swiftAttributes.count);

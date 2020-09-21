@@ -9,10 +9,12 @@
  */
 
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge.h>
-
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+#if CK_NOT_SWIFT
 
 @interface CKComponentViewConfiguration_SwiftBridge ()
 
@@ -21,5 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (const CKComponentViewConfiguration &)viewConfig;
 
 @end
+
+#endif
 
 NS_ASSUME_NONNULL_END

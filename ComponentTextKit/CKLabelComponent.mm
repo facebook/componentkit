@@ -64,7 +64,7 @@
   };
   const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
   return [self initWithLabelAttributes:labelAttributes
-                        viewAttributes:CKSwiftComponentViewAttributeArrayToMap(swiftAttributes)
+                        viewAttributes:CKComponentViewAttribute_SwiftBridgeToMap(swiftAttributes)
                                   size:size];
 }
 
