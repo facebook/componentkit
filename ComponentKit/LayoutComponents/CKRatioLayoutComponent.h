@@ -45,7 +45,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 
 - (instancetype)initWithRatio:(CGFloat)ratio
                     swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
-                    component:(CKComponent *)component NS_DESIGNATED_INITIALIZER NS_REFINED_FOR_SWIFT;
+                    component:(CKComponent *)component NS_DESIGNATED_INITIALIZER;
 
 #else
 

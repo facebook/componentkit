@@ -29,7 +29,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param component A child that is laid out to determine the size of this component.
  @param background A child that is laid out behind it. May be nil, in which case the background is omitted.
  */
-- (instancetype)initWithComponent:(CKComponent *)component
+- (instancetype)initWithComponent:(CKComponent *_Nullable)component
                        background:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER;
 
 /**

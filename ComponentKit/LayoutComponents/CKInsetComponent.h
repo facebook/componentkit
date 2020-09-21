@@ -51,7 +51,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  */
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView
                            insets:(UIEdgeInsets)insets
-                        component:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER NS_REFINED_FOR_SWIFT;
+                        component:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER;
 
 #else
 

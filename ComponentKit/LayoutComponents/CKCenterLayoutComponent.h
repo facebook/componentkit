@@ -55,7 +55,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (instancetype)initWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
                            sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
                                    child:(CKComponent *)child
-                               swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize NS_DESIGNATED_INITIALIZER NS_REFINED_FOR_SWIFT;
+                               swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize NS_DESIGNATED_INITIALIZER;
 
 
 #else
