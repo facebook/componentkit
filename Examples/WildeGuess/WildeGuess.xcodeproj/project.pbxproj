@@ -23,6 +23,8 @@
 		B34FB9821ABE8BA300D2D896 /* WildeGuessCollectionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B34FB9751ABE8BA300D2D896 /* WildeGuessCollectionViewController.mm */; };
 		B34FB9841ABE8BB000D2D896 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B34FB9831ABE8BB000D2D896 /* main.m */; };
 		B3E848D11ABE848900377D52 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3E848D01ABE848900377D52 /* Images.xcassets */; };
+		D42B78E125176CCF00DAC4D5 /* CKTextSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42B78E025176CCF00DAC4D5 /* CKTextSwift.framework */; };
+		D42B78E225176CCF00DAC4D5 /* CKTextSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D42B78E025176CCF00DAC4D5 /* CKTextSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D44CF6AC23E1D0E50056039B /* Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44CF6AB23E1D0E50056039B /* Swift.swift */; };
 		D461755025177788004FC1A4 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D093266D1CC4647700CFEBC4 /* ComponentKit.framework */; };
 		D461755125177788004FC1A4 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D43187DC23E2011C0024AA12 /* RenderCore.framework */; };
@@ -102,6 +104,13 @@
 			remoteGlobalIDString = D42B787A2517675100DAC4D5;
 			remoteInfo = ComponentTextKit;
 		};
+		D42B78DF25176CCF00DAC4D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0B47DC41CBDAFFF00BB33CE /* ComponentKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D42B78CF25176C4000DAC4D5;
+			remoteInfo = CKTextSwift;
+		};
 		D43187DB23E2011C0024AA12 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D0B47DC41CBDAFFF00BB33CE /* ComponentKit.xcodeproj */;
@@ -146,6 +155,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D42B78E225176CCF00DAC4D5 /* CKTextSwift.framework in Embed Frameworks */,
 				D4BC57BD23E384050075D688 /* CKSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -198,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D46175572517785C004FC1A4 /* ComponentTextKit.framework in Frameworks */,
+				D42B78E125176CCF00DAC4D5 /* CKTextSwift.framework in Frameworks */,
 				D461755025177788004FC1A4 /* ComponentKit.framework in Frameworks */,
 				D461755125177788004FC1A4 /* RenderCore.framework in Frameworks */,
 				D4BC57BC23E384050075D688 /* CKSwift.framework in Frameworks */,
@@ -307,6 +318,7 @@
 				D4BC57B923E384050075D688 /* CKSwift.framework */,
 				D4BC57BB23E384050075D688 /* CKSwiftTests.xctest */,
 				D42B78B325176C1F00DAC4D5 /* ComponentTextKit.framework */,
+				D42B78E025176CCF00DAC4D5 /* CKTextSwift.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -439,6 +451,13 @@
 			fileType = wrapper.framework;
 			path = ComponentTextKit.framework;
 			remoteRef = D42B78B225176C1F00DAC4D5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D42B78E025176CCF00DAC4D5 /* CKTextSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CKTextSwift.framework;
+			remoteRef = D42B78DF25176CCF00DAC4D5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D43187DC23E2011C0024AA12 /* RenderCore.framework */ = {

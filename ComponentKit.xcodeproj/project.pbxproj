@@ -777,6 +777,9 @@
 		D42B789625176A4A00DAC4D5 /* CKAsyncLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C621CBD92C200BB33CE /* CKAsyncLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D42B789725176A5200DAC4D5 /* CKFunctor.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C6E1CBD92C200BB33CE /* CKFunctor.h */; };
 		D42B78A225176BCD00DAC4D5 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
+		D42B78BC25176C4000DAC4D5 /* CKSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC578223E37A1B0075D688 /* CKSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D42B78D925176C9400DAC4D5 /* CKTextSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B78D425176C9400DAC4D5 /* CKTextSwift.swift */; };
+		D42B78DA25176C9400DAC4D5 /* CKTextSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = D42B78D525176C9400DAC4D5 /* CKTextSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431881E23E2057E0024AA12 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
 		D431881F23E2057E0024AA12 /* RenderCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D431882323E2059F0024AA12 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
@@ -1312,6 +1315,20 @@
 			remoteGlobalIDString = D431881623E2057E0024AA12;
 			remoteInfo = RenderCore;
 		};
+		D486B9C925178C3E00D167E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D42B76C52517675100DAC4D5;
+			remoteInfo = ComponentTextKit;
+		};
+		D486B9CA25178C3E00D167E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D4BC577F23E37A1B0075D688;
+			remoteInfo = CKSwift;
+		};
 		D4BC578A23E37A1B0075D688 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
@@ -1385,6 +1402,16 @@
 			dstSubfolderSpec = 10;
 			files = (
 				405230351F7EE8E8005D227B /* OCMock.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D41CB467251776FB00DA42E2 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1926,6 +1953,11 @@
 		D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentContext.mm; sourceTree = "<group>"; };
 		D427E8182314A888004F22BD /* CKStatelessComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatelessComponentContext.h; sourceTree = "<group>"; };
 		D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComponentTextKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D42B78CF25176C4000DAC4D5 /* CKTextSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CKTextSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D42B78D425176C9400DAC4D5 /* CKTextSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKTextSwift.swift; sourceTree = "<group>"; };
+		D42B78D525176C9400DAC4D5 /* CKTextSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTextSwift.h; sourceTree = "<group>"; };
+		D42B78D625176C9400DAC4D5 /* CKTextSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKTextSwift.xcconfig; sourceTree = "<group>"; };
+		D42B78D825176C9400DAC4D5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D42B78E325176D8600DAC4D5 /* ComponentTextKit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ComponentTextKit.xcconfig; sourceTree = "<group>"; };
 		D42B78E425176E5D00DAC4D5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D431880023E2056C0024AA12 /* RenderCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RenderCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2209,6 +2241,13 @@
 				D42B775D2517675100DAC4D5 /* QuartzCore.framework in Frameworks */,
 				D42B775F2517675100DAC4D5 /* CoreText.framework in Frameworks */,
 				D461755225177822004FC1A4 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D42B78C525176C4000DAC4D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2689,6 +2728,7 @@
 		B3EECEB91AC2366500BFC5DA = {
 			isa = PBXGroup;
 			children = (
+				D42B78D325176C9400DAC4D5 /* CKTextSwift */,
 				D0B47AC21CBD926700BB33CE /* ComponentKit */,
 				D0B47C3F1CBD92C200BB33CE /* ComponentTextKit */,
 				723958B1238E9B21005B570A /* RenderCore */,
@@ -2724,6 +2764,7 @@
 				D4BC578023E37A1B0075D688 /* CKSwift.framework */,
 				D4BC578823E37A1B0075D688 /* CKSwiftTests.xctest */,
 				D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */,
+				D42B78CF25176C4000DAC4D5 /* CKTextSwift.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3238,6 +3279,17 @@
 				2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */,
 			);
 			name = ReferenceImages;
+			sourceTree = "<group>";
+		};
+		D42B78D325176C9400DAC4D5 /* CKTextSwift */ = {
+			isa = PBXGroup;
+			children = (
+				D42B78D425176C9400DAC4D5 /* CKTextSwift.swift */,
+				D42B78D525176C9400DAC4D5 /* CKTextSwift.h */,
+				D42B78D625176C9400DAC4D5 /* CKTextSwift.xcconfig */,
+				D42B78D825176C9400DAC4D5 /* Info.plist */,
+			);
+			path = CKTextSwift;
 			sourceTree = "<group>";
 		};
 		D4BC56EB23E3765B0075D688 /* RenderCoreHeaders */ = {
@@ -3893,6 +3945,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D42B78BB25176C4000DAC4D5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D42B78BC25176C4000DAC4D5 /* CKSwift.h in Headers */,
+				D42B78DA25176C9400DAC4D5 /* CKTextSwift.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D43187FB23E2056C0024AA12 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -4213,6 +4274,27 @@
 			productReference = D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		D42B78B625176C4000DAC4D5 /* CKTextSwift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D486B9D725178C3E00D167E7 /* Build configuration list for PBXNativeTarget "CKTextSwift" */;
+			buildPhases = (
+				D42B78BB25176C4000DAC4D5 /* Headers */,
+				D42B78BD25176C4000DAC4D5 /* Sources */,
+				D42B78C525176C4000DAC4D5 /* Frameworks */,
+				D42B78C825176C4000DAC4D5 /* Resources */,
+				D41CB467251776FB00DA42E2 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D42B78E725176FC100DAC4D5 /* PBXTargetDependency */,
+				D41CB4642517750700DA42E2 /* PBXTargetDependency */,
+			);
+			name = CKTextSwift;
+			productName = CKSwift;
+			productReference = D42B78CF25176C4000DAC4D5 /* CKTextSwift.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		D43187FF23E2056C0024AA12 /* RenderCoreAppleTV */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D431881123E2056C0024AA12 /* Build configuration list for PBXNativeTarget "RenderCoreAppleTV" */;
@@ -4318,6 +4400,9 @@
 					D0B47AB41CBD924100BB33CE = {
 						CreatedOnToolsVersion = 7.3;
 					};
+					D42B78B625176C4000DAC4D5 = {
+						ProvisioningStyle = Automatic;
+					};
 					D43187FF23E2056C0024AA12 = {
 						CreatedOnToolsVersion = 11.3;
 						ProvisioningStyle = Automatic;
@@ -4376,6 +4461,7 @@
 				D4BC577F23E37A1B0075D688 /* CKSwift */,
 				D4BC578723E37A1B0075D688 /* CKSwiftTests */,
 				D42B76C52517675100DAC4D5 /* ComponentTextKit */,
+				D42B78B625176C4000DAC4D5 /* CKTextSwift */,
 			);
 		};
 /* End PBXProject section */
@@ -4516,6 +4602,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D42B78742517675100DAC4D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D42B78C825176C4000DAC4D5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -5059,6 +5152,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D42B78BD25176C4000DAC4D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D42B78D925176C9400DAC4D5 /* CKTextSwift.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D43187FC23E2056C0024AA12 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5167,6 +5268,16 @@
 			isa = PBXTargetDependency;
 			target = D0B47AB41CBD924100BB33CE /* ComponentKit */;
 			targetProxy = D0B47ABA1CBD924100BB33CE /* PBXContainerItemProxy */;
+		};
+		D41CB4642517750700DA42E2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D4BC577F23E37A1B0075D688 /* CKSwift */;
+			targetProxy = D486B9CA25178C3E00D167E7 /* PBXContainerItemProxy */;
+		};
+		D42B78E725176FC100DAC4D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D42B76C52517675100DAC4D5 /* ComponentTextKit */;
+			targetProxy = D486B9C925178C3E00D167E7 /* PBXContainerItemProxy */;
 		};
 		D431881D23E2057E0024AA12 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5833,6 +5944,27 @@
 			};
 			name = Release;
 		};
+		D486B9CB25178C3E00D167E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D42B78D625176C9400DAC4D5 /* CKTextSwift.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D486B9CC25178C3E00D167E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D42B78D625176C9400DAC4D5 /* CKTextSwift.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		D4BC579823E37A1B0075D688 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D4BC57C423E387510075D688 /* CKSwift.xcconfig */;
@@ -6114,6 +6246,15 @@
 			buildConfigurations = (
 				D431882123E2057E0024AA12 /* Debug */,
 				D431882223E2057E0024AA12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D486B9D725178C3E00D167E7 /* Build configuration list for PBXNativeTarget "CKTextSwift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D486B9CB25178C3E00D167E7 /* Debug */,
+				D486B9CC25178C3E00D167E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
