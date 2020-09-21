@@ -79,6 +79,7 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentSize.h>
+#import <ComponentKit/CKSizingComponent.h>
 #import <ComponentKit/CKComponentSize_SwiftBridge.h>
 #import <ComponentKit/CKComponentSize_SwiftBridge+Internal.h>
 #import <ComponentKit/CKComponentSizeRangeProviding.h>

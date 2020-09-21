@@ -1027,7 +1027,11 @@
 		D4BC57A223E383840075D688 /* ComponentKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4BC57BE23E3849A0075D688 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
 		D4BC57BF23E3849A0075D688 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
+		D4C1270A2517ACB6006AD1A4 /* CKSizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4D9CF022342AECE00D1BA22 /* CKTransitions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D9D3D2342606B003DDC41 /* CKTransitions.mm */; };
+		D4EAA5622514F6FC00F32DC1 /* CKSizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4EAA5632514F6FC00F32DC1 /* CKSizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */; };
+		D4EAA5642514F84800F32DC1 /* CKSizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */; };
 		D4EEE0A523E1DE1400D1ED7E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE09A23E1DE1400D1ED7E /* CoreGraphics.framework */; };
 		D4EEE0A723E1DE1E00D1ED7E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE0A623E1DE1E00D1ED7E /* QuartzCore.framework */; };
 		D4EEE0A923E1DE2A00D1ED7E /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE0A823E1DE2A00D1ED7E /* CoreText.framework */; };
@@ -2031,6 +2035,8 @@
 		D4BC579123E37A1B0075D688 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4BC579D23E37A240075D688 /* CKSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKSwift.swift; sourceTree = "<group>"; };
 		D4BC57C423E387510075D688 /* CKSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKSwift.xcconfig; sourceTree = "<group>"; };
+		D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKSizingComponent.h; sourceTree = "<group>"; };
+		D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSizingComponent.mm; sourceTree = "<group>"; };
 		D4EEE09A23E1DE1400D1ED7E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		D4EEE0A623E1DE1E00D1ED7E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		D4EEE0A823E1DE2A00D1ED7E /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = DEVELOPER_DIR; };
@@ -2840,6 +2846,8 @@
 		D0B47ACC1CBD926700BB33CE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */,
+				D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */,
 				D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */,
 				D6C713ED224CCA5700BADCC6 /* CKAnimationComponent.h */,
 				D6C713F8224CCA5700BADCC6 /* CKAnimationComponent.mm */,
@@ -3446,6 +3454,7 @@
 				D6A0CF8822844556000CC4D0 /* CKAnimation.h in Headers */,
 				7227043323423332009A82A6 /* CKBuildComponentResult.h in Headers */,
 				D601E93A24FFECC8004007C0 /* CKTransitionComponent.h in Headers */,
+				D4C1270A2517ACB6006AD1A4 /* CKSizingComponent.h in Headers */,
 				03B8B4DF1D2A346F00EDFF59 /* CKComponent.h in Headers */,
 				03B8B4E11D2A346F00EDFF59 /* CKComponentController.h in Headers */,
 				D4BC575B23E3765C0075D688 /* CKRequired.h in Headers */,
@@ -3902,6 +3911,7 @@
 				72647CEC2368D3AE0072F330 /* CKRenderHelpers.h in Headers */,
 				D4BC573C23E3765C0075D688 /* CKComponentDescriptionHelper.h in Headers */,
 				D4BC575623E3765C0075D688 /* CKDictionary.h in Headers */,
+				D4EAA5622514F6FC00F32DC1 /* CKSizingComponent.h in Headers */,
 				D6EF79F723ECC6E600230005 /* CKSizeRange_SwiftBridge.h in Headers */,
 				72647CA42368CEB90072F330 /* CKComponentSpecContext.h in Headers */,
 				7262D39D225CE02E00BA991E /* CKComponentControllerHelper.h in Headers */,
@@ -4715,6 +4725,7 @@
 				03B8B47F1D2A346F00EDFF59 /* ComponentLayoutContext.mm in Sources */,
 				72647CD32368D15D0072F330 /* CKComponentGestureActions.mm in Sources */,
 				03B8B4821D2A346F00EDFF59 /* CKComponentScope.mm in Sources */,
+				D4EAA5642514F84800F32DC1 /* CKSizingComponent.mm in Sources */,
 				03DED2BF2226015900CD63FF /* CKDataSourceSplitChangesetModification.mm in Sources */,
 				7F5A853B1F1F904C00238338 /* CKComponentControllerEvents.mm in Sources */,
 				03B8B4841D2A346F00EDFF59 /* CKComponentScopeHandle.mm in Sources */,
@@ -5103,6 +5114,7 @@
 				72647CE22368D2E10072F330 /* CKInvalidChangesetOperationType.mm in Sources */,
 				23FEC5A3203B30DA0068E09D /* CKTreeNode.mm in Sources */,
 				D6B7DA45240B067C007E2BEA /* CKComponentViewConfiguration_SwiftBridge.mm in Sources */,
+				D4EAA5632514F6FC00F32DC1 /* CKSizingComponent.mm in Sources */,
 				72647CB72368D0BA0072F330 /* CKComponentContextHelper.mm in Sources */,
 				237E82BB21B011F000794571 /* CKComponentPerfScope.mm in Sources */,
 				D427E8192314A888004F22BD /* CKStatelessComponentContext.mm in Sources */,
