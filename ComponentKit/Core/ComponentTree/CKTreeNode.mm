@@ -40,8 +40,10 @@ namespace TreeNode {
     if ([node.scopeHandle acquireFromComponent:component]) {
       return node;
     }
-    CKCAssertWithCategory([component.class controllerClass] == Nil || [component conformsToProtocol:@protocol(CKRenderComponentProtocol)],
-      NSStringFromClass([component class]),
+    CKCAssertWithCategory([component.class controllerClass] == nil ||
+                          CKSubclassOverridesInstanceMethod([CKComponent class], component.class, @selector(buildController)) ||
+                          [component conformsToProtocol:@protocol(CKRenderComponentProtocol)],
+                          NSStringFromClass([component class]),
       @"Component has a controller but no scope! Make sure you construct your scope(self) "
       "before constructing the component or CKComponentTestRootScope at the start of the test.");
 
