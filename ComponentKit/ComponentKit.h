@@ -21,7 +21,6 @@
 #import <ComponentKit/CKArgumentPrecondition.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKAssociatedObject.h>
-#import <ComponentKit/CKAsyncLayer.h>
 #import <ComponentKit/CKAutoSizedImageComponent.h>
 #import <ComponentKit/CKAvailability.h>
 #import <ComponentKit/CKBackgroundLayoutComponent.h>
@@ -123,7 +122,6 @@
 #import <ComponentKit/CKIterable.h>
 #import <ComponentKit/CKIterableHelpers.h>
 #import <ComponentKit/CKLinkable.h>
-#import <ComponentKit/CKLabelComponent.h>
 #import <ComponentKit/CKLayout.h>
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
@@ -157,8 +155,6 @@
 #import <ComponentKit/CKStaticLayoutComponent.h>
 #import <ComponentKit/CKSupplementaryViewDataSource.h>
 #import <ComponentKit/CKSystraceListener.h>
-#import <ComponentKit/CKTextComponent.h>
-#import <ComponentKit/CKTextKitAttributes.h>
 #import <ComponentKit/CKTransitions.h>
 #import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>

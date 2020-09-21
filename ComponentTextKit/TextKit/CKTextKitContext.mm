@@ -10,7 +10,7 @@
 
 #import <mutex>
 
-#import <ComponentKit/CKTextKitContext.h>
+#import "CKTextKitContext.h"
 
 @implementation CKTextKitContext
 {

@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKAsyncTransactionContainer.h>
+#import <ComponentTextKit/CKAsyncTransactionContainer.h>
 
 @class CKAsyncTransaction;
 

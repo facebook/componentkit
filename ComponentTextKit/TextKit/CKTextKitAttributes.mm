@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKTextKitAttributes.h>
+#import <ComponentTextKit/CKTextKitAttributes.h>
 
 #import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>

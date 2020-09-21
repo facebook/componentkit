@@ -12,10 +12,10 @@
 
 #import <ComponentKit/CKAssert.h>
 
-#import <ComponentKit/CKTextKitContext.h>
-#import <ComponentKit/CKTextKitShadower.h>
-#import <ComponentKit/CKTextKitTailTruncater.h>
-#import <ComponentKit/CKTextKitTruncating.h>
+#import <ComponentTextKit/CKTextKitContext.h>
+#import <ComponentTextKit/CKTextKitShadower.h>
+#import <ComponentTextKit/CKTextKitTailTruncater.h>
+#import <ComponentTextKit/CKTextKitTruncating.h>
 
 static NSCharacterSet *_defaultAvoidTruncationCharacterSet()
 {

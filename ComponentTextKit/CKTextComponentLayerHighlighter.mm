@@ -12,10 +12,10 @@
 
 #import <ComponentKit/CKAssert.h>
 
-#import <ComponentKit/CKHighlightOverlayLayer.h>
+#import <ComponentTextKit/CKHighlightOverlayLayer.h>
 
-#import <ComponentKit/CKTextKitRenderer+Positioning.h>
-#import <ComponentKit/CKTextKitRenderer.h>
+#import <ComponentTextKit/CKTextKitRenderer+Positioning.h>
+#import <ComponentTextKit/CKTextKitRenderer.h>
 
 #import "CKTextComponentLayer.h"
 

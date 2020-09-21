@@ -10,9 +10,10 @@
  */
 
 #import "WarmQuoteComponent.h"
-
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
+
+#import <ComponentTextKit/CKLabelComponent.h>
 
 @implementation WarmQuoteComponent
 

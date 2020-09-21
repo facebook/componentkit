@@ -15,7 +15,7 @@
 #ifndef ComponentKit_CKCacheImpl_h
 #define ComponentKit_CKCacheImpl_h
 
-#import <ComponentKit/CKFunctor.h>
+#import <ComponentTextKit/CKFunctor.h>
 #import <ComponentKit/CKAssert.h>
 
 #import <CoreGraphics/CoreGraphics.h>

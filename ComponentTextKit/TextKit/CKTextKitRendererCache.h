@@ -14,8 +14,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKCacheImpl.h>
-#import <ComponentKit/CKTextKitAttributes.h>
+#import <ComponentTextKit/CKCacheImpl.h>
+#import <ComponentTextKit/CKTextKitAttributes.h>
 
 @class CKTextKitRenderer;
 

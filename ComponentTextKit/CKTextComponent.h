@@ -14,8 +14,8 @@
 
 #import <ComponentKit/CKComponent.h>
 
-#import <ComponentKit/CKAsyncLayer.h>
-#import <ComponentKit/CKTextKitAttributes.h>
+#import <ComponentTextKit/CKAsyncLayer.h>
+#import <ComponentTextKit/CKTextKitAttributes.h>
 
 struct CKTextComponentAccessibilityContext
 {

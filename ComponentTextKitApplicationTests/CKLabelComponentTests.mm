@@ -12,7 +12,7 @@
 
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import <ComponentKit/CKLabelComponent.h>
+#import <ComponentTextKit/CKLabelComponent.h>
 
 static const CKSizeRange kFlexibleSize = {{0, 0}, {320, 100}};
 

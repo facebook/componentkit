@@ -8,16 +8,9 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
-
-#if CK_NOT_SWIFT
-
 #import <UIKit/UIKit.h>
 
-#import <ComponentTextKit/CKTextKitTruncating.h>
-
-@interface CKTextKitTailTruncater : NSObject <CKTextKitTruncating>
-
-@end
-
-#endif
+#import <ComponentTextKit/CKLabelComponent.h>
+#import <ComponentTextKit/CKTextComponent.h>
+#import <ComponentTextKit/CKAsyncLayer.h>
+#import <ComponentTextKit/CKTextKitAttributes.h>

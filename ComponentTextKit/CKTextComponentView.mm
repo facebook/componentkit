@@ -12,10 +12,10 @@
 #import "CKTextComponentViewInternal.h"
 
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKAsyncLayer.h>
-#import <ComponentKit/CKAsyncLayerSubclass.h>
-#import <ComponentKit/CKTextKitRenderer.h>
-#import <ComponentKit/CKTextKitRendererCache.h>
+#import <ComponentTextKit/CKAsyncLayer.h>
+#import <ComponentTextKit/CKAsyncLayerSubclass.h>
+#import <ComponentTextKit/CKTextKitRenderer.h>
+#import <ComponentTextKit/CKTextKitRendererCache.h>
 #import <ComponentKit/CKInternalHelpers.h>
 
 #import "CKTextComponentLayer.h"

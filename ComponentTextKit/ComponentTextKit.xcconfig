@@ -1,0 +1,23 @@
+//
+//  Copyright (c) 2014-present, Facebook, Inc.
+//  All rights reserved.
+//
+//  This source code is licensed under the BSD-style license found in the
+//  LICENSE file in the root directory of this source tree. An additional grant
+//  of patent rights can be found in the PATENTS file in the same directory.
+//
+
+#include "../Carthage/Checkouts/xcconfigs/iOS/iOS-Framework.xcconfig"
+
+PRODUCT_NAME = ComponentTextKit
+INFOPLIST_FILE = ComponentTextKit/Info.plist
+PRODUCT_BUNDLE_IDENTIFIER = org.componentkit.ComponentTextKit
+CURRENT_PROJECT_VERSION = 0.30
+ALWAYS_SEARCH_USER_PATHS = NO
+CLANG_ENABLE_OBJC_ARC = YES
+CLANG_ENABLE_MODULES = YES
+
+ONLY_ACTIVE_ARCH[config=Debug] = YES
+GCC_OPTIMIZATION_LEVEL[config=Debug] = 0
+COPY_PHASE_STRIP[config=Debug] = NO
+OTHER_CFLAGS[config=Debug] = $(inherited) -Wall -Wextra -Wno-mismatched-tags -Wno-unused-parameter -Wno-sign-compare -Wno-missing-field-initializers

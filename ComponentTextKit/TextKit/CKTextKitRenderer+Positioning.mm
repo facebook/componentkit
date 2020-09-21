@@ -14,8 +14,8 @@
 
 #import <ComponentKit/CKAssert.h>
 
-#import <ComponentKit/CKTextKitContext.h>
-#import <ComponentKit/CKTextKitShadower.h>
+#import <ComponentTextKit/CKTextKitContext.h>
+#import <ComponentTextKit/CKTextKitShadower.h>
 
 static const CGFloat CKTextKitRendererGlyphTouchHitSlop = 5.0;
 static const CGFloat CKTextKitRendererTextCapHeightPadding = 1.3;

@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKTextKitRendererCache.h>
+#import <ComponentTextKit/CKTextKitRendererCache.h>
 
 #import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>

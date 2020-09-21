@@ -11,6 +11,8 @@
 
 #import "SuccessIndicatorComponent.h"
 
+#import <ComponentTextKit/CKLabelComponent.h>
+
 @implementation SuccessIndicatorComponent
 
 + (instancetype)newWithIndicatesSuccess:(BOOL)indicatesSuccess

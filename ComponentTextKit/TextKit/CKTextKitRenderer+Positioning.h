@@ -12,7 +12,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <ComponentKit/CKTextKitRenderer.h>
+#import <ComponentTextKit/CKTextKitRenderer.h>
 
 typedef void (^ck_text_component_index_block_t)(NSUInteger characterIndex,
                                                 CGRect glyphBoundingRect,

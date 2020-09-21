@@ -10,10 +10,10 @@
 
 #import "CKLabelComponent.h"
 
-#import <ComponentKit/CKTextComponent.h>
-#import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
-#import "CKComponentViewAttribute_SwiftBridge+Internal.h"
-#import "CKComponentSize_SwiftBridge+Internal.h"
+#import <ComponentTextKit/CKTextComponent.h>
+#import <ComponentKit/CKComponentViewConfiguration_SwiftBridge+Internal.h>
+#import <ComponentKit/CKComponentViewAttribute_SwiftBridge+Internal.h>
+#import <ComponentKit/CKComponentSize_SwiftBridge+Internal.h>
 
 @implementation CKLabelComponent
 

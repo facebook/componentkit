@@ -11,9 +11,9 @@
 #import "CKTextComponentLayer.h"
 
 #import <ComponentKit/CKInternalHelpers.h>
-#import <ComponentKit/CKTextKitAttributes.h>
-#import <ComponentKit/CKTextKitRenderer.h>
-#import <ComponentKit/CKTextKitRendererCache.h>
+#import <ComponentTextKit/CKTextKitAttributes.h>
+#import <ComponentTextKit/CKTextKitRenderer.h>
+#import <ComponentTextKit/CKTextKitRendererCache.h>
 #import <ComponentKit/CKAssert.h>
 
 #import "CKTextComponentLayerHighlighter.h"

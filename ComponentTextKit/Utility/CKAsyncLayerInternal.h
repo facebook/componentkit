@@ -12,8 +12,8 @@
 
 #if CK_NOT_SWIFT
 
-#import <ComponentKit/CKAsyncLayer.h>
-#import <ComponentKit/CKAsyncTransaction.h>
+#import <ComponentTextKit/CKAsyncLayer.h>
+#import <ComponentTextKit/CKAsyncTransaction.h>
 
 @class CKAsyncTransaction;
 

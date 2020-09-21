@@ -13,6 +13,7 @@
 
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
+#import <ComponentTextKit/CKLabelComponent.h>
 
 @implementation FrostedQuoteComponent
 
