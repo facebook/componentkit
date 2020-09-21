@@ -726,6 +726,7 @@
 		D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81C2314A893004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
+		D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76262516856200DAC4D5 /* FlexboxComponent.swift */; };
 		D42B76292516858200DAC4D5 /* LabelComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76282516858200DAC4D5 /* LabelComponent.swift */; };
 		D42B77322517675100DAC4D5 /* CKLabelComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C411CBD92C200BB33CE /* CKLabelComponent.mm */; };
 		D42B773F2517675100DAC4D5 /* CKTextComponentLayerHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C471CBD92C200BB33CE /* CKTextComponentLayerHighlighter.mm */; };
@@ -1954,6 +1955,7 @@
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentContext.mm; sourceTree = "<group>"; };
 		D427E8182314A888004F22BD /* CKStatelessComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatelessComponentContext.h; sourceTree = "<group>"; };
+		D42B76262516856200DAC4D5 /* FlexboxComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxComponent.swift; sourceTree = "<group>"; };
 		D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComponentTextKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D42B78CF25176C4000DAC4D5 /* CKTextSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CKTextSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D42B78D425176C9400DAC4D5 /* CKTextSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKTextSwift.swift; sourceTree = "<group>"; };
@@ -3351,6 +3353,7 @@
 				D4F543C4250784A2008F17A8 /* Component.swift */,
 				D4F543B9250784A2008F17A8 /* ComponentSize.swift */,
 				D4F543C5250784A2008F17A8 /* Dimension.swift */,
+				D42B76262516856200DAC4D5 /* FlexboxComponent.swift */,
 				D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */,
 				D4BC578223E37A1B0075D688 /* CKSwift.h */,
 				D4BC579D23E37A240075D688 /* CKSwift.swift */,
@@ -5225,6 +5228,7 @@
 				D4F543CA250784A2008F17A8 /* ViewConfiguration.swift in Sources */,
 				D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */,
 				D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */,
+				D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
