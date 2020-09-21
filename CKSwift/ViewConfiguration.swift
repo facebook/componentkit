@@ -114,6 +114,10 @@ public struct ViewConfigurationAttributeBuilder<View: UIView> {
     attr.componentViewAttribute
   }
 
+  public static func buildExpression(_ attr: ViewConfiguration.LayerAttribute) -> ComponentViewAttributeSwiftBridge {
+    attr.componentViewAttribute
+  }
+
   public static func buildExpression<Value>(_ attr: (key: ReferenceWritableKeyPath<View, Value>, value: Value)) -> ComponentViewAttributeSwiftBridge {
     ViewConfiguration.Attribute<View>(attr.key, attr.value).componentViewAttribute
   }
