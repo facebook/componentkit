@@ -30,7 +30,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param background A child that is laid out behind it. May be nil, in which case the background is omitted.
  */
 - (instancetype)initWithComponent:(CKComponent *_Nullable)component
-                       background:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER;
+                       background:(CKComponent *_Nullable)background NS_DESIGNATED_INITIALIZER;
 
 /**
  DEPRECATED - Do not use. Use CK::BackgroundLayoutComponentBuilder instead.

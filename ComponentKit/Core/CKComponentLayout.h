@@ -30,7 +30,6 @@
  @param supercomponent Usually pass nil; if you are mounting a subtree of a layout, pass the parent component so the
         component responder chain can be connected correctly.
  @param analyticsListener analytics listener used to log mount time.
- @param isUpdate Indicates whether the mount is due to an (state/props) update.
  */
 NSSet<id<CKMountable>> *CKMountComponentLayout(const CKLayout &layout,
                                                UIView *view,
