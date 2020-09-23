@@ -70,7 +70,7 @@ auto CKBuildComponentTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
 {
   CKBuildTrigger trigger = CKBuildTriggerNone;
 
-  if ([scopeRoot rootComponent] != nil) {
+  if ([scopeRoot isEmpty] == NO) {
     if (stateUpdates.empty() == false) {
       trigger |= CKBuildTriggerStateUpdate;
     }

@@ -22,12 +22,11 @@
 
 static auto makeScopeRoot(BOOL empty = NO) -> CK::NonNull<CKComponentScopeRoot *> {
   const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-
-  if (empty == NO) {
-    [scopeRoot setRootComponent:[CKComponent new]];
+  if (empty) {
+    return scopeRoot;
+  } else {
+    return CK::makeNonNull([scopeRoot newRoot]);
   }
-
-  return scopeRoot;
 }
 
 static auto nonEmptyStateUpdates() -> CKComponentStateUpdateMap {

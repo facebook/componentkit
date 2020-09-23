@@ -42,6 +42,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
   return [[CKComponentScopeRoot alloc] initWithListener:listener
                                       analyticsListener:analyticsListener
                                        globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
+                                               isEmpty:YES
                                     componentPredicates:componentPredicates
                           componentControllerPredicates:componentControllerPredicates];
 }
@@ -51,6 +52,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
   return [[CKComponentScopeRoot alloc] initWithListener:_listener
                                       analyticsListener:_analyticsListener
                                        globalIdentifier:_globalIdentifier
+                                               isEmpty:NO
                                     componentPredicates:_componentPredicates
                           componentControllerPredicates:_componentControllerPredicates];
 }
@@ -58,6 +60,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                 globalIdentifier:(CKComponentScopeRootIdentifier)globalIdentifier
+                         isEmpty:(BOOL)isEmpty
              componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
    componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
 {
@@ -68,6 +71,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
     _globalIdentifier = globalIdentifier;
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
+    _isEmpty = isEmpty;
   }
   return self;
 }

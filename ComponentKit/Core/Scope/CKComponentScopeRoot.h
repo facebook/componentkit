@@ -52,6 +52,7 @@ struct CKStateUpdateMetadata;
 
  @param listener A listener for state updates that flow through the scope root.
  @param analyticsListener A listener for analytics events for the components of this scope root.
+ @param analyticsListener A listener for analytics events for the components of this scope root.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
@@ -75,7 +76,7 @@ struct CKStateUpdateMetadata;
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, strong, readonly) id<CKAnalyticsListener> analyticsListener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;
-
+@property (nonatomic, readonly) BOOL isEmpty;
 
 // Forces ownership of the component tree by the scope root.
 @property (nonatomic, strong) id<CKComponentProtocol> rootComponent;
