@@ -221,7 +221,8 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   NSObject *o = [[NSObject alloc] init];
   CKComponentMutableContext<NSObject> context(o);
   const CKComponentContextContents contents = CKComponentContextHelper::fetchAll();
-  XCTAssertEqualObjects(contents.objects, @{[NSObject class]: o});
+  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
+  XCTAssertEqualObjects(contents.objects, expectedValues);
 }
 
 - (void)testFetchingAllComponentContextItemsTwiceReturnsEqualContents
@@ -250,7 +251,8 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 
   {
     CKComponentMutableContext<NSObject> context1(o1);
-    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
+    const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[[NSObject class]]];
+    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
 
     {
       CKComponentTestRootScope testScope;
@@ -263,16 +265,18 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   CKComponentContextHelper::willBuildComponentTree(component1);
 
   // As there is a render component in the tree, o1 still need to stay in the store.
-  XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
+  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[[NSObject class]]];
+  XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
 
   {
     CKComponentMutableContext<NSObject> context1(o2);
+    const auto expectedValues2 = [[NSDictionary alloc] initWithObjects:@[o2] forKeys:@[[NSObject class]]];
     // Make sure we get the latest value from the current store.
-    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o2});
+    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues2);
   }
 
 
-  XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
+  XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
 
   CKComponentContextHelper::didBuildComponentTree(component1);
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, nil);
@@ -286,7 +290,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   XCTAssertNil(CKComponentMutableContext<NSObject>::get());
   // Set initial values and make sure the value is available.
   NSObject *o = [[NSObject alloc] init];
-  NSDictionary<Class, id> *initialValues = @{[NSObject class] : o};
+  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
   {
     CKComponentInitialValuesContext initialValuesContext(initialValues);
     XCTAssertEqualObjects(CKComponentMutableContext<NSObject>::get(), o);
@@ -299,7 +303,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 {
   // Set initial values and make sure the value is available.
   NSObject *o = [[NSObject alloc] init];
-  NSDictionary<Class, id> *initialValues = @{[NSObject class] : o};
+  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
   {
     CKComponentInitialValuesContext initialValuesContext(initialValues);
     XCTAssertEqualObjects(CKComponentMutableContext<NSObject>::get(), o);
@@ -319,7 +323,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (void)testFetchAllForInitialValues
 {
   NSObject *o = [[NSObject alloc] init];
-  NSDictionary<Class, id> *initialValues = @{[NSObject class] : o};
+  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
   {
     // Set initial values
     CKComponentInitialValuesContext initialValuesContext(initialValues);
@@ -327,7 +331,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
       // Push context
       NSString *s = @"1";
       CKComponentMutableContext<NSString> context(s);
-      NSDictionary *expectedValue = @{[NSObject class]: o, [NSString class]: s};
+      const auto expectedValue = [[NSDictionary alloc] initWithObjects:@[o, s] forKeys:@[[NSObject class], [NSString class]]];
       XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValue);
     }
     // Verify the initial values are being fetched correctly.
@@ -424,7 +428,8 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   NSObject *o = [[NSObject alloc] init];
   CKComponentContext<NSObject> context(o);
   const CKComponentContextContents contents = CKComponentContextHelper::fetchAll();
-  XCTAssertEqualObjects(contents.objects, @{[NSObject class]: o});
+  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
+  XCTAssertEqualObjects(contents.objects, expectedValues);
 }
 
 - (void)testFetchingAllComponentContextItemsTwiceReturnsEqualContents
@@ -455,9 +460,10 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
     component1 = [CKComponent new];
   }
 
+  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[[NSObject class]]];
   {
     CKComponentContext<NSObject> context1(o1);
-    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
+    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
 
     // Simulate creation of render component.
     {
@@ -470,16 +476,17 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   CKComponentContextHelper::willBuildComponentTree(component1);
 
   // As there is a render component in the tree, o1 still need to stay in the store.
-  XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
+  XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
 
   {
     CKComponentContext<NSObject> context1(o2);
     // Make sure we get the latest value from the current store.
-    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o2});
+    const auto expectedValues2 = [[NSDictionary alloc] initWithObjects:@[o2] forKeys:@[[NSObject class]]];
+    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues2);
   }
 
 
-  XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
+  XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
 
   CKComponentContextHelper::didBuildComponentTree(component1);
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, nil);
