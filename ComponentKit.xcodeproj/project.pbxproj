@@ -1034,6 +1034,9 @@
 		D4BC57BF23E3849A0075D688 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
 		D4C1270A2517ACB6006AD1A4 /* CKSizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4D9CF022342AECE00D1BA22 /* CKTransitions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D9D3D2342606B003DDC41 /* CKTransitions.mm */; };
+		D4EAA5552513A09400F32DC1 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5542513A09400F32DC1 /* State.swift */; };
+		D4EAA5572513A0BE00F32DC1 /* ScopeHandleLinkable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */; };
+		D4EAA55B2513A23B00F32DC1 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA55A2513A23B00F32DC1 /* Binding.swift */; };
 		D4EAA5622514F6FC00F32DC1 /* CKSizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4EAA5632514F6FC00F32DC1 /* CKSizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */; };
 		D4EAA5642514F84800F32DC1 /* CKSizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */; };
@@ -2047,7 +2050,10 @@
 		D4BC579123E37A1B0075D688 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4BC579D23E37A240075D688 /* CKSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKSwift.swift; sourceTree = "<group>"; };
 		D4BC57C423E387510075D688 /* CKSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKSwift.xcconfig; sourceTree = "<group>"; };
+		D4EAA5542513A09400F32DC1 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScopeHandleLinkable.swift; sourceTree = "<group>"; };
 		D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftComponent.swift; sourceTree = "<group>"; };
+		D4EAA55A2513A23B00F32DC1 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKSizingComponent.h; sourceTree = "<group>"; };
 		D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSizingComponent.mm; sourceTree = "<group>"; };
 		D4EEE09A23E1DE1400D1ED7E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -3386,6 +3392,9 @@
 				D4B29A10251A1AE1006EFEBA /* Animation.swift */,
 				D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */,
 				D42AF57D251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift */,
+				D4EAA5542513A09400F32DC1 /* State.swift */,
+				D4EAA55A2513A23B00F32DC1 /* Binding.swift */,
+				D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */,
 				D4BC57C423E387510075D688 /* CKSwift.xcconfig */,
 				D6BA03BB24144B8400D13A21 /* ComponentHostingViewController.swift */,
 				D4BC578323E37A1B0075D688 /* Info.plist */,
@@ -5265,11 +5274,14 @@
 				D4BC579E23E37A240075D688 /* CKSwift.swift in Sources */,
 				D4F543C8250784A2008F17A8 /* Component.swift in Sources */,
 				D6BA03C624144B8400D13A21 /* ComponentHostingViewController.swift in Sources */,
+				D4EAA55B2513A23B00F32DC1 /* Binding.swift in Sources */,
 				D42AF58C2519045E00F0BBA8 /* ComponentBuilder.swift in Sources */,
 				D4F543CA250784A2008F17A8 /* ViewConfiguration.swift in Sources */,
 				D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */,
 				D4F543EC25079578008F17A8 /* View.swift in Sources */,
 				D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */,
+				D4EAA5572513A0BE00F32DC1 /* ScopeHandleLinkable.swift in Sources */,
+				D4EAA5552513A09400F32DC1 /* State.swift in Sources */,
 				D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */,
 				D4B29A11251A1AE1006EFEBA /* Animation.swift in Sources */,
 				D4B299182519F404006EFEBA /* SwiftComponent.swift in Sources */,
