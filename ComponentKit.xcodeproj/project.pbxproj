@@ -940,6 +940,8 @@
 		D48F3238245C0C4900A097A1 /* CKComponentCoalescingMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D48F3236245C0C4900A097A1 /* CKComponentCoalescingMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4ABA9982382B80900EB9941 /* CKRenderComponentTestHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3E9D6722215E39530019429E /* CKRenderComponentTestHelpers.mm */; };
 		D4ABA9A32382B82300EB9941 /* CKRenderComponentTestHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */; };
+		D4B299182519F404006EFEBA /* SwiftComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */; };
+		D4B29A11251A1AE1006EFEBA /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B29A10251A1AE1006EFEBA /* Animation.swift */; };
 		D4BC571E23E3765C0075D688 /* CKComponentSize.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56EC23E3765B0075D688 /* CKComponentSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC571F23E3765C0075D688 /* CKComponentSize.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56EC23E3765B0075D688 /* CKComponentSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC572023E3765C0075D688 /* CKGeometryHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56ED23E3765B0075D688 /* CKGeometryHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1992,6 +1994,7 @@
 		D48D9D5223426BE3003DDC41 /* ComponentBuilder.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ComponentBuilder.mm; sourceTree = "<group>"; };
 		D48F3233245C0C3000A097A1 /* CKComponentCoalescingMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentCoalescingMode.h; sourceTree = "<group>"; };
 		D48F3236245C0C4900A097A1 /* CKComponentCoalescingMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentCoalescingMode.h; sourceTree = "<group>"; };
+		D4B29A10251A1AE1006EFEBA /* Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		D4BC56EC23E3765B0075D688 /* CKComponentSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSize.h; sourceTree = "<group>"; };
 		D4BC56ED23E3765B0075D688 /* CKGeometryHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKGeometryHelpers.h; sourceTree = "<group>"; };
 		D4BC56EE23E3765B0075D688 /* CKNonNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKNonNull.h; sourceTree = "<group>"; };
@@ -2039,6 +2042,7 @@
 		D4BC579123E37A1B0075D688 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4BC579D23E37A240075D688 /* CKSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKSwift.swift; sourceTree = "<group>"; };
 		D4BC57C423E387510075D688 /* CKSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKSwift.xcconfig; sourceTree = "<group>"; };
+		D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftComponent.swift; sourceTree = "<group>"; };
 		D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKSizingComponent.h; sourceTree = "<group>"; };
 		D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSizingComponent.mm; sourceTree = "<group>"; };
 		D4EEE09A23E1DE1400D1ED7E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -3371,6 +3375,8 @@
 				D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */,
 				D4BC578223E37A1B0075D688 /* CKSwift.h */,
 				D4BC579D23E37A240075D688 /* CKSwift.swift */,
+				D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */,
+				D4B29A10251A1AE1006EFEBA /* Animation.swift */,
 				D4BC57C423E387510075D688 /* CKSwift.xcconfig */,
 				D6BA03BB24144B8400D13A21 /* ComponentHostingViewController.swift */,
 				D4BC578323E37A1B0075D688 /* Info.plist */,
@@ -5254,6 +5260,8 @@
 				D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */,
 				D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */,
 				D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */,
+				D4B29A11251A1AE1006EFEBA /* Animation.swift in Sources */,
+				D4B299182519F404006EFEBA /* SwiftComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
