@@ -68,4 +68,17 @@ public struct SwiftComponentModel {
   }
 }
 
+final public class SwiftComponent<View: CKSwift.View> : CKSwiftComponent {
+  private let view: View
+
+  init(_ view: View, body: Component? = nil, viewConfiguration: ViewConfiguration? = nil, size: ComponentSize? = nil, model: SwiftComponentModel?) {
+    self.view = view
+    super.init(
+      swiftView: viewConfiguration?.viewConfiguration,
+      swiftSize: size?.componentSize,
+      child: body,
+      model: model?.toSwiftBridge())
+  }
+}
+
 #endif

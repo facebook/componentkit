@@ -43,3 +43,42 @@ public extension CompositeComponent {
     self.init(__swiftView: view?.viewConfiguration, component: component)
   }
 }
+
+#if swift(>=5.3)
+
+// MARK: Component
+
+extension Component : ComponentInflatable {
+  public func inflateComponent(with model: SwiftComponentModel?) -> Component {
+    // When a non-view issued component is built we need to check the model for:
+    // animations & lifecycle callbacks. The component is to be conditionally
+    // wrapped.
+    var result: Component {
+      if model?.requiresSwiftComponent == true {
+        return CKSwiftComponent(
+          swiftView: nil,
+          swiftSize: nil,
+          child: self,
+          model: model?.toSwiftBridge())
+      } else {
+        return self
+      }
+    }
+    return result.animated(model?.animations)
+  }
+}
+
+extension Component {
+  func animated(_ model: SwiftComponentModel.Animations?) -> Component {
+    guard let model = model, model.requiresAnimationComponent else {
+      return self
+    }
+
+    return AnimationComponent(
+      component: self,
+      onInitialMount: model.initialMount.group(),
+      onFinalUnmount: model.finalUnmount.group(with: .backwards))
+  }
+}
+
+#endif
