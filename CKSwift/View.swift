@@ -20,4 +20,23 @@ public protocol ComponentInflatable {
   func inflateComponent(with model: SwiftComponentModel?) -> Component
 }
 
+// MARK: View
+
+public protocol View : ComponentInflatable {
+  associatedtype Body
+  @ComponentBuilder var body: Body { get }
+}
+
+extension View where Self.Body == Never {
+  public var body: Never {
+    // Leaf views don't return
+    fatalError("Attempting to call .body on a leaf view")
+  }
+}
+
+public protocol ViewIdentifiable {
+  associatedtype ID: Hashable
+  var id: ID { get }
+}
+
 #endif
