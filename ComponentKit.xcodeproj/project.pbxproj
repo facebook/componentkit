@@ -727,6 +727,7 @@
 		D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81C2314A893004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
 		D42AF56E2519003D00F0BBA8 /* CKAnimationComponent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D42AF58C2519045E00F0BBA8 /* ComponentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */; };
 		D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76262516856200DAC4D5 /* FlexboxComponent.swift */; };
 		D42B77322517675100DAC4D5 /* CKLabelComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C411CBD92C200BB33CE /* CKLabelComponent.mm */; };
 		D42B773F2517675100DAC4D5 /* CKTextComponentLayerHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C471CBD92C200BB33CE /* CKTextComponentLayerHighlighter.mm */; };
@@ -1053,6 +1054,7 @@
 		D4F543DE2507913D008F17A8 /* CKSwiftComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F543DB2507913D008F17A8 /* CKSwiftComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4F543DF2507913D008F17A8 /* CKSwiftComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4F543DC2507913D008F17A8 /* CKSwiftComponent.mm */; };
 		D4F543E02507913D008F17A8 /* CKSwiftComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4F543DC2507913D008F17A8 /* CKSwiftComponent.mm */; };
+		D4F543EC25079578008F17A8 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F543EB25079578008F17A8 /* View.swift */; };
 		D4FBC0F02437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4FBC0F12437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D601E93724FFECC8004007C0 /* CKTransitionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */; };
@@ -1965,6 +1967,7 @@
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentContext.mm; sourceTree = "<group>"; };
 		D427E8182314A888004F22BD /* CKStatelessComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatelessComponentContext.h; sourceTree = "<group>"; };
+		D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentBuilder.swift; sourceTree = "<group>"; };
 		D42B76262516856200DAC4D5 /* FlexboxComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxComponent.swift; sourceTree = "<group>"; };
 		D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComponentTextKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D42B78CF25176C4000DAC4D5 /* CKTextSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CKTextSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2060,6 +2063,7 @@
 		D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewConfiguration.swift; sourceTree = "<group>"; };
 		D4F543DB2507913D008F17A8 /* CKSwiftComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKSwiftComponent.h; sourceTree = "<group>"; };
 		D4F543DC2507913D008F17A8 /* CKSwiftComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSwiftComponent.mm; sourceTree = "<group>"; };
+		D4F543EB25079578008F17A8 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKReusableComponentProtocol.h; sourceTree = "<group>"; };
 		D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransitionComponent.mm; sourceTree = "<group>"; };
 		D601E93624FFECC8004007C0 /* CKTransitionComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKTransitionComponent.h; sourceTree = "<group>"; };
@@ -3375,8 +3379,10 @@
 				D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */,
 				D4BC578223E37A1B0075D688 /* CKSwift.h */,
 				D4BC579D23E37A240075D688 /* CKSwift.swift */,
+				D4F543EB25079578008F17A8 /* View.swift */,
 				D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */,
 				D4B29A10251A1AE1006EFEBA /* Animation.swift */,
+				D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */,
 				D4BC57C423E387510075D688 /* CKSwift.xcconfig */,
 				D6BA03BB24144B8400D13A21 /* ComponentHostingViewController.swift */,
 				D4BC578323E37A1B0075D688 /* Info.plist */,
@@ -5256,8 +5262,10 @@
 				D4BC579E23E37A240075D688 /* CKSwift.swift in Sources */,
 				D4F543C8250784A2008F17A8 /* Component.swift in Sources */,
 				D6BA03C624144B8400D13A21 /* ComponentHostingViewController.swift in Sources */,
+				D42AF58C2519045E00F0BBA8 /* ComponentBuilder.swift in Sources */,
 				D4F543CA250784A2008F17A8 /* ViewConfiguration.swift in Sources */,
 				D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */,
+				D4F543EC25079578008F17A8 /* View.swift in Sources */,
 				D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */,
 				D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */,
 				D4B29A11251A1AE1006EFEBA /* Animation.swift in Sources */,
