@@ -106,24 +106,53 @@ public extension ViewConfiguration.Attribute {
 #if swift(>=5.1)
 @_functionBuilder
 public struct ViewConfigurationAttributeBuilder<View: UIView> {
-  public static func buildBlock(_ partialResults: ComponentViewAttributeSwiftBridge...) -> [ComponentViewAttributeSwiftBridge] {
-    partialResults
+  public enum Directive {
+    case attribute(ViewConfiguration.Attribute<View>)
+    case layerAttribute(ViewConfiguration.LayerAttribute)
+
+    fileprivate var swiftBridge: ComponentViewAttributeSwiftBridge {
+      switch self {
+      case let .attribute(attribute):
+        return attribute.componentViewAttribute
+      case let .layerAttribute(attribute):
+        return attribute.componentViewAttribute
+      }
+    }
   }
 
-  public static func buildExpression(_ attr: ViewConfiguration.Attribute<View>) -> ComponentViewAttributeSwiftBridge {
-    attr.componentViewAttribute
+  #if swift(<5.3)
+  public static func buildBlock(_ parts: Directive...) -> [ComponentViewAttributeSwiftBridge] {
+    parts.map { $0.swiftBridge }
+  }
+  #endif
+
+  public static func buildBlock(_ parts: Directive...) -> [Directive] {
+    parts
   }
 
-  public static func buildExpression(_ attr: ViewConfiguration.LayerAttribute) -> ComponentViewAttributeSwiftBridge {
-    attr.componentViewAttribute
+  public static func buildFinalResult(_ parts: [Directive]) -> [Directive] {
+    parts
   }
 
-  public static func buildExpression<Value>(_ attr: (key: ReferenceWritableKeyPath<View, Value>, value: Value)) -> ComponentViewAttributeSwiftBridge {
-    ViewConfiguration.Attribute<View>(attr.key, attr.value).componentViewAttribute
+  public static func buildFinalResult(_ parts: [Directive]) -> [ComponentViewAttributeSwiftBridge] {
+    parts.map { $0.swiftBridge }
   }
 
-  public static func buildExpression<Value>(_ attr: (key: ReferenceWritableKeyPath<CALayer, Value>, value: Value)) -> ComponentViewAttributeSwiftBridge {
-    ViewConfiguration.LayerAttribute(attr.key, attr.value).componentViewAttribute
+  public static func buildExpression(_ attr: ViewConfiguration.Attribute<View>) -> Directive {
+    .attribute(attr)
+  }
+
+  public static func buildExpression(_ attr: ViewConfiguration.LayerAttribute) -> Directive {
+    .layerAttribute(attr)
+  }
+
+  public static func buildExpression<Value>(_ attr: (key: ReferenceWritableKeyPath<View, Value>, value: Value)) -> Directive {
+    .attribute(ViewConfiguration.Attribute<View>(attr.key, attr.value))
+  }
+
+  public static func buildExpression<Value>(_ attr: (key: ReferenceWritableKeyPath<CALayer, Value>, value: Value)) -> Directive {
+    .layerAttribute(ViewConfiguration.LayerAttribute(attr.key, attr.value))
   }
 }
+
 #endif
