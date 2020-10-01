@@ -728,6 +728,7 @@
 		D427E81C2314A893004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
 		D42AF56E2519003D00F0BBA8 /* CKAnimationComponent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D42AF57E251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42AF57D251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift */; };
+		D42AF58A2519041F00F0BBA8 /* ComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42AF5892519041F00F0BBA8 /* ComponentView.swift */; };
 		D42AF58C2519045E00F0BBA8 /* ComponentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */; };
 		D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76262516856200DAC4D5 /* FlexboxComponent.swift */; };
 		D42B77322517675100DAC4D5 /* CKLabelComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C411CBD92C200BB33CE /* CKLabelComponent.mm */; };
@@ -1972,6 +1973,7 @@
 		D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentContext.mm; sourceTree = "<group>"; };
 		D427E8182314A888004F22BD /* CKStatelessComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatelessComponentContext.h; sourceTree = "<group>"; };
 		D42AF57D251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewConfigurationRepresentable.swift; sourceTree = "<group>"; };
+		D42AF5892519041F00F0BBA8 /* ComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentView.swift; sourceTree = "<group>"; };
 		D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentBuilder.swift; sourceTree = "<group>"; };
 		D42B76262516856200DAC4D5 /* FlexboxComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxComponent.swift; sourceTree = "<group>"; };
 		D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComponentTextKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3391,6 +3393,7 @@
 				D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */,
 				D4B29A10251A1AE1006EFEBA /* Animation.swift */,
 				D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */,
+				D42AF5892519041F00F0BBA8 /* ComponentView.swift */,
 				D42AF57D251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift */,
 				D4EAA5542513A09400F32DC1 /* State.swift */,
 				D4EAA55A2513A23B00F32DC1 /* Binding.swift */,
@@ -5277,6 +5280,7 @@
 				D4EAA55B2513A23B00F32DC1 /* Binding.swift in Sources */,
 				D42AF58C2519045E00F0BBA8 /* ComponentBuilder.swift in Sources */,
 				D4F543CA250784A2008F17A8 /* ViewConfiguration.swift in Sources */,
+				D42AF58A2519041F00F0BBA8 /* ComponentView.swift in Sources */,
 				D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */,
 				D4F543EC25079578008F17A8 /* View.swift in Sources */,
 				D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */,
