@@ -11,6 +11,8 @@
 import ComponentKit
 import UIKit
 
+#if swift(>=5.3)
+
 public extension FlexboxComponent.Child {
   convenience init(
     spacingBefore: CGFloat = 0,
@@ -23,9 +25,9 @@ public extension FlexboxComponent.Child {
     sizeConstraints: ComponentSize? = nil,
     useTextRounding: Bool = false,
     useHeightAsBaseline: Bool = false,
-    component: Component?) {
+    @ComponentBuilder component: () -> Component?) {
     self.init(
-      __component: component,
+      __component: component(),
       spacingBefore: spacingBefore,
       spacingAfter: spacingAfter,
       flexGrow: flexGrow,
@@ -62,7 +64,6 @@ public extension FlexboxComponent.Style {
   }
 }
 
-#if swift(>=5.1)
 @_functionBuilder
 public struct FlexboxChildBuilder {
   public static func buildBlock(_ partialResults: FlexboxComponent.Child?...) -> [FlexboxComponent.Child] {
@@ -71,6 +72,12 @@ public struct FlexboxChildBuilder {
 
   public static func buildExpression(_ child: FlexboxComponent.Child) -> FlexboxComponent.Child {
     child
+  }
+
+  public static func buildExpression<Inflatable : ComponentInflatable>(_ inflatable: Inflatable) -> FlexboxComponent.Child {
+    FlexboxComponent.Child {
+      inflatable.inflateComponent(with: nil)
+    }
   }
 
   public static func buildEither(first: FlexboxComponent.Child) -> FlexboxComponent.Child {
@@ -85,10 +92,8 @@ public struct FlexboxChildBuilder {
     child?.flatMap { $0 }
   }
 }
-#endif
 
 public extension FlexboxComponent {
-#if swift(>=5.1)
   convenience init(
     view: ViewConfiguration? = nil,
     direction: Style.Direction = .column,
@@ -176,8 +181,9 @@ public extension FlexboxComponent {
         layoutDirection: layoutDirection,
         useDeepYogaTrees: useDeepYogaTrees),
       swiftSize: size?.componentSize,
-      swiftChildren: [FlexboxComponent.Child(component: child())]
+      swiftChildren: [FlexboxComponent.Child(component: child)]
     )
   }
-#endif
 }
+
+#endif
