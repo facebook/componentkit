@@ -206,4 +206,15 @@ static void parseInt(int& c) {
   XCTAssertEqual(v, 43);
 }
 
+- (void)test_GettingTypeAtIndex
+{
+  Variant<int, std::string>::AlternativeAt<0> intVar = 3;
+  XCTAssertEqual(intVar, 3);
+  
+  Variant<int, std::string>::AlternativeAt<1> stringVar = "test";
+  XCTAssertEqual(stringVar, "test");
+  
+  // Variant<int, std::string>::AlternativeAt<2> invalidVar; this one fails at compile time
+}
+
 @end

@@ -492,6 +492,15 @@ class Variant : private VariantDetail::VariantStorage<Types...>,
   // Inherit assignment operators from each of the types in Types
   using VariantDetail::VariantChoice<sizeof...(Types), Types...>::operator=;
 
+  /**
+   Provides compile-time indexed access to the types of the variant's alternatives
+   \code
+   using T = CK::Variant<bool, short, int>::AlternativeAt<1>; // T == short
+   \endcode
+   */
+  template <unsigned i>
+  using AlternativeAt = VariantDetail::NthElement<VariantDetail::Typelist<Types...>, i>;
+
   Variant() = default;
 
   Variant(const Variant& other) {
