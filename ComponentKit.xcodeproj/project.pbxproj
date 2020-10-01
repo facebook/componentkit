@@ -726,8 +726,8 @@
 		D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81C2314A893004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
+		D42AF56E2519003D00F0BBA8 /* CKAnimationComponent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76262516856200DAC4D5 /* FlexboxComponent.swift */; };
-		D42B76292516858200DAC4D5 /* LabelComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76282516858200DAC4D5 /* LabelComponent.swift */; };
 		D42B77322517675100DAC4D5 /* CKLabelComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C411CBD92C200BB33CE /* CKLabelComponent.mm */; };
 		D42B773F2517675100DAC4D5 /* CKTextComponentLayerHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C471CBD92C200BB33CE /* CKTextComponentLayerHighlighter.mm */; };
 		D42B77412517675100DAC4D5 /* CKTextComponentView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C491CBD92C200BB33CE /* CKTextComponentView.mm */; };
@@ -927,7 +927,7 @@
 		D48D24E424B88B6600E3BFC4 /* CKWritingDirection.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D24D724B88B6500E3BFC4 /* CKWritingDirection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D48D24E524B88B6600E3BFC4 /* CKWritingDirection.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D24E224B88B6600E3BFC4 /* CKWritingDirection.mm */; };
 		D48D24E624B88B6600E3BFC4 /* CKWritingDirection.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D24E224B88B6600E3BFC4 /* CKWritingDirection.mm */; };
-		D48D9D3B23424C75003DDC41 /* CKAnimationComponent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */; };
+		D48D9D3B23424C75003DDC41 /* CKAnimationComponent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D48D9D3E2342606B003DDC41 /* CKTransitions.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3C2342606B003DDC41 /* CKTransitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D48D9D3F2342606B003DDC41 /* CKTransitions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D9D3D2342606B003DDC41 /* CKTransitions.mm */; };
 		D48D9D40234261C4003DDC41 /* CKTransitions.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3C2342606B003DDC41 /* CKTransitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -3528,6 +3528,7 @@
 				72C74F62236B643B00E4D533 /* CKComponentAccessibilityContext.h in Headers */,
 				03B8B50E1D2A346F00EDFF59 /* CKComponentScope.h in Headers */,
 				722EFE97243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h in Headers */,
+				D42AF56E2519003D00F0BBA8 /* CKAnimationComponent+Internal.h in Headers */,
 				D66BEECA24241D070051F0E4 /* CKClippingComponent.h in Headers */,
 				03B8B5111D2A346F00EDFF59 /* CKDataSourceChange.h in Headers */,
 				23EA314521A2E57400FEC59C /* CKTreeNodeTypes.h in Headers */,

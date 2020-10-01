@@ -2,8 +2,6 @@
 
 #import <ComponentKit/CKDefines.h>
 
-#if CK_NOT_SWIFT
-
 #import <ComponentKit/CKAnimation.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKMacros.h>
@@ -26,11 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
   onInitialMount:CK::Animation::alphaFrom(0)
   onFinalUnmount:CK::Animation::alphaTo(0)];
  */
+NS_SWIFT_NAME(AnimationComponent)
 @interface CKAnimationComponent : CKCompositeComponent
 
-CK_COMPONENT_INIT_UNAVAILABLE;
-
 CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE;
+
+#if CK_NOT_SWIFT
 
 /**
  @param component Component to animate.
@@ -55,8 +54,9 @@ CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE;
                            onInitialMount:(CK::Animation::Initial)initial
                            onFinalUnmount:(CK::Animation::Final)final;
 
+#endif
+
 @end
 
 NS_ASSUME_NONNULL_END
 
-#endif

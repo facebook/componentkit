@@ -51,8 +51,11 @@
   auto const c = component.viewConfiguration.viewClass().hasView()
                      ? [super newWithComponent:component]
                      : [super newWithView:{[CKAnimationComponentPassthroughView class]} component:component];
-  c->_animationOnInitialMount = animationOnInitialMount;
-  c->_animationOnFinalUnmount = animationOnFinalUnmount;
+
+  if (c != nil) {
+    c->_animationOnInitialMount = animationOnInitialMount;
+    c->_animationOnFinalUnmount = animationOnFinalUnmount;
+  }
   return c;
 }
 
