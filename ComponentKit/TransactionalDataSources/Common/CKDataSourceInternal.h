@@ -14,6 +14,16 @@
 
 #import <ComponentKit/CKDataSource.h>
 
+/**
+ CKDispatchQueue provides API similar to a serail GCD queue.
+ CKDispatchQueue uses increased stack size when ComponentKit is built with TSan
+ so that deep recursive layout calls do not cause stack overflow.
+*/
+@interface CKDispatchQueueSerial : NSObject
+- (instancetype)initWithName:(const char *)name;
+- (void)dispatchAsync:(dispatch_block_t)block;
+@end
+
 @class CKDataSourceChange;
 
 @interface CKDataSource ()
@@ -23,7 +33,7 @@
  You may change the target queue of this queue to any queue that is not the main queue.
  You may dispatch_suspend this queue (but be sure to resume it later).
  */
-@property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
+@property (nonatomic, strong, readonly) CKDispatchQueueSerial *workQueue;
 
 /**
  Current state of CKDataSource. This is main thread affined.

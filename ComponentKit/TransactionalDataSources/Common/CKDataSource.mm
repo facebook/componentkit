@@ -40,6 +40,112 @@
 #import "CKSystraceScope.h"
 #import "CKTraitCollectionHelper.h"
 
+// If set to 1, CKDispatchQueueSerial uses NSThread when built with TSan.
+#define CKDISPATCHQUEUESERIAL_TSAN_WORKAROUND_ENABLED 1
+
+#if defined(__has_feature) && __has_feature(thread_sanitizer) && CKDISPATCHQUEUESERIAL_TSAN_WORKAROUND_ENABLED
+// TSan (ThreadSanitizer) build.
+// CKDispatchQueueSerial uses NSThread to execute submitted blocks.
+// NSThread has stack of size kBackgroundThreadStackSizeInBytes so that deep
+// recursive calls do not cause stack overflow.
+
+static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 2 Mb.
+
+@implementation CKDispatchQueueSerial {
+  // Blocks (tasks) submitted for execution.
+  NSMutableArray<dispatch_block_t> *_blocks;
+
+  // Thread that is used to execute blocks.
+  NSThread *_thread;
+
+  // A semaphore that notifies the thread that new block is available.
+  dispatch_semaphore_t _sem;
+
+  // A queue that protects access to _blocks.
+  dispatch_queue_t _blocksQueue;
+}
+
+- (instancetype)initWithName:(const char *)name {
+  if (self = [super init]) {
+    _blocksQueue = dispatch_queue_create(name, DISPATCH_QUEUE_SERIAL);
+    _blocks = [NSMutableArray new];
+    _sem = dispatch_semaphore_create(0);
+    __weak __typeof(self) weakSelf = self;
+    if (@available(iOS 10.0, *)) {
+      _thread = [[NSThread alloc] initWithBlock:^{
+        for (;;) {
+          __strong __typeof(weakSelf) strongSelf = weakSelf;
+          if (!strongSelf) {
+            return;
+          }
+
+          // Wait for blocks.
+          dispatch_semaphore_wait(strongSelf->_sem, DISPATCH_TIME_FOREVER);
+
+          __block dispatch_block_t block;
+          dispatch_sync(strongSelf->_blocksQueue, ^{
+            if (_blocks.count == 0) {
+              return;
+            }
+            // Grab next block.
+            block = strongSelf->_blocks[0];
+            [strongSelf->_blocks removeObjectAtIndex:0];
+          });
+          if (block) {
+            block();
+          } else {
+            // CKDispatchQueueSerial was deallocated.
+            return;
+          }
+        }
+      }];
+      _thread.stackSize = kBackgroundThreadStackSizeInBytes;
+      [_thread start];
+    } else {
+      CKFailAssert(@"ComponentKit requires iOS 10 or higher when running under TSan.");
+    }
+  }
+  return self;
+}
+
+- (void)dispatchAsync:(dispatch_block_t)block {
+  dispatch_sync(_blocksQueue, ^{
+    [_blocks addObject:block];
+  });
+  dispatch_semaphore_signal(_sem);
+}
+
+- (void)dealloc {
+  // This will cause thread wake up and
+  dispatch_semaphore_signal(_sem);
+}
+
+@end
+
+#else
+// Regular build (without TSan).
+// CKDispatchQueueSerial is just a wrapper around dispatch_queue_t.
+
+@implementation CKDispatchQueueSerial {
+  dispatch_queue_t _queue;
+}
+
+- (instancetype)initWithName:(const char *)name {
+  if (self = [super init]) {
+    _queue = dispatch_queue_create(name, DISPATCH_QUEUE_SERIAL);
+  }
+  return self;
+}
+
+- (void)dispatchAsync:(dispatch_block_t)block {
+  dispatch_async(_queue, block);
+}
+
+@end
+
+#endif
+
+
 @interface CKDataSourceModificationPair : NSObject
 
 @property (nonatomic, strong, readonly) id<CKDataSourceStateModifying> modification;
@@ -61,7 +167,7 @@
   BOOL _processingAsynchronousModification;
   BOOL _shouldPauseStateUpdates;
   BOOL _isBackgroundMode;
-  dispatch_queue_t _workQueue;
+  CKDispatchQueueSerial *_workQueue;
 
   CKDataSourceViewport _viewport;
   BOOL _changesetSplittingEnabled;
@@ -86,7 +192,7 @@
     _state = state;
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
 
-    _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
+    _workQueue = [[CKDispatchQueueSerial alloc] initWithName:"org.componentkit.CKDataSource"];
     _pendingAsynchronousModifications = [NSMutableArray array];
     _changesetSplittingEnabled = configuration.options.splitChangesetOptions.enabled;
     [CKComponentDebugController registerReflowListener:self];
@@ -349,7 +455,7 @@
       });
     }, [modification qos], _isBackgroundMode);
 
-    dispatch_async(_workQueue, block);
+    [_workQueue dispatchAsync:block];
   }
 }
 
