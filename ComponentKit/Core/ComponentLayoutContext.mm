@@ -15,7 +15,6 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKStatelessComponent.h>
 
 using namespace CK::Component;
 
@@ -71,10 +70,13 @@ const CK::Component::LayoutContextStack &LayoutContext::currentStack()
 }
 
 static auto componentClassString(CKComponent *component) -> NSString * {
-  if ([component isKindOfClass: [CKStatelessComponent class]]) {
-    return [[(CKStatelessComponent *)component identifier] stringByAppendingString:@" (CKStatelessComponent)"];
+  const auto className = component.className;
+  const auto componentClassString = NSStringFromClass(component.class);
+
+  if ([className isEqualToString:componentClassString]) {
+    return className;
   } else {
-    return NSStringFromClass([component class]);
+    return [NSString stringWithFormat:@"%@ (%@)", className, componentClassString];
   }
 }
 
