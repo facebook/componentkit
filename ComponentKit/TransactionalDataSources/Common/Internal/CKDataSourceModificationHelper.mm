@@ -27,8 +27,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> prev
                                         id context,
                                         CKReflowTrigger reflowTrigger)
 {
-  CKExceptionInfoScopedValue modelValue{@"ck_data_source_item_model", NSStringFromClass([model class]) ?: @"Nil"};
-  CKExceptionInfoScopedValue contextValue{@"ck_data_source_item_context", NSStringFromClass([context class]) ?: @"Nil"};
+  CKExceptionInfoScopedValue itemDescription(@"ck_data_source_item_description", [model description]);
 
   auto const componentProvider = [configuration componentProvider];
   const auto componentFactory = ^{
