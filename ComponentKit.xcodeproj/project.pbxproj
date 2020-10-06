@@ -731,6 +731,7 @@
 		D42AF58A2519041F00F0BBA8 /* ComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42AF5892519041F00F0BBA8 /* ComponentView.swift */; };
 		D42AF58C2519045E00F0BBA8 /* ComponentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */; };
 		D42B76142516233200DAC4D5 /* ViewLayoutModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76092516233100DAC4D5 /* ViewLayoutModifier.swift */; };
+		D42B76162516361600DAC4D5 /* ViewAnimationModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76152516361600DAC4D5 /* ViewAnimationModifier.swift */; };
 		D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B76262516856200DAC4D5 /* FlexboxComponent.swift */; };
 		D42B77322517675100DAC4D5 /* CKLabelComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C411CBD92C200BB33CE /* CKLabelComponent.mm */; };
 		D42B773F2517675100DAC4D5 /* CKTextComponentLayerHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C471CBD92C200BB33CE /* CKTextComponentLayerHighlighter.mm */; };
@@ -1978,6 +1979,7 @@
 		D42AF5892519041F00F0BBA8 /* ComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentView.swift; sourceTree = "<group>"; };
 		D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentBuilder.swift; sourceTree = "<group>"; };
 		D42B76092516233100DAC4D5 /* ViewLayoutModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewLayoutModifier.swift; sourceTree = "<group>"; };
+		D42B76152516361600DAC4D5 /* ViewAnimationModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnimationModifier.swift; sourceTree = "<group>"; };
 		D42B76262516856200DAC4D5 /* FlexboxComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxComponent.swift; sourceTree = "<group>"; };
 		D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComponentTextKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D42B78CF25176C4000DAC4D5 /* CKTextSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CKTextSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3392,6 +3394,7 @@
 				D42B76092516233100DAC4D5 /* ViewLayoutModifier.swift */,
 				D4EAA55E2513A2BF00F32DC1 /* ViewLifecycleModifier.swift */,
 				D42B76262516856200DAC4D5 /* FlexboxComponent.swift */,
+				D42B76152516361600DAC4D5 /* ViewAnimationModifier.swift */,
 				D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */,
 				D4BC578223E37A1B0075D688 /* CKSwift.h */,
 				D4BC579D23E37A240075D688 /* CKSwift.swift */,
@@ -5295,6 +5298,7 @@
 				D4EAA5552513A09400F32DC1 /* State.swift in Sources */,
 				D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */,
 				D4B29A11251A1AE1006EFEBA /* Animation.swift in Sources */,
+				D42B76162516361600DAC4D5 /* ViewAnimationModifier.swift in Sources */,
 				D42B76142516233200DAC4D5 /* ViewLayoutModifier.swift in Sources */,
 				D4B299182519F404006EFEBA /* SwiftComponent.swift in Sources */,
 				D42AF57E251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift in Sources */,
