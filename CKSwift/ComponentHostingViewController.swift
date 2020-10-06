@@ -14,12 +14,25 @@ public final class ComponentHostingViewController: UIViewController {
   private let rootComponentProvider: () -> Component
   private let hostingView: ComponentHostingView<NSObject, ObjCProviderWrapper>
 
+  #if swift(>=5.3)
+
+  public init(@ComponentBuilder rootComponentProvider: @escaping () -> Component) {
+    self.rootComponentProvider = rootComponentProvider
+    hostingView = ComponentHostingView(componentProvider: { _, wrapper in wrapper!.provider() },
+                                       sizeRangeProviderBlock: { size in SizeRange(minSize: .zero, maxSize: size) })
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  #else
+
   public init(rootComponentProvider: @escaping () -> Component) {
     self.rootComponentProvider = rootComponentProvider
     hostingView = ComponentHostingView(componentProvider: { _, wrapper in wrapper!.provider() },
                                        sizeRangeProviderBlock: { size in SizeRange(minSize: .zero, maxSize: size) })
     super.init(nibName: nil, bundle: nil)
   }
+
+  #endif
 
   required init(coder: NSCoder) {
     fatalError()
