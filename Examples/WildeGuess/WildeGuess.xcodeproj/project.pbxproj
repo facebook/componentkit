@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B34FB9761ABE8BA300D2D896 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B34FB95B1ABE8BA300D2D896 /* AppDelegate.m */; };
+		B34FB9761ABE8BA300D2D896 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B34FB95B1ABE8BA300D2D896 /* AppDelegate.mm */; };
 		B34FB9841ABE8BB000D2D896 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B34FB9831ABE8BB000D2D896 /* main.m */; };
 		B3E848D11ABE848900377D52 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3E848D01ABE848900377D52 /* Images.xcassets */; };
 		D42B78E125176CCF00DAC4D5 /* CKTextSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42B78E025176CCF00DAC4D5 /* CKTextSwift.framework */; };
@@ -198,7 +198,7 @@
 		A2BC94DA1AC235A60043B82F /* QuoteComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuoteComponent.h; sourceTree = "<group>"; };
 		A2BC94DB1AC235A60043B82F /* QuoteComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QuoteComponent.mm; sourceTree = "<group>"; };
 		B34FB95A1ABE8BA300D2D896 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		B34FB95B1ABE8BA300D2D896 /* AppDelegate.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = AppDelegate.m; sourceTree = "<group>"; };
+		B34FB95B1ABE8BA300D2D896 /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = AppDelegate.mm; sourceTree = "<group>"; };
 		B34FB95D1ABE8BA300D2D896 /* FrostedQuoteComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrostedQuoteComponent.h; sourceTree = "<group>"; };
 		B34FB95E1ABE8BA300D2D896 /* FrostedQuoteComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FrostedQuoteComponent.mm; sourceTree = "<group>"; };
 		B34FB95F1ABE8BA300D2D896 /* InteractiveQuoteComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InteractiveQuoteComponent.h; sourceTree = "<group>"; };
@@ -228,6 +228,7 @@
 		B3E848D01ABE848900377D52 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D0B47DC41CBDAFFF00BB33CE /* ComponentKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ComponentKit.xcodeproj; path = ../../ComponentKit.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D42B76172516707100DAC4D5 /* QuoteComponentFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuoteComponentFactory.h; sourceTree = "<group>"; };
+		D484CA2F251A466C0052EC5A /* WildeGuess-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WildeGuess-Bridging-Header.h"; sourceTree = "<group>"; };
 		D4B29B3B251A402C006EFEBA /* WildeGuessKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WildeGuessKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4B29B3D251A402C006EFEBA /* WildeGuessKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WildeGuessKit.h; sourceTree = "<group>"; };
 		D4B29B3E251A402C006EFEBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -328,9 +329,10 @@
 			isa = PBXGroup;
 			children = (
 				B34FB95A1ABE8BA300D2D896 /* AppDelegate.h */,
-				B34FB95B1ABE8BA300D2D896 /* AppDelegate.m */,
+				B34FB95B1ABE8BA300D2D896 /* AppDelegate.mm */,
 				B3E848D01ABE848900377D52 /* Images.xcassets */,
 				B3E848C31ABE848900377D52 /* Supporting Files */,
+				D484CA2F251A466C0052EC5A /* WildeGuess-Bridging-Header.h */,
 			);
 			path = WildeGuess;
 			sourceTree = "<group>";
@@ -635,7 +637,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B34FB9761ABE8BA300D2D896 /* AppDelegate.m in Sources */,
+				B34FB9761ABE8BA300D2D896 /* AppDelegate.mm in Sources */,
 				B34FB9841ABE8BB000D2D896 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -787,6 +789,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.componentkit.wildeguess;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WildeGuess/WildeGuess-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -806,6 +809,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.componentkit.wildeguess;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WildeGuess/WildeGuess-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
