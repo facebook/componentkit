@@ -907,7 +907,7 @@ auto ComponentBuilder() -> ComponentBuilderEmpty;
  .height(100)
  .build()
  */
-auto ComponentBuilder(CK::ComponentSpecContext c) -> ComponentBuilderContext;
+auto ComponentBuilder(const CK::ComponentSpecContext& c) -> ComponentBuilderContext;
 
 using ViewConfig = BuilderDetails::ViewConfigBuilder<>;
 
@@ -924,7 +924,7 @@ private:
     : ComponentBuilderBase<ComponentBuilder, PropsBitmap>{context} { }
 
   friend auto CK::ComponentBuilder() -> ComponentBuilderEmpty;
-  friend auto CK::ComponentBuilder(CK::ComponentSpecContext) -> ComponentBuilderContext;
+  friend auto CK::ComponentBuilder(const CK::ComponentSpecContext&) -> ComponentBuilderContext;
 
   template <template <PropsBitmapType> class, PropsBitmapType>
   friend class BuilderBase;

@@ -16,8 +16,8 @@ auto ComponentBuilder() -> ComponentBuilderEmpty {
   return {};
 }
 
-auto ComponentBuilder(CK::ComponentSpecContext c) -> ComponentBuilderContext {
-  return {std::move(c)};
+auto ComponentBuilder(const CK::ComponentSpecContext& c) -> ComponentBuilderContext {
+  return {c};
 }
 
 }
