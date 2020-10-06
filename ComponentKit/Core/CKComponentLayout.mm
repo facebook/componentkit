@@ -18,6 +18,8 @@
 #import <ComponentKit/ComponentLayoutContext.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 
+#import <pthread.h>
+
 NSSet<id<CKMountable>> *CKMountComponentLayout(const CKLayout &layout,
                                                UIView *view,
                                                NSSet<id<CKMountable>> *previouslyMountedComponents,
@@ -47,6 +49,29 @@ NSSet<id<CKMountable>> *CKMountComponentLayout(const CKLayout &layout,
   return mountedComponents;
 }
 
+#if CK_ASSERTIONS_ENABLED
+
+static pthread_key_t _threadStackRootKey() noexcept
+{
+  static pthread_key_t threadKey;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    (void)pthread_key_create(&threadKey, nullptr);
+  });
+  return threadKey;
+}
+
+size_t CKLayoutGetUsedStackSize() {
+  const auto root = (char *)pthread_getspecific(_threadStackRootKey());
+  if (root == nullptr) {
+    return 0;
+  } else {
+    return root - (char *)&root;
+  }
+}
+
+#endif
+
 static auto buildComponentsByPredicateMap(const CKLayout &layout,
                                           const std::unordered_set<CKMountablePredicate> &predicates)
 {
@@ -73,6 +98,10 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   CK::Component::LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
+
+#if CK_ASSERTIONS_ENABLED
+  pthread_setspecific(_threadStackRootKey(), &systraceContext);
+#endif
 
   CKLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
