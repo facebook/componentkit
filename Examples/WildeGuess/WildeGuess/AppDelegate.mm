@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <WildeGuessKit/Quote.h>
 #import <WildeGuessKit/QuoteContext.h>
+#import <SwiftWildeGuessKit/SwiftWildeGuessKit-Swift.h>
 
 @implementation AppDelegate
 {
@@ -39,7 +40,7 @@
 }
 
 static CKComponent *swiftComponentGenerator(Quote *quote, QuoteContext *quoteContext) {
-  return nil;
+  return [Trampoline componentWithText:quote.text author:quote.author style:(NSInteger)quote.style];
 }
 
 - (UIViewController *)makeSwiftViewController
