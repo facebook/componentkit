@@ -9,15 +9,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <ComponentKit/ComponentKit.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
 @class QuoteContext;
 
 /**
- A monochrome quote component creates a left-aligned transucent white box on which it places a small bookmark-like gray
- box and the quote, horizontally stacked. This is placed on top of a monochrome background.
+ A warm quote component is a fixed-ratio component that centers the quote within its height. It has a nice warm
+ background on which it places the quote.
  */
-@interface MonochromeQuoteComponent : CKCompositeComponent
+@interface WarmQuoteComponent : CKCompositeComponent
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
 

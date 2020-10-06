@@ -14,6 +14,8 @@
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
 #import <ComponentTextKit/CKLabelComponent.h>
+#import <ComponentKit/CKInsetComponent.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 
 @implementation FrostedQuoteComponent
 

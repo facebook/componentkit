@@ -9,8 +9,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
-@interface WildeGuessCollectionViewController : UICollectionViewController
+@class Quote;
+@class QuoteContext;
+
+/**
+ A QuoteComponent formats a quote based on the quote style.
+ */
+@interface QuoteComponent : CKCompositeComponent
+
++ (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context;
 
 @end

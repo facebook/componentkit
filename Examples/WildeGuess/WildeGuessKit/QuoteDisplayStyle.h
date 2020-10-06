@@ -9,16 +9,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <ComponentKit/ComponentKit.h>
+#import <Foundation/Foundation.h>
 
-@class QuoteContext;
-
-/**
- A warm quote component is a fixed-ratio component that centers the quote within its height. It has a nice warm
- background on which it places the quote.
- */
-@interface WarmQuoteComponent : CKCompositeComponent
-
-+ (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
-
-@end
+typedef NS_CLOSED_ENUM(NSUInteger, QuoteDisplayStyle) {
+  QuoteDisplayStyleFrosted,
+  QuoteDisplayStyleMonochrome,
+  QuoteDisplayStyleSombre,
+  QuoteDisplayStyleWarm,
+};

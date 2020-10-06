@@ -9,15 +9,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <ComponentKit/ComponentKit.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
-@class QuoteContext;
+/** A component indicating whether a quote belongs to Oscar Wilde. */
+@interface SuccessIndicatorComponent : CKCompositeComponent
 
-/**
- A frosted quote component vertically stacks a quote and a " symbol and places it on a background.
- */
-@interface FrostedQuoteComponent : CKCompositeComponent
-
-+ (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
++ (instancetype)newWithIndicatesSuccess:(BOOL)indicatesSuccess
+                            successText:(NSString *)successText
+                            failureText:(NSString *)failureText;
 
 @end

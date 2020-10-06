@@ -9,11 +9,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <ComponentKit/ComponentKit.h>
+#import <Foundation/Foundation.h>
 
-@interface QuoteWithBackgroundComponent : CKCompositeComponent
+#import <WildeGuessKit/QuoteDisplayStyle.h>
 
-+ (instancetype)newWithBackgroundImage:(UIImage *)backgroundImage
-                        quoteComponent:(CKComponent *)quoteComponent;
+@interface Quote : NSObject
+
+@property (nonatomic, readonly, copy) NSString *text;
+@property (nonatomic, readonly, copy) NSString *author;
+@property (nonatomic, readonly) QuoteDisplayStyle style;
+
+- (instancetype)initWithText:(NSString *)text
+                      author:(NSString *)author
+                       style:(QuoteDisplayStyle)style;
 
 @end

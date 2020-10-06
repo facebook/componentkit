@@ -9,15 +9,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <ComponentKit/ComponentKit.h>
+#import <ComponentKit/CKDefines.h>
+#import <ComponentKit/CKComponent.h>
 
+@class CKComponent;
+@class Quote;
 @class QuoteContext;
 
-/**
- A sombre quote component sandwiches a quote between two thick lines and puts them on top of a somwhat sombre background.
- */
-@interface SombreQuoteComponent : CKCompositeComponent
+NS_ASSUME_NONNULL_BEGIN
 
-+ (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
+CK_EXTERN_C_BEGIN
 
-@end
+CKComponent *QuoteComponentFactory(Quote *quote, QuoteContext *context);
+
+CK_EXTERN_C_END
+
+NS_ASSUME_NONNULL_END

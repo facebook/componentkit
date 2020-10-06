@@ -9,17 +9,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <ComponentKit/ComponentKit.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
-@class Quote;
-@class QuoteContext;
+@interface QuoteWithBackgroundComponent : CKCompositeComponent
 
-/**
- An InteractiveQuoteComponent renders a Quote, adding the ability to tap to see whether the
- quote is actually by Oscar Wilde or not.
- */
-@interface InteractiveQuoteComponent : CKCompositeComponent
-
-+ (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context;
++ (instancetype)newWithBackgroundImage:(UIImage *)backgroundImage
+                        quoteComponent:(CKComponent *)quoteComponent;
 
 @end

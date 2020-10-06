@@ -9,11 +9,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
-typedef NS_ENUM(NSUInteger, QuoteDisplayStyle) {
-  QuoteDisplayStyleFrosted,
-  QuoteDisplayStyleMonochrome,
-  QuoteDisplayStyleSombre,
-  QuoteDisplayStyleWarm,
-};
+@class Quote;
+@class QuoteContext;
+
+/**
+ An InteractiveQuoteComponent renders a Quote, adding the ability to tap to see whether the
+ quote is actually by Oscar Wilde or not.
+ */
+@interface InteractiveQuoteComponent : CKCompositeComponent
+
++ (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context;
+
+@end

@@ -9,18 +9,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
-#import "QuoteDisplayStyle.h"
+@class QuoteContext;
 
-@interface Quote : NSObject
+/**
+ A monochrome quote component creates a left-aligned transucent white box on which it places a small bookmark-like gray
+ box and the quote, horizontally stacked. This is placed on top of a monochrome background.
+ */
+@interface MonochromeQuoteComponent : CKCompositeComponent
 
-@property (nonatomic, readonly, copy) NSString *text;
-@property (nonatomic, readonly, copy) NSString *author;
-@property (nonatomic, readonly) QuoteDisplayStyle style;
-
-- (instancetype)initWithText:(NSString *)text
-                      author:(NSString *)author
-                       style:(QuoteDisplayStyle)style;
++ (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
 
 @end

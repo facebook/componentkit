@@ -10,6 +10,7 @@
  */
 
 #import "QuoteWithBackgroundComponent.h"
+#import <ComponentKit/CKBackgroundLayoutComponent.h>
 
 @implementation QuoteWithBackgroundComponent
 

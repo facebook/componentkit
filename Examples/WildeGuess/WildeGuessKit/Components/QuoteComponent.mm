@@ -17,6 +17,8 @@
 #import "QuoteContext.h"
 #import "SombreQuoteComponent.h"
 #import "WarmQuoteComponent.h"
+#import "QuoteComponentFactory.h"
+#import "InteractiveQuoteComponent.h"
 
 @implementation QuoteComponent
 
@@ -48,3 +50,7 @@ static CKComponent *quoteComponent(Quote *quote, QuoteContext *context)
 }
 
 @end
+
+CKComponent *QuoteComponentFactory(Quote *quote, QuoteContext *context) {
+  return [InteractiveQuoteComponent newWithQuote:quote context:context];
+}

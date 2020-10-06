@@ -1,3 +1,5 @@
+// Copyright 2004-present Facebook. All Rights Reserved.
+
 /* This file provided by Facebook is for non-commercial testing and evaluation
  * purposes only.  Facebook reserves all rights not expressly granted.
  *
@@ -11,13 +13,17 @@
 
 #import "WildeGuessCollectionViewController.h"
 
-#import <ComponentKit/ComponentKit.h>
+#import <ComponentKit/CKCollectionViewDataSource.h>
+#import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKDataSourceChangeset.h>
+#import <ComponentKit/CKDataSourceConfiguration.h>
+#import <WildeGuessKit/Quote.h>
+#import <WildeGuessKit/QuoteContext.h>
 
-#import "InteractiveQuoteComponent.h"
-#import "QuoteModelController.h"
-#import "Quote.h"
-#import "QuoteContext.h"
-#import "QuotesPage.h"
+#import "QuoteComponentFactory.h"
+#import <WildeGuessKit/QuoteModelController.h>
+#import <WildeGuessKit/QuotesPage.h>
 
 @interface WildeGuessCollectionViewController () <UICollectionViewDelegateFlowLayout>
 @end
@@ -27,13 +33,28 @@
   CKCollectionViewDataSource *_dataSource;
   QuoteModelController *_quoteModelController;
   CKComponentFlexibleSizeRangeProvider *_sizeRangeProvider;
+  WildeGuessQuoteComponentProvider _provider;
 }
 
-- (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout *)layout
+static UICollectionViewLayout *makeLayout() {
+  UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+  [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+  [flowLayout setMinimumInteritemSpacing:0];
+  [flowLayout setMinimumLineSpacing:0];
+  return flowLayout;
+}
+
+- (instancetype)init
 {
-  if (self = [super initWithCollectionViewLayout:layout]) {
+  return [self initWithProvider:&ComponentProvider];
+}
+
+- (instancetype)initWithProvider:(WildeGuessQuoteComponentProvider)provider
+{
+  if (self = [super initWithCollectionViewLayout:makeLayout()]) {
     _sizeRangeProvider = [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleHeight];
     _quoteModelController = [QuoteModelController new];
+    _provider = provider;
     self.title = @"Wilde Guess";
     self.navigationItem.prompt = @"Tap to reveal which quotes are from Oscar Wilde";
   }
@@ -58,10 +79,10 @@
 
   // Size configuration
   const CKSizeRange sizeRange = [_sizeRangeProvider sizeRangeForBoundingSize:self.collectionView.bounds.size];
-  CKDataSourceConfiguration *configuration = [[CKDataSourceConfiguration<Quote *, QuoteContext *> alloc]
-      initWithComponentProviderFunc:WildeGuessComponentProvider
-                            context:context
-                          sizeRange:sizeRange];
+  CKDataSourceConfiguration *configuration =
+  [[CKDataSourceConfiguration<Quote *, QuoteContext *> alloc] initWithComponentProviderFunc:_provider
+                                                                                    context:context
+                                                                                  sizeRange:sizeRange];
 
   // Create the data source
   _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
@@ -114,13 +135,9 @@
   [_dataSource announceDidEndDisplayingCell:cell];
 }
 
-#pragma mark - CKComponentProvider
-
-static CKComponent *WildeGuessComponentProvider(Quote *quote, QuoteContext *context)
+static CKComponent *ComponentProvider(Quote *quote, QuoteContext *context)
 {
-  return [InteractiveQuoteComponent
-          newWithQuote:quote
-          context:context];
+  return QuoteComponentFactory(quote, context);
 }
 
 #pragma mark - UIScrollViewDelegate

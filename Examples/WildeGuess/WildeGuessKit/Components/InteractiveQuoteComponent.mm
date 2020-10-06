@@ -12,6 +12,8 @@
 #import "InteractiveQuoteComponent.h"
 
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKFlexboxComponent.h>
+#import <ComponentKit/CKOverlayLayoutComponent.h>
 
 #import "Quote.h"
 #import "QuoteComponent.h"

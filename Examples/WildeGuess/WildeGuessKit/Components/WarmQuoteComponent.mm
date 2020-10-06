@@ -14,6 +14,8 @@
 #import "QuoteContext.h"
 
 #import <ComponentTextKit/CKLabelComponent.h>
+#import <ComponentKit/CKInsetComponent.h>
+#import <ComponentKit/CKRatioLayoutComponent.h>
 
 @implementation WarmQuoteComponent
 

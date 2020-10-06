@@ -9,13 +9,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <ComponentKit/ComponentKit.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
-/** A component indicating whether a quote belongs to Oscar Wilde. */
-@interface SuccessIndicatorComponent : CKCompositeComponent
+@class QuoteContext;
 
-+ (instancetype)newWithIndicatesSuccess:(BOOL)indicatesSuccess
-                            successText:(NSString *)successText
-                            failureText:(NSString *)failureText;
+/**
+ A sombre quote component sandwiches a quote between two thick lines and puts them on top of a somwhat sombre background.
+ */
+@interface SombreQuoteComponent : CKCompositeComponent
+
++ (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
 
 @end
