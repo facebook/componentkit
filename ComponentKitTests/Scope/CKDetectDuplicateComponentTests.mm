@@ -16,7 +16,7 @@
 
 #import <ComponentKit/CKTreeVerificationHelpers.h>
 
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 #pragma mark - Tests
 

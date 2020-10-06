@@ -18,7 +18,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKCompositeComponent.h>
 
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 @interface CKDetectScrollComponent : CKCompositeComponent <UIScrollViewDelegate>
 @property (nonatomic, assign) BOOL receivedScroll;

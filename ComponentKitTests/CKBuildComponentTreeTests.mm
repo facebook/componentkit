@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKFlexboxComponent.h>
 
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
 #import <ComponentKit/CKMountable.h>
 #import <ComponentKit/CKRenderHelpers.h>
@@ -25,7 +26,6 @@
 #import <ComponentKit/CKRenderTreeNode.h>
 #import <ComponentKit/CKScopeTreeNode.h>
 
-#import "CKComponentTestCase.h"
 
 /** A helper class that inherits from 'CKRenderComponent'; render the component from the initializer */
 @interface CKComponentTreeTestComponent_Render : CKRenderComponent

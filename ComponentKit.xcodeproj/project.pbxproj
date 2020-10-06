@@ -167,6 +167,8 @@
 		03F1ABFD1D2B2A9B00867584 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		03F1ABFE1D2B2A9B00867584 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
 		03F1ABFF1D2B2A9B00867584 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
+		14118462252CAEF900EEB050 /* CKComponentTestCase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729D49A1246C741800C1ABBD /* CKComponentTestCase.mm */; };
+		14FBDEB9252CA09B00B0C36C /* CKComponentTestCase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729D49A1246C741800C1ABBD /* CKComponentTestCase.mm */; };
 		18644AE51B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE11B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm */; };
 		18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */; };
 		18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */; };
@@ -433,10 +435,8 @@
 		728D25E123E885830016D672 /* CKAssociatedObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7285DE3723E4DA3C00969D07 /* CKAssociatedObject.mm */; };
 		728D25E523E98A6D0016D672 /* CKAssociatedObjectTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 728D25E423E98A6D0016D672 /* CKAssociatedObjectTests.mm */; };
 		728D25E623E98A6D0016D672 /* CKAssociatedObjectTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 728D25E423E98A6D0016D672 /* CKAssociatedObjectTests.mm */; };
-		729D49A3246C741900C1ABBD /* CKComponentTestCase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729D49A1246C741800C1ABBD /* CKComponentTestCase.mm */; };
 		72AE129C22D7707400E1C27D /* CKComponentCreationValidation.h in Headers */ = {isa = PBXBuildFile; fileRef = 72AE129A22D7707400E1C27D /* CKComponentCreationValidation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		72AE129D22D7707400E1C27D /* CKComponentCreationValidation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72AE129B22D7707400E1C27D /* CKComponentCreationValidation.mm */; };
-		72AF9C92246D6414005F393E /* CKComponentTestCase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729D49A1246C741800C1ABBD /* CKComponentTestCase.mm */; };
 		72B93ED5234374B600F10364 /* CKComponentGeneratorTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72B93ED4234374B600F10364 /* CKComponentGeneratorTests.mm */; };
 		72C410632241659F0025D6B5 /* CKComponentAttachController.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C410602241659E0025D6B5 /* CKComponentAttachController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		72C410642241659F0025D6B5 /* CKComponentAttachController.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C410602241659E0025D6B5 /* CKComponentAttachController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -2615,6 +2615,8 @@
 		A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				729D49A2246C741900C1ABBD /* CKComponentTestCase.h */,
+				729D49A1246C741800C1ABBD /* CKComponentTestCase.mm */,
 				23F949F322689F7600E590A2 /* CKAnalyticsListenerSpy.h */,
 				23F949F422689F7700E590A2 /* CKAnalyticsListenerSpy.mm */,
 				C1B53821212EAE6A00E13477 /* CKEmbeddedTestComponent.h */,
@@ -2692,8 +2694,6 @@
 				D6CD290520DFE723000881EF /* CKComponentAnimationsEquality.h */,
 				D64F4A7920DFEC3A00A0B169 /* CKComponentAnimationsEquality.mm */,
 				D6C3B06C20B71FFD0089F06A /* CKComponentAnimationsTests.mm */,
-				729D49A2246C741900C1ABBD /* CKComponentTestCase.h */,
-				729D49A1246C741800C1ABBD /* CKComponentTestCase.mm */,
 				B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */,
 				B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */,
 				B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */,
@@ -4880,6 +4880,7 @@
 				03F1ABC71D2B2A9B00867584 /* CKComponentHostingViewAsyncStateUpdateTests.mm in Sources */,
 				03F1ABC81D2B2A9B00867584 /* CKComponentMountContextLayoutGuideTests.mm in Sources */,
 				03F1ABC91D2B2A9B00867584 /* CKComponentDelegateAttributeTests.mm in Sources */,
+				14118462252CAEF900EEB050 /* CKComponentTestCase.mm in Sources */,
 				03F1ABCA1D2B2A9B00867584 /* CKComponentBoundsAnimationTests.mm in Sources */,
 				72CF432F233D088C00A82419 /* CKDataSourceChangesetApplicatorTests.mm in Sources */,
 				03F1ABCB1D2B2A9B00867584 /* CKOptimisticViewMutationsTests.mm in Sources */,
@@ -4924,7 +4925,6 @@
 				03F1ABEF1D2B2A9B00867584 /* CKStateScopeComponentBuilderTests.mm in Sources */,
 				03F1ABF01D2B2A9B00867584 /* CKComponentViewReuseTests.mm in Sources */,
 				03F1ABF11D2B2A9B00867584 /* CKDataSourceReloadModificationTests.mm in Sources */,
-				72AF9C92246D6414005F393E /* CKComponentTestCase.mm in Sources */,
 				03F1ABF41D2B2A9B00867584 /* CKComponentGestureActionsTests.mm in Sources */,
 				03F1ABF51D2B2A9B00867584 /* CKStatefulViewReusePoolTests.mm in Sources */,
 				03F1ABF71D2B2A9B00867584 /* CKDataSourceUpdateStateModificationTests.mm in Sources */,
@@ -4951,6 +4951,7 @@
 				A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */,
 				23F949F622689F7700E590A2 /* CKAnalyticsListenerSpy.mm in Sources */,
 				3E9D6724215E39530019429E /* CKRenderComponentTestHelpers.mm in Sources */,
+				14FBDEB9252CA09B00B0C36C /* CKComponentTestCase.mm in Sources */,
 				2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 				D6B0AE0220AAFB1000A31FDF /* NSIndexSetExtensions.mm in Sources */,
 				7FA099151F66F36800B81EED /* CKComponentLifecycleTestHelper.mm in Sources */,
@@ -4996,7 +4997,6 @@
 				497824751BC570E000F29081 /* CKCollectionViewDataSourceTests.mm in Sources */,
 				A22FE3061AF2CF0C00EC30B8 /* CKStateExposingComponent.mm in Sources */,
 				B342DC721AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */,
-				729D49A3246C741900C1ABBD /* CKComponentTestCase.mm in Sources */,
 				B761C8B11CB36FA200CDD03F /* CKDataSourceAppliedChangesTests.mm in Sources */,
 				B342DC7B1AC23EA900ACAC53 /* CKComponentSizeTests.mm in Sources */,
 				824416C21E44E34600904340 /* CKDetectDuplicateComponentTests.mm in Sources */,
@@ -5557,6 +5557,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -5573,6 +5574,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

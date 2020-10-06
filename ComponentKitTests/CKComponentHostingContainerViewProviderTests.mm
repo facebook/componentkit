@@ -18,8 +18,7 @@
 
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 #import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
-
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 @interface CKComponentHostingContainerViewProviderTests : CKComponentTestCase
 @end

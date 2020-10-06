@@ -19,7 +19,7 @@
 #import <ComponentKit/CKMountableHelpers.h>
 #import <ComponentKit/CKMountedObjectForView.h>
 
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 @interface CKComponentMountTests : CKComponentTestCase
 @end

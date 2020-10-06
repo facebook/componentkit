@@ -15,7 +15,7 @@
 
 #import <ComponentKit/CKComponentAccessibility.h>
 
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 using namespace CK::Component::Accessibility;
 

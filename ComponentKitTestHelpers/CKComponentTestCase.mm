@@ -8,7 +8,7 @@
 *
 */
 
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 #import <ComponentKit/CKComponentContextHelper.h>
 #import <ComponentKit/CKComponentCreationValidation.h>
