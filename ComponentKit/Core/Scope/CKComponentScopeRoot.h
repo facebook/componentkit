@@ -52,7 +52,6 @@ struct CKStateUpdateMetadata;
 
  @param listener A listener for state updates that flow through the scope root.
  @param analyticsListener A listener for analytics events for the components of this scope root.
- @param analyticsListener A listener for analytics events for the components of this scope root.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
