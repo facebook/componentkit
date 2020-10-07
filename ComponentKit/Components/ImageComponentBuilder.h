@@ -346,15 +346,9 @@ private:
     constexpr auto imageIsSet = PropBitmap::isSet(PropsBitmap, ImageComponentPropId::image);
     static_assert(imageIsSet, "Required property 'image' is not set.");
 
-    if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBaseSizeOnlyPropId::size)) {
-      return [CKImageComponent newWithImage:_image
-                                 attributes:std::move(_attributes)
-                                       size:this->_size];
-    } else {
-      return [CKImageComponent newWithImage:_image
-                                 attributes:std::move(_attributes)
-                                       size:{}];
-    }
+    return [[CKImageComponent alloc] initWithImage:_image
+                                       attributes:std::move(_attributes)
+                                      size:this->_size];
   }
 
 private:
