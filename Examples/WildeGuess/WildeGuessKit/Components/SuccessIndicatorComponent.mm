@@ -31,19 +31,21 @@
   return [super
           newWithView:{[UIView class]} // Need a view so supercomponent can animate this component.
           component:
-          [CKInsetComponent
-           newWithInsets:{.left = 20, .right = 20}
-           component:
-           CK::CenterLayoutComponentBuilder()
+          CK::InsetComponentBuilder()
+              .insetsLeft(20)
+              .insetsRight(20)
+              .component(CK::CenterLayoutComponentBuilder()
             .centeringOptions(CKCenterLayoutComponentCenteringY)
             .sizingOptions(CKCenterLayoutComponentSizingOptionMinimumY)
             .child(
             [CKBackgroundLayoutComponent
              newWithComponent:
-             [CKInsetComponent
-              newWithInsets:{.top = 40, .left = 20, .bottom = 40, .right = 20}
-              component:
-              [CKFlexboxComponent
+             CK::InsetComponentBuilder()
+                 .insetsTop(40)
+                 .insetsLeft(20)
+                 .insetsBottom(40)
+                 .insetsRight(20)
+                 .component([CKFlexboxComponent
                newWithView:{}
                size:{}
                style:{
@@ -77,7 +79,8 @@
                    size:{ }],
                    .spacingBefore = 20
                  }
-               }]]
+               }])
+                 .build()
              background:
              [CKComponent
               newWithView:{
@@ -89,7 +92,8 @@
               }
               size:{}]]
             )
-            .build()]];
+            .build())
+              .build()];
 }
 
 @end

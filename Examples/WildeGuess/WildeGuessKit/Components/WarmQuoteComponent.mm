@@ -29,11 +29,12 @@
             newWithRatio:1.3
             size:{}
             component:
-            [CKInsetComponent
-             // Left and right inset of 30pts; centered vertically:
-             newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
-             component:
-             [CKLabelComponent
+            CK::InsetComponentBuilder()
+                .insetsLeft(30)
+                .insetsRight(30)
+                .insetsTop(INFINITY)
+                .insetsBottom(INFINITY)
+                .component([CKLabelComponent
               newWithLabelAttributes:{
                 .string = text,
                 .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
@@ -42,7 +43,8 @@
                 {@selector(setBackgroundColor:), [UIColor clearColor]},
                 {@selector(setUserInteractionEnabled:), @NO},
               }
-              size:{ }]]]]];
+              size:{ }])
+                .build()]]];
 
 }
 

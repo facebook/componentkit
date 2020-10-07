@@ -23,10 +23,12 @@
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
   CKComponent *quoteTextComponent =
-  [CKInsetComponent
-   newWithInsets:{.top = 50, .left = 20, .bottom = 50, .right = 20}
-   component:
-   [CKLabelComponent
+  CK::InsetComponentBuilder()
+      .insetsTop(50)
+      .insetsLeft(20)
+      .insetsBottom(50)
+      .insetsRight(20)
+      .component([CKLabelComponent
     newWithLabelAttributes:{
       .string = text,
       .color = [UIColor darkGrayColor],
@@ -36,7 +38,8 @@
       {@selector(setBackgroundColor:), [UIColor clearColor]},
       {@selector(setUserInteractionEnabled:), @NO},
     }
-    size:{ }]];
+    size:{ }])
+      .build();
 
   CKComponent *quoteTextWithBookmarkComponent =
   [CKFlexboxComponent
@@ -69,10 +72,10 @@
           [QuoteWithBackgroundComponent
            newWithBackgroundImage:[context imageNamed:@"Drops"]
            quoteComponent:
-           [CKInsetComponent
-            newWithInsets:{.top = 40, .bottom = 40}
-            component:
-            [CKBackgroundLayoutComponent
+           CK::InsetComponentBuilder()
+               .insetsTop(40)
+               .insetsBottom(40)
+               .component([CKBackgroundLayoutComponent
              newWithComponent:quoteTextWithBookmarkComponent
              background:
              // Add a translucent white background for the text.
@@ -81,7 +84,8 @@
                 [UIView class],
                 {{@selector(setBackgroundColor:), [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.7]}}
               }
-              size:{}]]]]];
+              size:{}]])
+               .build()]];
 }
 
 @end

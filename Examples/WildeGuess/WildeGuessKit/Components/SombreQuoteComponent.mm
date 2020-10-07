@@ -25,10 +25,12 @@
           [QuoteWithBackgroundComponent
            newWithBackgroundImage:[context imageNamed:@"MarketStreet"]
            quoteComponent:
-           [CKInsetComponent
-            newWithInsets:{.top = 40, .left = 30, .bottom = 40, .right = 30}
-            component:
-            [CKFlexboxComponent
+           CK::InsetComponentBuilder()
+               .insetsTop(40)
+               .insetsLeft(30)
+               .insetsBottom(40)
+               .insetsRight(30)
+               .component([CKFlexboxComponent
              newWithView:{}
              size:{}
              style:{
@@ -49,7 +51,8 @@
                  }
                  size:{ }]},
                {lineComponent()},
-             }]]]];;
+             }])
+               .build()]];;
 }
 
 static CKComponent *lineComponent()

@@ -26,10 +26,12 @@
           [QuoteWithBackgroundComponent
            newWithBackgroundImage:[context imageNamed:@"LosAngeles"]
            quoteComponent:
-           [CKInsetComponent
-            newWithInsets:{.top = 70, .bottom = 25, .left = 20, .right = 20}
-            component:
-            [CKFlexboxComponent
+           CK::InsetComponentBuilder()
+               .insetsTop(70)
+               .insetsBottom(25)
+               .insetsLeft(20)
+               .insetsRight(20)
+               .component([CKFlexboxComponent
              newWithView:{}
              size:{}
              style:{.alignItems = CKFlexboxAlignItemsStart}
@@ -49,10 +51,9 @@
                },
                {
                  // A semi-transparent end quote (") symbol placed below the quote.
-                 [CKInsetComponent
-                  newWithInsets:{.right = 5}
-                  component:
-                  [CKLabelComponent
+                 CK::InsetComponentBuilder()
+                     .insetsRight(5)
+                     .component([CKLabelComponent
                    newWithLabelAttributes:{
                      .string = @"\u201D",
                      .color = [UIColor colorWithWhite:1 alpha:0.5],
@@ -62,10 +63,12 @@
                      {@selector(setBackgroundColor:), [UIColor clearColor]},
                      {@selector(setUserInteractionEnabled:), @NO},
                    }
-                   size:{ }]],
+                   size:{ }])
+                     .build(),
                  .alignSelf = CKFlexboxAlignSelfEnd, // Right aligned
                }
-             }]]]];
+             }])
+               .build()]];
 }
 
 @end
