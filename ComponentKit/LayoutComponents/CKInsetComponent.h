@@ -45,7 +45,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 #if CK_SWIFT
 
 /**
- @param view Passed to CKComponent +newWithView:size:. The view, if any, will extend outside the insets.
+ @param swiftView Passed to CKComponent -initWithView:size:. The view, if any, will extend outside the insets.
  @param insets The amount of space to inset on each side.
  @param component The wrapped child component to inset. If nil, this method returns nil.
  */

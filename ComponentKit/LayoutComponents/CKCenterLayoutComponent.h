@@ -50,7 +50,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param centeringOptions see CKCenterLayoutComponentCenteringOptions.
  @param sizingOptions see CKCenterLayoutComponentSizingOptions.
  @param child The child to center.
- @param size The component size or nil for the default which is for the layout to take the maximum space available.
+ @param swiftSize The component size or nil for the default which is for the layout to take the maximum space available.
  */
 - (instancetype)initWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
                            sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
