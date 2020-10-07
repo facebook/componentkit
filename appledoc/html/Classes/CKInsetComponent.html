@@ -145,7 +145,7 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Passed to CKComponent +newWithView:size:. The view, if any, will extend outside the insets.</p>
+				<p>Passed to CKComponent -initWithView:size:. The view, if any, will extend outside the insets.</p>
 			</div>
 			
 		    
@@ -159,6 +159,11 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 				<table class="argument-def parameter-def">
 				
 					<tr>
+						<th scope="row" class="argument-name"><code>swiftView</code></th>
+						<td><p>Passed to CKComponent -initWithView:size:. The view, if any, will extend outside the insets.</p></td>
+					</tr>
+				
+					<tr>
 						<th scope="row" class="argument-name"><code>insets</code></th>
 						<td><p>The amount of space to inset on each side.</p></td>
 					</tr>
@@ -166,11 +171,6 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 					<tr>
 						<th scope="row" class="argument-name"><code>component</code></th>
 						<td><p>The wrapped child component to inset. If nil, this method returns nil.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>view</code></th>
-						<td><p>Passed to CKComponent +newWithView:size:. The view, if any, will extend outside the insets.</p></td>
 					</tr>
 				
 				</table>
