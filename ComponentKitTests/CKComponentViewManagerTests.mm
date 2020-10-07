@@ -17,7 +17,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKCompositeComponent.h>
 
-#import <ComponentKitTestHelpers/CKComponentTestCase.h>
+#import "CKComponentTestCase.h"
 
 using CK::Component::ViewManager;
 

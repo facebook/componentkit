@@ -20,8 +20,9 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKRenderHelpers.h>
 
-#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
+
+#import "CKComponentTestCase.h"
 
 @interface CKRenderComponentTests : CKComponentTestCase
 @end

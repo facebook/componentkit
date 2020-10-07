@@ -20,10 +20,11 @@
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKComponentControllerInternal.h>
 
-#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 #import <ComponentKitTestHelpers/CKComponentTestRootScope.h>
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
+
+#import "CKComponentTestCase.h"
 
 using namespace CKComponentControllerHelper;
 
