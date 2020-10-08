@@ -71,14 +71,6 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (instancetype)initWithInsets:(UIEdgeInsets)insets
                      component:(CKComponent *_Nullable)component;
 
-// DEPRECATED - Do not use. Use CK::InsetComponentBuilder instead.
-+ (instancetype)newWithInsets:(UIEdgeInsets)insets
-                    component:(CKComponent *_Nullable)component;
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                     insets:(UIEdgeInsets)insets
-                  component:(CKComponent *_Nullable)component;
-
 #endif
 
 @end

@@ -70,19 +70,6 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
   return [self initWithView:{} insets:insets component:component];
 }
 
-+ (instancetype)newWithInsets:(UIEdgeInsets)insets
-                    component:(CKComponent *_Nullable)component
-{
-  return [[self alloc] initWithView:{} insets:insets component:component];
-}
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                     insets:(UIEdgeInsets)insets
-                  component:(CKComponent *_Nullable)component
-{
-  return [[self alloc] initWithView:view insets:insets component:component];
-}
-
 - (nullable instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
                                    insets:(UIEdgeInsets)insets
                                 component:(CKComponent *_Nullable)component
