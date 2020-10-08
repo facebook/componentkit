@@ -96,7 +96,9 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Componen
     // TODO: Reuse logic
     // TODO: CKDeflatedComponentContext
 
-    let hasScopeHandle = linkPropertyWrappersWithScopeHandle()
+    let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
+      forceRequireNode: model?.requiresNode ?? false
+    )
 
     defer {
       if hasScopeHandle {
@@ -185,42 +187,38 @@ extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable, Se
 // MARK: Link
 
 private extension View {
-  func linkPropertyWrappersWithScopeHandle(forceRequireNode: Bool = false) -> Bool {
-    let states = Mirror(reflecting: self)
+
+  private var linkableItems: [ScopeHandleLinkable] {
+    Mirror(reflecting: self)
       .children
       .compactMap {
         $0.value as? ScopeHandleLinkable
       }
+  }
 
-    guard states.isEmpty == false || forceRequireNode else {
+  private func link(linkableItems: [ScopeHandleLinkable], id: Any?) {
+    let scopeHandle = CKSwiftCreateScopeHandle(SwiftComponent<Self>.self, id)
+    linkableItems
+      .enumerated()
+      .forEach { index, item in
+        item.link(with: scopeHandle, at: index)
+      }
+  }
+
+  func linkPropertyWrappersWithScopeHandle(forceRequireNode: Bool) -> Bool {
+    let linkableItems = self.linkableItems
+    guard linkableItems.isEmpty == false || forceRequireNode else {
       return false
     }
 
-    let scopeHandle = CKSwiftCreateScopeHandle(SwiftComponent<Self>.self, nil)
-    states
-      .enumerated()
-      .forEach { index, state in
-        state.link(with: scopeHandle, at: index)
-      }
+    link(linkableItems: linkableItems, id: nil)
     return true
   }
 }
 
 private extension View where Self: ViewIdentifiable {
   func linkPropertyWrappersWithScopeHandle() {
-    let states = Mirror(reflecting: self)
-      .children
-      .compactMap {
-        $0.value as? ScopeHandleLinkable
-      }
-
-    // We've got an identifier so we shouldn't skip the creation of the scope.
-    let scopeHandle = CKSwiftCreateScopeHandle(SwiftComponent<Self>.self, id)
-    states
-      .enumerated()
-      .forEach { index, state in
-        state.link(with: scopeHandle, at: index)
-      }
+    link(linkableItems: linkableItems, id: id)
   }
 }
 
