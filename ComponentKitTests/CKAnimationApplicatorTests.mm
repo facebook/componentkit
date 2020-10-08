@@ -10,13 +10,14 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
+
 #import <ComponentKit/CKAnimationApplicator.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAnimationsController.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
 
 #import "CKAnimationSpy.h"
-#import "CKComponentTestCase.h"
 #import "CKComponentAnimationsEquality.h"
 #import "TransactionProviderSpy.h"
 

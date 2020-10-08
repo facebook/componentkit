@@ -16,7 +16,7 @@
 
 #import "yoga/Yoga.h"
 
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 @interface CKFlexboxComponent (Test)
 

@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKTestActionComponent.h>
 
 #import <ComponentKit/CKAction.h>
@@ -27,7 +28,7 @@
 - (void)someAction {}
 @end
 
-@interface CKComponentActionAttributeTests : XCTestCase
+@interface CKComponentActionAttributeTests : CKComponentTestCase
 @end
 
 /* This needs to be an application test, otherwise sendActionsForControlEvents: doesn't work since UIApplication is nil */

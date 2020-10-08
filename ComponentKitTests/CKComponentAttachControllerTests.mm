@@ -17,9 +17,8 @@
 #import <ComponentKit/CKComponentAttachControllerInternal.h>
 #import <ComponentKit/CKComponentRootLayoutProvider.h>
 #import <ComponentKit/CKComponentRootView.h>
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
-
-#import "CKComponentTestCase.h"
 
 @interface CKComponentRootLayoutTestProvider: NSObject <CKComponentRootLayoutProvider>
 

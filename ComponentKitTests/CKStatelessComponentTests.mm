@@ -12,7 +12,7 @@
 
 #import <ComponentKit/CKStatelessComponent.h>
 
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 @interface CKStatelessComponentTests : CKComponentTestCase
 

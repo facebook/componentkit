@@ -11,13 +11,13 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKTestActionComponent.h>
 
 #import <ComponentKit/CKAction.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
-#import "CKComponentTestCase.h"
 
 @interface CKComponentAccessibilityCustomActionsAttributeTests : CKComponentTestCase
 @end

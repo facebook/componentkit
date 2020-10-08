@@ -19,10 +19,10 @@
 #import <ComponentKit/CKComponentAnimations.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKComponentTestRootScope.h>
 
 #import "CKComponentAnimationsEquality.h"
-#import "CKComponentTestCase.h"
 
 @interface CKComponentAnimationsTests_LayoutDiffing: CKComponentTestCase
 @end

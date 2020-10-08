@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKTestActionComponent.h>
 
 #import <ComponentKit/CKBuildComponent.h>
@@ -23,8 +24,6 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
-
-#import "CKComponentTestCase.h"
 
 @interface CKComponentActionTestAssertionHandler : NSAssertionHandler
 @end

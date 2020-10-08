@@ -24,7 +24,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKRenderTreeNode.h>
 
-#import "CKComponentTestCase.h"
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 
 static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> parentNode, CKTreeNode *childNode, id<CKRenderComponentProtocol> c) {
   auto const componentKey = [childNode componentKey];

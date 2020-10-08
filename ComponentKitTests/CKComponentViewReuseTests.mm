@@ -10,6 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 
 #import <ComponentKit/CKComponent.h>
@@ -18,8 +19,6 @@
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/ComponentViewManager.h>
 #import <ComponentKit/ComponentViewReuseUtilities.h>
-
-#import "CKComponentTestCase.h"
 
 @interface CKComponentViewReuseTests : CKComponentTestCase
 @end
