@@ -14,6 +14,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(CKComponentViewAttribute_SwiftBridge.Gesture)
+typedef NS_CLOSED_ENUM(NSInteger, CKComponentViewAttributeGesture_SwiftBridge) {
+  CKComponentViewAttributeGesture_SwiftBridgeTap,
+  CKComponentViewAttributeGesture_SwiftBridgePan,
+  CKComponentViewAttributeGesture_SwiftBridgeLongPress,
+};
+
 typedef void (^CKComponentViewAttribute_SwiftBridgeGestureHandler)(UIGestureRecognizer *);
 
 __attribute__((objc_subclassing_restricted))
@@ -24,10 +31,7 @@ NS_SWIFT_NAME(ComponentViewAttributeSwiftBridge)
 
 - (instancetype)init NS_UNAVAILABLE;
 
-/* Gestures */
-- (instancetype)initWithTapHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler;
-- (instancetype)initWithPanHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler;
-- (instancetype)initWithLongPressHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler;
+- (instancetype)initWithGesture:(CKComponentViewAttributeGesture_SwiftBridge)gesture handler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler;
 
 @end
 

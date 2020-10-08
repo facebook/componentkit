@@ -100,26 +100,6 @@ extension ViewAttributeAssignable where Self: ComponentInflatable {
   public func cornerRadius(_ value: CGFloat) -> Self {
     attribute(\.cornerRadius, value)
   }
-
-  // MARK: Gestures
-
-  public func tapHandler(_ value: @escaping (UIGestureRecognizer) -> Void) -> Self {
-    var copy = self
-    copy.attributes.append(ViewConfiguration.Attribute(tapHandler: value))
-    return copy
-  }
-
-  public func panHandler(_ value: @escaping (UIGestureRecognizer) -> Void) -> Self {
-    var copy = self
-    copy.attributes.append(ViewConfiguration.Attribute(panHandler: value))
-    return copy
-  }
-
-  public func longPressHandler(_ value: @escaping (UIGestureRecognizer) -> Void) -> Self {
-    var copy = self
-    copy.attributes.append(ViewConfiguration.Attribute(longPressHandler: value))
-    return copy
-  }
 }
 
 #endif

@@ -722,6 +722,7 @@
 		D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
 		D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
+		D4171B52252DBD660082CF96 /* Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4171B51252DBD660082CF96 /* Gestures.swift */; };
 		D427E8192314A888004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
 		D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1983,6 +1984,7 @@
 		D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D0B47D971CBDA97400BB33CE /* CKComponentSnapshotTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSnapshotTestCase.h; sourceTree = "<group>"; };
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		D4171B51252DBD660082CF96 /* Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gestures.swift; sourceTree = "<group>"; };
 		D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentContext.mm; sourceTree = "<group>"; };
 		D427E8182314A888004F22BD /* CKStatelessComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatelessComponentContext.h; sourceTree = "<group>"; };
 		D42AF57D251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewConfigurationRepresentable.swift; sourceTree = "<group>"; };
@@ -3405,6 +3407,7 @@
 				D4F543C5250784A2008F17A8 /* Dimension.swift */,
 				D42B76092516233100DAC4D5 /* ViewLayoutModifier.swift */,
 				D4EAA55E2513A2BF00F32DC1 /* ViewLifecycleModifier.swift */,
+				D4171B51252DBD660082CF96 /* Gestures.swift */,
 				D42B76262516856200DAC4D5 /* FlexboxComponent.swift */,
 				D42B76152516361600DAC4D5 /* ViewAnimationModifier.swift */,
 				D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */,
@@ -5302,6 +5305,7 @@
 				D42AF58C2519045E00F0BBA8 /* ComponentBuilder.swift in Sources */,
 				D4EAA55F2513A2BF00F32DC1 /* ViewLifecycleModifier.swift in Sources */,
 				D4F543CA250784A2008F17A8 /* ViewConfiguration.swift in Sources */,
+				D4171B52252DBD660082CF96 /* Gestures.swift in Sources */,
 				D42AF58A2519041F00F0BBA8 /* ComponentView.swift in Sources */,
 				D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */,
 				D4F543EC25079578008F17A8 /* View.swift in Sources */,

@@ -82,27 +82,6 @@ public struct ViewConfiguration {
 #endif
 }
 
-public extension ViewConfiguration.Attribute {
-
-  /// Creates a view configuration attribute linked to tap gesture recognizer.
-  /// - Parameter tapHandler: The closure to execute when the gesture fires.
-  init(tapHandler: @escaping (UIGestureRecognizer) -> Void) {
-    self.init(componentViewAttribute: .init(tapHandler: tapHandler))
-  }
-
-  /// Creates a view configuration attribute linked to pan gesture recognizer.
-  /// - Parameter panHandler: The closure to execute when the gesture fires.
-  init(panHandler: @escaping (UIGestureRecognizer) -> Void) {
-    self.init(componentViewAttribute: .init(panHandler: panHandler))
-  }
-
-  /// Creates a view configuration attribute linked to long press gesture recognizer.
-  /// - Parameter longPressHandler: The closure to execute when the gesture fires.
-  init(longPressHandler: @escaping (UIGestureRecognizer) -> Void) {
-    self.init(componentViewAttribute: .init(longPressHandler: longPressHandler))
-  }
-}
-
 #if swift(>=5.1)
 @_functionBuilder
 public struct ViewConfigurationAttributeBuilder<View: UIView> {

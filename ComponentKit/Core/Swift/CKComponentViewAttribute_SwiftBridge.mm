@@ -63,25 +63,22 @@
 
 #pragma mark - Gestures
 
-- (instancetype)initWithAttributeProvider:(CKComponentViewAttributeValue (*)(CKAction<UIGestureRecognizer *>))provider
-                                  handler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
+typedef CKComponentViewAttributeValue (*CKComponentViewAttributeValueGestureProvider)(CKAction<UIGestureRecognizer *>);
+static CKComponentViewAttributeValueGestureProvider providerFromGesture(CKComponentViewAttributeGesture_SwiftBridge gesture) {
+  switch (gesture) {
+    case CKComponentViewAttributeGesture_SwiftBridgeTap:
+      return &CKComponentTapGestureAttribute;
+    case CKComponentViewAttributeGesture_SwiftBridgePan:
+      return &CKComponentPanGestureAttribute;
+    case CKComponentViewAttributeGesture_SwiftBridgeLongPress:
+      return &CKComponentLongPressGestureAttribute;
+  }
+}
+
+- (instancetype)initWithGesture:(CKComponentViewAttributeGesture_SwiftBridge)gesture handler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
 {
+  const auto provider = providerFromGesture(gesture);
   return [self initWithViewAttribute:provider(CKAction<UIGestureRecognizer *>::actionFromSenderlessBlock(handler)).first];
-}
-
-- (instancetype)initWithTapHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
-{
-  return [self initWithAttributeProvider:&CKComponentTapGestureAttribute handler:handler];
-}
-
-- (instancetype)initWithPanHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
-{
-  return [self initWithAttributeProvider:&CKComponentPanGestureAttribute handler:handler];
-}
-
-- (instancetype)initWithLongPressHandler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
-{
-  return [self initWithAttributeProvider:&CKComponentLongPressGestureAttribute handler:handler];
 }
 
 @end
