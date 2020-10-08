@@ -25,27 +25,27 @@
           [QuoteWithBackgroundComponent
            newWithBackgroundImage:[context imageNamed:@"Powell"]
            quoteComponent:
-           [CKRatioLayoutComponent
-            newWithRatio:1.3
-            size:{}
-            component:
-            CK::InsetComponentBuilder()
-                .insetsLeft(30)
-                .insetsRight(30)
-                .insetsTop(INFINITY)
-                .insetsBottom(INFINITY)
-                .component([CKLabelComponent
-              newWithLabelAttributes:{
-                .string = text,
-                .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
-              }
-              viewAttributes:{
-                {@selector(setBackgroundColor:), [UIColor clearColor]},
-                {@selector(setUserInteractionEnabled:), @NO},
-              }
-              size:{ }])
-                .build()]]];
-
+           CK::RatioLayoutComponentBuilder()
+            .ratio(1.3)
+            .component(
+                CK::InsetComponentBuilder()
+                    .insetsLeft(30)
+                    .insetsRight(30)
+                    .insetsTop(INFINITY)
+                    .insetsBottom(INFINITY)
+                    .component([CKLabelComponent
+                  newWithLabelAttributes:{
+                    .string = text,
+                    .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
+                  }
+                  viewAttributes:{
+                    {@selector(setBackgroundColor:), [UIColor clearColor]},
+                    {@selector(setUserInteractionEnabled:), @NO},
+                  }
+                  size:{ }])
+                 .build()
+            )
+            .build()]];
 }
 
 @end
