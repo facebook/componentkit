@@ -112,9 +112,14 @@ struct std::equal_to<CKComponentScopeHandle *>
   }
 };
 
+#endif
+
 typedef int32_t CKScopedResponderUniqueIdentifier;
+
+NS_SWIFT_NAME(ScopedResponderKey)
 typedef int CKScopedResponderKey;
 
+NS_SWIFT_NAME(ScopedResponder)
 @interface CKScopedResponder : NSObject
 
 @property (nonatomic, readonly, assign) CKScopedResponderUniqueIdentifier uniqueIdentifier;
@@ -130,7 +135,5 @@ typedef int CKScopedResponderKey;
 - (id _Nullable)responderForKey:(CKScopedResponderKey)key;
 
 @end
-
-#endif
 
 NS_ASSUME_NONNULL_END
