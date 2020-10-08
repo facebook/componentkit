@@ -683,7 +683,7 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
       }
     }
 
-    return [CKButtonComponent newWithAction:std::move(_action) options:std::move(_options)];
+    return [[CKButtonComponent alloc] initWithAction:std::move(_action) options:std::move(_options)];
   }
 
  private:

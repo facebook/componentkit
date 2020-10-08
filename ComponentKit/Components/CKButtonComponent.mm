@@ -53,8 +53,8 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   CGSize _intrinsicSize;
 }
 
-+ (instancetype)newWithAction:(const CKAction<UIEvent *>)action
-                      options:(const CKButtonComponentOptions &)options
+- (instancetype)initWithAction:(const CKAction<UIEvent *>)action
+                       options:(const CKButtonComponentOptions &)options
 {
   static const CKComponentViewAttribute titleFontAttribute = {"CKButtonComponent.titleFont", ^(UIButton *button, id value) {
     button.titleLabel.font = value;
@@ -154,31 +154,31 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     accessibilityContext.extra = extra;
   }
 
-  const auto b = [super
-                  newWithView:{
-                    [CKButtonWithExtendedTapArea class],
-                    std::move(attributes),
-                    std::move(accessibilityContext)
-                  }
-                  size:options.size];
+  self = [super initWithView:{
+    [CKButtonWithExtendedTapArea class],
+    std::move(attributes),
+    std::move(accessibilityContext)
+  } size:options.size];
 
-#if !TARGET_OS_TV
-  const UIControlState state = (options.selected ? UIControlStateSelected : UIControlStateNormal)
-  | (options.enabled ? UIControlStateNormal : UIControlStateDisabled);
-  b->_intrinsicSize = intrinsicSize(valueForState(options.titles.getMap(), state),
-                                    options.numberOfLines,
-                                    options.titleFont,
-                                    valueForState(options.images.getMap(), state),
-                                    valueForState(options.backgroundImages.getMap(), state),
-                                    contentEdgeInsets,
-                                    titleEdgeInsets,
-                                    imageEdgeInsets);
+  if (self != nil) {
+  #if !TARGET_OS_TV
+    const UIControlState state = (options.selected ? UIControlStateSelected : UIControlStateNormal)
+    | (options.enabled ? UIControlStateNormal : UIControlStateDisabled);
+    _intrinsicSize = intrinsicSize(valueForState(options.titles.getMap(), state),
+                                   options.numberOfLines,
+                                   options.titleFont,
+                                   valueForState(options.images.getMap(), state),
+                                   valueForState(options.backgroundImages.getMap(), state),
+                                   contentEdgeInsets,
+                                   titleEdgeInsets,
+                                   imageEdgeInsets);
 
-#else
-  // `labelFontSize` is unavailable on tvOS
-  b->_intrinsicSize = {INFINITY, INFINITY};
-#endif // !TARGET_OS_TV
-  return b;
+  #else
+    // `labelFontSize` is unavailable on tvOS
+    _intrinsicSize = {INFINITY, INFINITY};
+  #endif // !TARGET_OS_TV
+  }
+  return self;
 }
 
 - (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

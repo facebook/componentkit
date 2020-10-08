@@ -87,8 +87,8 @@ struct CKButtonComponentOptions {
 
 CK_COMPONENT_INIT_UNAVAILABLE;
 
-+ (instancetype)newWithAction:(const CKAction<UIEvent *>)action
-                      options:(const CKButtonComponentOptions &)options;
+- (instancetype)initWithAction:(const CKAction<UIEvent *>)action
+                       options:(const CKButtonComponentOptions &)options NS_DESIGNATED_INITIALIZER;
 
 @end
 
