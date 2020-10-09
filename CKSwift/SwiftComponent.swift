@@ -40,9 +40,9 @@ public struct SwiftComponentModel {
   func toSwiftBridge() -> SwiftComponentModelSwiftBridge? {
     guard isEmpty == false else { return nil }
     return SwiftComponentModelSwiftBridge(
-      animation: animations.animations.group(),
-      initialMountAnimation: animations.initialMount.group(),
-      finalUnmountAnimation: animations.finalUnmount.group(with: .backwards),
+      animation: animations.animations.groupAnimationOrNil(),
+      initialMountAnimation: animations.initialMount.groupAnimationOrNil(),
+      finalUnmountAnimation: animations.finalUnmount.groupAnimationOrNil(fillMode: .forwards),
       didInitCallbacks: lifecycleCallbacks.didInit.isEmpty ? nil : lifecycleCallbacks.didInit,
       willMountCallbacks: lifecycleCallbacks.willMount.isEmpty ? nil : lifecycleCallbacks.willMount,
       didUnmountCallbacks: lifecycleCallbacks.didUnmount.isEmpty ? nil : lifecycleCallbacks.didUnmount,

@@ -12,13 +12,14 @@ import Foundation
 import UIKit
 
 extension Array where Element: CAAnimation {
-  func group(with fillMode: CAMediaTimingFillMode = .backwards) -> CAAnimation? {
+  func groupAnimationOrNil(fillMode: CAMediaTimingFillMode = .backwards) -> CAAnimation? {
     guard count > 1 else {
       return first
     }
 
-    let animation = CAAnimationGroup()
-    animation.animations = self
-    return animation
+    let animationGroup = CAAnimationGroup()
+    animationGroup.animations = self
+    animationGroup.fillMode = fillMode
+    return animationGroup
   }
 }
