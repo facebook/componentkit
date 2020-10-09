@@ -66,7 +66,7 @@ extension View where Self.Body == Component {
       self,
       body: body,
       model: model
-    ).animated(model?.animations)
+    )
   }
 }
 
@@ -87,7 +87,7 @@ extension View where Self: ViewIdentifiable, Self.Body == Component {
       self,
       body: body,
       model: model
-    ).animated(model?.animations)
+    )
   }
 }
 
@@ -113,7 +113,7 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Componen
       body: body,
       viewConfiguration: viewConfiguration,
       model: model
-    ).animated(model?.animations)
+    )
   }
 }
 
@@ -135,7 +135,7 @@ extension View where Self: ViewIdentifiable & ViewConfigurationRepresentable, Se
       body: body,
       viewConfiguration: viewConfiguration,
       model: model
-    ).animated(model?.animations)
+    )
   }
 }
 
@@ -160,7 +160,6 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Never {
       viewConfiguration: viewConfiguration,
       model: model
     )
-    .animated(model?.animations)
   }
 }
 
@@ -180,7 +179,6 @@ extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable, Se
       viewConfiguration: viewConfiguration,
       model: model
     )
-    .animated(model?.animations)
   }
 }
 

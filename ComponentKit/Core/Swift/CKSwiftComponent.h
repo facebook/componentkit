@@ -27,6 +27,8 @@ NS_SWIFT_NAME(SwiftComponentModelSwiftBridge)
 CK_INIT_UNAVAILABLE;
 
 - (instancetype)initWithAnimation:(CAAnimation *_Nullable)animation
+            initialMountAnimation:(CAAnimation *_Nullable)initialMountAnimation
+            finalUnmountAnimation:(CAAnimation *_Nullable)finalUnmountAnimation
                  didInitCallbacks:(NSArray<CKSwiftComponentDidInitCallback> *_Nullable)didInitCallbacks
                willMountCallbacks:(NSArray<CKSwiftComponentWillMountCallback> *_Nullable)willMountCallbacks
               didUnmountCallbacks:(NSArray<CKSwiftComponentDidUnMountCallback> *_Nullable)didUnmountCallbacks

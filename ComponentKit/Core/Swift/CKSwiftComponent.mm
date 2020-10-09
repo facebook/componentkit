@@ -28,6 +28,8 @@
 @implementation CKSwiftComponentModel_SwiftBridge {
   @package
   CAAnimation *_animation;
+  CAAnimation *_initialMountAnimation;
+  CAAnimation *_finalUnmountAnimation;
   NSArray<CKSwiftComponentDidInitCallback> *_didInitCallbacks;
   NSArray<CKSwiftComponentWillMountCallback> *_willMountCallbacks;
   NSArray<CKSwiftComponentDidUnMountCallback> *_didUnmountCallbacks;
@@ -35,6 +37,8 @@
 }
 
 - (instancetype)initWithAnimation:(CAAnimation *)animation
+            initialMountAnimation:(CAAnimation *)initialMountAnimation
+            finalUnmountAnimation:(CAAnimation *)finalUnmountAnimation
                  didInitCallbacks:(NSArray<CKSwiftComponentDidInitCallback> *)didInitCallbacks
                willMountCallbacks:(NSArray<CKSwiftComponentWillMountCallback> *)willMountCallbacks
               didUnmountCallbacks:(NSArray<CKSwiftComponentDidUnMountCallback> *)didUnmountCallbacks
@@ -42,6 +46,8 @@
 {
   if (self = [super init]) {
     _animation = animation;
+    _initialMountAnimation = initialMountAnimation;
+    _finalUnmountAnimation = finalUnmountAnimation;
     _didInitCallbacks = didInitCallbacks;
     _willMountCallbacks = willMountCallbacks;
     _didUnmountCallbacks = didUnmountCallbacks;
@@ -130,6 +136,28 @@
   }
 }
 
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount
+{
+  if (_model != nil && _model->_initialMountAnimation != nil) {
+    return {
+      {self, _model->_initialMountAnimation},
+    };
+  } else {
+    return {};
+  }
+}
+
+- (std::vector<CKComponentFinalUnmountAnimation>)animationsOnFinalUnmount
+{
+  if (_model != nil && _model->_finalUnmountAnimation != nil) {
+    return {
+      {self, _model->_finalUnmountAnimation},
+    };
+  } else {
+    return {};
+  }
+}
+
 - (BOOL)hasAnimations
 {
   return _model != nil && _model->_animation != nil;
@@ -138,6 +166,16 @@
 - (BOOL)hasBoundsAnimations
 {
   return NO;
+}
+
+- (BOOL)hasInitialMountAnimations
+{
+  return _model != nil && _model->_initialMountAnimation != nil;
+}
+
+- (BOOL)hasFinalUnmountAnimations
+{
+  return _model != nil && _model->_finalUnmountAnimation != nil;
 }
 
 - (id<CKComponentControllerProtocol>)buildController

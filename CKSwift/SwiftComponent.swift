@@ -35,16 +35,14 @@ public struct SwiftComponentModel {
     var isEmpty: Bool {
       animations.isEmpty && initialMount.isEmpty && finalUnmount.isEmpty
     }
-
-    var requiresAnimationComponent: Bool {
-      initialMount.isEmpty == false || finalUnmount.isEmpty == false
-    }
   }
 
   func toSwiftBridge() -> SwiftComponentModelSwiftBridge? {
     guard isEmpty == false else { return nil }
     return SwiftComponentModelSwiftBridge(
       animation: animations.animations.group(),
+      initialMountAnimation: animations.initialMount.group(),
+      finalUnmountAnimation: animations.finalUnmount.group(with: .backwards),
       didInitCallbacks: lifecycleCallbacks.didInit.isEmpty ? nil : lifecycleCallbacks.didInit,
       willMountCallbacks: lifecycleCallbacks.willMount.isEmpty ? nil : lifecycleCallbacks.willMount,
       didUnmountCallbacks: lifecycleCallbacks.didUnmount.isEmpty ? nil : lifecycleCallbacks.didUnmount,
@@ -60,11 +58,11 @@ public struct SwiftComponentModel {
   }
 
   var requiresNode: Bool {
-    lifecycleCallbacks.isEmpty == false || animations.animations.isEmpty == false
+    isEmpty == false
   }
 
   var requiresSwiftComponent: Bool {
-    lifecycleCallbacks.isEmpty == false || animations.animations.isEmpty == false
+    isEmpty == false
   }
 }
 

@@ -34,20 +34,16 @@ public struct ComponentView<UIViewType: UIView> : View, ViewAttributeAssignable 
   // MARK: ComponentInflatable
 
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
-    var result : Component {
-      if model?.requiresSwiftComponent == true {
-        return CKSwiftComponent(
-          swiftView: viewConfiguration.viewConfiguration,
-          swiftSize: nil,
-          child: nil,
-          model: model?.toSwiftBridge()
-        )
-      } else {
-        return Component(view: viewConfiguration)
-      }
+    if model?.requiresSwiftComponent == true {
+      return CKSwiftComponent(
+        swiftView: viewConfiguration.viewConfiguration,
+        swiftSize: nil,
+        child: nil,
+        model: model?.toSwiftBridge()
+      )
+    } else {
+      return Component(view: viewConfiguration)
     }
-
-    return result.animated(model?.animations)
   }
 }
 
@@ -72,22 +68,18 @@ public struct WrapperComponentView<UIViewType: UIView> : View, ViewAttributeAssi
   // MARK: ComponentInflatable
 
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
-    var result : Component {
-      if model?.requiresSwiftComponent == true {
-        return CKSwiftComponent(
-          swiftView: viewConfiguration.viewConfiguration,
-          swiftSize: nil,
-          child: self.component(),
-          model: model?.toSwiftBridge()
-        )
-      } else {
-        return CompositeComponent(
-          view: viewConfiguration,
-          component: self.component())
-      }
+    if model?.requiresSwiftComponent == true {
+      return CKSwiftComponent(
+        swiftView: viewConfiguration.viewConfiguration,
+        swiftSize: nil,
+        child: self.component(),
+        model: model?.toSwiftBridge()
+      )
+    } else {
+      return CompositeComponent(
+        view: viewConfiguration,
+        component: self.component())
     }
-
-    return result.animated(model?.animations)
   }
 }
 

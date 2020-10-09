@@ -14,7 +14,7 @@
 
 - (instancetype)initWithImage:(UIImage *)image
                   attributes:(const CKViewComponentAttributeValueMap &)attributes
-                        size:(const CKComponentSize &)size;
+                        size:(const CKComponentSize &)size
 {
   CKViewComponentAttributeValueMap updatedAttributes(attributes);
   updatedAttributes.insert({
