@@ -59,7 +59,10 @@ XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); 
  */
 #define CKSnapshotVerifyComponentWithInsets(component__, sizeRange__, insets__, identifier__) \
 { \
-CKSnapshotVerifyComponent([CKInsetComponent newWithInsets:insets__ component:component__], sizeRange__, identifier__) \
+CKSnapshotVerifyComponent(CK::InsetComponentBuilder() \
+                              .insets(insets__) \
+                              .component(component__) \
+                              .build(), sizeRange__, identifier__); \
 }
 
 /**
