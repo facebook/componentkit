@@ -61,12 +61,7 @@ public final class ComponentHostingViewController: UIViewController {
   public override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
-    let constrainingSize = CGSize(width: view.bounds.width,
-                                  height: view.bounds.height - topLayoutGuide.length)
-    let hostingViewSize = hostingView.sizeThatFits(constrainingSize)
-    let hostingViewFrame = CGRect(origin: CGPoint(x: 0, y: topLayoutGuide.length),
-                                  size: hostingViewSize)
-    hostingView.frame = hostingViewFrame
+    hostingView.frame = view.bounds
   }
 }
 
