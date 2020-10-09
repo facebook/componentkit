@@ -56,14 +56,6 @@ public struct SwiftComponentModel {
   var isEmpty: Bool {
     lifecycleCallbacks.isEmpty && animations.isEmpty
   }
-
-  var requiresNode: Bool {
-    isEmpty == false
-  }
-
-  var requiresSwiftComponent: Bool {
-    isEmpty == false
-  }
 }
 
 final public class SwiftComponent<View: CKSwift.View> : CKSwiftComponent {

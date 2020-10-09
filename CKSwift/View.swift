@@ -48,7 +48,7 @@ extension View where Self.Body == Component {
     // TODO: CKDeflatedComponentContext
 
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
-      forceRequireNode: model?.requiresNode ?? false)
+      forceRequireNode: model?.isEmpty == false)
 
     if hasScopeHandle == false {
       // If the current view doesn't require a scope handle and there is no view configuration
@@ -97,7 +97,7 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Componen
     // TODO: CKDeflatedComponentContext
 
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
-      forceRequireNode: model?.requiresNode ?? false
+      forceRequireNode: model?.isEmpty == false
     )
 
     defer {
@@ -147,7 +147,7 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Never {
     // TODO: CKDeflatedComponentContext
 
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
-      forceRequireNode: model?.requiresNode ?? false)
+      forceRequireNode: model?.isEmpty == false)
 
     defer {
       if hasScopeHandle {

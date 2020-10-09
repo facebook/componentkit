@@ -34,12 +34,12 @@ public struct ComponentView<UIViewType: UIView> : View, ViewAttributeAssignable 
   // MARK: ComponentInflatable
 
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
-    if model?.requiresSwiftComponent == true {
+    if let model = model, model.isEmpty == false {
       return CKSwiftComponent(
         swiftView: viewConfiguration.viewConfiguration,
         swiftSize: nil,
         child: nil,
-        model: model?.toSwiftBridge()
+        model: model.toSwiftBridge()
       )
     } else {
       return Component(view: viewConfiguration)
@@ -68,12 +68,12 @@ public struct WrapperComponentView<UIViewType: UIView> : View, ViewAttributeAssi
   // MARK: ComponentInflatable
 
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
-    if model?.requiresSwiftComponent == true {
+    if let model = model, model.isEmpty == false {
       return CKSwiftComponent(
         swiftView: viewConfiguration.viewConfiguration,
         swiftSize: nil,
         child: self.component(),
-        model: model?.toSwiftBridge()
+        model: model.toSwiftBridge()
       )
     } else {
       return CompositeComponent(

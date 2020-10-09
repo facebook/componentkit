@@ -53,12 +53,12 @@ extension Component : ComponentInflatable {
     // When a non-view issued component is built we need to check the model for:
     // animations & lifecycle callbacks. The component is to be conditionally
     // wrapped.
-    if model?.requiresSwiftComponent == true {
+    if let model = model, model.isEmpty == false {
       return CKSwiftComponent(
         swiftView: nil,
         swiftSize: nil,
         child: self,
-        model: model?.toSwiftBridge())
+        model: model.toSwiftBridge())
     } else {
       return self
     }
