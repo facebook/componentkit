@@ -127,6 +127,16 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(boundsAnimationFromPreviousComponent:));
 }
 
+- (BOOL)hasInitialMountAnimations
+{
+  return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(animationsOnInitialMount));
+}
+
+- (BOOL)hasFinalUnmountAnimations
+{
+  return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(animationsOnFinalUnmount));
+}
+
 - (BOOL)controllerOverridesDidPrepareLayout
 {
   const Class<CKComponentControllerProtocol> controllerClass = [[self class] controllerClass];

@@ -40,7 +40,11 @@ BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id<CKComponent
 
 auto CKComponentHasAnimationsOnInitialMountPredicate(id<CKMountable> const c) -> BOOL
 {
-  return CKSubclassOverridesInstanceMethod([CKComponent class], [c class], @selector(animationsOnInitialMount));
+  if ([c.class isSubclassOfClass:[CKComponent class]]) {
+    return [(CKComponent *)c hasInitialMountAnimations];
+  } else {
+    return NO;
+  }
 }
 
 auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKMountable> const c) -> BOOL
@@ -54,7 +58,11 @@ auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKMountable> cons
 
 auto CKComponentHasAnimationsOnFinalUnmountPredicate(id<CKMountable> const c) -> BOOL
 {
-  return CKSubclassOverridesInstanceMethod([CKComponent class], [c class], @selector(animationsOnFinalUnmount));
+  if ([c.class isSubclassOfClass:[CKComponent class]]) {
+    return [(CKComponent *)c hasFinalUnmountAnimations];
+  } else {
+    return NO;
+  }
 }
 
 void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout)

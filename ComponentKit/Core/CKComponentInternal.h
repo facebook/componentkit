@@ -81,6 +81,12 @@
 @property (nonatomic, assign, readonly) BOOL hasBoundsAnimations;
 
 /** For internal use; don't touch this. */
+@property (nonatomic, assign, readonly) BOOL hasInitialMountAnimations;
+
+/** For internal use; don't touch this. */
+@property (nonatomic, assign, readonly) BOOL hasFinalUnmountAnimations;
+
+/** For internal use; don't touch this. */
 @property (nonatomic, assign, readonly) BOOL controllerOverridesDidPrepareLayout;
 
 @end
