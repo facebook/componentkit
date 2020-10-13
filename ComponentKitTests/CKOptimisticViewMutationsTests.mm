@@ -10,7 +10,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 
 #import <ComponentKit/CKButtonComponent.h>
@@ -18,6 +17,8 @@
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKOptimisticViewMutations.h>
+
+#import "CKComponentTestCase.h"
 
 @interface CKOptimisticViewMutationsTests : CKComponentTestCase
 @end

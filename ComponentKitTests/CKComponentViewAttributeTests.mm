@@ -11,11 +11,12 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentSubclass.h>
+
+#import "CKComponentTestCase.h"
 
 @interface CKComponentViewAttributeTests : CKComponentTestCase
 @end

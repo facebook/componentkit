@@ -10,13 +10,14 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKComponentTestCase.h>
 #import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKStaticLayoutComponent.h>
+
+#import "CKComponentTestCase.h"
 
 @protocol CKAnalyticsListener;
 

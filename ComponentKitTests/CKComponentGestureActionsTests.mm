@@ -18,7 +18,7 @@
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKComponentGestureActionsInternal.h>
 
-#import <ComponentKitTestHelpers/CKComponentTestCase.h>
+#import "CKComponentTestCase.h"
 
 @interface CKFakeActionComponent : CKComponent <UIGestureRecognizerDelegate>
 - (void)test:(CKComponent *)sender;
