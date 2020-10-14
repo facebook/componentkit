@@ -324,11 +324,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 {
 #if CK_ASSERTIONS_ENABLED
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
-  const auto currentStackSize = CKLayoutGetUsedStackSize();
-  // prevent stripping
-  if (currentStackSize == -1) {
-    CKLayoutGetUsedStackSize();
-  }
 #endif
 
   CKAssertSizeRange(constrainedSize);

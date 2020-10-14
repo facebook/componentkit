@@ -76,12 +76,6 @@ private:
   ComponentsByPredicateMap _componentsByPredicate;
 };
 
-#if CK_ASSERTIONS_ENABLED
-
-size_t CKLayoutGetUsedStackSize();
-
-#endif
-
 /**
  Safely computes the layout of the given root component by guarding against nil components.
  @param rootComponent The root component to compute the layout for.
