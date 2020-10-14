@@ -38,9 +38,8 @@
             .centeringOptions(CKCenterLayoutComponentCenteringY)
             .sizingOptions(CKCenterLayoutComponentSizingOptionMinimumY)
             .child(
-            [CKBackgroundLayoutComponent
-             newWithComponent:
-             CK::InsetComponentBuilder()
+            CK::BackgroundLayoutComponentBuilder()
+                .component(CK::InsetComponentBuilder()
                  .insetsTop(40)
                  .insetsLeft(20)
                  .insetsBottom(40)
@@ -80,9 +79,8 @@
                    .spacingBefore = 20
                  }
                }])
-                 .build()
-             background:
-             [CKComponent
+                 .build())
+                .background([CKComponent
               newWithView:{
                 [UIView class],
                 {
@@ -90,7 +88,8 @@
                   {CKComponentViewAttribute::LayerAttribute(@selector(setCornerRadius:)), @10.0}
                 }
               }
-              size:{}]]
+              size:{}])
+                .build()
             )
             .build())
               .build()];

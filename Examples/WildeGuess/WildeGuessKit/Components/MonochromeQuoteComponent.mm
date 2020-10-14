@@ -75,16 +75,15 @@
            CK::InsetComponentBuilder()
                .insetsTop(40)
                .insetsBottom(40)
-               .component([CKBackgroundLayoutComponent
-             newWithComponent:quoteTextWithBookmarkComponent
-             background:
-             // Add a translucent white background for the text.
-             [CKComponent
+               .component(CK::BackgroundLayoutComponentBuilder()
+                              .component(quoteTextWithBookmarkComponent)
+                              .background([CKComponent
               newWithView:{
                 [UIView class],
                 {{@selector(setBackgroundColor:), [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.7]}}
               }
-              size:{}]])
+              size:{}])
+                              .build())
                .build()]];
 }
 

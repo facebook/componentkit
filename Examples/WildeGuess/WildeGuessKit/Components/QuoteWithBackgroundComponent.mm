@@ -19,10 +19,9 @@
 
 {
   return [super newWithComponent:
-          [CKBackgroundLayoutComponent
-           newWithComponent:quoteComponent
-           background:
-           [CKComponent
+          CK::BackgroundLayoutComponentBuilder()
+              .component(quoteComponent)
+              .background([CKComponent
             newWithView:{
               [UIImageView class],
               {
@@ -31,7 +30,8 @@
                 {@selector(setClipsToBounds:), @YES},
               }
             }
-            size:{}]]];
+            size:{}])
+              .build()];
 }
 
 @end

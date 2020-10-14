@@ -29,9 +29,10 @@
 - (void)testFindDuplicateComponentWithDuplicateComponent
 {
   auto const c = [CKComponent new];
-  auto const b = [CKBackgroundLayoutComponent
-                  newWithComponent:c
-                  background:c];
+  auto const b = CK::BackgroundLayoutComponentBuilder()
+                     .component(c)
+                     .background(c)
+                     .build();
 
   auto const layout = CKComputeComponentLayout(b, {}, {});
   auto const info = CKFindDuplicateComponent(layout);
@@ -40,9 +41,10 @@
 
 - (void)testFindDuplicateComponentWithNoDuplicateComponent
 {
-  auto const b = [CKBackgroundLayoutComponent
-                  newWithComponent:[CKComponent new]
-                  background:[CKComponent new]];
+  auto const b = CK::BackgroundLayoutComponentBuilder()
+                     .component([CKComponent new])
+                     .background([CKComponent new])
+                     .build();
 
   auto const layout = CKComputeComponentLayout(b, {}, {});
   auto const info = CKFindDuplicateComponent(layout);
