@@ -154,6 +154,8 @@ template class std::vector<CKFlexboxComponentChild>;
                  useDeepYogaTrees:(BOOL)useDeepYogaTrees
 {
   if (self = [super init]) {
+    _direction = direction;
+    _spacing = spacing;
     _justifyContent = justifyContent;
     _alignItems = alignItems;
     _alignContent = alignContent;
@@ -167,6 +169,8 @@ template class std::vector<CKFlexboxComponentChild>;
 - (CKFlexboxComponentStyle)style
 {
   return {
+    .direction = _direction,
+    .spacing = _spacing,
     .justifyContent = _justifyContent,
     .alignItems = _alignItems,
     .alignContent = _alignContent,
