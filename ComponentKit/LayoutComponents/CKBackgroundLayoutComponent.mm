@@ -34,16 +34,6 @@
   return self;
 }
 
-+ (instancetype)newWithComponent:(CKComponent *)component
-                      background:(CKComponent *)background
-{
-  if (component == nil) {
-    return nil;
-  }
-
-  return [[self alloc] initWithComponent:component background:background];
-}
-
 - (unsigned int)numberOfChildren
 {
   return CKIterable::numberOfChildren(_component, _background);

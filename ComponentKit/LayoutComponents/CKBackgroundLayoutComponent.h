@@ -32,14 +32,6 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (instancetype)initWithComponent:(CKComponent *_Nullable)component
                        background:(CKComponent *_Nullable)background NS_DESIGNATED_INITIALIZER;
 
-/**
- DEPRECATED - Do not use. Use CK::BackgroundLayoutComponentBuilder instead.
- @param component A child that is laid out to determine the size of this component. If this is nil, then this method returns nil.
- @param background A child that is laid out behind it. May be nil, in which case the background is omitted.
-*/
-+ (nullable instancetype)newWithComponent:(CKComponent *_Nullable)component
-                               background:(CKComponent *_Nullable)background;
-
 @end
 
 NS_ASSUME_NONNULL_END
