@@ -41,6 +41,24 @@ CKViewConfiguration::CKViewConfiguration(CKComponentViewClass &&cls,
   }));
 }
 
+CKViewConfiguration CKViewConfiguration::forceViewClassIfNone(CKComponentViewClass &&cls) const noexcept
+{
+  if (rep->viewClass.hasView()) {
+    return *this;
+  } else if (isDefaultConfiguration()) {
+    return CKViewConfiguration{std::move(cls)};
+  } else {
+    auto attributes = *rep->attributes;
+    auto accessibilityContext = rep->accessibilityContext;
+    return CKViewConfiguration{
+      std::move(cls),
+      std::move(attributes),
+      std::move(accessibilityContext),
+      rep->blockImplicitAnimations
+    };
+  }
+}
+
 CKViewConfiguration::~CKViewConfiguration() {}
 
 const CKComponentViewClass &CKViewConfiguration::viewClass() const noexcept

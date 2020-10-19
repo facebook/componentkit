@@ -20,6 +20,7 @@
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKIdValueWrapper.h>
+#import <ComponentKit/CKAnimationComponentPassthroughView.h>
 #import <ComponentKit/CKAssert.h>
 
 @interface CKSwiftComponentController : CKComponentController
@@ -65,6 +66,13 @@
   _willDisposeCallbacks.firstObject != nil;
 }
 
+- (BOOL)hasAnimations
+{
+  return _animation != nil ||
+  _initialMountAnimation != nil ||
+  _finalUnmountAnimation != nil;
+}
+
 @end
 
 @implementation CKSwiftComponent {
@@ -74,14 +82,26 @@
   CKSwiftComponentModel_SwiftBridge *_model;
 }
 
+static CKComponentViewConfiguration _viewConfigurationWithViewIfAnimated(
+    CKComponentViewConfiguration_SwiftBridge *swiftView,
+    BOOL hasAnimations) {
+  if (swiftView == nil) {
+    return hasAnimations
+    ? CKComponentViewConfiguration{CKAnimationComponentPassthroughView.class}
+    : CKComponentViewConfiguration{};
+  } else {
+    return swiftView.viewConfig.forceViewClassIfNone(CKAnimationComponentPassthroughView.class);
+  }
+}
+
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
                         swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
                             child:(CKComponent *)child
                             model:(CKSwiftComponentModel_SwiftBridge *)model
 
 {
-  const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};
   const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  const auto view = _viewConfigurationWithViewIfAnimated(swiftView, model.hasAnimations);
   if (self = [super initWithView:view size:size]) {
     _model = model;
     _child = child;

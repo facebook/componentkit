@@ -62,6 +62,8 @@ struct CKViewConfiguration {
 
   const CK::Component::PersistentAttributeShape &attributeShape() const noexcept;
 
+  CKViewConfiguration forceViewClassIfNone(CKComponentViewClass &&cls) const noexcept;
+
 private:
   struct Repr {
     CKComponentViewClass viewClass;
