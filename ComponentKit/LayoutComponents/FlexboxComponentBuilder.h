@@ -846,7 +846,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
 
   @note  This method must @b not be called more than once on a given component builder instance.
   */
-  NS_RETURNS_RETAINED auto build() noexcept -> CKFlexboxComponent *
+  NS_RETURNS_RETAINED auto _build() noexcept -> CKFlexboxComponent *
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _children.push_back(_currentChild);
