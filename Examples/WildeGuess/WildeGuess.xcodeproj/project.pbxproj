@@ -59,6 +59,8 @@
 		D4B29B92251A42B3006EFEBA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B29B91251A42B3006EFEBA /* QuartzCore.framework */; };
 		D4BC57BC23E384050075D688 /* CKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BC57B923E384050075D688 /* CKSwift.framework */; };
 		D4BC57BD23E384050075D688 /* CKSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D4BC57B923E384050075D688 /* CKSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D4BEF4CB253D91F200AE6446 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D093266D1CC4647700CFEBC4 /* ComponentKit.framework */; platformFilter = ios; };
+		D4BEF4CE253D91FD00AE6446 /* ComponentTextKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42B78B325176C1F00DAC4D5 /* ComponentTextKit.framework */; platformFilter = ios; };
 		D4D656612524C6A4004DBFAB /* WildeGuessCollectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D4D6564F2524C6A4004DBFAB /* WildeGuessCollectionViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4D656622524C6A4004DBFAB /* WildeGuessCollectionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4D656602524C6A4004DBFAB /* WildeGuessCollectionViewController.mm */; };
 		D4D656672524C6E3004DBFAB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4D656662524C6E3004DBFAB /* CoreGraphics.framework */; };
@@ -281,6 +283,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4BEF4CE253D91FD00AE6446 /* ComponentTextKit.framework in Frameworks */,
+				D4BEF4CB253D91F200AE6446 /* ComponentKit.framework in Frameworks */,
 				D484CA63251A4E830052EC5A /* CKSwift.framework in Frameworks */,
 				D484CA66251A4E910052EC5A /* CKTextSwift.framework in Frameworks */,
 			);
