@@ -50,7 +50,7 @@
 - (void)testComputeRootLayout_WithCache_NoScope
 {
   __block NSArray<CKComponent *> *children;
-  __block CKFlexboxComponent *c;
+  __block CKComponent *c;
   CKBuildComponentResult results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     children = createChildrenArray(NO);
     c = flexboxComponentWithScopedChildren(children);
@@ -69,7 +69,7 @@
 - (void)testComputeRootLayout_WithCache_WithScope
 {
   __block NSArray<CKComponent *> *children;
-  __block CKFlexboxComponent *c;
+  __block CKComponent *c;
   CKBuildComponentResult results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     children = createChildrenArray(YES);
     c = flexboxComponentWithScopedChildren(children);
@@ -87,13 +87,15 @@
 
 #pragma mark - Helpers
 
-static CKFlexboxComponent* flexboxComponentWithScopedChildren(NSArray<CKComponent *> *children) {
-
-  CKFlexboxComponent *c = CK::FlexboxComponentBuilder()
-                              .alignItems(CKFlexboxAlignItemsStart)
-                              .children(CK::map(children, [](CKComponent *child) -> CKFlexboxComponentChild { return {child}; }))
-                              .build();
-  return c;
+static CKComponent* flexboxComponentWithScopedChildren(NSArray<CKComponent *> *children) {
+  return CK::FlexboxComponentBuilder()
+      .alignItems(CKFlexboxAlignItemsStart)
+      .children(CK::map(
+          children,
+          [](CKComponent* child) -> CKFlexboxComponentChild {
+            return {child};
+          }))
+      .build();
 }
 
 static NSArray<CKComponent *>* createChildrenArray(BOOL scoped) {

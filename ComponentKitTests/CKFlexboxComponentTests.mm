@@ -13,6 +13,7 @@
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponent+Yoga.h>
 
 #import "yoga/Yoga.h"
 
