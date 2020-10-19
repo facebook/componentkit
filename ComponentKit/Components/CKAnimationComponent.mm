@@ -2,12 +2,10 @@
 
 #import "CKAnimationComponent.h"
 #import "CKAnimationComponent+Internal.h"
+#import "CKAnimationComponentPassthroughView.h"
 
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
-
-@interface CKAnimationComponentPassthroughView: UIView
-@end
 
 @implementation CKAnimationComponent {
   CAAnimation * _animationOnInitialMount;
@@ -77,16 +75,6 @@
     };
   }
   return {};
-}
-
-@end
-
-@implementation CKAnimationComponentPassthroughView
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-  auto const v = [super hitTest:point withEvent:event];
-  return v == self ? nil : v;
 }
 
 @end
