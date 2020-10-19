@@ -320,22 +320,10 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 #pragma mark - Layout
 
-- (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
+#if CK_ASSERTIONS_ENABLED
+
+- (void)_validate_layoutThatFits:(const CKSizeRange &)constrainedSize layout:(const CKLayout &)layout parentSize:(const CGSize &)parentSize
 {
-#if CK_ASSERTIONS_ENABLED
-  const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
-#endif
-
-  CKAssertSizeRange(constrainedSize);
-  CK::Component::LayoutContext context(self, constrainedSize);
-  auto const systraceListener = context.systraceListener;
-  [systraceListener willLayoutComponent:self];
-
-  CKLayout layout = [self computeLayoutThatFits:constrainedSize
-                                        restrictedToSize:_size
-                                    relativeToParentSize:parentSize];
-
-#if CK_ASSERTIONS_ENABLED
   // If this component has children in its layout, this means that it's not a real leaf component.
   // As a result, the infrastructure won't call `buildComponentTree:` on the component's children and can affect the render process.
   if (self.superclass == [CKComponent class] && layout.children != nullptr && layout.children->size() > 0) {
@@ -364,6 +352,27 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                        @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
                        NSStringFromCGSize(layout.size), self.className, resolvedRange.description(),
                        CK::Component::LayoutContext::currentStackDescription());
+}
+
+#endif
+
+- (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
+{
+#if CK_ASSERTIONS_ENABLED
+  const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
+#endif
+
+  CKAssertSizeRange(constrainedSize);
+  CK::Component::LayoutContext context(self, constrainedSize);
+  auto const systraceListener = context.systraceListener;
+  [systraceListener willLayoutComponent:self];
+
+  CKLayout layout = [self computeLayoutThatFits:constrainedSize
+                                        restrictedToSize:_size
+                                    relativeToParentSize:parentSize];
+
+#if CK_ASSERTIONS_ENABLED
+  [self _validate_layoutThatFits:constrainedSize layout:layout parentSize:parentSize];
 #endif
 
   [systraceListener didLayoutComponent:self];
