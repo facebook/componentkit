@@ -53,9 +53,10 @@ static NSString *const oscarWilde = @"Oscar Wilde";
       .alignItems = CKFlexboxAlignItemsStretch
     }
     children:{
-      {[CKOverlayLayoutComponent
-        newWithComponent:[QuoteComponent newWithQuote:quote context:context]
-        overlay:overlay]},
+      {CK::OverlayLayoutComponentBuilder()
+           .component([QuoteComponent newWithQuote:quote context:context])
+           .overlay(overlay)
+           .build()},
       {[CKComponent
         newWithView:{
           [UIView class],

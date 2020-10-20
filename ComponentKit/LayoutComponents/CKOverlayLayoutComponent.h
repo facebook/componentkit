@@ -31,10 +31,6 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (instancetype)initWithComponent:(CKComponent *)component
                           overlay:(CKComponent *_Nullable)overlay NS_DESIGNATED_INITIALIZER;
 
-// DEPRECATED - Do not use. Use CK::OverlayLayoutComponentBuilder instead.
-+ (nullable instancetype)newWithComponent:(CKComponent *_Nullable)component
-                                  overlay:(CKComponent *_Nullable)overlay;
-
 @end
 
 NS_ASSUME_NONNULL_END

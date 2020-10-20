@@ -33,16 +33,6 @@
   return self;
 }
 
-+ (instancetype)newWithComponent:(CKComponent *)component
-                         overlay:(CKComponent *)overlay
-{
-  if (component == nil) {
-    return nil;
-  }
-
-  return [[self alloc] initWithComponent:component overlay:overlay];
-}
-
 #pragma mark - CKMountable
 
 - (unsigned int)numberOfChildren
