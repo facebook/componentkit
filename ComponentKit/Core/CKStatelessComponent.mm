@@ -41,6 +41,7 @@ CKComponent *CKCreateStatelessComponent(NS_RELEASES_ARGUMENT CKComponent *compon
   if (component) {
 #if CK_ASSERTIONS_ENABLED
     auto const shouldAllocateComponent = YES;
+    CKCWarnWithCategory(component != nil, @(debugIdentifier), @"returns a nil component");
 #else
     auto const shouldAllocateComponent = [CKComponentContext<CKStatelessComponentContext>::get() shouldAllocateComponent];
 #endif
