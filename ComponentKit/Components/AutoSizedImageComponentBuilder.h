@@ -208,7 +208,7 @@ class __attribute__((__may_alias__)) AutoSizedImageComponentBuilder
   {
     constexpr auto imageIsSet = PropBitmap::isSet(PropsBitmap, AutoSizedImageComponentPropId::image);
     static_assert(imageIsSet, "Required property 'image' is not set.");
-    return [CKAutoSizedImageComponent newWithImage:_image attributes:std::move(_attributes)];
+    return [[CKAutoSizedImageComponent alloc] initWithImage:_image attributes:std::move(_attributes)];
   }
 
  private:

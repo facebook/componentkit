@@ -16,15 +16,16 @@
 
 @implementation CKAutoSizedImageComponent
 
-+ (instancetype)newWithImage:(UIImage *)image
-                  attributes:(const CKViewComponentAttributeValueMap &)attributes
+- (instancetype)initWithImage:(UIImage *)image
+                   attributes:(const CKViewComponentAttributeValueMap &)attributes
 {
-  return [super newWithComponent:
-          CK::ImageComponentBuilder()
-              .image(image)
-              .attributes(attributes)
-              .size(CKComponentSize::fromCGSize(image.size))
-              .build()];
+  return [super initWithView:{}
+                   component:
+                    CK::ImageComponentBuilder()
+                        .image(image)
+                        .attributes(attributes)
+                        .size(CKComponentSize::fromCGSize(image.size))
+                        .build()];
 }
 
 @end

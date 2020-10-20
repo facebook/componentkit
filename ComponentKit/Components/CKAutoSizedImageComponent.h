@@ -28,8 +28,8 @@ CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE;
 /**
  Uses a static layout with the image's size and apply additional attributes.
  */
-+ (instancetype)newWithImage:(UIImage *)image
-                  attributes:(const CKViewComponentAttributeValueMap &)attributes;
+- (instancetype)initWithImage:(UIImage *)image
+                   attributes:(const CKViewComponentAttributeValueMap &)attributes;
 
 @end
 
