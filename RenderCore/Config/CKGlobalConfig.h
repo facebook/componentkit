@@ -40,10 +40,6 @@ struct CKGlobalConfig {
    Component coalescing mode.
    */
    CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
-   /**
-    When true flexbox has additional assertions.
-    */
-   BOOL shouldPerformFlexboxExtraAssertions = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

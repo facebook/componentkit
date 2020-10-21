@@ -185,48 +185,7 @@ template class std::vector<CKFlexboxComponentChild>;
 @implementation CKFlexboxComponent {
   CKFlexboxComponentStyle _style;
   std::vector<CKFlexboxComponentChild> _children;
-
-#if CK_ASSERTIONS_ENABLED
-  // @cuva - Attempting to debug a memory related issue - see below comments for more details.
-  // https://fburl.com/tasks/oahenjua
-  std::size_t _barrier;
-  std::vector<CKFlexboxComponentChild> _childrenCopy;
-  std::size_t _childrenSize;
-  NSArray<NSString *> *_description;
-  NSArray<NSString *> *_childrenDescription;
-#endif
 }
-
-#if CK_ASSERTIONS_ENABLED
-static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponentChild>& children) {
-  NSMutableArray<NSString *> *const items = [NSMutableArray new];
-  if (const auto tls = CKThreadLocalComponentScope::currentScope()) {
-    auto stack = tls->stack;
-    while (stack.empty() == false) {
-      const auto top = stack.top();
-      stack.pop();
-      if (top.node.scopeHandle != nil) {
-        [items addObject:@(top.node.scopeHandle.componentTypeName)];
-      }
-    }
-  }
-
-  [items addObject:@"----- Children -------"];
-
-  [items addObjectsFromArray:_makeChildrenDescription(children)];
-  return items;
-}
-
-static NSArray<NSString *> *_makeChildrenDescription(const std::vector<CKFlexboxComponentChild>& children) {
-  NSMutableArray<NSString *> *const items = [NSMutableArray new];
-  for (const auto& child : children) {
-    [items addObject:[NSString stringWithFormat:@"%@ %@", [child.component description], child.component.className]];
-  }
-
-  return items;
-}
-
-#endif
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
                         size:(const CKComponentSize &)size
@@ -237,20 +196,6 @@ static NSArray<NSString *> *_makeChildrenDescription(const std::vector<CKFlexbox
   if (self = [super initWithView:view size:size]) {
     _style = style;
     _children = children.take();
-
-#if CK_ASSERTIONS_ENABLED
-    if (CKReadGlobalConfig().shouldPerformFlexboxExtraAssertions) {
-      _barrier = 42;
-      _childrenSize = _children.size();
-      for (const auto& child : _children) {
-        // Forcibly create a copy of each `CKFlexboxComponentChild` which will in turn generate arc traffic on `child.component`.
-        // The intention is that the arc traffic will acess if the pointers are valid arc pointers.
-        _childrenCopy.push_back(child);
-      }
-      _description = _makeDescription(_children);
-    }
-    _childrenDescription = _makeChildrenDescription(_children);
-#endif
   }
   return self;
 }
@@ -274,42 +219,6 @@ static NSArray<NSString *> *_makeChildrenDescription(const std::vector<CKFlexbox
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
   return [[self alloc] initWithView:view size:size style:style children:std::move(children)];
-}
-
-- (void)dealloc
-{
-#if CK_ASSERTIONS_ENABLED
-  if (CKReadGlobalConfig().shouldPerformFlexboxExtraAssertions) {
-    CKAssert(_barrier == 42, @"Barrier value overriden.\n%@", [_description componentsJoinedByString:@"\n"]);
-    // Somewhat "check" containers integrity.
-    CKAssert(_childrenCopy.size() == _childrenSize, @"_childrenCopy seems busted?\n%@", [_description componentsJoinedByString:@"\n"]);
-    CKAssert(_children.size() == _childrenSize, @"_children seems busted?\n%@", [_description componentsJoinedByString:@"\n"]);
-
-    if (_barrier == 42 && _childrenCopy.size() == _children.size()) {
-      // Check that _children && _childrenCopy are the same w/o trigering arc traffic.
-      for (std::size_t i = 0; i < _childrenSize; ++i) {
-        const auto &c = _children[i];
-        const auto &c2 = _childrenCopy[i];
-        CKAssert(
-          c.component == c2.component,
-          @"Child at index: %ld is different from copy, something was changed between `+new` and `-dealloc`.\n%@",
-          (long)i, [_description componentsJoinedByString:@"\n"]);
-      }
-      // Retriger copy of both _children and _childrenCopy to generate arc traffic
-      const auto copy = _childrenCopy;
-      _childrenCopy = _children;
-      _childrenCopy = copy;
-    }
-  }
-  // Forcing the crash here to find more about the issue.
-  // https://fburl.com/tasks/oahenjua
-  for (int i = 0; i < _children.size(); ++i) {
-    NSString *const childDescription = i < _childrenDescription.count ? _childrenDescription[i] : @"<out of bounds>";
-    const CKExceptionInfoScopedValue corruptedChild{@"ck_corrupted_flexbox_child", childDescription};
-    _children[i] = {};
-  }
-
-#endif
 }
 
 static bool setPercentOnChildNode(const CKFlexboxComponentStyle &style) {
