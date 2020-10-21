@@ -146,17 +146,22 @@
   CK::StaticMutexLocker l(mutex);
 
   static std::unordered_map<Class, BOOL> *cache = new std::unordered_map<Class, BOOL>();
-  const auto &it = cache->find(componentClass);
+  auto it = cache->find(componentClass);
   if (it == cache->end()) {
     const BOOL requiresScopeHandle =
       CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(buildController)) ||
       CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
       CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnInitialMount)) ||
       CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnFinalUnmount));
-    cache->insert({componentClass, requiresScopeHandle});
-    return requiresScopeHandle;
+    it = cache->insert({componentClass, requiresScopeHandle}).first;
   }
-  return it->second;
+  const BOOL requiresScopeHandle = it->second;
+  CKAssert(requiresScopeHandle ||
+           (!self.hasAnimations && !self.hasInitialMountAnimations && !self.hasFinalUnmountAnimations),
+           @"%@ changes the default logic of -has*Animations properties; Make sure to override -requiresScopeHandle "
+           "and return YES when animations are present.",
+           self);
+  return requiresScopeHandle;
 }
 
 - (instancetype)clone

@@ -119,21 +119,25 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (BOOL)hasAnimations
 {
+  // NOTE: The default implementation is expected to be class-static. Check -[CKRenderComponent requiresScopeHandle] for more context.
   return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(animationsFromPreviousComponent:));
 }
 
 - (BOOL)hasBoundsAnimations
 {
+  // NOTE: The default implementation is expected to be class-static. Check -[CKRenderComponent requiresScopeHandle] for more context.
   return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(boundsAnimationFromPreviousComponent:));
 }
 
 - (BOOL)hasInitialMountAnimations
 {
+  // NOTE: The default implementation is expected to be class-static. Check -[CKRenderComponent requiresScopeHandle] for more context.
   return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(animationsOnInitialMount));
 }
 
 - (BOOL)hasFinalUnmountAnimations
 {
+  // NOTE: The default implementation is expected to be class-static. Check -[CKRenderComponent requiresScopeHandle] for more context.
   return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(animationsOnFinalUnmount));
 }
 
