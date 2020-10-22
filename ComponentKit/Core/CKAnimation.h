@@ -443,6 +443,9 @@ namespace CK {
         this->applyTimingTo(g);
         if (type == Type::initial || type == Type::change) {
           g.fillMode = kCAFillModeBackwards;
+        } else if (type == Type::final) {
+          g.fillMode = kCAFillModeForwards;
+          g.removedOnCompletion = NO;
         }
         g.duration = durationForParallelGroup(*this);
         return g;

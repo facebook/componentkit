@@ -235,6 +235,11 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
   XCTAssertEqualObjects(backgroundColorTo(UIColor.blackColor).toCA().fillMode, kCAFillModeForwards);
 }
 
+- (void)testIsNotRemovedOnCompletion
+{
+  XCTAssertFalse(alphaTo(0).toCA().removedOnCompletion);
+}
+
 @end
 
 @interface CKAnimationTests_Change: XCTestCase
@@ -389,6 +394,20 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
   auto a = parallel(alpha(), position()).toCA();
 
   XCTAssertEqualObjects(a.fillMode, kCAFillModeBackwards);
+}
+
+- (void)test_WhenComposingFinalAnimations_UsesForwardsFillMode
+{
+  auto a = parallel(alphaTo(0), translationYTo(0)).toCA();
+
+  XCTAssertEqualObjects(a.fillMode, kCAFillModeForwards);
+}
+
+- (void)test_WhenComposingFinalAnimations_NotRemovedOnCompletion
+{
+  auto a = parallel(alphaTo(0), translationYTo(0)).toCA();
+
+  XCTAssertFalse(a.removedOnCompletion);
 }
 
 - (void)test_WhenDurationCannotBeSetExternally_DurationIsMaxDurationOfComposedAnimations

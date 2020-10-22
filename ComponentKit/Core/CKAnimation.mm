@@ -66,6 +66,7 @@ auto Animation::FinalBuilder::toCA() const -> CAAnimation *
   a.toValue = _to;
   this->applyTimingTo(a);
   a.fillMode = kCAFillModeForwards;
+  a.removedOnCompletion = NO;
   return a;
 }
 
