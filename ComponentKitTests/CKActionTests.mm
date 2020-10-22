@@ -495,6 +495,60 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
+- (void)testCombineTwoActionsWithNoArguments
+{
+  __block int action1CallCount = 0;
+  __block int action2CallCount = 0;
+
+  CKAction<> action1 = CKAction<>::actionFromBlock(^(CKComponent *) {
+     XCTAssert(action1CallCount == 0, @"No actions should have been called yet");
+     XCTAssert(action2CallCount == 0, @"No actions should have been called yet");
+     action1CallCount++;
+  });
+  CKAction<> action2 = CKAction<>::actionFromBlock(^(CKComponent *) {
+     XCTAssert(action1CallCount == 1, @"First action should be called before the second action");
+     XCTAssert(action2CallCount == 0, @"Second action shouldn't have been called yet");
+     action2CallCount++;
+  });
+
+  CKAction<>::combine(action1, action2).send([CKComponent new]);
+
+  XCTAssert(action1CallCount == 1, @"First action should have been called once");
+  XCTAssert(action2CallCount == 1, @"Second action should habe been called once");
+}
+
+- (void)testCombineThreeActionsWithNoArguments
+{
+  __block int action1CallCount = 0;
+  __block int action2CallCount = 0;
+  __block int action3CallCount = 0;
+
+  CKAction<> action1 = CKAction<>::actionFromBlock(^(CKComponent *) {
+     XCTAssert(action1CallCount == 0, @"No actions should have been called yet");
+     XCTAssert(action2CallCount == 0, @"No actions should have been called yet");
+     XCTAssert(action3CallCount == 0, @"No actions should have been called yet");
+     action1CallCount++;
+  });
+  CKAction<> action2 = CKAction<>::actionFromBlock(^(CKComponent *) {
+     XCTAssert(action1CallCount == 1, @"First action should be called before the second action");
+     XCTAssert(action2CallCount == 0, @"Second action shouldn't have been called yet");
+     XCTAssert(action3CallCount == 0, @"Third action shouldn't have been called yet");
+     action2CallCount++;
+  });
+  CKAction<> action3 = CKAction<>::actionFromBlock(^(CKComponent *) {
+     XCTAssert(action1CallCount == 1, @"First action should be called before the second action");
+     XCTAssert(action2CallCount == 1, @"Second action should be called before the third action");
+     XCTAssert(action3CallCount == 0, @"Third action shouldn't have been called yet");
+     action3CallCount++;
+  });
+
+  CKAction<>::combine(action1, action2, action3).send([CKComponent new]);
+
+  XCTAssert(action1CallCount == 1, @"First action should have been called once");
+  XCTAssert(action2CallCount == 1, @"Second action should have been called once");
+  XCTAssert(action3CallCount == 1, @"Third action should have been called once");
+}
+
 - (void)testTargetSelectorActionCallsOnTargetWithoutMounting
 {
   __block BOOL calledBlock = NO;

@@ -200,6 +200,27 @@ public:
       action.send(sender, argsT...);
     });
   }
+  
+  /**
+   Combines two actions into one, the actions will be executed in the specified order.
+   */
+  static CKAction<T...> combine(CKAction<T...> action1, CKAction<T...> action2) {
+    return CKAction<T...>::actionFromBlock(^(CKComponent* sender, T... argsT) {
+      action1.send(sender, argsT...);
+      action2.send(sender, argsT...);
+    });
+  }
+
+  /**
+   Combines three actions into one, the actions will be executed in the specified order.
+   */
+  static CKAction<T...> combine(CKAction<T...> action1, CKAction<T...> action2, CKAction<T...> action3) {
+    return CKAction<T...>::actionFromBlock(^(CKComponent* sender, T... argsT) {
+      action1.send(sender, argsT...);
+      action2.send(sender, argsT...);
+      action3.send(sender, argsT...);
+    });
+  }
 
   /**
    Allows explicit null actions. NULL can cause ambiguity in constructor resolution and is best avoided where
