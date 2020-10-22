@@ -39,7 +39,11 @@ struct CKGlobalConfig {
   /**
    Component coalescing mode.
    */
-   CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
+  CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
+  /**
+   When true, use -[CKComponent layoutThatFits_ExtractedAssertions:parentSize:]
+   */
+  BOOL stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();
