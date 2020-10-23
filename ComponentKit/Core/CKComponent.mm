@@ -12,7 +12,6 @@
 #import "CKComponentControllerInternal.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKGlobalInternalConfig.h"
 
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKAssert.h>
