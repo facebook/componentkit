@@ -42,7 +42,8 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
                                                          BOOL shouldCollectTreeNodeCreationInformation,
                                                          BOOL alwaysBuildRenderTree,
                                                          CKComponentCoalescingMode coalescingMode,
-                                                         BOOL enforceCKComponentSubclasses)
+                                                         BOOL enforceCKComponentSubclasses,
+                                                         BOOL disableRenderToNilInCoalescedCompositeComponents)
 : newScopeRoot([previousScopeRoot newRoot]),
   previousScopeRoot(previousScopeRoot),
   stateUpdates(updates),
@@ -53,6 +54,7 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
   treeNodeDirtyIds(CKRender::treeNodeDirtyIdsFor(previousScopeRoot, stateUpdates, trigger)),
   shouldCollectTreeNodeCreationInformation(shouldCollectTreeNodeCreationInformation),
   coalescingMode(coalescingMode),
+  disableRenderToNilInCoalescedCompositeComponents(disableRenderToNilInCoalescedCompositeComponents),
   enforceCKComponentSubclasses(enforceCKComponentSubclasses),
   previousScope(CKThreadLocalComponentScope::currentScope())
 {

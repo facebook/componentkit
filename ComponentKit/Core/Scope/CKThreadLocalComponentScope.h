@@ -36,7 +36,8 @@ public:
                               BOOL shouldCollectTreeNodeCreationInformation = NO,
                               BOOL alwaysBuildRenderTree = NO,
                               CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone,
-                              BOOL enforceCKComponentSubclasses = YES);
+                              BOOL enforceCKComponentSubclasses = YES,
+                              BOOL disableRenderToNilInCoalescedCompositeComponents = NO);
   ~CKThreadLocalComponentScope();
 
   /** Returns nullptr if there isn't a current scope */
@@ -69,6 +70,8 @@ public:
   const BOOL shouldCollectTreeNodeCreationInformation;
 
   const CKComponentCoalescingMode coalescingMode;
+
+  const BOOL disableRenderToNilInCoalescedCompositeComponents;
 
   const BOOL enforceCKComponentSubclasses;
 

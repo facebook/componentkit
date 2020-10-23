@@ -46,9 +46,13 @@ struct CKGlobalConfig {
    */
   BOOL stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO;
   /**
-    Component based accessibility mode
+   Component based accessibility mode
    */
    CKComponentBasedAccessibilityMode componentAXMode = CKComponentBasedAccessibilityModeDisabled;
+  /**
+   Kill-switch to disable render-to-nil in coalesced composite components.
+   */
+  BOOL disableRenderToNilInCoalescedCompositeComponents = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();
