@@ -900,4 +900,35 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   return nil;
 }
 
+- (NSArray<NSObject *> *)accessibilityChildren
+{
+  std::vector<CKFlexboxComponentChild> sortedChildren;
+
+  // Use correct order
+  switch(_style.direction) {
+    case CKFlexboxDirectionRow:
+    case CKFlexboxDirectionColumn:
+      sortedChildren.insert(sortedChildren.end(), _children.begin(), _children.end());
+      break;
+    case CKFlexboxDirectionRowReverse:
+    case CKFlexboxDirectionColumnReverse:
+      sortedChildren.insert(sortedChildren.end(), _children.rbegin(), _children.rend());
+      break;
+  }
+
+  // Put higher z-index first
+  std::stable_sort(sortedChildren.begin(), sortedChildren.end(),
+                   [](const CKFlexboxComponentChild &c1, const CKFlexboxComponentChild &c2){
+                     return c1.zIndex > c2.zIndex;
+                   });
+
+  std::vector<CKComponent *> elements = CK::map(CK::filter(sortedChildren, [](const CKFlexboxComponentChild &c){
+    return c.component != nil;
+  }), [](const CKFlexboxComponentChild &c) -> CKComponent * {
+    return c.component;
+  });
+
+  return [[NSArray alloc] initWithObjects:&elements[0] count:elements.size()];
+}
+
 @end

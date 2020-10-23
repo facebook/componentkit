@@ -76,4 +76,20 @@ static NSMutableArray *hitTestHooks;
   return scopeRootIdentifier > 0 ? @(scopeRootIdentifier) : nil;
 }
 
+- (void)setAccessibilityElements:(NSArray *)accessibilityElements {
+  CKFailAssert(@"Attempt to setAccessibilityElements in %@", NSStringFromClass([self class]));
+}
+
+- (NSArray *)accessibilityElements {
+  const auto rootComponent = [self mountedLayout].component;
+
+  if (NO) {
+    return @[rootComponent];
+  }
+  return [super accessibilityElements];
+}
+
+
+
+
 @end

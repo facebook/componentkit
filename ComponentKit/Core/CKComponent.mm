@@ -604,4 +604,48 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return class_getName(self.class);
 }
 
+// This method can be used to override what accessible elements are
+// provided by the component. Very similar to UIKit accessibilityElements.
+#pragma mark - Accessibility
+
+- (NSArray<NSObject *> *)accessibilityChildren
+{
+  const auto numChildren = [self numberOfChildren];
+  if (numChildren == 0) {
+    return nil;
+  }
+  NSMutableArray *const contents = [NSMutableArray arrayWithCapacity:numChildren];
+  for(unsigned int i = 0; i < numChildren; i++) {
+    const auto child = [self childAtIndex:i];
+    if (child != nil) {
+      [contents addObject:child];
+    }
+  }
+
+  return contents;
+}
+
+- (CGRect)accessibilityFrame {
+  if (_mountInfo == nullptr) {
+    return CGRectNull;
+  }
+  return UIAccessibilityConvertFrameToScreenCoordinates(_mountInfo->viewContext.frame, _mountInfo->viewContext.view);
+}
+
+- (void)setAccessibilityElements:(NSArray *)accessibilityElements {
+  CKFailAssert(@"Attempt to setAccessibilityElements in %@", NSStringFromClass([self class]));
+}
+
+// In base Component we rely on the view to provide the accessible elements:
+// If the component itself has isAccessibilityElement == NO and
+// 1) It has a mounted view that has accessibilityElements
+// 2) It has a mounted view that is an accessibile element
+- (NSArray<NSObject *> *)accessibilityElements
+{
+  if (self.mountedView != nil && ([[self.mountedView accessibilityElements] count] > 0 || [self.mountedView isAccessibilityElement])) {
+      return @[self.mountedView];
+  }
+  return [self accessibilityChildren];
+}
+
 @end
