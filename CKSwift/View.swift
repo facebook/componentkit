@@ -35,7 +35,7 @@ extension View where Self.Body == Never {
   }
 }
 
-public protocol ViewIdentifiable {
+public protocol ViewIdentifiable : ScopeHandleProvider {
   associatedtype ID: Hashable
   var id: ID { get }
 }
@@ -205,7 +205,7 @@ private extension View {
 
   func linkPropertyWrappersWithScopeHandle(forceRequireNode: Bool) -> Bool {
     let linkableItems = self.linkableItems
-    guard linkableItems.isEmpty == false || forceRequireNode else {
+    guard linkableItems.isEmpty == false || forceRequireNode || self is ScopeHandleProvider else {
       return false
     }
 

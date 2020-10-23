@@ -11,6 +11,9 @@
 import Foundation
 import ComponentKit
 
+/// Marker protocol for views indicating that a scope handle is necessary.
+public protocol ScopeHandleProvider { }
+
 protocol ScopeHandleLinkable {
   func link(with scopeHandle: CKComponentScopeHandle, at index: Int)
 }
