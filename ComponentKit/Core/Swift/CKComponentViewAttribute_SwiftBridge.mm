@@ -14,6 +14,7 @@
 #import <ComponentKit/CKCasting.h>
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKDelayedInitialisationWrapper.h>
+#import <ComponentKit/CKAction_SwiftBridge+Internal.h>
 
 @implementation CKComponentViewAttribute_SwiftBridge {
   CK::DelayedInitialisationWrapper<CKComponentViewAttribute> _viewAttribute;
@@ -75,10 +76,10 @@ static CKComponentViewAttributeValueGestureProvider providerFromGesture(CKCompon
   }
 }
 
-- (instancetype)initWithGesture:(CKComponentViewAttributeGesture_SwiftBridge)gesture handler:(CKComponentViewAttribute_SwiftBridgeGestureHandler)handler
+- (instancetype)initWithGesture:(CKComponentViewAttributeGesture_SwiftBridge)gesture swiftAction:(CKActionWithId_SwiftBridge)swiftAction
 {
   const auto provider = providerFromGesture(gesture);
-  return [self initWithViewAttribute:provider(CKAction<UIGestureRecognizer *>::actionFromSenderlessBlock(handler)).first];
+  return [self initWithViewAttribute:provider(CKSwiftActionUnsafeBridgeToObjectiveC<UIGestureRecognizer *>(swiftAction)).first];
 }
 
 @end

@@ -10,47 +10,87 @@
 
 import Foundation
 import UIKit
+import ComponentKit
 
 #if swift(>=5.3)
 
-public extension ViewConfiguration.Attribute {
-
+extension ViewConfiguration.Attribute {
   /// Creates a view configuration attribute linked to tap gesture recognizer.
-  /// - Parameter tapHandler: The closure to execute when the gesture fires.
-  init(tapHandler: @escaping (UIGestureRecognizer) -> Void) {
-    self.init(componentViewAttribute: .init(gesture: .tap, handler: tapHandler))
+  /// - Parameter tapAction: Action to invoke when the gesture fires..
+  init(gesture: ComponentViewAttributeSwiftBridge.Gesture, action: ActionWith<UIGestureRecognizer>) {
+    self.init(componentViewAttribute: ComponentViewAttributeSwiftBridge(gesture: gesture, swiftAction: action.swiftBridgeWithType))
+  }
+}
+
+public struct TapAction {
+  let action: ActionWith<UIGestureRecognizer>
+}
+
+public struct PanAction {
+  let action: ActionWith<UIGestureRecognizer>
+}
+
+public struct LongPressAction {
+  let action: ActionWith<UIGestureRecognizer>
+}
+
+extension View where Self: Actionable {
+  public func onTap(_ handler: @escaping (Self, UIGestureRecognizer) -> Void) -> TapAction {
+    TapAction(action: action(handler))
   }
 
-  /// Creates a view configuration attribute linked to pan gesture recognizer.
-  /// - Parameter panHandler: The closure to execute when the gesture fires.
-  init(panHandler: @escaping (UIGestureRecognizer) -> Void) {
-    self.init(componentViewAttribute: .init(gesture: .pan, handler: panHandler))
+  public func onTap(_ handler: @escaping (Self) -> (UIGestureRecognizer) -> Void) -> TapAction {
+    TapAction(action: action(handler))
   }
 
-  /// Creates a view configuration attribute linked to long press gesture recognizer.
-  /// - Parameter longPressHandler: The closure to execute when the gesture fires.
-  init(longPressHandler: @escaping (UIGestureRecognizer) -> Void) {
-    self.init(componentViewAttribute: .init(gesture: .longPress, handler: longPressHandler))
+  public func onPan(_ handler: @escaping (Self, UIGestureRecognizer) -> Void) -> PanAction {
+    PanAction(action: action(handler))
+  }
+
+  public func onPan(_ handler: @escaping (Self) -> (UIGestureRecognizer) -> Void) -> PanAction {
+    PanAction(action: action(handler))
+  }
+
+  public func onLongPress(_ handler: @escaping (Self, UIGestureRecognizer) -> Void) -> LongPressAction {
+    LongPressAction(action: action(handler))
+  }
+
+  public func onLongPress(_ handler: @escaping (Self) -> (UIGestureRecognizer) -> Void) -> LongPressAction {
+    LongPressAction(action: action(handler))
+  }
+}
+
+public extension ViewConfigurationAttributeBuilder {
+  static func buildExpression(_ tapAction: TapAction) -> Directive {
+    buildExpression(ViewConfiguration.Attribute<View>(gesture: .tap, action: tapAction.action))
+  }
+
+  static func buildExpression(_ panAction: PanAction) -> Directive {
+    buildExpression(ViewConfiguration.Attribute<View>(gesture: .pan, action: panAction.action))
+  }
+
+  static func buildExpression(_ longPressAction: LongPressAction) -> Directive {
+    buildExpression(ViewConfiguration.Attribute<View>(gesture: .longPress, action: longPressAction.action))
   }
 }
 
 extension ViewAttributeAssignable where Self: ComponentInflatable {
 
-  public func tapHandler(_ value: @escaping (UIGestureRecognizer) -> Void) -> Self {
+  public func action(_ tapAction: TapAction) -> Self {
     var copy = self
-    copy.attributes.append(ViewConfiguration.Attribute(tapHandler: value))
+    copy.attributes.append(ViewConfiguration.Attribute(gesture: .tap, action: tapAction.action))
     return copy
   }
 
-  public func panHandler(_ value: @escaping (UIGestureRecognizer) -> Void) -> Self {
+  public func action(_ panAction: PanAction) -> Self {
     var copy = self
-    copy.attributes.append(ViewConfiguration.Attribute(panHandler: value))
+    copy.attributes.append(ViewConfiguration.Attribute(gesture: .pan, action: panAction.action))
     return copy
   }
 
-  public func longPressHandler(_ value: @escaping (UIGestureRecognizer) -> Void) -> Self {
+  public func action(_ longPressAction: LongPressAction) -> Self {
     var copy = self
-    copy.attributes.append(ViewConfiguration.Attribute(longPressHandler: value))
+    copy.attributes.append(ViewConfiguration.Attribute(gesture: .longPress, action: longPressAction.action))
     return copy
   }
 }

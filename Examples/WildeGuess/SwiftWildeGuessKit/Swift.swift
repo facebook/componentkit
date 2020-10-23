@@ -26,7 +26,7 @@ extension CAAnimation {
   }()
 }
 
-struct SwiftInteractiveQuoteView : View, ViewIdentifiable, ViewConfigurationRepresentable {
+struct SwiftInteractiveQuoteView : View, ViewIdentifiable, ViewConfigurationRepresentable, Actionable {
   let quote: Quote
   let context: QuoteContext
   @Binding var revealAnswer: Bool
@@ -34,9 +34,9 @@ struct SwiftInteractiveQuoteView : View, ViewIdentifiable, ViewConfigurationRepr
   var body: Component {
     FlexboxComponent(
       view: ViewConfiguration(viewClass: UIView.self) {
-        ViewConfiguration.Attribute(tapHandler: { _ in
-          self.revealAnswer.toggle()
-        })
+        onTap { view, _ in
+          view.revealAnswer.toggle()
+        }
       },
       alignItems: .stretch) {
       QuoteView(quote: quote, context: context)
