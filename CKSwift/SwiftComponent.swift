@@ -59,7 +59,7 @@ public struct SwiftComponentModel {
 }
 
 final public class SwiftComponent<View: CKSwift.View> : CKSwiftComponent {
-  private let view: View
+  let view: View
 
   init(_ view: View, body: Component? = nil, viewConfiguration: ViewConfiguration? = nil, size: ComponentSize? = nil, model: SwiftComponentModel?) {
     self.view = view

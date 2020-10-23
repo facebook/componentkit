@@ -14,6 +14,8 @@
 #import <ComponentKit/ButtonComponentBuilder.h>
 #import <ComponentKit/CenterLayoutComponentBuilder.h>
 #import <ComponentKit/CKAction.h>
+#import <ComponentKit/CKAction_SwiftBridge.h>
+#import <ComponentKit/CKAction_SwiftBridge+Internal.h>
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKAnalyticsListenerHelpers.h>
 #import <ComponentKit/CKAnimation.h>

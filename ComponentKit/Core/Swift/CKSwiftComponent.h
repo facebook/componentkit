@@ -73,6 +73,13 @@ id _Nullable CKSwiftFetchState(CKComponentScopeHandle *scopeHandle, NSInteger in
 /// @param newValue The new state value.
 void CKSwiftUpdateState(CKComponentScopeHandle *scopeHandle, NSInteger index, id _Nullable newValue);
 
+/// Initialises an action.
+/// @param klass The class of the component. Used for runtime assertions.
+/// @param responder The scoped responder for the action.
+/// @param key The key for the action
+BOOL CKSwiftInitializeAction(Class klass, CKScopedResponder *_Nullable*_Nonnull responder, CKScopedResponderKey *_Null_unspecified key);
+
+
 CK_EXTERN_C_END
 
 NS_ASSUME_NONNULL_END

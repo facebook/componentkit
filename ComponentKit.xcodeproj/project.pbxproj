@@ -727,6 +727,11 @@
 		D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
 		D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
 		D4171B52252DBD660082CF96 /* Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4171B51252DBD660082CF96 /* Gestures.swift */; };
+		D4171BA5252DCA0D0082CF96 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4171BA4252DCA0D0082CF96 /* Action.swift */; };
+		D4171BBB252DCA700082CF96 /* CKAction_SwiftBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4171BBD252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BBA252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4171BCE252DCA760082CF96 /* CKAction_SwiftBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */; };
+		D4171BDF252DCA7C0082CF96 /* CKAction_SwiftBridge+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BBA252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E8192314A888004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
 		D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1996,6 +2001,9 @@
 		D0B47D971CBDA97400BB33CE /* CKComponentSnapshotTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSnapshotTestCase.h; sourceTree = "<group>"; };
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D4171B51252DBD660082CF96 /* Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gestures.swift; sourceTree = "<group>"; };
+		D4171BA4252DCA0D0082CF96 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
+		D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAction_SwiftBridge.h; sourceTree = "<group>"; };
+		D4171BBA252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKAction_SwiftBridge+Internal.h"; sourceTree = "<group>"; };
 		D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentContext.mm; sourceTree = "<group>"; };
 		D427E8182314A888004F22BD /* CKStatelessComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatelessComponentContext.h; sourceTree = "<group>"; };
 		D42AF57D251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewConfigurationRepresentable.swift; sourceTree = "<group>"; };
@@ -3430,6 +3438,7 @@
 				D42B76152516361600DAC4D5 /* ViewAnimationModifier.swift */,
 				D4F543C6250784A2008F17A8 /* ViewConfiguration.swift */,
 				D4BC578223E37A1B0075D688 /* CKSwift.h */,
+				D4171BA4252DCA0D0082CF96 /* Action.swift */,
 				D4BC579D23E37A240075D688 /* CKSwift.swift */,
 				D4F543EB25079578008F17A8 /* View.swift */,
 				D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */,
@@ -3459,6 +3468,8 @@
 		D6B4182A23EABF880037E475 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */,
+				D4171BBA252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h */,
 				D6EF79E823ECC6E500230005 /* CKComponentSize_SwiftBridge.h */,
 				D6EF79EB23ECC6E500230005 /* CKComponentSize_SwiftBridge.mm */,
 				D6EF79ED23ECC6E500230005 /* CKComponentSize_SwiftBridge+Internal.h */,
@@ -3593,6 +3604,7 @@
 				03B8B5001D2A346F00EDFF59 /* CKDataSourceStateInternal.h in Headers */,
 				D6C713FA224CCA5800BADCC6 /* CKAnimationComponent.h in Headers */,
 				03B8B5031D2A346F00EDFF59 /* CKOverlayLayoutComponent.h in Headers */,
+				D4171BDF252DCA7C0082CF96 /* CKAction_SwiftBridge+Internal.h in Headers */,
 				60D7B3B620FC90500011AB3B /* YGNode.h in Headers */,
 				72647CCB2368D15D0072F330 /* CKComponentGestureActions.h in Headers */,
 				D6CDB13623EEEF6E000EFB93 /* CKBlockSizeRangeProvider.h in Headers */,
@@ -3653,6 +3665,7 @@
 				60D7B3CA20FC90500011AB3B /* Yoga.h in Headers */,
 				72D30B7C236B41DE0023DB1F /* CKComponentViewConfiguration.h in Headers */,
 				03B8B52B1D2A346F00EDFF59 /* CKComponentBoundsAnimation.h in Headers */,
+				D4171BCE252DCA760082CF96 /* CKAction_SwiftBridge.h in Headers */,
 				03B8B52C1D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.h in Headers */,
 				03B8B52E1D2A346F00EDFF59 /* CKButtonComponent.h in Headers */,
 				72647CE12368D2E10072F330 /* CKInvalidChangesetOperationType.h in Headers */,
@@ -3846,6 +3859,7 @@
 				D0B47D481CBD948E00BB33CE /* CKDataSourceState.h in Headers */,
 				D0B47D461CBD948E00BB33CE /* CKDataSourceListener.h in Headers */,
 				72647CCE2368D15D0072F330 /* CKComponentGestureActionsInternal.h in Headers */,
+				D4171BBB252DCA700082CF96 /* CKAction_SwiftBridge.h in Headers */,
 				2398D8B723ACD5E90028EC2A /* CKLayoutComponent.h in Headers */,
 				D0B47D3E1CBD948E00BB33CE /* CKDataSource.h in Headers */,
 				72647CCC2368D15D0072F330 /* CKComponentDelegateForwarder.h in Headers */,
@@ -3964,6 +3978,7 @@
 				D4BC573E23E3765C0075D688 /* CKMountedObjectForView.h in Headers */,
 				D0B47D0D1CBD948E00BB33CE /* CKComponentScopeRoot.h in Headers */,
 				72647CD02368D15D0072F330 /* CKComponentDelegateAttribute.h in Headers */,
+				D4171BBD252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h in Headers */,
 				2DBF1D7A1D3425ED004F28E8 /* CKTreeVerificationHelpers.h in Headers */,
 				60D7B3B920FC90500011AB3B /* Yoga-internal.h in Headers */,
 				D634A27F22DB71460085D697 /* ComponentBuilder.h in Headers */,
@@ -5328,6 +5343,7 @@
 				D4F543C8250784A2008F17A8 /* Component.swift in Sources */,
 				D6BA03C624144B8400D13A21 /* ComponentHostingViewController.swift in Sources */,
 				D4EAA55B2513A23B00F32DC1 /* Binding.swift in Sources */,
+				D4171BA5252DCA0D0082CF96 /* Action.swift in Sources */,
 				D42AF58C2519045E00F0BBA8 /* ComponentBuilder.swift in Sources */,
 				D4EAA55F2513A2BF00F32DC1 /* ViewLifecycleModifier.swift in Sources */,
 				D4F543CA250784A2008F17A8 /* ViewConfiguration.swift in Sources */,

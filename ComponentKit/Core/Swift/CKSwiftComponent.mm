@@ -376,3 +376,27 @@ void CKSwiftUpdateState(CKComponentScopeHandle *scopeHandle, NSInteger index, id
     return [[CKSwiftStateWrapper alloc] initWithValues:values];
   } metadata:{} mode:CKUpdateModeAsynchronous];
 }
+
+BOOL CKSwiftInitializeAction(Class klass, CKScopedResponder **responder, CKScopedResponderKey *key) {
+  const auto pair = CKSwiftGetCurrentPair();
+
+  if (responder == nil || key == nil) {
+    CKCFailAssert(@"Initialising action but passing nil responder/key");
+    return NO;
+  }
+
+  if (pair == nullptr) {
+    CKCFailAssert(@"Initialising action but pair is nil");
+    return NO;
+  }
+
+  const auto handle = pair->node.scopeHandle;
+  if (class_getName(klass) != handle.componentTypeName) {
+    CKCFailAssert(@"Creating an action outside the view's body function. Expected: %@, Found: %s", klass, handle.componentTypeName);
+    return NO;
+  }
+
+  *responder = handle.scopedResponder;
+  *key = [handle.scopedResponder keyForHandle:handle];
+  return YES;
+}
