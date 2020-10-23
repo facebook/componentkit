@@ -674,6 +674,18 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     _currentChild.useHeightAsBaseline = b;
     return *this;
   }
+      
+      /**
+       Sets the sort priority order for this component's accessibility element, relative to other elements at the same level.
+      */
+      auto &accessibilitySortPriority(NSUInteger p)
+      {
+        constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+        static_assert(isSettingPropertiesForChild,
+                      "Cannot set child property 'accessibilitySortPriority' before specifying a child component using .child()");
+        _currentChild.accessibilitySortPriority = p;
+        return *this;
+      }
 
   /**
   Adds a complete collection of children to this flexbox component.
@@ -1227,6 +1239,16 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
     return *this;
   }
 
+  
+  /**
+   Sets the sort priority order for this component's accessibility element, relative to other elements at the same level.
+  */
+  auto &accessibilitySortPriority(NSUInteger p)
+  {
+    _child.accessibilitySortPriority = p;
+    return *this;
+  }
+  
   /**
   This property sets the component for the flexbox child.
   */

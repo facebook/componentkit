@@ -919,7 +919,8 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   // Put higher z-index first
   std::stable_sort(sortedChildren.begin(), sortedChildren.end(),
                    [](const CKFlexboxComponentChild &c1, const CKFlexboxComponentChild &c2){
-                     return c1.zIndex > c2.zIndex;
+                      return c1.accessibilitySortPriority > c2.accessibilitySortPriority ||
+                             (c1.accessibilitySortPriority == c2.accessibilitySortPriority && c1.zIndex > c2.zIndex);
                    });
 
   std::vector<CKComponent *> elements = CK::map(CK::filter(sortedChildren, [](const CKFlexboxComponentChild &c){
