@@ -277,6 +277,8 @@
 		4F22A37824B78A9300641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
 		4F22A37924B78AA500641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
 		4F22A37A24B78AAD00641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
+		51557C7F2541C91800E47E6B /* CKAccessibilityAwareComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 51557C732541C91700E47E6B /* CKAccessibilityAwareComponent.mm */; };
+		51557C802541C91800E47E6B /* CKAccessibilityAwareComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */; };
 		6016FC2420A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
@@ -1561,6 +1563,8 @@
 		497824741BC570E000F29081 /* CKCollectionViewDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewDataSourceTests.mm; sourceTree = "<group>"; };
 		49FA174D1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceIntegrationTests.mm; sourceTree = "<group>"; };
 		4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKViewConfiguration.mm; sourceTree = "<group>"; };
+		51557C732541C91700E47E6B /* CKAccessibilityAwareComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAccessibilityAwareComponent.mm; sourceTree = "<group>"; };
+		51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAccessibilityAwareComponent.h; sourceTree = "<group>"; };
 		6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+Yoga.h"; sourceTree = "<group>"; };
 		6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKComponent+Yoga.mm"; sourceTree = "<group>"; };
 		60172864238FEF57000D5CD6 /* CKDelayedInitialisationWrapperTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDelayedInitialisationWrapperTests.mm; sourceTree = "<group>"; };
@@ -2896,6 +2900,8 @@
 		D0B47ACC1CBD926700BB33CE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */,
+				51557C732541C91700E47E6B /* CKAccessibilityAwareComponent.mm */,
 				D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */,
 				D4EAA5612514F6FC00F32DC1 /* CKSizingComponent.mm */,
 				D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */,
@@ -3776,6 +3782,7 @@
 				23D1B14122D638F600453EC7 /* CKScopeTreeNode.h in Headers */,
 				D0B47D161CBD948E00BB33CE /* CKComponentAnnouncerBase.h in Headers */,
 				723E448B2345058000A4806C /* CKBuildTrigger.h in Headers */,
+				51557C802541C91800E47E6B /* CKAccessibilityAwareComponent.h in Headers */,
 				D4BC572823E3765C0075D688 /* CKComponentViewClass.h in Headers */,
 				72C74F61236B643B00E4D533 /* CKComponentAccessibilityContext.h in Headers */,
 				D4BC573423E3765C0075D688 /* CKWeakObjectContainer.h in Headers */,
@@ -5156,6 +5163,7 @@
 				D4B1B679253747B3000F0B99 /* CKAnimationComponentPassthroughView.mm in Sources */,
 				D0B47CB71CBD943400BB33CE /* CKStaticLayoutComponent.mm in Sources */,
 				D0B47CB81CBD943400BB33CE /* CKStatefulViewComponent.mm in Sources */,
+				51557C7F2541C91800E47E6B /* CKAccessibilityAwareComponent.mm in Sources */,
 				72647CAB2368D0300072F330 /* CKAction.mm in Sources */,
 				60D7B3CD20FC90500011AB3B /* YGEnums.cpp in Sources */,
 				D0B47CB91CBD943400BB33CE /* CKStatefulViewComponentController.mm in Sources */,

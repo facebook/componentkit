@@ -12,8 +12,10 @@
 #import "CKComponentRootViewInternal.h"
 
 #import <ComponentKit/CKAssert.h>
-
+#import <ComponentKit/CKComponent+UIView.h>
 #import "CKComponentAttachControllerInternal.h"
+
+#import <ComponentKit/CKAccessibilityAwareComponent.h>
 
 @implementation CKComponentRootView {
   BOOL _allowTapPassthrough;
@@ -81,9 +83,13 @@ static NSMutableArray *hitTestHooks;
 }
 
 - (NSArray *)accessibilityElements {
+  // This check is needed to only use the new accessibility API
+  // in the surfaces we are testing.
+  // It will be removed (along with CKAccessibilityAwareComponent)
+  // when we do a full rollout
   const auto rootComponent = [self mountedLayout].component;
 
-  if (NO) {
+  if (IsAccessibilityBasedOnComponent((CKComponent *)rootComponent)) {
     return @[rootComponent];
   }
   return [super accessibilityElements];
