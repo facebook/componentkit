@@ -13,6 +13,7 @@
 #if CK_NOT_SWIFT
 
 #import <ComponentKit/ComponentBuilder.h>
+#import <ComponentKit/CKIdValueWrapper.h>
 
 namespace CK {
 namespace BuilderDetails {
@@ -76,6 +77,19 @@ public:
   auto &triggerValue(NS_RELEASES_ARGUMENT id<NSObject> triggerValue)
   {
     _triggerValue = triggerValue;
+    return reinterpret_cast<
+    TransitionComponentBuilder<PropsBitmap | TransitionComponentPropId::hasTrigger> &>(*this);
+  }
+
+  /**
+   A value changes in which are used to trigger the transition.
+
+   @note  @c T::operator == is used to compare the previous and the new value.
+   */
+  template <typename T>
+  auto &triggerValue(T triggerValue)
+  {
+    _triggerValue = CKIdValueWrapperCreate<T>(triggerValue);
     return reinterpret_cast<
     TransitionComponentBuilder<PropsBitmap | TransitionComponentPropId::hasTrigger> &>(*this);
   }
