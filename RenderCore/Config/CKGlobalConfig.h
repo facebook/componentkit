@@ -14,6 +14,7 @@
 
 #import <Foundation/Foundation.h>
 #import <RenderCore/CKComponentCoalescingMode.h>
+#import <RenderCore/CKComponentBasedAccessibilityMode.h>
 
 @protocol CKAnalyticsListener;
 
@@ -44,6 +45,10 @@ struct CKGlobalConfig {
    When true, use -[CKComponent layoutThatFits_ExtractedAssertions:parentSize:]
    */
   BOOL stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO;
+  /**
+    Component based accessibility mode
+   */
+   CKComponentBasedAccessibilityMode componentAXMode = CKComponentBasedAccessibilityModeDisabled;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

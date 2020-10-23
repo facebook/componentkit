@@ -14,6 +14,8 @@
 #import <ComponentKit/ComponentLayoutContext.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
+#import <ComponentKit/CKGlobalConfig.h>
+
 @implementation CKComponentBasedAccessibilityContext
 
 - (instancetype)initWithComponentBasedAXEnabled:(BOOL)enabled {
@@ -44,12 +46,33 @@
 @end
 
 BOOL IsAccessibilityBasedOnComponent(CKComponent *component) {
-  return [component isKindOfClass:[CKAccessibilityAwareComponent class]];
+  if (!component) {
+    return NO;
+  }
+  auto const componentAXMode = CKReadGlobalConfig().componentAXMode;
+  switch (componentAXMode) {
+    case CKComponentBasedAccessibilityModeEnabled:
+      return YES;
+      break;
+    case CKComponentBasedAccessibilityModeEnabledOnSurface:
+      return [component isMemberOfClass:[CKAccessibilityAwareComponent class]];
+      break;
+    default:
+      break;
+  }
+  return NO;
+}
+
+BOOL shouldUseComponentAsSourceOfAccessibility() {
+  auto const componentAXMode = CKReadGlobalConfig().componentAXMode;
+  // Wrap only if we want to selectively enable component based accessibility on surface by surface base
+  return
+    componentAXMode == CKComponentBasedAccessibilityModeEnabledOnSurface
+    && [CKComponentContext<CKComponentBasedAccessibilityContext>::get() componentBasedAXEnabled];
 }
 
 CKComponent * CKAccessibilityAwareWrapper(CKComponent *wrappedComponent) {
-  auto const shouldUseComponentAsSourceOfAccessibility = [CKComponentContext<CKComponentBasedAccessibilityContext>::get() componentBasedAXEnabled];
-  if (!shouldUseComponentAsSourceOfAccessibility) {
+  if (shouldUseComponentAsSourceOfAccessibility()) {
     return wrappedComponent;
   }
   return [CKAccessibilityAwareComponent newWithComponent:wrappedComponent];
