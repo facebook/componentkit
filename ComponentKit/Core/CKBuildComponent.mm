@@ -118,6 +118,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                           shouldCollectTreeNodeCreationInformation,
                                           globalConfig.alwaysBuildRenderTree,
                                           coalescingMode,
+                                          /* enforce CKComponent */ YES,
                                           globalConfig.disableRenderToNilInCoalescedCompositeComponents);
 
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
