@@ -65,6 +65,16 @@ BOOL IsAccessibilityBasedOnComponent(CKComponent *component) {
 
 BOOL shouldUseComponentAsSourceOfAccessibility() {
   auto const componentAXMode = CKReadGlobalConfig().componentAXMode;
+  // return true if component based accessiility is enabled everywhwere or
+  // if it's enabled per surface, and we are in the correct surface
+  return
+    componentAXMode == CKComponentBasedAccessibilityModeEnabled ||
+    (componentAXMode == CKComponentBasedAccessibilityModeEnabledOnSurface
+    && [CKComponentContext<CKComponentBasedAccessibilityContext>::get() componentBasedAXEnabled]);
+}
+
+static BOOL isComponentBasedAccessibilityEnabledPerSurface() {
+  auto const componentAXMode = CKReadGlobalConfig().componentAXMode;
   // Wrap only if we want to selectively enable component based accessibility on surface by surface base
   return
     componentAXMode == CKComponentBasedAccessibilityModeEnabledOnSurface
@@ -72,7 +82,7 @@ BOOL shouldUseComponentAsSourceOfAccessibility() {
 }
 
 CKComponent * CKAccessibilityAwareWrapper(CKComponent *wrappedComponent) {
-  if (shouldUseComponentAsSourceOfAccessibility()) {
+  if (!isComponentBasedAccessibilityEnabledPerSurface()) {
     return wrappedComponent;
   }
   return [CKAccessibilityAwareComponent newWithComponent:wrappedComponent];
