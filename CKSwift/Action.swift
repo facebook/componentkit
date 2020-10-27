@@ -103,19 +103,19 @@ public extension Action where Param == Void {
 public protocol Actionable : ScopeHandleProvider { }
 
 extension View where Self: Actionable {
-  public func action<Param>(_ handler: @escaping (Self, Param) -> Void) -> ActionWith<Param> {
+  public func onAction<Param>(_ handler: @escaping (Self, Param) -> Void) -> ActionWith<Param> {
     ActionWith(handler: handler)
   }
 
-  public func action<Param>(_ handler: @escaping (Self) -> (Param) -> Void) -> ActionWith<Param> {
+  public func onAction<Param>(_ handler: @escaping (Self) -> (Param) -> Void) -> ActionWith<Param> {
     ActionWith(handler: handler)
   }
 
-  public func action(_ handler: @escaping (Self) -> Void) -> Action {
+  public func onAction(_ handler: @escaping (Self) -> Void) -> Action {
     ActionWith(handler: handler)
   }
 
-  public func action(_ handler: @escaping (Self) -> () -> Void) -> Action {
+  public func onAction(_ handler: @escaping (Self) -> () -> Void) -> Action {
     ActionWith(handler: handler)
   }
 }

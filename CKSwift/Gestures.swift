@@ -36,27 +36,27 @@ public struct LongPressAction {
 
 extension View where Self: Actionable {
   public func onTap(_ handler: @escaping (Self, UIGestureRecognizer) -> Void) -> TapAction {
-    TapAction(action: action(handler))
+    TapAction(action: onAction(handler))
   }
 
   public func onTap(_ handler: @escaping (Self) -> (UIGestureRecognizer) -> Void) -> TapAction {
-    TapAction(action: action(handler))
+    TapAction(action: onAction(handler))
   }
 
   public func onPan(_ handler: @escaping (Self, UIGestureRecognizer) -> Void) -> PanAction {
-    PanAction(action: action(handler))
+    PanAction(action: onAction(handler))
   }
 
   public func onPan(_ handler: @escaping (Self) -> (UIGestureRecognizer) -> Void) -> PanAction {
-    PanAction(action: action(handler))
+    PanAction(action: onAction(handler))
   }
 
   public func onLongPress(_ handler: @escaping (Self, UIGestureRecognizer) -> Void) -> LongPressAction {
-    LongPressAction(action: action(handler))
+    LongPressAction(action: onAction(handler))
   }
 
   public func onLongPress(_ handler: @escaping (Self) -> (UIGestureRecognizer) -> Void) -> LongPressAction {
-    LongPressAction(action: action(handler))
+    LongPressAction(action: onAction(handler))
   }
 }
 
