@@ -23,40 +23,64 @@ using CKActionWithT_SwiftBridge = void (^)(T);
 
 template <typename T, typename = std::enable_if_t<std::is_convertible<T, id>::value>>
 CKAction<T> CKSwiftActionUnsafeBridgeToObjectiveC(CKActionWithT_SwiftBridge<T> _Null_unspecified action) {
-  return CKAction<T>::actionFromSenderlessBlock(action);
+  if (action == nil) {
+    return nullptr;
+  } else {
+    return CKAction<T>::actionFromSenderlessBlock(action);
+  }
 }
 
 template <typename T, typename = std::enable_if_t<!std::is_convertible<T, id>::value>>
 CKAction<T> CKSwiftActionUnsafeBridgeToObjectiveC(CKActionWithT_SwiftBridge<id> _Null_unspecified action) {
-  return CKAction<T>::actionFromSenderlessBlock(^(T param){
-    action(@(param));
-  });
+  if (action == nil) {
+    return nullptr;
+  } else {
+    return CKAction<T>::actionFromSenderlessBlock(^(T param){
+      action(@(param));
+    });
+  }
 }
 
 inline CKAction<> CKSwiftActionUnsafeBridgeToObjectiveC(CKAction_SwiftBridge action) {
-  return CKAction<>::actionFromSenderlessBlock(action);
+  if (action == nil) {
+    return nullptr;
+  } else {
+    return CKAction<>::actionFromSenderlessBlock(action);
+  }
 }
 
 // MARK: From Objective-C
 
 template <typename T, typename = std::enable_if_t<std::is_convertible<T, id>::value>>
 CKActionWithT_SwiftBridge<T> _Nonnull CKSwiftActionUnsafeBridgeFromObjectiveC(CKAction<T> action) {
-  return ^(T param) {
-    action.send(nil, param);
-  };
+  if (action) {
+    return ^(T param) {
+      action.send(nil, param);
+    };
+  } else {
+    return nil;
+  }
 }
 
 template <typename T, typename = std::enable_if_t<!std::is_convertible<T, id>::value>>
 CKActionWithT_SwiftBridge<id> _Nonnull CKSwiftActionUnsafeBridgeFromObjectiveC(CKAction<T> action) {
-  return ^(T param) {
-    action.send(nil, @(param));
-  };
+  if (action) {
+    return ^(T param) {
+      action.send(nil, @(param));
+    };
+  } else {
+    return nil;
+  }
 }
 
 inline CKAction_SwiftBridge CKSwiftActionUnsafeBridgeFromObjectiveC(CKAction<> action) {
-  return ^(){
-    action.send(nil);
-  };
+  if (action) {
+    return ^(){
+      action.send(nil);
+    };
+  } else {
+    return nil;
+  }
 }
 
 #endif
