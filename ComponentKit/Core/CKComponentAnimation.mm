@@ -61,6 +61,7 @@ static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponent
       CKCAssertWithCategory(viewForAnimation != nil, [component className],
                             @"Can't animate component without a view. Check if %@ has a view.", [component className]);
       const auto snapshotView = [viewForAnimation snapshotViewAfterScreenUpdates:NO];
+      snapshotView.layer.anchorPoint = viewForAnimation.layer.anchorPoint;
       snapshotView.frame = [viewForAnimation convertRect:viewForAnimation.bounds toView:hostView];
       snapshotView.userInteractionEnabled = NO;
       return snapshotView;

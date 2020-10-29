@@ -39,7 +39,10 @@ static auto disappearingPreviousComponentAnimation(CAAnimation *disappearAnimati
                             [previousComponent className]
                             );
 
-      return [childView snapshotViewAfterScreenUpdates:NO];
+      auto const snapshotView = [childView snapshotViewAfterScreenUpdates:NO];
+      snapshotView.layer.anchorPoint = childView.layer.anchorPoint;
+      snapshotView.userInteractionEnabled = NO;
+      return snapshotView;
     },
     .didRemount = ^UIView *(UIView *snapshotView) {
       auto const newView = [newComponent viewForAnimation];
@@ -52,7 +55,6 @@ static auto disappearingPreviousComponentAnimation(CAAnimation *disappearAnimati
         snapshotView.bounds.size,
       };
       snapshotView.frame = frame;
-      snapshotView.userInteractionEnabled = NO;
       [newView.superview insertSubview:snapshotView aboveSubview:newView];
 
       [CATransaction begin];
