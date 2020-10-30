@@ -1141,6 +1141,8 @@
 		D66BEECA24241D070051F0E4 /* CKClippingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D66BEEC624241D070051F0E4 /* CKClippingComponent.h */; };
 		D68F8738242018D600C16A2A /* CKExceptionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = D68F872D242018D600C16A2A /* CKExceptionInfo.h */; };
 		D68F8739242018D600C16A2A /* CKExceptionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = D68F872D242018D600C16A2A /* CKExceptionInfo.h */; };
+		D6939EAA254C279D007425C1 /* CompositeComponentBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6939EA9254C279D007425C1 /* CompositeComponentBuilder.mm */; };
+		D6939EAB254C279D007425C1 /* CompositeComponentBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6939EA9254C279D007425C1 /* CompositeComponentBuilder.mm */; };
 		D69FDBAA23E32385002046EC /* ButtonComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D69FDBA923E32385002046EC /* ButtonComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D69FDBAB23E32385002046EC /* ButtonComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D69FDBA923E32385002046EC /* ButtonComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6A0CF8722844556000CC4D0 /* CKAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D6A0CF8522844556000CC4D0 /* CKAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2153,6 +2155,7 @@
 		D66BEEBB24241D070051F0E4 /* CKClippingComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKClippingComponent.mm; sourceTree = "<group>"; };
 		D66BEEC624241D070051F0E4 /* CKClippingComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKClippingComponent.h; sourceTree = "<group>"; };
 		D68F872D242018D600C16A2A /* CKExceptionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKExceptionInfo.h; sourceTree = "<group>"; };
+		D6939EA9254C279D007425C1 /* CompositeComponentBuilder.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CompositeComponentBuilder.mm; sourceTree = "<group>"; };
 		D69FDBA923E32385002046EC /* ButtonComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ButtonComponentBuilder.h; sourceTree = "<group>"; };
 		D6A0CF8522844556000CC4D0 /* CKAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimation.h; sourceTree = "<group>"; };
 		D6A0CF8622844556000CC4D0 /* CKAnimation.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimation.mm; sourceTree = "<group>"; };
@@ -3025,6 +3028,7 @@
 				D634A27E22DB71460085D697 /* ComponentBuilder.h */,
 				D48D9D5223426BE3003DDC41 /* ComponentBuilder.mm */,
 				D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */,
+				D6939EA9254C279D007425C1 /* CompositeComponentBuilder.mm */,
 				723E445B23414FFB00A4806C /* CKComponentGenerator.h */,
 				723E445C23414FFB00A4806C /* CKComponentGenerator.mm */,
 				D48D9D3C2342606B003DDC41 /* CKTransitions.h */,
@@ -4893,6 +4897,7 @@
 				03B8B4A61D2A346F00EDFF59 /* CKDataSourceConfiguration.mm in Sources */,
 				03B8B4A71D2A346F00EDFF59 /* CKDataSourceItem.mm in Sources */,
 				03B8B4A81D2A346F00EDFF59 /* CKDataSourceListenerAnnouncer.mm in Sources */,
+				D6939EAB254C279D007425C1 /* CompositeComponentBuilder.mm in Sources */,
 				03B8B4A91D2A346F00EDFF59 /* CKDataSourceState.mm in Sources */,
 				D6EF79F023ECC6E600230005 /* CKSizeRange_SwiftBridge.mm in Sources */,
 				60D7B3C820FC90500011AB3B /* Utils.cpp in Sources */,
@@ -5135,6 +5140,7 @@
 				D0B47C871CBD943400BB33CE /* CKImageComponent.mm in Sources */,
 				D0B47C881CBD943400BB33CE /* CKNetworkImageComponent.mm in Sources */,
 				D0B47C891CBD943400BB33CE /* CKComponent.mm in Sources */,
+				D6939EAA254C279D007425C1 /* CompositeComponentBuilder.mm in Sources */,
 				D0B47C8A1CBD943400BB33CE /* CKComponentAnimation.mm in Sources */,
 				D0B47C8B1CBD943400BB33CE /* CKComponentBoundsAnimation.mm in Sources */,
 				60EFF4B52113555C00CA7C68 /* CKStatelessComponent.mm in Sources */,
