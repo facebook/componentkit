@@ -278,7 +278,7 @@
 		4F22A37924B78AA500641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
 		4F22A37A24B78AAD00641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
 		51557C7F2541C91800E47E6B /* CKAccessibilityAwareComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 51557C732541C91700E47E6B /* CKAccessibilityAwareComponent.mm */; };
-		51557C802541C91800E47E6B /* CKAccessibilityAwareComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */; };
+		51557C802541C91800E47E6B /* CKAccessibilityAwareComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		51557C8A2541CABD00E47E6B /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C892541CABD00E47E6B /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		51557C9B2541CAF200E47E6B /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C892541CABD00E47E6B /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6016FC2420A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -1053,6 +1053,9 @@
 		D4BC57BF23E3849A0075D688 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
 		D4C1270A2517ACB6006AD1A4 /* CKSizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4D9CF022342AECE00D1BA22 /* CKTransitions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D9D3D2342606B003DDC41 /* CKTransitions.mm */; };
+		D4DEA539254C478D00A295E0 /* CKAccessibilityAwareComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4DEA545254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DEA544254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4DEA546254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DEA544254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4EAA5552513A09400F32DC1 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5542513A09400F32DC1 /* State.swift */; };
 		D4EAA5572513A0BE00F32DC1 /* ScopeHandleLinkable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */; };
 		D4EAA55B2513A23B00F32DC1 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA55A2513A23B00F32DC1 /* Binding.swift */; };
@@ -2096,6 +2099,7 @@
 		D4BC579123E37A1B0075D688 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4BC579D23E37A240075D688 /* CKSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKSwift.swift; sourceTree = "<group>"; };
 		D4BC57C423E387510075D688 /* CKSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKSwift.xcconfig; sourceTree = "<group>"; };
+		D4DEA544254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentBasedAccessibilityMode.h; sourceTree = "<group>"; };
 		D4EAA5542513A09400F32DC1 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScopeHandleLinkable.swift; sourceTree = "<group>"; };
 		D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftComponent.swift; sourceTree = "<group>"; };
@@ -3393,6 +3397,7 @@
 			children = (
 				D4BC570E23E3765B0075D688 /* CKArgumentPrecondition.h */,
 				D4BC570523E3765B0075D688 /* CKAssert.h */,
+				D4DEA544254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h */,
 				728D25D123E8853A0016D672 /* CKAssociatedObject.h */,
 				D4BC56FE23E3765B0075D688 /* CKAvailability.h */,
 				D4BC571023E3765B0075D688 /* CKCasting.h */,
@@ -3689,6 +3694,7 @@
 				03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */,
 				D48D9D40234261C4003DDC41 /* CKTransitions.h in Headers */,
 				D4BC575723E3765C0075D688 /* CKDictionary.h in Headers */,
+				D4DEA546254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h in Headers */,
 				23FEC5A0203B30DA0068E09D /* CKTreeNode.h in Headers */,
 				03B8B5321D2A346F00EDFF59 /* CKUpdateMode.h in Headers */,
 				23309AA92045C61000833BDB /* CKTreeNodeProtocol.h in Headers */,
@@ -3941,6 +3947,7 @@
 				D0B47CF41CBD948E00BB33CE /* CKComponentControllerInternal.h in Headers */,
 				D0B47CEE1CBD948E00BB33CE /* CKNetworkImageDownloading.h in Headers */,
 				D0B47D2A1CBD948E00BB33CE /* CKComponentFlexibleSizeRangeProvider.h in Headers */,
+				D4DEA545254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h in Headers */,
 				72F0729323903A7C00338AB0 /* CKSizeAssert.h in Headers */,
 				D68F8738242018D600C16A2A /* CKExceptionInfo.h in Headers */,
 				D4BC575823E3765C0075D688 /* ComponentMountContext.h in Headers */,
@@ -4117,6 +4124,7 @@
 				D431887223E205F40024AA12 /* CKComponentViewAttribute.h in Headers */,
 				D431886023E205F40024AA12 /* CKDictionary.h in Headers */,
 				D431886E23E205F40024AA12 /* CKFunctionalHelpers.h in Headers */,
+				D4DEA539254C478D00A295E0 /* CKAccessibilityAwareComponent.h in Headers */,
 				D431885923E205F40024AA12 /* CKNonNull.h in Headers */,
 				D431887023E205F40024AA12 /* CKMutex.h in Headers */,
 				D431885823E205F40024AA12 /* CKAssert.h in Headers */,

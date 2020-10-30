@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <RenderCore/CKAccessibilityContext.h>
+#import <RenderCore/CKComponentBasedAccessibilityMode.h>
 #import <RenderCore/CKArgumentPrecondition.h>
 #import <RenderCore/CKAssert.h>
 #import <RenderCore/CKAssociatedObject.h>
