@@ -25,6 +25,10 @@ public struct Binding<Value> {
     get { state.wrappedValue }
     nonmutating set { state.wrappedValue = newValue }
   }
+
+  public var projectedValue: Binding<Value> {
+    self
+  }
 }
 
 extension Binding : Equatable where Value : Equatable {
