@@ -167,6 +167,7 @@
 #import <ComponentKit/CKVariant.h>
 #import <ComponentKit/CKViewConfiguration.h>
 #import <ComponentKit/CKWeakObjectContainer.h>
+#import <ComponentKit/CKZStackComponent.h>
 #import <ComponentKit/ComponentBuilder.h>
 #import <ComponentKit/ComponentLayoutContext.h>
 #import <ComponentKit/ComponentMountContext.h>
