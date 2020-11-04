@@ -33,14 +33,18 @@ public struct ActionWith<Param> {
       fatalError("Attempting to initialise action outside of the right body function")
     }
 
-    self.scopedResponder = scopedResponder
-    self.scopedResponderKey = key
-    self.handler = { aComponent, param in
+    self.init(scopedResponder: scopedResponder, scopedResponderKey: key, handler: { aComponent, param in
       guard let component = aComponent as? SwiftComponent<View> else {
         fatalError("Expecting \(SwiftComponent<View>.self) when invoking action but got \(aComponent) instead")
       }
       handler(component.view, param)
-    }
+    })
+  }
+
+  private init(scopedResponder: ScopedResponder, scopedResponderKey: ScopedResponderKey, handler: @escaping (Component, Param) -> Void) {
+    self.scopedResponder = scopedResponder
+    self.scopedResponderKey = scopedResponderKey
+    self.handler = handler
   }
 
   init<View: CKSwift.View>(handler: @escaping (View) -> Void) {
@@ -80,6 +84,15 @@ public struct ActionWith<Param> {
       self.invoke(param)
     }
   }
+
+  /// Demotes an action with a parameter to a parameter less param.
+  /// - Parameter param: The value to pass to the action handler.
+  /// - Returns: The parameterless `Action`.
+  public func demote(passing param: Param) -> Action {
+    Action(scopedResponder: scopedResponder, scopedResponderKey: scopedResponderKey) { component, _ in
+      handler(component, param)
+    }
+  }
 }
 
 public typealias Action = ActionWith<Void>
@@ -117,6 +130,13 @@ extension View where Self: Actionable {
 
   public func onAction(_ handler: @escaping (Self) -> () -> Void) -> Action {
     ActionWith(handler: handler)
+  }
+
+  /// Creates a `Action` which receives a param not specified by the caller but on creation.
+  public func onAction<Param>(_ handler: @escaping (Self) -> (Param) -> Void, passing param: Param) -> Action {
+    Action() { view in
+      handler(view)(param)
+    }
   }
 }
 
