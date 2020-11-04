@@ -122,68 +122,6 @@ public extension FlexboxComponent {
       swiftChildren: children()
     )
   }
-
-  // Overload for single value. Fixed in Xcode 12
-  // https://twitter.com/dgregor79/status/1258412048934768641
-  convenience init(
-    view: ViewConfiguration? = nil,
-    direction: Style.Direction = .column,
-    spacing: CGFloat = 0,
-    justifyContent: Style.JustifyContent = .start,
-    alignItems: Style.AlignItems = .stretch,
-    alignContent: Style.AlignContent = .start,
-    wrap: Style.Wrap = .noWrap,
-    layoutDirection: Style.LayoutDirection = .applicationDirection,
-    useDeepYogaTrees: Bool = false,
-    size: ComponentSize? = nil,
-    @FlexboxChildBuilder children: () -> FlexboxComponent.Child
-  ) {
-    self.init(
-      __swiftView: view?.viewConfiguration,
-      swiftStyle: Style(
-        direction: direction,
-        spacing: spacing,
-        justifyContent: justifyContent,
-        alignItems: alignItems,
-        alignContent: alignContent,
-        wrap: wrap,
-        layoutDirection: layoutDirection,
-        useDeepYogaTrees: useDeepYogaTrees),
-      swiftSize: size?.componentSize,
-      swiftChildren: [children()]
-    )
-  }
-
-  // Overload for single value. Fixed in Xcode 12
-  // https://twitter.com/dgregor79/status/1258412048934768641
-  convenience init(
-    view: ViewConfiguration? = nil,
-    direction: Style.Direction = .column,
-    spacing: CGFloat = 0,
-    justifyContent: Style.JustifyContent = .start,
-    alignItems: Style.AlignItems = .stretch,
-    alignContent: Style.AlignContent = .start,
-    wrap: Style.Wrap = .noWrap,
-    layoutDirection: Style.LayoutDirection = .applicationDirection,
-    useDeepYogaTrees: Bool = false,
-    size: ComponentSize? = nil,
-    @FlexboxChildBuilder child: () -> Component
-  ) {
-    self.init(
-      __swiftView: view?.viewConfiguration,
-      swiftStyle: Style(
-        direction: direction,
-        spacing: spacing,
-        justifyContent: justifyContent,
-        alignItems: alignItems,
-        alignContent: alignContent,
-        wrap: wrap,
-        layoutDirection: layoutDirection,
-        useDeepYogaTrees: useDeepYogaTrees),
-      swiftSize: size?.componentSize,
-      swiftChildren: [FlexboxComponent.Child(component: child)]
-    )
-  }
 }
 
 #endif
