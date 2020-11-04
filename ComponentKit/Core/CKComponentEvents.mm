@@ -65,15 +65,15 @@ auto CKComponentHasAnimationsOnFinalUnmountPredicate(id<CKMountable> const c) ->
   }
 }
 
-void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout)
+void CKComponentSendDidPrepareLayoutForComponent(id<CKComponentScopeEnumeratorProvider> scopeEnumeratorProvider, const CKComponentRootLayout &layout)
 {
   // Iterate over the components that their controllers override the 'didPrepareLayoutForComponent' method.
-  [scopeRoot enumerateComponentsMatchingPredicate:&CKComponentDidPrepareLayoutForComponentToControllerPredicate
-                                            block:^(id<CKComponentProtocol> c) {
-                                              CKComponent *component = (CKComponent *)c;
-                                              const CKLayout componentLayout = layout.cachedLayoutForComponent(component);
-                                              [component.controller didPrepareLayout:componentLayout forComponent:component];
-                                            }];
+  [scopeEnumeratorProvider enumerateComponentsMatchingPredicate:&CKComponentDidPrepareLayoutForComponentToControllerPredicate
+                                                          block:^(id<CKComponentProtocol> c) {
+    CKComponent *component = (CKComponent *)c;
+    const CKLayout componentLayout = layout.cachedLayoutForComponent(component);
+    [component.controller didPrepareLayout:componentLayout forComponent:component];
+  }];
 }
 
 void CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths(id<NSFastEnumeration> indexPaths,
