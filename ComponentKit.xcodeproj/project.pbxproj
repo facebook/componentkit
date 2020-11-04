@@ -961,6 +961,7 @@
 		D4B1B678253747B3000F0B99 /* CKAnimationComponentPassthroughView.h in Headers */ = {isa = PBXBuildFile; fileRef = D4B1B66B253747B3000F0B99 /* CKAnimationComponentPassthroughView.h */; };
 		D4B1B679253747B3000F0B99 /* CKAnimationComponentPassthroughView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4B1B676253747B3000F0B99 /* CKAnimationComponentPassthroughView.mm */; };
 		D4B1B67A253747B3000F0B99 /* CKAnimationComponentPassthroughView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4B1B676253747B3000F0B99 /* CKAnimationComponentPassthroughView.mm */; };
+		D4B20D6D25506A1300763BB1 /* FlexboxComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B20D6C25506A1300763BB1 /* FlexboxComponentTests.swift */; };
 		D4B299182519F404006EFEBA /* SwiftComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */; };
 		D4B29A11251A1AE1006EFEBA /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B29A10251A1AE1006EFEBA /* Animation.swift */; };
 		D4B29B9D251A442E006EFEBA /* CKSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC578223E37A1B0075D688 /* CKSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2051,6 +2052,7 @@
 		D48F3236245C0C4900A097A1 /* CKComponentCoalescingMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentCoalescingMode.h; sourceTree = "<group>"; };
 		D4B1B66B253747B3000F0B99 /* CKAnimationComponentPassthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAnimationComponentPassthroughView.h; sourceTree = "<group>"; };
 		D4B1B676253747B3000F0B99 /* CKAnimationComponentPassthroughView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimationComponentPassthroughView.mm; sourceTree = "<group>"; };
+		D4B20D6C25506A1300763BB1 /* FlexboxComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxComponentTests.swift; sourceTree = "<group>"; };
 		D4B29A10251A1AE1006EFEBA /* Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		D4BC56EC23E3765B0075D688 /* CKComponentSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSize.h; sourceTree = "<group>"; };
 		D4BC56ED23E3765B0075D688 /* CKGeometryHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKGeometryHelpers.h; sourceTree = "<group>"; };
@@ -3477,6 +3479,7 @@
 			isa = PBXGroup;
 			children = (
 				D4BC578F23E37A1B0075D688 /* CKSwiftTests.swift */,
+				D4B20D6C25506A1300763BB1 /* FlexboxComponentTests.swift */,
 				D4BC579123E37A1B0075D688 /* Info.plist */,
 			);
 			path = CKSwiftTests;
@@ -5393,6 +5396,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4B20D6D25506A1300763BB1 /* FlexboxComponentTests.swift in Sources */,
 				D4BC579023E37A1B0075D688 /* CKSwiftTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

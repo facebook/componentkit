@@ -65,31 +65,57 @@ public extension FlexboxComponent.Style {
 }
 
 @_functionBuilder
-public struct FlexboxChildBuilder {
-  public static func buildBlock(_ partialResults: FlexboxComponent.Child?...) -> [FlexboxComponent.Child] {
-    return partialResults.compactMap { $0 }
-  }
-
+public struct FlexboxChildrenBuilder {
   public static func buildExpression(_ child: FlexboxComponent.Child) -> FlexboxComponent.Child {
     child
   }
 
-  public static func buildExpression<Inflatable : ComponentInflatable>(_ inflatable: Inflatable) -> FlexboxComponent.Child {
-    FlexboxComponent.Child {
-      inflatable.inflateComponent(with: nil)
+  public static func buildExpression<C: Sequence>(_ collection: C) -> [FlexboxComponent.Child] where C.Element == FlexboxComponent.Child {
+    Array(collection)
+  }
+
+  public static func buildExpression<C : Sequence, Inflatable: ComponentInflatable>(_ collection: C) -> [FlexboxComponent.Child] where C.Element == Inflatable {
+    collection.map { inflatable in
+      FlexboxComponent.Child {
+        inflatable
+      }
     }
   }
 
-  public static func buildEither(first: FlexboxComponent.Child) -> FlexboxComponent.Child {
-    first
+  public static func buildExpression<Inflatable : ComponentInflatable>(_ inflatable: Inflatable) -> FlexboxComponent.Child {
+    FlexboxComponent.Child {
+      inflatable
+    }
   }
 
-  public static func buildEither(second: FlexboxComponent.Child) -> FlexboxComponent.Child {
-    second
+  public static func buildBlock<C: Sequence>(_ children: C...) -> [FlexboxComponent.Child] where C.Element == FlexboxComponent.Child {
+    children.flatMap { $0 }
   }
 
-  public static func buildOptional(_ child: FlexboxComponent.Child??) -> FlexboxComponent.Child? {
-    child?.flatMap { $0 }
+  public static func buildBlock(_ children: FlexboxComponent.Child...) -> [FlexboxComponent.Child] {
+    children
+  }
+
+  public static func buildOptional(_ children: [FlexboxComponent.Child]?) -> [FlexboxComponent.Child] {
+    children.map {
+      Array($0)
+    } ?? []
+  }
+
+  public static func buildEither<C: Sequence>(first collection: C) -> [FlexboxComponent.Child] where C.Element == FlexboxComponent.Child {
+    Array(collection)
+  }
+
+  public static func buildEither<C: Sequence>(second collection: C) -> [FlexboxComponent.Child] where C.Element == FlexboxComponent.Child {
+    Array(collection)
+  }
+
+  public static func buildLimitedAvailability<C: Sequence>(_ collection: C) -> [FlexboxComponent.Child] where C.Element == FlexboxComponent.Child {
+    Array(collection)
+  }
+
+  public static func buildDo<C: Sequence>(_ collection: C) -> [FlexboxComponent.Child] where C.Element == FlexboxComponent.Child {
+    Array(collection)
   }
 }
 
@@ -105,7 +131,7 @@ public extension FlexboxComponent {
     layoutDirection: Style.LayoutDirection = .applicationDirection,
     useDeepYogaTrees: Bool = false,
     size: ComponentSize? = nil,
-    @FlexboxChildBuilder children: () -> [FlexboxComponent.Child]
+    @FlexboxChildrenBuilder childrenBuilder: () -> [FlexboxComponent.Child]
   ) {
     self.init(
       __swiftView: view?.viewConfiguration,
@@ -119,7 +145,7 @@ public extension FlexboxComponent {
         layoutDirection: layoutDirection,
         useDeepYogaTrees: useDeepYogaTrees),
       swiftSize: size?.componentSize,
-      swiftChildren: children()
+      swiftChildren: childrenBuilder()
     )
   }
 }
