@@ -17,11 +17,11 @@ import ComponentKit
 /// be invoked on the first non-null generation of a component.
 public struct ActionWith<Param> {
   /// The type erased handler representing the action.
-  private let handler: (Component, Param) -> Void
-  /// The scoped responder to invoke the action on.
-  private let scopedResponder: ScopedResponder
-  /// The scoped responder key to use when invoking the action.
-  private let scopedResponderKey: ScopedResponderKey
+  private let handler: (Param) -> Void
+
+  private init(handler: @escaping (Param) -> Void) {
+    self.handler = handler
+  }
 
   init<View: CKSwift.View>(handler: @escaping (View, Param) -> Void) {
     var responder: ScopedResponder?
@@ -33,18 +33,13 @@ public struct ActionWith<Param> {
       fatalError("Attempting to initialise action outside of the right body function")
     }
 
-    self.init(scopedResponder: scopedResponder, scopedResponderKey: key, handler: { aComponent, param in
-      guard let component = aComponent as? SwiftComponent<View> else {
-        fatalError("Expecting \(SwiftComponent<View>.self) when invoking action but got \(aComponent) instead")
+    self.handler = { param in
+      guard let untypedComponent = scopedResponder.responder(forKey: key) as? Component else { return }
+      guard let component = untypedComponent as? SwiftComponent<View> else {
+        fatalError("Expecting \(SwiftComponent<View>.self) when invoking action but got \(untypedComponent) instead")
       }
       handler(component.view, param)
-    })
-  }
-
-  private init(scopedResponder: ScopedResponder, scopedResponderKey: ScopedResponderKey, handler: @escaping (Component, Param) -> Void) {
-    self.scopedResponder = scopedResponder
-    self.scopedResponderKey = scopedResponderKey
-    self.handler = handler
+    }
   }
 
   init<View: CKSwift.View>(handler: @escaping (View) -> Void) {
@@ -65,14 +60,18 @@ public struct ActionWith<Param> {
     }
   }
   
+  /// Creates an action from a target + handler. Use this when the target of an action isn't a view/component.
+  public init<Target: AnyObject>(target: Target, handler: @escaping (Target) -> (Param) -> Void) {
+    self.handler = { [weak weakTarget = target] param in
+      guard let strongTarget = weakTarget else { return }
+      handler(strongTarget)(param)
+    }
+  }
+
   /// Invokes the action.
   /// - Parameter param: The parameter to pass to the action.
   public func invoke(_ param: Param) {
-    guard let component = scopedResponder.responder(forKey: scopedResponderKey) as? Component else {
-      return
-    }
-
-    handler(component, param)
+    handler(param)
   }
 
   /// The objective-c bridgeable representation of a parametrized action.
@@ -89,8 +88,8 @@ public struct ActionWith<Param> {
   /// - Parameter param: The value to pass to the action handler.
   /// - Returns: The parameterless `Action`.
   public func demote(passing param: Param) -> Action {
-    Action(scopedResponder: scopedResponder, scopedResponderKey: scopedResponderKey) { component, _ in
-      handler(component, param)
+    Action() { _ in
+      handler(param)
     }
   }
 }
