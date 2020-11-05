@@ -732,6 +732,7 @@
 		D4171BBD252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BBA252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4171BCE252DCA760082CF96 /* CKAction_SwiftBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */; };
 		D4171BDF252DCA7C0082CF96 /* CKAction_SwiftBridge+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BBA252DCA700082CF96 /* CKAction_SwiftBridge+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D41C1441255403BB0026F8F7 /* CKAccessibilityAwareComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 51557C732541C91700E47E6B /* CKAccessibilityAwareComponent.mm */; };
 		D427E8192314A888004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
 		D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -4870,6 +4871,7 @@
 				D6C713FC224CCA5800BADCC6 /* CKAnimationComponent.mm in Sources */,
 				60EFF4C221135FCA00CA7C68 /* CKStatelessComponent.mm in Sources */,
 				D63F21D920C20559007604F4 /* CKComponentAnimationsController.mm in Sources */,
+				D41C1441255403BB0026F8F7 /* CKAccessibilityAwareComponent.mm in Sources */,
 				03B8B48C1D2A346F00EDFF59 /* CKComponentAnnouncerHelper.mm in Sources */,
 				72647CEF2368D3AE0072F330 /* CKRenderHelpers.mm in Sources */,
 				D4B1B67A253747B3000F0B99 /* CKAnimationComponentPassthroughView.mm in Sources */,
