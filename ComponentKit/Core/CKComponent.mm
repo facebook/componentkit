@@ -49,8 +49,6 @@
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
 
-static BOOL __stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO;
-
 @implementation CKComponent
 {
   id<CKTreeNodeProtocol> _treeNode;
@@ -98,13 +96,6 @@ static BOOL __stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO
     _size = size;
 
     [self didFinishComponentInitialization];
-
-#if CK_ASSERTIONS_ENABLED
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-      __stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = CKReadGlobalConfig().stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions;
-    });
-#endif
   }
   return self;
 }
@@ -333,15 +324,6 @@ static BOOL __stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO
 
 #pragma mark - Layout
 
-- (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
-{
-  if (__stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions) {
-    return [self layoutThatFits_ExtractedAssertions:constrainedSize parentSize:parentSize];
-  } else {
-    return [self layoutThatFits_DEPRECATED:constrainedSize parentSize:parentSize];
-  }
-}
-
 #if CK_ASSERTIONS_ENABLED
 
 - (void)_validate_layoutThatFits:(const CKSizeRange &)constrainedSize layout:(const CKLayout &)layout parentSize:(const CGSize &)parentSize
@@ -378,7 +360,7 @@ static BOOL __stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO
 
 #endif
 
-- (CKLayout)layoutThatFits_ExtractedAssertions:(const CKSizeRange &)constrainedSize parentSize:(const CGSize &)parentSize
+- (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
 {
 #if CK_ASSERTIONS_ENABLED
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
@@ -395,57 +377,6 @@ static BOOL __stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO
 
 #if CK_ASSERTIONS_ENABLED
   [self _validate_layoutThatFits:constrainedSize layout:layout parentSize:parentSize];
-#endif
-
-  [systraceListener didLayoutComponent:self];
-
-  return layout;
-}
-
-- (CKLayout)layoutThatFits_DEPRECATED:(const CKSizeRange &)constrainedSize parentSize:(const CGSize &)parentSize
-{
-#if CK_ASSERTIONS_ENABLED
-  const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
-#endif
-
-  CKAssertSizeRange(constrainedSize);
-  CK::Component::LayoutContext context(self, constrainedSize);
-  auto const systraceListener = context.systraceListener;
-  [systraceListener willLayoutComponent:self];
-
-  CKLayout layout = [self computeLayoutThatFits:constrainedSize
-                                        restrictedToSize:_size
-                                    relativeToParentSize:parentSize];
-
-#if CK_ASSERTIONS_ENABLED
-  // If this component has children in its layout, this means that it's not a real leaf component.
-  // As a result, the infrastructure won't call `buildComponentTree:` on the component's children and can affect the render process.
-  if (self.superclass == [CKComponent class] && layout.children != nullptr && layout.children->size() > 0) {
-    const auto overridesIterableMethods =
-    CKSubclassOverridesInstanceMethod([CKComponent class], self.class, @selector(childAtIndex:)) &&
-    CKSubclassOverridesInstanceMethod([CKComponent class], self.class, @selector(numberOfChildren));
-    CKAssertWithCategory(overridesIterableMethods,
-                         self.className,
-                         @"%@ is subclassing CKComponent directly, you need to subclass CKLayoutComponent instead. "
-                         "Context: we’re phasing out CKComponent subclasses for in favor of CKLayoutComponent subclasses. "
-                         "While this is still kinda OK for leaf components, things start to break when you introduce a CKComponent subclass with children.",
-                         self.className);
-  }
-
-  CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
-           self.className, layout.component.className);
-
-  CKAssertResolvedSize(_size, parentSize);
-  CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
-  CKAssertSizeRange(resolvedRange);
-  CKAssertWithCategory(CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.width, layout.size.width)
-                       && CKIsGreaterThanOrEqualWithTolerance(layout.size.width, resolvedRange.min.width)
-                       && CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.height,layout.size.height)
-                       && CKIsGreaterThanOrEqualWithTolerance(layout.size.height,resolvedRange.min.height),
-                       self.className,
-                       @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
-                       NSStringFromCGSize(layout.size), self.className, resolvedRange.description(),
-                       CK::Component::LayoutContext::currentStackDescription());
 #endif
 
   [systraceListener didLayoutComponent:self];

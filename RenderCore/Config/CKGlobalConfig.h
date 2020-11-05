@@ -42,13 +42,9 @@ struct CKGlobalConfig {
    */
   CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
   /**
-   When true, use -[CKComponent layoutThatFits_ExtractedAssertions:parentSize:]
-   */
-  BOOL stackSizeRegressionCKComponentLayoutThatFitsExtractAssertions = NO;
-  /**
    Component based accessibility mode
    */
-   CKComponentBasedAccessibilityMode componentAXMode = CKComponentBasedAccessibilityModeDisabled;
+  CKComponentBasedAccessibilityMode componentAXMode = CKComponentBasedAccessibilityModeDisabled;
   /**
    Kill-switch to disable render-to-nil in coalesced composite components.
    */
