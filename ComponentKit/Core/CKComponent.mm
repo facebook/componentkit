@@ -534,6 +534,11 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return class_getName(self.class);
 }
 
+- (NSDictionary<NSString *, id> *)metadata
+{
+  return nil;
+}
+
 // This method can be used to override what accessible elements are
 // provided by the component. Very similar to UIKit accessibilityElements.
 #pragma mark - Accessibility

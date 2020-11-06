@@ -69,6 +69,9 @@
  */
 - (const CKComponentViewConfiguration &)viewConfiguration;
 
+/** Free form metadata associated with the component */
+@property (nonatomic, readonly) NSDictionary<NSString *, id> *metadata;
+
 /** Used to get the root component in the responder chain; don't touch this. */
 @property (nonatomic, weak) UIView *rootComponentMountedView;
 
