@@ -74,7 +74,7 @@ public struct FlexboxChildrenBuilder {
     Array(collection)
   }
 
-  public static func buildExpression<C : Sequence>(_ collection: C) -> [FlexboxComponent.Child] where C.Element: ComponentInflatable {
+  public static func buildExpression<C : Sequence, Inflatable: ComponentInflatable>(_ collection: C) -> [FlexboxComponent.Child] where C.Element == Inflatable {
     collection.map { inflatable in
       FlexboxComponent.Child {
         inflatable
@@ -82,7 +82,7 @@ public struct FlexboxChildrenBuilder {
     }
   }
 
-  public static func buildExpression(_ inflatable: ComponentInflatable) -> FlexboxComponent.Child {
+  public static func buildExpression<Inflatable : ComponentInflatable>(_ inflatable: Inflatable) -> FlexboxComponent.Child {
     FlexboxComponent.Child {
       inflatable
     }

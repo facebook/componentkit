@@ -12,7 +12,7 @@ import ComponentKit
 
 #if swift(>=5.3)
 
-public struct ViewAnimationModifier : ComponentInflatable {
+public struct ViewAnimationModifier<Inflatable : ComponentInflatable> : ComponentInflatable {
   enum Directive {
     case initialMount(CAAnimation?)
     case finalUnmount(CAAnimation?)
@@ -29,7 +29,7 @@ public struct ViewAnimationModifier : ComponentInflatable {
     }
   }
 
-  let inflatable: ComponentInflatable
+  let inflatable: Inflatable
   let directive: Directive
 
   // MARK: ComponentInflatable
@@ -42,11 +42,11 @@ public struct ViewAnimationModifier : ComponentInflatable {
 }
 
 extension ComponentInflatable {
-  public func onInitialMount(_ animation: CAAnimation?) -> ViewAnimationModifier {
+  public func onInitialMount(_ animation: CAAnimation?) -> ViewAnimationModifier<Self> {
     ViewAnimationModifier(inflatable: self, directive: .initialMount(animation))
   }
 
-  public func onFinalUnmount(_ animation: CAAnimation?) -> ViewAnimationModifier {
+  public func onFinalUnmount(_ animation: CAAnimation?) -> ViewAnimationModifier<Self> {
     ViewAnimationModifier(inflatable: self, directive: .finalUnmount(animation))
   }
 }

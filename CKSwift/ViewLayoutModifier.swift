@@ -16,7 +16,7 @@ import ComponentKit
 typealias ViewLayoutCenteringOptions = CenterLayoutComponent.CenteringOptions
 typealias ViewLayoutCenteringSizingOptions = CenterLayoutComponent.SizingOptions
 
-public struct ViewLayoutModifier : ComponentInflatable {
+public struct ViewLayoutModifier<Inflatable: ComponentInflatable> : ComponentInflatable {
   enum Directive {
     case frame(ComponentSize)
     case padding(UIEdgeInsets)
@@ -46,7 +46,7 @@ public struct ViewLayoutModifier : ComponentInflatable {
     }
   }
 
-  let inflatable: ComponentInflatable
+  let inflatable: Inflatable
   let directive: Directive
 
   // MARK: ComponentInflatable
@@ -65,7 +65,7 @@ extension ComponentInflatable {
                     minWidth: CGFloat? = nil,
                     minHeight: CGFloat? = nil,
                     maxWidth: CGFloat? = nil,
-                    maxHeight: CGFloat? = nil) -> ViewLayoutModifier {
+                    maxHeight: CGFloat? = nil) -> ViewLayoutModifier<Self> {
     ViewLayoutModifier(
       inflatable: self,
       directive: .frame(
@@ -85,7 +85,7 @@ extension ComponentInflatable {
                             minWidth: CGFloat? = nil,
                             minHeight: CGFloat? = nil,
                             maxWidth: CGFloat? = nil,
-                            maxHeight: CGFloat? = nil) -> ViewLayoutModifier {
+                            maxHeight: CGFloat? = nil) -> ViewLayoutModifier<Self> {
     ViewLayoutModifier(
       inflatable: self,
       directive: .frame(
@@ -100,28 +100,28 @@ extension ComponentInflatable {
     )
   }
 
-  public func overlay(@ComponentBuilder _ overlay: @escaping () -> Component) -> ViewLayoutModifier {
+  public func overlay(@ComponentBuilder _ overlay: @escaping () -> Component) -> ViewLayoutModifier<Self> {
     ViewLayoutModifier(inflatable: self, directive: .overlay(overlay))
   }
 
-  public func background(@ComponentBuilder _ background: @escaping () -> Component) -> ViewLayoutModifier {
+  public func background(@ComponentBuilder _ background: @escaping () -> Component) -> ViewLayoutModifier<Self> {
     ViewLayoutModifier(inflatable: self, directive: .background(background))
   }
 
   // TODO: CenterLayoutComponent options shouldn't leak
   public func center(centeringOptions: CenterLayoutComponent.CenteringOptions = [],
-                     sizingOptions: CenterLayoutComponent.SizingOptions = []) -> ViewLayoutModifier {
+                     sizingOptions: CenterLayoutComponent.SizingOptions = []) -> ViewLayoutModifier<Self> {
     ViewLayoutModifier(inflatable: self, directive: .center(centeringOptions: centeringOptions, sizingOptions: sizingOptions))
   }
 
-  public func ratio(_ ratio: CGFloat) -> ViewLayoutModifier {
+  public func ratio(_ ratio: CGFloat) -> ViewLayoutModifier<Self> {
     ViewLayoutModifier(inflatable: self, directive: .ratio(ratio))
   }
 
   public func padding(top: CGFloat? = nil,
                       left: CGFloat? = nil,
                       bottom: CGFloat? = nil,
-                      right: CGFloat? = nil) -> ViewLayoutModifier {
+                      right: CGFloat? = nil) -> ViewLayoutModifier<Self> {
     // TODO: nil should represent `default` and be contextual instead of `0`
     ViewLayoutModifier(
       inflatable: self,
@@ -137,7 +137,7 @@ extension ComponentInflatable {
 
   // TODO: Padding with Edge set API
 
-  public func padding(_ length: CGFloat?) -> ViewLayoutModifier {
+  public func padding(_ length: CGFloat?) -> ViewLayoutModifier<Self> {
     padding(top: length, left: length, bottom: length, right: length)
   }
 }

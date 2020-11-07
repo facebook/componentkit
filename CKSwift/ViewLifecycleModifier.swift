@@ -12,7 +12,7 @@ import ComponentKit
 
 #if swift(>=5.3)
 
-public struct ViewLifecycleModifier : ComponentInflatable {
+public struct ViewLifecycleModifier<Inflatable : ComponentInflatable> : ComponentInflatable {
   enum Directive {
     case didInit(()  -> Void)
     case willMount(()  -> Void)
@@ -33,7 +33,7 @@ public struct ViewLifecycleModifier : ComponentInflatable {
     }
   }
 
-  let inflatable: ComponentInflatable
+  let inflatable: Inflatable
   let directive: Directive
 
   // MARK: ComponentInflatable
@@ -46,19 +46,19 @@ public struct ViewLifecycleModifier : ComponentInflatable {
 }
 
 extension ComponentInflatable {
-  public func onDidInit(_ callback: @escaping () -> Void) -> ViewLifecycleModifier {
+  public func onDidInit(_ callback: @escaping () -> Void) -> ViewLifecycleModifier<Self> {
     ViewLifecycleModifier(inflatable: self, directive: .didInit(callback))
   }
 
-  public func onWillMount(_ callback: @escaping () -> Void) -> ViewLifecycleModifier {
+  public func onWillMount(_ callback: @escaping () -> Void) -> ViewLifecycleModifier<Self> {
     ViewLifecycleModifier(inflatable: self, directive: .willMount(callback))
   }
 
-  public func onDidUnmount(_ callback: @escaping () -> Void) -> ViewLifecycleModifier {
+  public func onDidUnmount(_ callback: @escaping () -> Void) -> ViewLifecycleModifier<Self> {
     ViewLifecycleModifier(inflatable: self, directive: .didUnmount(callback))
   }
 
-  public func onWillDispose(_ callback: @escaping () -> Void) -> ViewLifecycleModifier {
+  public func onWillDispose(_ callback: @escaping () -> Void) -> ViewLifecycleModifier<Self> {
     ViewLifecycleModifier(inflatable: self, directive: .willDispose(callback))
   }
 }

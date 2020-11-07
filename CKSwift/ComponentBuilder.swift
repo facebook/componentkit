@@ -32,7 +32,7 @@ public struct ComponentBuilder {
     component
   }
 
-  public static func buildExpression(_ inflatable: ComponentInflatable) -> Component {
+  public static func buildExpression<Inflatable: ComponentInflatable>(_ inflatable: Inflatable) -> Component {
     inflatable.inflateComponent(with: nil)
   }
 
