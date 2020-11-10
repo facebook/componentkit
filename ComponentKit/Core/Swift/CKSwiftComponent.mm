@@ -94,6 +94,15 @@ static CKComponentViewConfiguration _viewConfigurationWithViewIfAnimated(
   }
 }
 
+- (instancetype)initFromShellComponent:(CKSwiftComponent *)shellComponent child:(CKComponent *)child
+{
+  if (self = [super initWithView:shellComponent.viewConfiguration size:shellComponent.size]) {
+    _model = shellComponent->_model;
+    _child = child;
+  }
+  return self;
+}
+
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
                         swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
                             child:(CKComponent *)child

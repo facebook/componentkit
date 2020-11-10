@@ -45,7 +45,6 @@ public protocol ViewIdentifiable : ScopeHandleProvider {
 extension View where Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    // TODO: CKDeflatedComponentContext
 
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
       forceRequireNode: model?.isEmpty == false)
@@ -73,15 +72,11 @@ extension View where Self.Body == Component {
 extension View where Self: ViewIdentifiable, Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    // TODO: CKDeflatedComponentContext
-
     linkPropertyWrappersWithScopeHandle()
 
     defer {
       CKSwiftPopClass()
     }
-
-    // We've got an identifier so we shouldn't just return our child.
 
     return SwiftComponent(
       self,
@@ -91,11 +86,27 @@ extension View where Self: ViewIdentifiable, Self.Body == Component {
   }
 }
 
+extension View where Self: ViewIdentifiable & Equatable, Self.Body == Component {
+  public func inflateComponent(with model: SwiftComponentModel?) -> Component {
+    // TODO: Reuse logic
+    linkPropertyWrappersWithScopeHandle()
+
+    defer {
+      CKSwiftPopClass()
+    }
+
+    return SwiftReusableComponent(
+      self,
+      body: CKShouldCreateShellComponent() ? nil : body,
+      model: model
+    )
+  }
+}
+
+
 extension View where Self: ViewConfigurationRepresentable, Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    // TODO: CKDeflatedComponentContext
-
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
       forceRequireNode: model?.isEmpty == false
     )
@@ -106,11 +117,8 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Componen
       }
     }
 
-    // We've got an identifier so we shouldn't just return our child.
-
     return SwiftComponent(
       self,
-      body: body,
       viewConfiguration: viewConfiguration,
       model: model
     )
@@ -120,19 +128,32 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Componen
 extension View where Self: ViewIdentifiable & ViewConfigurationRepresentable, Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    // TODO: CKDeflatedComponentContext
-
     linkPropertyWrappersWithScopeHandle()
 
     defer {
       CKSwiftPopClass()
     }
 
-    // We've got an identifier so we shouldn't just return our child.
-
     return SwiftComponent(
       self,
-      body: body,
+      viewConfiguration: viewConfiguration,
+      model: model
+    )
+  }
+}
+
+extension View where Self: ViewIdentifiable & ViewConfigurationRepresentable & Equatable, Self.Body == Component {
+  public func inflateComponent(with model: SwiftComponentModel?) -> Component {
+    // TODO: Reuse logic
+    linkPropertyWrappersWithScopeHandle()
+
+    defer {
+      CKSwiftPopClass()
+    }
+
+    return SwiftReusableComponent(
+      self,
+      body: CKShouldCreateShellComponent() ? nil : body,
       viewConfiguration: viewConfiguration,
       model: model
     )
@@ -144,8 +165,6 @@ extension View where Self: ViewIdentifiable & ViewConfigurationRepresentable, Se
 extension View where Self: ViewConfigurationRepresentable, Self.Body == Never {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    // TODO: CKDeflatedComponentContext
-
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
       forceRequireNode: model?.isEmpty == false)
 
@@ -166,8 +185,6 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Never {
 extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable, Self.Body == Never {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    // TODO: CKDeflatedComponentContext
-
     linkPropertyWrappersWithScopeHandle()
 
     defer {
@@ -175,6 +192,23 @@ extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable, Se
     }
 
     return SwiftComponent(
+      self,
+      viewConfiguration: viewConfiguration,
+      model: model
+    )
+  }
+}
+
+extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable & Equatable, Self.Body == Never {
+  public func inflateComponent(with model: SwiftComponentModel?) -> Component {
+    // TODO: Reuse logic
+    linkPropertyWrappersWithScopeHandle()
+
+    defer {
+      CKSwiftPopClass()
+    }
+
+    return SwiftReusableLeafComponent(
       self,
       viewConfiguration: viewConfiguration,
       model: model

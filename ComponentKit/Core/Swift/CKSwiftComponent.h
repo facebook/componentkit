@@ -47,6 +47,9 @@ CK_COMPONENT_INIT_UNAVAILABLE
                             child:(CKComponent *_Nullable)child
                             model:(CKSwiftComponentModel_SwiftBridge *_Nullable)model NS_DESIGNATED_INITIALIZER;
 
+- (instancetype)initFromShellComponent:(CKSwiftComponent *)shellComponent
+                                 child:(CKComponent *_Nullable)child NS_DESIGNATED_INITIALIZER;
+
 @end
 
 CK_EXTERN_C_BEGIN
