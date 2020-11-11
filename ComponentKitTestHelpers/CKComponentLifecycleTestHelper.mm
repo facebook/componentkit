@@ -131,6 +131,11 @@ using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
                                                 context:_state.context]];
 }
 
++ (BOOL)requiresMainThreadAffinedStateUpdates
+{
+  return YES;
+}
+
 #pragma mark - CKComponentRootLayoutProvider
 
 - (const CKComponentRootLayout &)rootLayout

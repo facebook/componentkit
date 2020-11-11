@@ -71,7 +71,7 @@ struct CKComponentGeneratorInputs {
   BOOL didUpdateModelOrContext() const {
     return _didUpdateModelOrContext;
   }
-  
+
   BOOL treeNeedsReflow() const {
     return forceReloadInNextGeneration || _didAccessibilityChange || _didUpdateTraitCollection;
   }
@@ -432,6 +432,11 @@ static std::vector<CKComponentController *> _addedComponentControllersBetweenSco
   } else {
     dispatch_async(_affinedQueue, enqueueStateUpdate);
   }
+}
+
++ (BOOL)requiresMainThreadAffinedStateUpdates
+{
+  return YES;
 }
 
 @end

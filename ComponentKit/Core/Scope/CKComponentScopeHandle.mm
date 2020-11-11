@@ -114,7 +114,7 @@
                mode:(CKUpdateMode)mode
 {
   CKAssertNotNil(updateBlock, @"The update block cannot be nil");
-  if (![NSThread isMainThread]) {
+  if (![NSThread isMainThread] && [(id<CKComponentStateListener>)[_listener class] requiresMainThreadAffinedStateUpdates]) {
     // Passing a const& into a block is scary, make a local copy to be safe.
     const auto metadataCopy = metadata;
     dispatch_async(dispatch_get_main_queue(), ^{

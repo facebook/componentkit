@@ -34,7 +34,7 @@
 class CKRootTreeNode;
 struct CKStateUpdateMetadata;
 
-/** Component state announcements will always be made on the main thread. */
+/** Component state announcements will be made on the main thread if `requiresMainThreadAffinedStateUpdates` returns YES. */
 @protocol CKComponentStateListener <NSObject>
 
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
@@ -42,6 +42,9 @@ struct CKStateUpdateMetadata;
        didReceiveStateUpdate:(id (^)(id))stateUpdate
                     metadata:(const CKStateUpdateMetadata &)metadata
                         mode:(CKUpdateMode)mode;
+
+/** Denotes if state announcements must be made on the main thread only for conforming instances. */
++ (BOOL)requiresMainThreadAffinedStateUpdates;
 
 @end
 

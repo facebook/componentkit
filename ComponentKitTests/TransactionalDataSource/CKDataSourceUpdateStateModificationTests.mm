@@ -77,6 +77,11 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   _pendingStateUpdates[rootIdentifier][handle].push_back(stateUpdate);
 }
 
++ (BOOL)requiresMainThreadAffinedStateUpdates
+{
+  return YES;
+}
+
 - (void)tearDown
 {
   _pendingStateUpdates.clear();

@@ -398,6 +398,11 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
   }
 }
 
++ (BOOL)requiresMainThreadAffinedStateUpdates
+{
+  return YES;
+}
+
 #pragma mark - CKComponentDebugReflowListener
 
 - (void)didReceiveReflowComponentsRequest
