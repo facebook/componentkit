@@ -333,11 +333,14 @@ struct CKFlexboxComponentChild {
    of first child in Yoga. If this property is set to YES then height of a component will be used as baseline.
    */
   BOOL useHeightAsBaseline;
-  
+
   /**
    The sort priority order for this child accessibility element, relative to other elements in the same flexbox. Defaults 0.
   */
   NSUInteger accessibilitySortPriority;
+
+  // Declaring destructor as a workaround for T78371770.
+  ~CKFlexboxComponentChild() noexcept = default;
 };
 
 extern template class std::vector<CKFlexboxComponentChild>;
