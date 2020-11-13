@@ -18,14 +18,20 @@
 @implementation CKIdValueWrapper {
   CKIdValueWrapperComparatorType _comparator;
   CKIdValueWrapperReleaserType _releaser;
+  void *_data;
 }
 
-- (instancetype)initWithValue:(void *const)value assigner:(CKIdValueWrapperAssignerType)assigner releaser:(CKIdValueWrapperReleaserType)releaser comparator:(CKIdValueWrapperComparatorType)comparator {
+- (instancetype)initWithValue:(void *const)value
+                     assigner:(CKIdValueWrapperAssignerType)assigner
+                     releaser:(CKIdValueWrapperReleaserType)releaser
+                   comparator:(CKIdValueWrapperComparatorType)comparator
+                dataAlignment:(NSUInteger)dataAlignment {
   if (self = [super init]) {
+    _data = _dataPointerValue(self, dataAlignment);
     _comparator = comparator;
     _releaser = releaser;
     if (assigner != nil) {
-      assigner(object_getIndexedIvars(self), value);
+      assigner(_data, value);
     }
   }
 
@@ -38,25 +44,39 @@
   }
 
   if (_comparator != nullptr && [object isMemberOfClass:CKIdValueWrapper.class]) {
-    return _comparator(object_getIndexedIvars(self), object_getIndexedIvars(object));
+    return _comparator(_data, ((CKIdValueWrapper*)object)->_data);
   } else {
     return NO;
   }
 }
 
+- (void*)data {
+  return _data;
+}
+
 - (void)dealloc {
   // Call the dtor on the value
-  _releaser(object_getIndexedIvars(self));
+  _releaser(_data);
 
   [super dealloc];
 }
 
-@end
-
-CKIdValueWrapper *CKIdValueWrapperAlloc(NSUInteger extraBytes) {
-  return class_createInstance(CKIdValueWrapper.class, extraBytes);
+static void *_dataPointerValue(id instance, NSUInteger dataAlignment) {
+  // `object_getIndexedIvars` returns a pointer size aligned pointer.
+  // If the alignment of the data to store is greater than sizeof(void*),
+  // adjust it. This assumes more space than necessary was requested.
+  void* untypedUnalignedData = object_getIndexedIvars(instance);
+  const auto unalignedData = reinterpret_cast<uintptr_t>(untypedUnalignedData);
+  const auto remainder = unalignedData % dataAlignment;
+  const auto delta = remainder != 0 ? dataAlignment - remainder : 0;
+  return reinterpret_cast<void*>(unalignedData + delta);
 }
 
-void *CKIdValueWrapperGetUntyped(CKIdValueWrapper *object) {
-  return object_getIndexedIvars(object);
+@end
+
+CKIdValueWrapper *CKIdValueWrapperAlloc(NSUInteger extraBytes, NSUInteger dataAlignment) {
+  // Request more space if dataAlignment is greater than the guaranteed pointer size returned by
+  // `object_getIndexedIvars` so we have enough space to adjust it.
+  const auto alignmentPadding = (dataAlignment > sizeof(void *) ? dataAlignment - sizeof(void*) : 0);
+  return class_createInstance(CKIdValueWrapper.class, extraBytes + alignmentPadding);
 }

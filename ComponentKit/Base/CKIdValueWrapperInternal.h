@@ -34,13 +34,15 @@ using CKIdValueWrapperComparatorType = BOOL (*)(const void * lhs, const void * r
 /// Shouldn't be used directly, see CKIdValueWrapperCreate()
 - (instancetype)initWithValue:(void *const _Nullable )value
                      assigner:(CKIdValueWrapperAssignerType _Nullable)assigner
-                     releaser:(CKIdValueWrapperReleaserType)releaser 
-                   comparator:(CKIdValueWrapperComparatorType _Nullable)comparator NS_DESIGNATED_INITIALIZER;
+                     releaser:(CKIdValueWrapperReleaserType)releaser
+                   comparator:(CKIdValueWrapperComparatorType _Nullable)comparator
+                dataAlignment:(NSUInteger)dataAlignment NS_DESIGNATED_INITIALIZER;
+
+@property (nonatomic, readonly) void *data;
 
 @end
 
-void *CKIdValueWrapperGetUntyped(CKIdValueWrapper *object);
-CKIdValueWrapper *CKIdValueWrapperAlloc(NSUInteger extraBytes) NS_RETURNS_RETAINED;
+CKIdValueWrapper *CKIdValueWrapperAlloc(NSUInteger extraBytes, NSUInteger alignOf) NS_RETURNS_RETAINED;
 
 template <typename T>
 void CKIdValueWrapperAssigner(void *location, void *const value) {
@@ -49,7 +51,7 @@ void CKIdValueWrapperAssigner(void *location, void *const value) {
 
 template <typename T>
 BOOL CKIdValueWrapperComparator(const void *lhs, const void * rhs) {
-  return *reinterpret_cast<const T *>(lhs) == 
+  return *reinterpret_cast<const T *>(lhs) ==
     *reinterpret_cast<const T *>(rhs);
 }
 

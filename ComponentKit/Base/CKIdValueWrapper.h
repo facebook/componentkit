@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 template <typename T>
 T& CKIdValueWrapperGet(__unsafe_unretained CKIdValueWrapper *object) {
-  return *reinterpret_cast<T *>(CKIdValueWrapperGetUntyped(object));
+  return *reinterpret_cast<T *>(object.data);
 }
 
 /**
@@ -59,11 +59,12 @@ CKIdValueWrapper *CKIdValueWrapperCreate(T value) NS_RETURNS_RETAINED {
 
   // Override alloc to allocate our classes with the additional storage
   // required for the instance variables.
-  CKIdValueWrapper *object = CKIdValueWrapperAlloc(/* extra bytes */sizeof(TType));
+  CKIdValueWrapper *object = CKIdValueWrapperAlloc(/* extra bytes */sizeof(TType), alignof(TType));
   return [object initWithValue:&value
                       assigner:&CKIdValueWrapperAssigner<TType>
                       releaser:&CKIdValueWrapperReleaser<TType>
-                    comparator:&CKIdValueWrapperComparator<TType>];
+                    comparator:&CKIdValueWrapperComparator<TType>
+                 dataAlignment:alignof(TType)];
 }
 
 /**
@@ -78,11 +79,12 @@ CKIdValueWrapper *CKIdValueWrapperCustomComparatorCreate(T value, BOOL (*compara
 
   // Override alloc to allocate our classes with the additional storage
   // required for the instance variables.
-  CKIdValueWrapper *object = CKIdValueWrapperAlloc(/* extra bytes */sizeof(TType));
+  CKIdValueWrapper *object = CKIdValueWrapperAlloc(/* extra bytes */sizeof(TType), alignof(TType));
   return [object initWithValue:&value
                       assigner:&CKIdValueWrapperAssigner<TType>
                       releaser:&CKIdValueWrapperReleaser<TType>
-                    comparator:(CKIdValueWrapperComparatorType)comparator];
+                    comparator:(CKIdValueWrapperComparatorType)comparator
+                 dataAlignment:alignof(TType)];
 }
 
 /**
@@ -94,11 +96,12 @@ CKIdValueWrapper *CKIdValueWrapperNonEquatableCreate(T value) NS_RETURNS_RETAINE
 
   // Override alloc to allocate our classes with the additional storage
   // required for the instance variables.
-  CKIdValueWrapper *object = CKIdValueWrapperAlloc(/* extra bytes */sizeof(TType));
+  CKIdValueWrapper *object = CKIdValueWrapperAlloc(/* extra bytes */sizeof(TType), alignof(TType));
   return [object initWithValue:&value
                       assigner:&CKIdValueWrapperAssigner<TType>
                       releaser:&CKIdValueWrapperReleaser<TType>
-                    comparator:nullptr];
+                    comparator:nullptr
+                 dataAlignment:alignof(TType)];
 }
 
 NS_ASSUME_NONNULL_END
