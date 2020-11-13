@@ -18,6 +18,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKRootTreeNode.h>
+#import <ComponentKit/CKEmptyComponent.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
@@ -43,6 +44,11 @@ CKDuplicateComponentInfo CKFindDuplicateComponent(const CKLayout &layout)
     const auto componentLayout = queue.front();
     queue.pop();
     auto const component = componentLayout.component;
+
+    if (component.class == CKEmptyComponent.class) {
+      continue;
+    }
+
     if (component && [previouslySeenComponent containsObject:component]) {
       return {
         .component = component,

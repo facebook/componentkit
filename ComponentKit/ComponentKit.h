@@ -47,6 +47,7 @@
 #import <ComponentKit/CKComponentCreationValidation.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAccessibility.h>
+#import <ComponentKit/CKEmptyComponent.h>
 #import <ComponentKit/CKComponentAccessibilityContext.h>
 #import <ComponentKit/CKComponentAction.h>
 #import <ComponentKit/CKComponentActionInternal.h>

@@ -13,15 +13,6 @@ import ComponentKit
 
 #if swift(>=5.3)
 
-/// Marker component for render-to-nil scenarios.
-class EmptyComponent : Component {
-  private init() {
-    super.init(__swiftView: nil, swiftSize: nil)
-  }
-
-  static let shared = EmptyComponent()
-}
-
 // MARK: ComponentBuilder
 
 @_functionBuilder
