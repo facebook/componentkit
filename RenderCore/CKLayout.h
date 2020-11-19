@@ -43,6 +43,7 @@ struct CKLayout {
   CKLayout() noexcept;
 
   void enumerateLayouts(const std::function<void(const CKLayout &)> &f) const;
+  std::string description(int indent = 0) const;
 
 private:
   static std::shared_ptr<const std::vector<CKLayoutChild>> emptyChildren() noexcept;

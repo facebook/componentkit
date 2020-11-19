@@ -11,6 +11,7 @@
 #import "CKLayout.h"
 
 #import <stack>
+#import <sstream>
 #import <unordered_map>
 
 /** Deletes the target off the main thread; important since component layouts are large recursive structures. */
@@ -37,6 +38,25 @@ CKLayout::CKLayout(id<CKMountable> c, CGSize s, std::vector<CKLayoutChild> &&ch,
 
 CKLayout::CKLayout() noexcept
 : component(nil), size({0, 0}), children(emptyChildren()), extra(nil) {};
+
+std::string CKLayout::description(int indent) const
+{
+  std::stringstream s;
+  s << std::string(indent, ' ') << "{" << std::endl;
+  s << std::string(indent + 2, ' ') << "size: {" << size.width << ", " << size.height << "}," << std::endl;
+  if (!children->empty()) {
+    s << std::string(indent + 2, ' ') << "[" << std::endl;
+    for (const auto &child : *children) {
+      s << std::string(indent + 4, ' ') << "{" << std::endl;
+      s << std::string(indent + 6, ' ') << "position: {" << child.position.x << ", " << child.position.y << "}," << std::endl;
+      s << child.layout.description(indent + 6);
+      s << std::string(indent + 4, ' ') << "}," << std::endl;
+    }
+    s << std::string(indent + 2, ' ') << "]" << std::endl;
+  }
+  s << std::string(indent, ' ') << "}" << std::endl;
+  return s.str();
+}
 
 static void _deleteComponentLayoutChild(void *target) noexcept
 {
