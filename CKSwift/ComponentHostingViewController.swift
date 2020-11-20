@@ -21,10 +21,12 @@ final class ObjCProviderWrapper: NSObject {
 public final class ComponentHostingViewController: UIViewController {
   private let rootComponentProvider: () -> Component
   private let hostingView: ComponentHostingView<NSObject, ObjCProviderWrapper>
+  private let backgroundColor: UIColor?
 
   #if swift(>=5.3)
 
-  public init(@ComponentBuilder rootComponentProvider: @escaping () -> Component) {
+  public init(backgroundColor: UIColor? = .white, @ComponentBuilder rootComponentProvider: @escaping () -> Component) {
+    self.backgroundColor = backgroundColor
     self.rootComponentProvider = rootComponentProvider
     hostingView = ComponentHostingView(componentProvider: { _, wrapper in wrapper!.provider() },
                                        sizeRangeProviderBlock: { size in SizeRange(minSize: .zero, maxSize: size) })
@@ -33,7 +35,8 @@ public final class ComponentHostingViewController: UIViewController {
 
   #else
 
-  public init(rootComponentProvider: @escaping () -> Component) {
+  public init(backgroundColor: UIColor? = .white, rootComponentProvider: @escaping () -> Component) {
+    self.backgroundColor = backgroundColor
     self.rootComponentProvider = rootComponentProvider
     hostingView = ComponentHostingView(componentProvider: { _, wrapper in wrapper!.provider() },
                                        sizeRangeProviderBlock: { size in SizeRange(minSize: .zero, maxSize: size) })
@@ -47,7 +50,7 @@ public final class ComponentHostingViewController: UIViewController {
   }
 
   public override func viewDidLoad() {
-    view.backgroundColor = .white
+    view.backgroundColor = backgroundColor
 
     hostingView.updateContext(ObjCProviderWrapper(provider: rootComponentProvider), mode: .synchronous)
 
