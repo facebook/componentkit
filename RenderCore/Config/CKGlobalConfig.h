@@ -49,6 +49,10 @@ struct CKGlobalConfig {
    Kill-switch to disable render-to-nil in coalesced composite components.
    */
   BOOL disableRenderToNilInCoalescedCompositeComponents = NO;
+  /**
+   Enables workaround for https://bugs.llvm.org/show_bug.cgi?id=48207
+   */
+  BOOL clangCStructLeakWorkaroundEnabled = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

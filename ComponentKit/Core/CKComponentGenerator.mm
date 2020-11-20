@@ -310,7 +310,14 @@ private:
       if (shouldRetry) {
         [strongSelf generateComponentAsynchronously];
       } else {
-        [strongSelf->_delegate componentGenerator:strongSelf didAsynchronouslyGenerateComponentResult:*result];
+        if (CKReadGlobalConfig().clangCStructLeakWorkaroundEnabled) {
+          id<CKComponentGeneratorDelegate> delegate = strongSelf->_delegate;
+          if (delegate) {
+            [delegate componentGenerator:strongSelf didAsynchronouslyGenerateComponentResult:*result];
+          }
+        } else {
+          [strongSelf->_delegate componentGenerator:strongSelf didAsynchronouslyGenerateComponentResult:*result];
+        }
       }
     };
 
