@@ -32,7 +32,7 @@ class ActionTests : XCTestCase {
   }
 
   func test_TargetHandlerAction_DoesNotRetain() {
-    class Handler { func doNothing(a: Void) { }}
+    class Handler { func doNothing() { }}
 
     weak var weakHandler: Handler?
     var action: Action?
