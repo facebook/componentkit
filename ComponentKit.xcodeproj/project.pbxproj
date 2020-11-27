@@ -281,6 +281,10 @@
 		51557C802541C91800E47E6B /* CKAccessibilityAwareComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		51557C8A2541CABD00E47E6B /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C892541CABD00E47E6B /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		51557C9B2541CAF200E47E6B /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C892541CABD00E47E6B /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		516C3CA62555C94200FE3D3E /* CKAccessibilityAggregation.h in Headers */ = {isa = PBXBuildFile; fileRef = 516C3C9A2555C94200FE3D3E /* CKAccessibilityAggregation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		516C3CA72555C94200FE3D3E /* CKAccessibilityAggregation.h in Headers */ = {isa = PBXBuildFile; fileRef = 516C3C9A2555C94200FE3D3E /* CKAccessibilityAggregation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		516C3CA82555C94200FE3D3E /* CKAccessibilityAggregation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 516C3CA52555C94200FE3D3E /* CKAccessibilityAggregation.mm */; };
+		516C3CA92555C94200FE3D3E /* CKAccessibilityAggregation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 516C3CA52555C94200FE3D3E /* CKAccessibilityAggregation.mm */; };
 		6016FC2420A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
@@ -1588,6 +1592,8 @@
 		51557C732541C91700E47E6B /* CKAccessibilityAwareComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAccessibilityAwareComponent.mm; sourceTree = "<group>"; };
 		51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAccessibilityAwareComponent.h; sourceTree = "<group>"; };
 		51557C892541CABD00E47E6B /* CKComponentBasedAccessibilityMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentBasedAccessibilityMode.h; sourceTree = "<group>"; };
+		516C3C9A2555C94200FE3D3E /* CKAccessibilityAggregation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAccessibilityAggregation.h; sourceTree = "<group>"; };
+		516C3CA52555C94200FE3D3E /* CKAccessibilityAggregation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAccessibilityAggregation.mm; sourceTree = "<group>"; };
 		6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+Yoga.h"; sourceTree = "<group>"; };
 		6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKComponent+Yoga.mm"; sourceTree = "<group>"; };
 		60172864238FEF57000D5CD6 /* CKDelayedInitialisationWrapperTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDelayedInitialisationWrapperTests.mm; sourceTree = "<group>"; };
@@ -2592,6 +2598,8 @@
 		72EFBD952369E33200A205AB /* Accessibility */ = {
 			isa = PBXGroup;
 			children = (
+				516C3C9A2555C94200FE3D3E /* CKAccessibilityAggregation.h */,
+				516C3CA52555C94200FE3D3E /* CKAccessibilityAggregation.mm */,
 				72EFBD962369E33200A205AB /* CKComponentAccessibility.h */,
 				72C74F60236B643A00E4D533 /* CKComponentAccessibility.mm */,
 				72C74F5F236B643A00E4D533 /* CKComponentAccessibilityContext.h */,
@@ -3539,6 +3547,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				516C3CA72555C94200FE3D3E /* CKAccessibilityAggregation.h in Headers */,
 				72ECF0F322FE392C008C2D00 /* CKComponentCreationValidation.h in Headers */,
 				D4BC574923E3765C0075D688 /* CKPropBitmap.h in Headers */,
 				D4BC572F23E3765C0075D688 /* CKContainerWrapper.h in Headers */,
@@ -4041,6 +4050,7 @@
 				D0B47CF51CBD948E00BB33CE /* CKComponentInternal.h in Headers */,
 				D6C3B05E20B71DBE0089F06A /* CKComponentAnimations.h in Headers */,
 				72647CEC2368D3AE0072F330 /* CKRenderHelpers.h in Headers */,
+				516C3CA62555C94200FE3D3E /* CKAccessibilityAggregation.h in Headers */,
 				D4BC573C23E3765C0075D688 /* CKComponentDescriptionHelper.h in Headers */,
 				D4BC575623E3765C0075D688 /* CKDictionary.h in Headers */,
 				D4EAA5622514F6FC00F32DC1 /* CKSizingComponent.h in Headers */,
@@ -4855,6 +4865,7 @@
 				23452D1A22735D990008ACB1 /* CKAnalyticsListenerHelpers.mm in Sources */,
 				60D7B3D020FC90500011AB3B /* YGNodePrint.cpp in Sources */,
 				23D1B14422D638F600453EC7 /* CKScopeTreeNode.mm in Sources */,
+				516C3CA92555C94200FE3D3E /* CKAccessibilityAggregation.mm in Sources */,
 				D6BA03CE2415CCB700D13A21 /* CKComponentViewAttribute_SwiftBridge.mm in Sources */,
 				7268B5512241A7E400F68A37 /* CKComponentHostingContainerViewProvider.mm in Sources */,
 				72647CC72368D15D0072F330 /* CKComponentDelegateAttribute.mm in Sources */,
@@ -5194,6 +5205,7 @@
 				72647CD22368D15D0072F330 /* CKComponentGestureActions.mm in Sources */,
 				D0B47CA21CBD943400BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */,
 				7268B5502241A7E400F68A37 /* CKComponentHostingContainerViewProvider.mm in Sources */,
+				516C3CA82555C94200FE3D3E /* CKAccessibilityAggregation.mm in Sources */,
 				D0B47CA31CBD943400BB33CE /* CKComponentAnnouncerBase.mm in Sources */,
 				B1E3067D1E8B0EAA004864CF /* CKBuildComponent.mm in Sources */,
 				D6BA03CD2415CCB700D13A21 /* CKComponentViewAttribute_SwiftBridge.mm in Sources */,

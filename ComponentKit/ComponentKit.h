@@ -46,6 +46,7 @@
 #import <ComponentKit/CKDelayedInitialisationWrapper.h>
 #import <ComponentKit/CKComponentCreationValidation.h>
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKAccessibilityAggregation.h>
 #import <ComponentKit/CKComponentAccessibility.h>
 #import <ComponentKit/CKEmptyComponent.h>
 #import <ComponentKit/CKComponentAccessibilityContext.h>

@@ -32,6 +32,7 @@
 
 #import "CKComponent+UIView.h"
 #import "CKComponentAccessibility.h"
+#import "CKAccessibilityAggregation.h"
 #import "CKComponentAnimation.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
@@ -577,8 +578,15 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 // 2) It has a mounted view that is an accessibile element
 - (NSArray<NSObject *> *)accessibilityElements
 {
-  if (self.mountedView != nil && ([[self.mountedView accessibilityElements] count] > 0 || [self.mountedView isAccessibilityElement])) {
+  const auto mountedView = self.mountedView;
+  if ([[mountedView accessibilityElements] count] > 0 || [mountedView isAccessibilityElement]) {
+    if ([mountedView isAccessibilityElement]) {
       return @[self.mountedView];
+    } else if (![mountedView isAccessibilityElement] && CKAccessibilityAggregationIsActive()) {
+      return [self accessibilityChildren];
+    } else {
+      return @[self.mountedView];
+    }
   }
   return [self accessibilityChildren];
 }

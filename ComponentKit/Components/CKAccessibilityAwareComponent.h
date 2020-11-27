@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-BOOL shouldUseComponentAsSourceOfAccessibility();
+BOOL shouldUseComponentAsSourceOfAccessibility(void);
 CKComponent * CKAccessibilityAwareWrapper(CKComponent *wrappedComponent);
 BOOL IsAccessibilityBasedOnComponent(CKComponent *component);
 

@@ -19,6 +19,7 @@
 #import <ComponentKit/CKTransitions.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKComponentSpecContext.h>
+#import <ComponentKit/CKAccessibilityAggregation.h>
 
 namespace CK {
 namespace BuilderDetails {
@@ -61,6 +62,9 @@ public:
     const auto component = _buildComponentWithTransitionsIfNeeded();
     if (PropBitmap::isSet(PropsBitmap, BuilderBasePropId::key)) {
       _context.declareKey(_key, component);
+    }
+    if (_aggregatedAttributes != CKAccessibilityAggregatedAttributeNone) {
+      return CKComponentWithAccessibilityAggregationWrapper(component, _aggregatedAttributes);
     }
     return component;
   }
@@ -109,9 +113,21 @@ public:
     // `this` pointer needs adjustment since `BuilderBase` is not the first base class of `ComponentBuilderBase`
     return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*static_cast<Derived<PropsBitmap> *>(this));
   }
+  
+  /**
+   Specifies what accessibility attributes will be aggregated.
 
+   @param attributes A OR-ed list of attributes that will be aggregated by this component.
+   */
+  auto &accessibilityAggregateAttributes(CKAccessibilityAggregatedAttributes attributes = CKAccessibilityAggregatedAttributesAll)
+  {
+    _aggregatedAttributes = attributes;
+    return reinterpret_cast<Derived<PropsBitmap> &>(*this);
+  }
+  
 private:
   CKTransitions _transitions;
+  CKAccessibilityAggregatedAttributes _aggregatedAttributes = CKAccessibilityAggregatedAttributeNone;
 };
 
 namespace ViewConfigBuilderPropId {
