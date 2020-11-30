@@ -35,7 +35,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
 
   ~FlexboxComponentBuilder() = default;
 
-  /** Specifies the direction children are stacked in. */
+  /** Specifies the direction children are stacked in. Default is \c CKFlexboxDirectionColumn . */
   auto &direction(CKFlexboxDirection d)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
@@ -125,7 +125,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
-  /** How children are aligned if there are no flexible children. */
+  /** How children are aligned if there are no flexible children. Default is \c CKFlexboxJustifyContentStart . */
   auto &justifyContent(CKFlexboxJustifyContent j)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
@@ -135,7 +135,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
-  /** Orientation of children along cross axis */
+  /** Orientation of children along cross axis. Default is \c CKFlexboxAlignItemsStretch . */
   auto &alignItems(CKFlexboxAlignItems a)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
@@ -145,7 +145,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
-  /** Alignment of container's lines in multi-line flex containers. Has no effect on single line containers. */
+  /** Alignment of container's lines in multi-line flex containers. Has no effect on single line containers. Default is \c CKFlexboxAlignContentStart . */
   auto &alignContent(CKFlexboxAlignContent a)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
@@ -155,7 +155,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
-  /** Wrapping style of children in case there isn't enough space */
+  /** Wrapping style of children in case there isn't enough space. Default is \c CKFlexboxWrapNoWrap . */
   auto &wrap(CKFlexboxWrap w)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
@@ -336,7 +336,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
 
   /**
    Use to support RTL layouts.
-   The default is to follow the application's layout direction, but you can force a LTR or RTL layout by changing this.
+   The default is \c CKLayoutDirectionApplicationDirection , but you can force a LTR or RTL layout by changing this.
    */
   auto &layoutDirection(CKLayoutDirection d)
   {
@@ -392,7 +392,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return reinterpret_cast<FlexboxComponentBuilder<PropsBitmap | FlexboxComponentPropId::hasActiveChild> &>(*this);
   }
 
-  /** Orientation of the child along cross axis, overriding @c alignItems */
+  /** Orientation of the child along cross axis, overriding @c alignItems . Default is \c CKFlexboxAlignSelfAuto . */
   auto &alignSelf(CKFlexboxAlignSelf a)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
@@ -476,7 +476,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
-  /** Type of the child position */
+  /** Type of the child position. Default is \c CKFlexboxPositionTypeRelative . */
   auto &positionType(CKFlexboxPositionType t)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
