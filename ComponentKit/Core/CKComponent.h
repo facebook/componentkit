@@ -15,6 +15,14 @@
 #error This file must be compiled Obj-C++ or imported from Swift. Objective-C files should have their extension changed to .mm.
 #endif
 
+#if defined(__has_feature) && !__has_feature(objc_arc_fields)
+#error "ComponentKit requires compiler to support objc pointers in C structures"
+#endif
+
+#if defined(__has_feature) && !__has_feature(objc_arc)
+#error "ComponentKit requires ARC (Automatic Reference Counting)"
+#endif
+
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentSize_SwiftBridge.h>
