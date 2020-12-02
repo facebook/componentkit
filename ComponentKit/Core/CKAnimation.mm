@@ -127,3 +127,4 @@ auto Animation::alpha() -> ChangeBuilder { return {@"opacity"}; }
 auto Animation::position() -> ChangeBuilder { return {@"position"}; };
 auto Animation::backgroundColor() -> ChangeBuilder { return {@"backgroundColor"}; }
 auto Animation::borderColor() -> ChangeBuilder { return {@"borderColor"}; }
+auto Animation::rotation() -> ChangeBuilder { return {@"transform.rotation"}; }

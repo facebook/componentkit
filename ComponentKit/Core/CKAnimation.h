@@ -547,6 +547,8 @@ namespace CK {
     auto backgroundColor() -> ChangeBuilder;
     /// Returns an object that can be used to configure a change animation of the border color.
     auto borderColor() -> ChangeBuilder;
+    /// Returns an object that can be used to configure a change animation of the rotation transformation.
+    auto rotation() -> ChangeBuilder;
 
     /**
      Returns an animation that runs given animations in parallel.
