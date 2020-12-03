@@ -53,6 +53,10 @@ struct CKGlobalConfig {
    Enables workaround for https://bugs.llvm.org/show_bug.cgi?id=48207
    */
   BOOL clangCStructLeakWorkaroundEnabled = NO;
+  /**
+   Force mounting views for component with accessibilityContext set even when VoiceOver is not enabled
+   */
+  BOOL alwaysMountViewForAccessibityContextComponent = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

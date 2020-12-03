@@ -206,7 +206,10 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   CKCAssertWithCategory([NSThread isMainThread], self.className, @"This method must be called on the main thread");
 
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
-  const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
+  const CKComponentViewConfiguration &viewConfiguration =
+    (CK::Component::Accessibility::IsAccessibilityEnabled() || CKReadGlobalConfig().alwaysMountViewForAccessibityContextComponent)
+    ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration)
+    : _viewConfiguration;
 
   if (_mountInfo == nullptr) {
     _mountInfo.reset(new CKMountInfo());
