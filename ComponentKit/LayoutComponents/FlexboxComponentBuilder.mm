@@ -19,7 +19,7 @@ auto FlexboxComponentBuilder() -> FlexboxComponentBuilderEmpty
 
 auto FlexboxComponentBuilder(const CK::ComponentSpecContext &c) -> FlexboxComponentBuilderContext
 {
-  return {std::move(c)};
+  return {c};
 }
 
 }

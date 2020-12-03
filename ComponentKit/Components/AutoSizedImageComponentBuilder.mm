@@ -19,7 +19,7 @@ auto AutoSizedImageComponentBuilder() -> AutoSizedImageComponentBuilderEmpty
 
 auto AutoSizedImageComponentBuilder(const CK::ComponentSpecContext &c) -> AutoSizedImageComponentBuilderContext
 {
-  return {std::move(c)};
+  return {c};
 }
 
 }

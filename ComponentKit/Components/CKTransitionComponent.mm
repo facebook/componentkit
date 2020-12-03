@@ -141,7 +141,7 @@ auto TransitionComponentBuilder() -> TransitionComponentBuilderEmpty
 
 auto TransitionComponentBuilder(const CK::ComponentSpecContext &c) -> TransitionComponentBuilderContext
 {
-  return {std::move(c)};
+  return {c};
 }
 
 }

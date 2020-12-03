@@ -19,7 +19,7 @@ auto RatioLayoutComponentBuilder() -> RatioLayoutComponentBuilderEmpty
 
 auto RatioLayoutComponentBuilder(const CK::ComponentSpecContext &c) -> RatioLayoutComponentBuilderContext
 {
-  return {std::move(c)};
+  return {c};
 }
 
 }
