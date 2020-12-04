@@ -901,9 +901,9 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
  private:
-  CKFlexboxComponentStyle _style;
-  CKFlexboxComponentChild _currentChild;
-  std::vector<CKFlexboxComponentChild> _children;
+  CKFlexboxComponentStyle _style{};
+  CKFlexboxComponentChild _currentChild{};
+  std::vector<CKFlexboxComponentChild> _children{};
 };
 
 namespace FlexboxChildComponentPropId {
@@ -1269,7 +1269,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
  private:
-  CKFlexboxComponentChild _child = {};
+  CKFlexboxComponentChild _child{};
 };
 
 }
