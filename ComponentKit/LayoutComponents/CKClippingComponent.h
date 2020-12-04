@@ -85,7 +85,7 @@ private:
   
 private:
   CKComponent *_component;
-  ClippingComponentDimensions _dimensions;
+  ClippingComponentDimensions _dimensions{};
 };
 
 }

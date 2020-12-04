@@ -97,7 +97,7 @@ class __attribute__((__may_alias__)) RatioLayoutComponentBuilder
   }
 
  private:
-  CGFloat _ratio;
+  CGFloat _ratio{};
   CKComponent *_component;
 };
 

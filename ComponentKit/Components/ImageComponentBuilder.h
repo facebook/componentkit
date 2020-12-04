@@ -353,7 +353,7 @@ private:
 
 private:
   UIImage *_image;
-  CKViewComponentAttributeValueMap _attributes;
+  CKViewComponentAttributeValueMap _attributes{};
 };
 
 }

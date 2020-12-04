@@ -687,13 +687,13 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
   }
 
  private:
-  CKButtonComponentStateMap<NSString *>::Map _titles;
-  CKButtonComponentStateMap<UIColor *>::Map _titleColors;
-  CKButtonComponentStateMap<UIImage *>::Map _images;
-  CKButtonComponentStateMap<UIImage *>::Map _backgroundImages;
+  CKButtonComponentStateMap<NSString *>::Map _titles{};
+  CKButtonComponentStateMap<UIColor *>::Map _titleColors{};
+  CKButtonComponentStateMap<UIImage *>::Map _images{};
+  CKButtonComponentStateMap<UIImage *>::Map _backgroundImages{};
 
-  CKAction<UIEvent *> _action;
-  CKButtonComponentOptions _options;
+  CKAction<UIEvent *> _action{};
+  CKButtonComponentOptions _options{};
 };
 
 }

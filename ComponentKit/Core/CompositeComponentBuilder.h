@@ -93,7 +93,7 @@ class __attribute__((__may_alias__)) CompositeComponentBuilder
   }
 
  private:
-  CKComponentViewConfiguration _viewConfig;
+  CKComponentViewConfiguration _viewConfig{};
   CKComponent *_component;
 };
 }

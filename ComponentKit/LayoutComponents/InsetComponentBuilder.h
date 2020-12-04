@@ -165,8 +165,8 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
  private:
-  CKComponentViewConfiguration _viewConfig;
-  UIEdgeInsets _insets;
+  CKComponentViewConfiguration _viewConfig{};
+  UIEdgeInsets _insets{};
   CKComponent *_component;
 };
 }

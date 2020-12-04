@@ -879,8 +879,8 @@ public:
   }
 
 protected:
-  CKComponentViewConfiguration _viewConfig;
-  CKComponentSize _size;
+  CKComponentViewConfiguration _viewConfig{};
+  CKComponentSize _size{};
 };
 
 template <PropsBitmapType = 0>

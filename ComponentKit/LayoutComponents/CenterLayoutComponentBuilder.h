@@ -89,8 +89,8 @@ private:
   }
 
 private:
-  CKCenterLayoutComponentCenteringOptions _centeringOptions;
-  CKCenterLayoutComponentSizingOptions _sizingOptions;
+  CKCenterLayoutComponentCenteringOptions _centeringOptions{};
+  CKCenterLayoutComponentSizingOptions _sizingOptions{};
   CKComponent *_child;
 };
 }

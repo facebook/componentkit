@@ -213,7 +213,7 @@ class __attribute__((__may_alias__)) AutoSizedImageComponentBuilder
 
  private:
   UIImage *_image;
-  CKViewComponentAttributeValueMap _attributes;
+  CKViewComponentAttributeValueMap _attributes{};
 };
 
 }

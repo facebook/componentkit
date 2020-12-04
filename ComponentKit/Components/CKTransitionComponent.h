@@ -116,8 +116,8 @@ private:
 
 private:
   CKComponent *_component;
-  Optional<Animation::Initial> _initial;
-  Optional<Animation::Final> _final;
+  Optional<Animation::Initial> _initial{};
+  Optional<Animation::Final> _final{};
   id<NSObject> _triggerValue;
 };
 
