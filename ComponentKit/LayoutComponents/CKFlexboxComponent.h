@@ -239,17 +239,17 @@ private:
 
 struct CKFlexboxComponentStyle {
   /** Specifies the direction children are stacked in. */
-  CKFlexboxDirection direction;
+  CKFlexboxDirection direction{CKFlexboxDirectionColumn};
   /** The amount of space between each child. Overriden by any margins on the child in the flex direction */
-  CGFloat spacing;
+  CGFloat spacing{0.0};
   /** How children are aligned if there are no flexible children. */
-  CKFlexboxJustifyContent justifyContent;
+  CKFlexboxJustifyContent justifyContent{CKFlexboxJustifyContentStart};
   /** Orientation of children along cross axis */
-  CKFlexboxAlignItems alignItems;
+  CKFlexboxAlignItems alignItems{CKFlexboxAlignItemsStretch};
   /** Alignment of container's lines in multi-line flex containers. Has no effect on single line containers. */
-  CKFlexboxAlignContent alignContent;
+  CKFlexboxAlignContent alignContent{CKFlexboxAlignContentStart};
   /** Wrapping style of children in case there isn't enough space */
-  CKFlexboxWrap wrap;
+  CKFlexboxWrap wrap{CKFlexboxWrapNoWrap};
   /** Padding applied to the container */
   CKFlexboxSpacing padding;
   /**
@@ -262,7 +262,7 @@ struct CKFlexboxComponentStyle {
    Use to support RTL layouts.
    The default is to follow the application's layout direction, but you can force a LTR or RTL layout by changing this.
    */
-  CKLayoutDirection layoutDirection = CKLayoutDirectionApplicationDirection;
+  CKLayoutDirection layoutDirection{CKLayoutDirectionApplicationDirection};
 
   /**
    If set to YES and the child component is back by yoga, will reuse the child's yoga node and avoid allocating new one. This will in turn
@@ -270,15 +270,15 @@ struct CKFlexboxComponentStyle {
 
    If set to NO, will allocate a yoga node for every single child even it is backed by yoga as well
    */
-  BOOL useDeepYogaTrees = NO;
+  BOOL useDeepYogaTrees{NO};
 };
 
 struct CKFlexboxComponentChild {
   CKComponent *_Nullable component;
   /** Additional space to place before the component in the stacking direction. Overriden by any margins in the stacking direction. */
-  CGFloat spacingBefore;
+  CGFloat spacingBefore{0.0};
   /** Additional space to place after the component in the stacking direction. Overriden by any margins in the stacking direction. */
-  CGFloat spacingAfter;
+  CGFloat spacingAfter{0.0};
   /** Margin applied to the child. Setting margin in the stacking direction overrides any spacing set on the container or child.
    Margin is applied outside the child - margin doesn't increase your child size.
    If you want to add space inside the child, use Padding property
@@ -295,13 +295,13 @@ struct CKFlexboxComponentChild {
    This value represents the "flex grow factor" and determines how much this component should grow in relation to any
    other flexible children.
    */
-  CGFloat flexGrow;
+  CGFloat flexGrow{0.0};
   /**
    If the sum of childrens' stack dimensions is greater than the maximum size, how much should this component shrink?
    This value represents the "flex shrink factor" and determines how much this component should shink in relation to
    other flexible children.
    */
-  CGFloat flexShrink;
+  CGFloat flexShrink{0.0};
   /** Specifies the initial size in the stack dimension for the child. */
   CKRelativeDimension flexBasis;
   /** Orientation of the child along cross axis, overriding alignItems */
@@ -312,7 +312,7 @@ struct CKFlexboxComponentChild {
    Child with greater stack order will be in front of an child with a lower stack order.
    If children have the same zIndex, the one declared first will appear below
    */
-  NSInteger zIndex;
+  NSInteger zIndex{0};
   /** Aspect ratio controls the size of the undefined dimension of a node.
    Aspect ratio is encoded as a floating point value width/height. e.g. A value of 2 leads to a node
    with a width twice the size of its height while a value of 0.5 gives the opposite effect. **/
@@ -327,17 +327,17 @@ struct CKFlexboxComponentChild {
    This property allows node to force rounding only up.
    Text should never be rounded down as this may cause it to be truncated.
    */
-  BOOL useTextRounding;
+  BOOL useTextRounding{NO};
   /**
    This property allows to override how the baseline of a component is calculated. The default baseline of component is the baseline
    of first child in Yoga. If this property is set to YES then height of a component will be used as baseline.
    */
-  BOOL useHeightAsBaseline;
+  BOOL useHeightAsBaseline{NO};
 
   /**
    The sort priority order for this child accessibility element, relative to other elements in the same flexbox. Defaults 0.
   */
-  NSUInteger accessibilitySortPriority;
+  NSUInteger accessibilitySortPriority{0};
 
   // Declaring destructor as a workaround for T78371770.
   ~CKFlexboxComponentChild() noexcept = default;
