@@ -852,6 +852,19 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     );
     return Super::size(s);
   }
+      
+  /**
+  Specifies a size constraint that should apply to this component.
+  */
+  auto &size(const CGSize &s)
+  {
+    constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+    static_assert(
+      isNotSettingPropertiesForChild,
+      "Properties for the container must be set before the first call to .child(). To set size for a particular child, use 'sizeConstraints'."
+    );
+    return Super::size(CKComponentSize::fromCGSize(s));
+  }
 
   /**
   Creates a new component instance with specified properties.

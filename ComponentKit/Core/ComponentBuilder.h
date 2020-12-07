@@ -744,6 +744,15 @@ public:
     _size = s;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
   }
+  
+  /**
+   Specifies a size constraint that should apply to this component.
+   */
+  auto &size(const CGSize &s)
+  {
+    _size = CKComponentSize::fromCGSize(s);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
 
 protected:
   CKComponentSize _size;
@@ -875,6 +884,15 @@ public:
   auto &size(const CKComponentSize &s)
   {
     _size = s;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
+  }
+
+  /**
+   Specifies a size constraint that should apply to this component.
+   */
+  auto &size(const CGSize &s)
+  {
+    _size = CKComponentSize::fromCGSize(s);
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
