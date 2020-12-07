@@ -14,22 +14,21 @@
 #import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
 
+inline auto systraceListenerFromTLS() {
+  auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
+  return threadLocalScope != nullptr ? threadLocalScope->systraceListener : nil;
+}
+
 CKComponentPerfScope::~CKComponentPerfScope()
 {
   [_systraceListener didBuildComponent:_componentTypeName];
 }
 
-CKComponentPerfScope::CKComponentPerfScope(Class __unsafe_unretained componentClass) noexcept
+CKComponentPerfScope::CKComponentPerfScope(id<CKSystraceListener> systraceListener, const char *componentTypeName) noexcept
+  : _systraceListener(systraceListener), _componentTypeName(componentTypeName)
 {
-  auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
-
-  if (threadLocalScope != nullptr) {
-    auto const systraceListener = threadLocalScope->systraceListener;
-    if (systraceListener)
-    {
-      _componentTypeName = class_getName(componentClass);
-      [systraceListener willBuildComponent:_componentTypeName];
-      _systraceListener = systraceListener;
-    }
-  }
+  [systraceListener willBuildComponent:_componentTypeName];
 }
+
+CKComponentPerfScope::CKComponentPerfScope(Class __unsafe_unretained componentClass) noexcept
+ : CKComponentPerfScope(systraceListenerFromTLS(), class_getName(componentClass)) { }
