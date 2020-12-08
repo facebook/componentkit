@@ -944,8 +944,8 @@
 		D461755925177E00004FC1A4 /* ComponentTextKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */; };
 		D46328BB2415486600E5B7DA /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D46328BA2415486600E5B7DA /* CKLinkable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D46328BC2415486600E5B7DA /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D46328BA2415486600E5B7DA /* CKLinkable.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D485F73E255EBB7100F65C37 /* CKEmptyComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D485F732255EBB7100F65C37 /* CKEmptyComponent.h */; };
-		D485F73F255EBB7100F65C37 /* CKEmptyComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D485F732255EBB7100F65C37 /* CKEmptyComponent.h */; };
+		D485F73E255EBB7100F65C37 /* CKEmptyComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D485F732255EBB7100F65C37 /* CKEmptyComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D485F73F255EBB7100F65C37 /* CKEmptyComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D485F732255EBB7100F65C37 /* CKEmptyComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D485F740255EBB7100F65C37 /* CKEmptyComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D485F73D255EBB7100F65C37 /* CKEmptyComponent.mm */; };
 		D485F741255EBB7100F65C37 /* CKEmptyComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D485F73D255EBB7100F65C37 /* CKEmptyComponent.mm */; };
 		D486BB2825179CB600D167E7 /* CKSwiftComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F543DB2507913D008F17A8 /* CKSwiftComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1066,6 +1066,8 @@
 		D4DEA539254C478D00A295E0 /* CKAccessibilityAwareComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4DEA545254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DEA544254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4DEA546254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DEA544254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4E807B6257E7FDC003C0804 /* CKDeflatedComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4E807BF257E7FED003C0804 /* CKDeflatedComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4EAA5552513A09400F32DC1 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5542513A09400F32DC1 /* State.swift */; };
 		D4EAA5572513A0BE00F32DC1 /* ScopeHandleLinkable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */; };
 		D4EAA55B2513A23B00F32DC1 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA55A2513A23B00F32DC1 /* Binding.swift */; };
@@ -2115,6 +2117,7 @@
 		D4BC579D23E37A240075D688 /* CKSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKSwift.swift; sourceTree = "<group>"; };
 		D4BC57C423E387510075D688 /* CKSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKSwift.xcconfig; sourceTree = "<group>"; };
 		D4DEA544254C4C1C00A295E0 /* CKComponentBasedAccessibilityMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentBasedAccessibilityMode.h; sourceTree = "<group>"; };
+		D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDeflatedComponentContext.h; sourceTree = "<group>"; };
 		D4EAA5542513A09400F32DC1 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScopeHandleLinkable.swift; sourceTree = "<group>"; };
 		D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftComponent.swift; sourceTree = "<group>"; };
@@ -2927,6 +2930,7 @@
 		D0B47AC71CBD926700BB33CE /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */,
 				D65938BA24EEA43700C9F843 /* CKExceptionInfoScopedValue.h */,
 				D44B214F24B73DFE0019E851 /* CKIdValueWrapper.h */,
 				D44B215024B73DFE0019E851 /* CKIdValueWrapperInternal.h */,
@@ -3774,6 +3778,7 @@
 				D6EF7A0023ECC6E600230005 /* CKDimension_SwiftBridge+Internal.h in Headers */,
 				72F9AF4E2469B154008E1E9E /* CKTraitCollectionHelper.h in Headers */,
 				03B8B55A1D2A346F00EDFF59 /* CKComponentSubclass.h in Headers */,
+				D4E807BF257E7FED003C0804 /* CKDeflatedComponentContext.h in Headers */,
 				230ADF721FC5FBE8001570A3 /* CKComponentEvents.h in Headers */,
 				D6327648238DB94C004486D4 /* InsetComponentBuilder.h in Headers */,
 				D657401321051C6F00FD8AAB /* CKIndexTransform.h in Headers */,
@@ -3983,6 +3988,7 @@
 				60D7B3C920FC90500011AB3B /* Yoga.h in Headers */,
 				D616A2BF20BED2D100695472 /* CKComponentTreeDiff.h in Headers */,
 				D0B47D3A1CBD948E00BB33CE /* CKStaticLayoutComponent.h in Headers */,
+				D4E807B6257E7FDC003C0804 /* CKDeflatedComponentContext.h in Headers */,
 				D0B47CF21CBD948E00BB33CE /* CKComponentBoundsAnimation.h in Headers */,
 				D6BA03CB2415CCB700D13A21 /* CKComponentViewAttribute_SwiftBridge.h in Headers */,
 				D4BC572A23E3765C0075D688 /* CKDispatch.h in Headers */,

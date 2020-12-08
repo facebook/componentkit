@@ -44,6 +44,7 @@
 #import <ComponentKit/CKIdValueWrapperInternal.h>
 #import <ComponentKit/CKWritingDirection.h>
 #import <ComponentKit/CKDelayedInitialisationWrapper.h>
+#import <ComponentKit/CKDeflatedComponentContext.h>
 #import <ComponentKit/CKComponentCreationValidation.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKAccessibilityAggregation.h>
