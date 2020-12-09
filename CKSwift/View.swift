@@ -136,6 +136,7 @@ extension View where Self: ViewIdentifiable & ViewConfigurationRepresentable, Se
 
     return SwiftComponent(
       self,
+      body: CKShouldCreateShellComponent() ? nil : body,
       viewConfiguration: viewConfiguration,
       model: model
     )
