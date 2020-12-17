@@ -61,15 +61,21 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param component The wrapped child component to inset. If nil, this method returns nil.
  */
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
-                      insets:(UIEdgeInsets)insets
+                         top:(CKRelativeDimension)top
+                        left:(CKRelativeDimension)left
+                      bottom:(CKRelativeDimension)bottom
+                       right:(CKRelativeDimension)right
                    component:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER;
 
 /**
  @param insets The amount of space to inset on each side.
  @param component The wrapped child component to inset. If nil, this method returns nil.
  */
-- (instancetype)initWithInsets:(UIEdgeInsets)insets
-                     component:(CKComponent *_Nullable)component;
+- (instancetype)initWithTop:(CKRelativeDimension)top
+                       left:(CKRelativeDimension)left
+                     bottom:(CKRelativeDimension)bottom
+                      right:(CKRelativeDimension)right
+                  component:(CKComponent *_Nullable)component;
 
 #endif
 

@@ -58,7 +58,10 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
    */
   auto &insets(UIEdgeInsets i)
   {
-    _insets = i;
+    _top = i.top;
+    _left = i.left;
+    _bottom = i.bottom;
+    _right = i.right;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
@@ -67,7 +70,16 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   */
   auto &insetsTop(CGFloat i)
   {
-    _insets.top = i;
+    _top = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+      
+  /**
+  Relative amount of inset to parent component's width.
+  */
+  auto &insetsTop(CKRelativeDimension i)
+  {
+    _top = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
@@ -76,7 +88,16 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   */
   auto &insetsLeft(CGFloat i)
   {
-    _insets.left = i;
+    _left = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+      
+  /**
+  Relative amount of inset to parent component's width.
+  */
+  auto &insetsLeft(CKRelativeDimension i)
+  {
+    _left = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
@@ -85,7 +106,16 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   */
   auto &insetsBottom(CGFloat i)
   {
-    _insets.bottom = i;
+    _bottom = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+      
+  /**
+  Relative amount of inset to parent component's width.
+  */
+  auto &insetsBottom(CKRelativeDimension i)
+  {
+    _bottom = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
@@ -94,7 +124,16 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   */
   auto &insetsRight(CGFloat i)
   {
-    _insets.right = i;
+    _right = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+      
+  /**
+  Relative amount of inset to parent component's width.
+  */
+  auto &insetsRight(CKRelativeDimension i)
+  {
+    _right = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
@@ -104,9 +143,9 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   auto &insetsStart(CGFloat i)
   {
     if (CKGetWritingDirection() == CKWritingDirection::RightToLeft) {
-      _insets.right = i;
+      _right = i;
     } else {
-      _insets.left = i;
+      _left = i;
     }
 
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
@@ -118,14 +157,14 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   auto &insetsEnd(CGFloat i)
   {
     if (CKGetWritingDirection() == CKWritingDirection::RightToLeft) {
-      _insets.left = i;
+      _left = i;
     } else {
-      _insets.right = i;
+      _right = i;
     }
 
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
-
+      
   /**
    The wrapped child component to inset.
    */
@@ -155,18 +194,24 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
                                                      std::move(this->_attributes),
                                                      std::move(this->_accessibilityCtx),
                                                      this->_blockImplicitAnimations}
-                                             insets:_insets
+                                                top:_top
+                                               left:_left
+                                             bottom:_bottom
+                                              right:_right
                                           component:_component];
     } else if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig)) {
-      return [[CKInsetComponent alloc] initWithView:this->_viewConfig insets:_insets component:_component];
+      return [[CKInsetComponent alloc] initWithView:this->_viewConfig top:_top left:_left bottom:_bottom right:_right component:_component];
     } else {
-      return [[CKInsetComponent alloc] initWithView:{} insets:_insets component:_component];
+      return [[CKInsetComponent alloc] initWithView:{} top:_top left:_left bottom:_bottom right:_right component:_component];
     }
   }
 
  private:
   CKComponentViewConfiguration _viewConfig{};
-  UIEdgeInsets _insets{};
+  CKRelativeDimension _top{};
+  CKRelativeDimension _left{};
+  CKRelativeDimension _bottom{};
+  CKRelativeDimension _right{};
   CKComponent *_component;
 };
 }
