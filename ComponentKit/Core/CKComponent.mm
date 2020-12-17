@@ -582,7 +582,9 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (NSArray<NSObject *> *)accessibilityElements
 {
   const auto mountedView = self.mountedView;
-  if ([[mountedView accessibilityElements] count] > 0 || [mountedView isAccessibilityElement]) {
+  if ([[mountedView accessibilityElements] count] > 0
+      || [mountedView accessibilityElementCount] > 0
+      || [mountedView isAccessibilityElement]) {
     if ([mountedView isAccessibilityElement]) {
       return @[self.mountedView];
     } else if (![mountedView isAccessibilityElement] && CKAccessibilityAggregationIsActive()) {
