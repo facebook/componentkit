@@ -60,11 +60,11 @@
 	
 	<optgroup label="Instance Methods">
 		
-		<option value="//api/name/initWithInsets:component:">- initWithInsets:component:</option>
-		
 		<option value="//api/name/initWithSwiftView:insets:component:">- initWithSwiftView:insets:component:</option>
 		
-		<option value="//api/name/initWithView:insets:component:">- initWithView:insets:component:</option>
+		<option value="//api/name/initWithTop:left:bottom:right:component:">- initWithTop:left:bottom:right:component:</option>
+		
+		<option value="//api/name/initWithView:top:left:bottom:right:component:">- initWithView:top:left:bottom:right:component:</option>
 		
 	</optgroup>
 	
@@ -197,8 +197,8 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/initWithView:insets:component:" title="initWithView:insets:component:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithView:insets:component:">&ndash;&nbsp;initWithView:insets:component:</a></code>
+	<a name="//api/name/initWithView:top:left:bottom:right:component:" title="initWithView:top:left:bottom:right:component:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithView:top:left:bottom:right:component:">&ndash;&nbsp;initWithView:top:left:bottom:right:component:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -213,7 +213,7 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithView:(const CKComponentViewConfiguration &amp;)<em>view</em> insets:(UIEdgeInsets)<em>insets</em> component:(CKComponent *_Nullable)<em>component</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithView:(const CKComponentViewConfiguration &amp;)<em>view</em> top:(CKRelativeDimension)<em>top</em> left:(CKRelativeDimension)<em>left</em> bottom:(CKRelativeDimension)<em>bottom</em> right:(CKRelativeDimension)<em>right</em> component:(CKComponent *_Nullable)<em>component</em></code></div>
 
 		    
 			
@@ -227,13 +227,13 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 					</tr>
 				
 					<tr>
-						<th scope="row" class="argument-name"><code>insets</code></th>
-						<td><p>The amount of space to inset on each side.</p></td>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>The wrapped child component to inset. If nil, this method returns nil.</p></td>
 					</tr>
 				
 					<tr>
-						<th scope="row" class="argument-name"><code>component</code></th>
-						<td><p>The wrapped child component to inset. If nil, this method returns nil.</p></td>
+						<th scope="row" class="argument-name"><code>insets</code></th>
+						<td><p>The amount of space to inset on each side.</p></td>
 					</tr>
 				
 				</table>
@@ -260,8 +260,8 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/initWithInsets:component:" title="initWithInsets:component:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithInsets:component:">&ndash;&nbsp;initWithInsets:component:</a></code>
+	<a name="//api/name/initWithTop:left:bottom:right:component:" title="initWithTop:left:bottom:right:component:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithTop:left:bottom:right:component:">&ndash;&nbsp;initWithTop:left:bottom:right:component:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -276,7 +276,7 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithInsets:(UIEdgeInsets)<em>insets</em> component:(CKComponent *_Nullable)<em>component</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithTop:(CKRelativeDimension)<em>top</em> left:(CKRelativeDimension)<em>left</em> bottom:(CKRelativeDimension)<em>bottom</em> right:(CKRelativeDimension)<em>right</em> component:(CKComponent *_Nullable)<em>component</em></code></div>
 
 		    
 			
@@ -285,13 +285,13 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 				<table class="argument-def parameter-def">
 				
 					<tr>
-						<th scope="row" class="argument-name"><code>insets</code></th>
-						<td><p>The amount of space to inset on each side.</p></td>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>The wrapped child component to inset. If nil, this method returns nil.</p></td>
 					</tr>
 				
 					<tr>
-						<th scope="row" class="argument-name"><code>component</code></th>
-						<td><p>The wrapped child component to inset. If nil, this method returns nil.</p></td>
+						<th scope="row" class="argument-name"><code>insets</code></th>
+						<td><p>The amount of space to inset on each side.</p></td>
 					</tr>
 				
 				</table>
@@ -332,7 +332,7 @@ An CKInsetComponent with an infinite left inset and 10px for all other edges wil
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-12-15</p>
+						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-12-21</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
