@@ -196,6 +196,15 @@ template class std::vector<CKFlexboxComponentChild>;
   if (self = [super initWithView:view size:size]) {
     _style = style;
     _children = children.take();
+#if CK_ASSERTIONS_ENABLED
+    for (const auto &child : _children) {
+      if (child.component) {
+        CKAssertWithCategory(child.component.typeName != nullptr,
+                             @"non_prod_validation_T79773577",
+                             @"Expected `child.component` to be a valid object.");
+      }
+    }
+#endif
   }
   return self;
 }
