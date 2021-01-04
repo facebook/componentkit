@@ -39,6 +39,11 @@
   return [self initWithDimension:CKRelativeDimension::Percent(percent)];
 }
 
++ (instancetype)autoInstance;
+{
+  return [[self alloc] initWithDimension:CKRelativeDimension::Auto()];
+}
+
 - (const CKRelativeDimension &)dimension
 {
   return _dimension;

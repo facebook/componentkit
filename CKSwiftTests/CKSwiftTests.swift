@@ -13,8 +13,8 @@ import CKSwift
 
 class CKSwiftTests : XCTestCase {
   func test_InitialisingDimension() {
-    XCTAssertEqual(Dimension(points: 20).description, "20pt")
-    XCTAssertEqual(Dimension(percent: 0.5).description, "50%")
+    XCTAssertEqual(Dimension.points(20).description, "20pt")
+    XCTAssertEqual(Dimension.percent(0.5).description, "50%")
   }
 
   func test_WhenInitialisedWithFloatLiteral_InitialisesDimensionWithPoints() {
@@ -39,7 +39,7 @@ class CKSwiftTests : XCTestCase {
 
   func test_WhenDimensionIsOmitted_ThisDimensionInitialisedToAuto() {
     let expected = "<CKComponentSize: exact={50%, Auto}, min={Auto, Auto}, max={Auto, Auto}>"
-    XCTAssertEqual(ComponentSize(width: Dimension(percent: 0.5)).description, expected)
+    XCTAssertEqual(ComponentSize(width: .percent(0.5)).description, expected)
   }
 
   func test_InitialisingSizeRange() {

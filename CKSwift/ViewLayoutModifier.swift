@@ -70,12 +70,12 @@ extension ComponentInflatable {
       inflatable: self,
       directive: .frame(
         ComponentSize(
-          width: width.map(Dimension.init(points:)),
-          height: height.map(Dimension.init(points:)),
-          minWidth: minWidth.map(Dimension.init(points:)),
-          minHeight: minHeight.map(Dimension.init(points:)),
-          maxWidth: maxWidth.map(Dimension.init(points:)),
-          maxHeight: maxHeight.map(Dimension.init(points:)))
+          width: width.map { .points($0) },
+          height: height.map { .points($0) },
+          minWidth: minWidth.map { .points($0) },
+          minHeight: minHeight.map { .points($0) },
+          maxWidth: maxWidth.map { .points($0) },
+          maxHeight: maxHeight.map { .points($0) })
       )
     )
   }
@@ -90,12 +90,12 @@ extension ComponentInflatable {
       inflatable: self,
       directive: .frame(
         ComponentSize(
-          width: width.map(Dimension.init(percent:)),
-          height: height.map(Dimension.init(percent:)),
-          minWidth: minWidth.map(Dimension.init(percent:)),
-          minHeight: minHeight.map(Dimension.init(percent:)),
-          maxWidth: maxWidth.map(Dimension.init(percent:)),
-          maxHeight: maxHeight.map(Dimension.init(percent:)))
+          width: width.map { .percent($0) },
+          height: height.map { .percent($0) },
+          minWidth: minWidth.map { .percent($0) },
+          minHeight: minHeight.map { .percent($0) },
+          maxWidth: maxWidth.map { .percent($0) },
+          maxHeight: maxHeight.map { .percent($0) })
       )
     )
   }

@@ -20,6 +20,8 @@ NS_SWIFT_NAME(DimensionSwiftBridge)
 - (instancetype)initWithPoints:(CGFloat)points;
 - (instancetype)initWithPercent:(CGFloat)percent;
 
++ (instancetype)autoInstance;
+
 @end
 
 NS_ASSUME_NONNULL_END

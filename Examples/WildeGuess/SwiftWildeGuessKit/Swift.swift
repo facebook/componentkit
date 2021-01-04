@@ -267,7 +267,7 @@ fileprivate struct MonochromeQuoteView : View  {
           }
           .frame(width: 30, height: 40)
         }
-        FlexboxComponent.Child(flexShrink: 1, flexBasis: Dimension(percent: 1.0)) {
+        FlexboxComponent.Child(flexShrink: 1, flexBasis: .percent(1.0)) {
           LabelView(
             text: text,
             font: UIFont(name: "HoeflerText-Italic", size: 25),

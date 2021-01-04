@@ -11,25 +11,21 @@
 import ComponentKit
 
 /// A dimension relative to constraints to be provided in the future.
-public struct Dimension: Hashable {
+public enum Dimension: Hashable {
+  case points(CGFloat)
+  case percent(CGFloat)
+  case auto
+
   /// The Objective-C bridgeable type.
-  public let dimension: DimensionSwiftBridge
-
-  /// Creates a default dimension.
-  public init() {
-    dimension = DimensionSwiftBridge()
-  }
-
-  /// Creates a new dimension.
-  /// - Parameter points: The fixed number of points represented.
-  public init(points: CGFloat) {
-    dimension = DimensionSwiftBridge(points: points)
-  }
-
-  /// Creates a new dimension.
-  /// - Parameter percent: The percentage of the parent dimension.
-  public init(percent: CGFloat) {
-    dimension = DimensionSwiftBridge(percent: percent)
+  public var dimension: DimensionSwiftBridge {
+    switch self  {
+    case let .points(points):
+      return DimensionSwiftBridge(points: points)
+    case let .percent(percent):
+      return DimensionSwiftBridge(percent: percent)
+    case .auto:
+      return DimensionSwiftBridge.autoInstance()
+    }
   }
 }
 
@@ -39,13 +35,13 @@ extension Dimension: CustomStringConvertible {
 
 extension Dimension: ExpressibleByFloatLiteral {
   public init(floatLiteral value: Double) {
-    self.init(points: CGFloat(value))
+    self = .points(CGFloat(value))
   }
 }
 
 extension Dimension: ExpressibleByIntegerLiteral {
   public init(integerLiteral value: Int) {
-    self.init(points: CGFloat(value))
+    self = .points(CGFloat(value))
   }
 }
 
