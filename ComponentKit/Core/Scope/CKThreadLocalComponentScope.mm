@@ -41,7 +41,7 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
                                                          CKBuildTrigger trigger,
                                                          BOOL shouldCollectTreeNodeCreationInformation,
                                                          BOOL alwaysBuildRenderTree,
-                                                         CKComponentCoalescingMode coalescingMode,
+                                                         RCComponentCoalescingMode coalescingMode,
                                                          BOOL enforceCKComponentSubclasses,
                                                          BOOL disableRenderToNilInCoalescedCompositeComponents)
 : newScopeRoot([previousScopeRoot newRoot]),

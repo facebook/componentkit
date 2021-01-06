@@ -104,7 +104,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         CKBuildTrigger buildTrigger,
                                         CKReflowTrigger reflowTrigger,
-                                        CKComponentCoalescingMode coalescingMode)
+                                        RCComponentCoalescingMode coalescingMode)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();

@@ -457,8 +457,8 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 #pragma mark - CKComponentProtocol
 
-+ (CKComponentCoalescingMode)coalescingMode {
-  return CKComponentCoalescingModeNone;
++ (RCComponentCoalescingMode)coalescingMode {
+  return RCComponentCoalescingModeNone;
 }
 
 + (Class<CKComponentControllerProtocol>)controllerClass

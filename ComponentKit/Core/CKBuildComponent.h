@@ -17,7 +17,7 @@
 #import <ComponentKit/CKBuildComponentResult.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKGlobalConfig.h>
-#import <ComponentKit/CKComponentCoalescingMode.h>
+#import <ComponentKit/RCComponentCoalescingMode.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
@@ -67,6 +67,6 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         CKBuildTrigger buildTrigger,
                                         CKReflowTrigger reflowTrigger,
-                                        CKComponentCoalescingMode coalescingMode = CKReadGlobalConfig().coalescingMode);
+                                        RCComponentCoalescingMode coalescingMode = CKReadGlobalConfig().coalescingMode);
 
 #endif

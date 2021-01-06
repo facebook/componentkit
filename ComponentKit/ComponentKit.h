@@ -56,7 +56,7 @@
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentAnimationHooks.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
-#import <ComponentKit/CKComponentCoalescingMode.h>
+#import <ComponentKit/RCComponentCoalescingMode.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentContextHelper.h>

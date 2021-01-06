@@ -8,4 +8,14 @@
  *
  */
 
-#import <RenderCore/CKComponentCoalescingMode.h>
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NS_ENUM(NSInteger, RCComponentCoalescingMode) {
+  RCComponentCoalescingModeNone = 0,
+  RCComponentCoalescingModeRender,
+  RCComponentCoalescingModeComposite,
+};
+
+NS_ASSUME_NONNULL_END

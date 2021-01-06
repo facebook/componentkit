@@ -24,7 +24,7 @@
 #import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKScopeTreeNode.h>
-#import <ComponentKit/CKComponentCoalescingMode.h>
+#import <ComponentKit/RCComponentCoalescingMode.h>
 
 @protocol CKSystraceListener;
 
@@ -35,7 +35,7 @@ public:
                               CKBuildTrigger trigger = CKBuildTriggerNone,
                               BOOL shouldCollectTreeNodeCreationInformation = NO,
                               BOOL alwaysBuildRenderTree = NO,
-                              CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone,
+                              RCComponentCoalescingMode coalescingMode = RCComponentCoalescingModeNone,
                               BOOL enforceCKComponentSubclasses = YES,
                               BOOL disableRenderToNilInCoalescedCompositeComponents = NO);
   ~CKThreadLocalComponentScope();
@@ -69,7 +69,7 @@ public:
 
   const BOOL shouldCollectTreeNodeCreationInformation;
 
-  const CKComponentCoalescingMode coalescingMode;
+  const RCComponentCoalescingMode coalescingMode;
 
   const BOOL disableRenderToNilInCoalescedCompositeComponents;
 

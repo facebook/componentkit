@@ -13,7 +13,7 @@
 #if CK_NOT_SWIFT
 
 #import <Foundation/Foundation.h>
-#import <RenderCore/CKComponentCoalescingMode.h>
+#import <RenderCore/RCComponentCoalescingMode.h>
 #import <RenderCore/RCComponentBasedAccessibilityMode.h>
 
 @protocol CKAnalyticsListener;
@@ -40,7 +40,7 @@ struct CKGlobalConfig {
   /**
    Component coalescing mode.
    */
-  CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
+  RCComponentCoalescingMode coalescingMode = RCComponentCoalescingModeNone;
   /**
    Component based accessibility mode
    */
