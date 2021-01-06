@@ -50,7 +50,10 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param component The wrapped child component to inset. If nil, this method returns nil.
  */
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView
-                           insets:(UIEdgeInsets)insets
+                              top:(CKDimension_SwiftBridge *)top
+                             left:(CKDimension_SwiftBridge *)left
+                           bottom:(CKDimension_SwiftBridge *)bottom
+                            right:(CKDimension_SwiftBridge *)right
                         component:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER;
 
 #else

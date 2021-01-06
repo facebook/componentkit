@@ -18,6 +18,7 @@
 #import <ComponentKit/CKSizeAssert.h>
 
 #import "CKComponentSubclass.h"
+#import "CKDimension_SwiftBridge+Internal.h"
 #import "ComponentLayoutContext.h"
 #import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
 
@@ -83,11 +84,14 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
 }
 
 - (nullable instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
-                                    insets:(UIEdgeInsets)insets
+                                       top:(CKDimension_SwiftBridge *)top
+                                      left:(CKDimension_SwiftBridge *)left
+                                    bottom:(CKDimension_SwiftBridge *)bottom
+                                     right:(CKDimension_SwiftBridge *)right
                                  component:(CKComponent *_Nullable)component
 {
   const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};
-  return [self initWithView:view top:insets.top left:insets.left bottom:insets.bottom right:insets.right component:component];
+  return [self initWithView:view top:top.dimension left:left.dimension bottom:bottom.dimension right:right.dimension component:component];
 }
 
 /**

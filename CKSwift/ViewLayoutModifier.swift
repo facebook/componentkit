@@ -19,7 +19,7 @@ typealias ViewLayoutCenteringSizingOptions = CenterLayoutComponent.SizingOptions
 public struct ViewLayoutModifier<Inflatable: ComponentInflatable> : ComponentInflatable {
   enum Directive {
     case frame(ComponentSize)
-    case padding(UIEdgeInsets)
+    case padding(top: Dimension, left: Dimension, bottom: Dimension, right: Dimension)
     case ratio(CGFloat)
     case center(centeringOptions: ViewLayoutCenteringOptions, sizingOptions: ViewLayoutCenteringSizingOptions)
     case background(() -> Component)
@@ -29,8 +29,13 @@ public struct ViewLayoutModifier<Inflatable: ComponentInflatable> : ComponentInf
       switch self {
       case let .frame(size):
         return SizingComponent(swiftSize: size.componentSize, component: content)
-      case let .padding(insets):
-        return InsetComponent(swiftView: nil, insets: insets, component: content)
+      case let .padding(top, left, bottom, right):
+        return InsetComponent(swiftView: nil,
+                              top: top.dimension,
+                              left: left.dimension,
+                              bottom: bottom.dimension,
+                              right: right.dimension,
+                              component: content)
       case let .ratio(ratio):
         return RatioLayoutComponent(ratio: ratio, swiftSize: nil, component: content)
       case let .center(centeringOptions, sizingOptions):
@@ -118,26 +123,40 @@ extension ComponentInflatable {
     ViewLayoutModifier(inflatable: self, directive: .ratio(ratio))
   }
 
-  public func padding(top: CGFloat? = nil,
-                      left: CGFloat? = nil,
-                      bottom: CGFloat? = nil,
-                      right: CGFloat? = nil) -> ViewLayoutModifier<Self> {
+  public func padding(top: Dimension? = nil,
+                      left: Dimension? = nil,
+                      bottom: Dimension? = nil,
+                      right: Dimension? = nil) -> ViewLayoutModifier<Self> {
     // TODO: nil should represent `default` and be contextual instead of `0`
     ViewLayoutModifier(
       inflatable: self,
       directive: .padding(
-        UIEdgeInsets(
-          top: top ?? 0,
-          left: left ?? 0,
-          bottom: bottom ?? 0,
-          right: right ?? 0)
+        top: top ?? 0,
+        left: left ?? 0,
+        bottom: bottom ?? 0,
+        right: right ?? 0
+      )
+    )
+  }
+
+  public func padding(top: CGFloat = 0,
+                      left: CGFloat = 0,
+                      bottom: CGFloat = 0,
+                      right: CGFloat = 0) -> ViewLayoutModifier<Self> {
+    ViewLayoutModifier(
+      inflatable: self,
+      directive: .padding(
+        top: .points(top),
+        left: .points(left),
+        bottom: .points(bottom),
+        right: .points(right)
       )
     )
   }
 
   // TODO: Padding with Edge set API
 
-  public func padding(_ length: CGFloat?) -> ViewLayoutModifier<Self> {
+  public func padding(_ length: Dimension? = nil) -> ViewLayoutModifier<Self> {
     padding(top: length, left: length, bottom: length, right: length)
   }
 }
