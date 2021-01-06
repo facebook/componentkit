@@ -66,6 +66,38 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
+  The amount of space to inset on the top, left, bottom and right.
+  */
+  auto &insets(CKRelativeDimension i)
+  {
+    _top = i;
+    _left = i;
+    _bottom = i;
+    _right = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+  The amount of space to inset on the top and bottom.
+  */
+  auto &insetsVertical(CKRelativeDimension i)
+  {
+    _top = i;
+    _bottom = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+  The amount of space to inset on the left and right.
+  */
+  auto &insetsHorizontal(CKRelativeDimension i)
+  {
+    _left = i;
+    _right = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
   The amount of space to inset on the top.
   */
   auto &insetsTop(CGFloat i)
@@ -73,7 +105,7 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
     _top = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
-      
+
   /**
   Relative amount of inset to parent component's width.
   */
@@ -91,7 +123,7 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
     _left = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
-      
+
   /**
   Relative amount of inset to parent component's width.
   */
@@ -109,7 +141,7 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
     _bottom = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
-      
+
   /**
   Relative amount of inset to parent component's width.
   */
@@ -127,7 +159,7 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
     _right = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
-      
+
   /**
   Relative amount of inset to parent component's width.
   */
@@ -164,10 +196,10 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
 
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
-      
+
   /**
-   The wrapped child component to inset.
-   */
+  The wrapped child component to inset.
+  */
   auto &component(NS_RELEASES_ARGUMENT CKComponent *c)
   {
     _component = c;
