@@ -12,10 +12,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, CKComponentBasedAccessibilityMode) {
-  CKComponentBasedAccessibilityModeDisabled = 0,
-  CKComponentBasedAccessibilityModeEnabledOnSurface, // Indicate that the feature only works on selected surfaces
-  CKComponentBasedAccessibilityModeEnabled,
+typedef NS_ENUM(NSInteger, RCComponentBasedAccessibilityMode) {
+  RCComponentBasedAccessibilityModeDisabled = 0,
+  RCComponentBasedAccessibilityModeEnabledOnSurface, // Indicate that the feature only works on selected surfaces
+  RCComponentBasedAccessibilityModeEnabled,
 };
 
 NS_ASSUME_NONNULL_END

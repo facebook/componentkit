@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 #import <RenderCore/CKComponentCoalescingMode.h>
-#import <RenderCore/CKComponentBasedAccessibilityMode.h>
+#import <RenderCore/RCComponentBasedAccessibilityMode.h>
 
 @protocol CKAnalyticsListener;
 
@@ -44,7 +44,7 @@ struct CKGlobalConfig {
   /**
    Component based accessibility mode
    */
-  CKComponentBasedAccessibilityMode componentAXMode = CKComponentBasedAccessibilityModeDisabled;
+  RCComponentBasedAccessibilityMode componentAXMode = RCComponentBasedAccessibilityModeDisabled;
   /**
    Kill-switch to disable render-to-nil in coalesced composite components.
    */

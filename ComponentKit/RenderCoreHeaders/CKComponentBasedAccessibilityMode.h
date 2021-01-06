@@ -8,4 +8,4 @@
  *
  */
 
-#import <RenderCore/CKComponentBasedAccessibilityMode.h>
+#import <RenderCore/RCComponentBasedAccessibilityMode.h>

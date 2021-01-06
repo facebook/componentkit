@@ -12,7 +12,7 @@
 
 #import <ComponentKit/BackgroundLayoutComponentBuilder.h>
 #import <ComponentKit/CKAccessibilityAwareComponent.h>
-#import <ComponentKit/CKComponentBasedAccessibilityMode.h>
+#import <ComponentKit/RCComponentBasedAccessibilityMode.h>
 #import <ComponentKit/ButtonComponentBuilder.h>
 #import <ComponentKit/CenterLayoutComponentBuilder.h>
 #import <ComponentKit/CKAction.h>

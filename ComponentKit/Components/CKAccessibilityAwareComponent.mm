@@ -51,10 +51,10 @@ BOOL IsAccessibilityBasedOnComponent(CKComponent *component) {
   }
   auto const componentAXMode = CKReadGlobalConfig().componentAXMode;
   switch (componentAXMode) {
-    case CKComponentBasedAccessibilityModeEnabled:
+    case RCComponentBasedAccessibilityModeEnabled:
       return YES;
       break;
-    case CKComponentBasedAccessibilityModeEnabledOnSurface:
+    case RCComponentBasedAccessibilityModeEnabledOnSurface:
       return [component isMemberOfClass:[CKAccessibilityAwareComponent class]];
       break;
     default:
@@ -68,8 +68,8 @@ BOOL shouldUseComponentAsSourceOfAccessibility() {
   // return true if component based accessiility is enabled everywhwere or
   // if it's enabled per surface, and we are in the correct surface
   return
-    componentAXMode == CKComponentBasedAccessibilityModeEnabled ||
-    (componentAXMode == CKComponentBasedAccessibilityModeEnabledOnSurface
+    componentAXMode == RCComponentBasedAccessibilityModeEnabled ||
+    (componentAXMode == RCComponentBasedAccessibilityModeEnabledOnSurface
     && [CKComponentContext<CKComponentBasedAccessibilityContext>::get() componentBasedAXEnabled]);
 }
 
@@ -77,7 +77,7 @@ static BOOL isComponentBasedAccessibilityEnabledPerSurface() {
   auto const componentAXMode = CKReadGlobalConfig().componentAXMode;
   // Wrap only if we want to selectively enable component based accessibility on surface by surface base
   return
-    componentAXMode == CKComponentBasedAccessibilityModeEnabledOnSurface
+    componentAXMode == RCComponentBasedAccessibilityModeEnabledOnSurface
     && [CKComponentContext<CKComponentBasedAccessibilityContext>::get() componentBasedAXEnabled];
 }
 
