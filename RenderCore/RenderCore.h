@@ -35,7 +35,7 @@
 #import <RenderCore/CKGeometryHelpers.h>
 #import <RenderCore/CKGlobalConfig.h>
 #import <RenderCore/CKInternalHelpers.h>
-#import <RenderCore/CKIterable.h>
+#import <RenderCore/RCIterable.h>
 #import <RenderCore/CKLayout.h>
 #import <RenderCore/CKMacros.h>
 #import <RenderCore/CKMountable.h>

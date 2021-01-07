@@ -43,12 +43,12 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 
 - (unsigned int)numberOfChildren
 {
-  return CKIterable::numberOfChildren(_component);
+  return RCIterable::numberOfChildren(_component);
 }
 
-- (id<CKIterable>)childAtIndex:(unsigned int)index
+- (id<RCIterable>)childAtIndex:(unsigned int)index
 {
-  return CKIterable::childAtIndex(self, index, _component);
+  return RCIterable::childAtIndex(self, index, _component);
 }
 
 - (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

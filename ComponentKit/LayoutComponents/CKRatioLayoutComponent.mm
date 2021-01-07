@@ -94,12 +94,12 @@
 
 - (unsigned int)numberOfChildren
 {
-  return CKIterable::numberOfChildren(_component);
+  return RCIterable::numberOfChildren(_component);
 }
 
 - (id<CKMountable>)childAtIndex:(unsigned int)index
 {
-  return CKIterable::childAtIndex(self, index, _component);
+  return RCIterable::childAtIndex(self, index, _component);
 }
 
 @end

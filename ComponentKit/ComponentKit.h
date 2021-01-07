@@ -128,7 +128,7 @@
 #import <ComponentKit/CKInsetComponent.h>
 #import <ComponentKit/CKInspectableView.h>
 #import <ComponentKit/CKInternalHelpers.h>
-#import <ComponentKit/CKIterable.h>
+#import <ComponentKit/RCIterable.h>
 #import <ComponentKit/CKIterableHelpers.h>
 #import <ComponentKit/CKLinkable.h>
 #import <ComponentKit/CKLayout.h>

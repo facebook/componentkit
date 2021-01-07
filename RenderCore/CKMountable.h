@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 #import <RenderCore/CKDefines.h>
-#import <RenderCore/CKIterable.h>
+#import <RenderCore/RCIterable.h>
 
 #if CK_NOT_SWIFT
 
@@ -35,7 +35,7 @@ struct CKMountInfo {
   CKComponentViewContext viewContext;
 };
 
-@protocol CKMountable <CKIterable>
+@protocol CKMountable <RCIterable>
 
 /**
  Call this on children components to compute their layouts.
@@ -117,7 +117,7 @@ Unmounts the component:
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Mountable)
-@protocol CKMountable <CKIterable>
+@protocol CKMountable <RCIterable>
 @end
 
 #endif

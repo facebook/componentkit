@@ -132,7 +132,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
     MAX(0, parentSize.height - insetsY)
   };
   CKLayout childLayout = [_component layoutThatFits:insetConstrainedSize parentSize:insetParentSize];
-  
+
   const CGSize computedSize = constrainedSize.clamp({
     finite(childLayout.size.width + insets.left + insets.right, parentSize.width),
     finite(childLayout.size.height + insets.top + insets.bottom, parentSize.height),
@@ -158,12 +158,12 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
 
 - (unsigned int)numberOfChildren
 {
-  return CKIterable::numberOfChildren(_component);
+  return RCIterable::numberOfChildren(_component);
 }
 
 - (id<CKMountable>)childAtIndex:(unsigned int)index
 {
-  return CKIterable::childAtIndex(self, index, _component);
+  return RCIterable::childAtIndex(self, index, _component);
 }
 
 @end

@@ -14,7 +14,7 @@
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKGlobalConfig.h>
-#import <ComponentKit/CKIterable.h>
+#import <ComponentKit/RCIterable.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -76,7 +76,7 @@ struct CKBuildComponentTreeParams {
  It represents the component holding the the scope handle, capable of building a component tree (CKTreeNode).
  */
 NS_SWIFT_NAME(TreeNodeComponentProtocol)
-@protocol CKTreeNodeComponentProtocol<CKComponentProtocol, CKIterable>
+@protocol CKTreeNodeComponentProtocol<CKComponentProtocol, RCIterable>
 
 #if CK_NOT_SWIFT
 

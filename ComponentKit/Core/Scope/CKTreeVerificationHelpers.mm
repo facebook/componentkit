@@ -98,7 +98,7 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKL
       if (registeredParentNode == nil) {
         CKCFailAssertWithCategory(CKComponentCompactDescription(c),
                                   @"Missing link from node to its parent on the CKRootTreeNode; \n"
-                                  @"make sure your component returns all its children on the CKIterable methods.\n"
+                                  @"make sure your component returns all its children on the RCIterable methods.\n"
                                   @"Component:%@\n"
                                   @"Parent component:%@",
                                   c,
@@ -106,7 +106,7 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKL
       } else if (registeredParentNode != parentNode) {
         CKCFailAssertWithCategory(CKComponentCompactDescription(c),
                                   @"Incorrect link from node to its parent on the CKRootTreeNode; \n"
-                                  @"make sure your component returns all its children on the CKIterable methods.\n"
+                                  @"make sure your component returns all its children on the RCIterable methods.\n"
                                   @"Component:%@\n"
                                   @"Parent component:%@\n"
                                   @"Registered parent component:%@",

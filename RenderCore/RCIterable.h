@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol CKIterable <NSObject>
+@protocol RCIterable <NSObject>
 
 #if CK_NOT_SWIFT
 
@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (unsigned int)numberOfChildren;
 
 /** Get child at index */
-- (id<CKIterable> _Nullable)childAtIndex:(unsigned int)index;
+- (id<RCIterable> _Nullable)childAtIndex:(unsigned int)index;
 
 #endif
 

@@ -16,7 +16,7 @@
 #import <ComponentKit/CKMountable.h>
 
 // Helper functions.
-namespace CKIterable {
+namespace RCIterable {
 
 // Return the number of non-nil children that are being passed as arguments.
 template <typename First>
@@ -31,7 +31,7 @@ unsigned int numberOfChildren(First first, Rest... rest) {
 
 // Return the child at index according to the children that are being passed as arguments.
 template <typename First>
-id<CKMountable> childAtIndex(__unsafe_unretained id<CKIterable> self, unsigned int idx, First first) {
+id<CKMountable> childAtIndex(__unsafe_unretained id<RCIterable> self, unsigned int idx, First first) {
   if (idx == 0 && first != nil) {
     return first;
   }
@@ -40,7 +40,7 @@ id<CKMountable> childAtIndex(__unsafe_unretained id<CKIterable> self, unsigned i
 }
 
 template <typename First, typename... Rest>
-id<CKMountable> childAtIndex(__unsafe_unretained id<CKIterable> self, unsigned int idx, First first, Rest... rest) {
+id<CKMountable> childAtIndex(__unsafe_unretained id<RCIterable> self, unsigned int idx, First first, Rest... rest) {
   if (first != nil) {
     if (idx == 0) {
       // Found

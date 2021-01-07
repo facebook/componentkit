@@ -39,7 +39,7 @@
   return static_cast<unsigned int>([_children count]);
 }
 
-- (id<CKIterable>)childAtIndex:(unsigned int)index
+- (id<RCIterable>)childAtIndex:(unsigned int)index
 {
   return _children[index].component;
 }
