@@ -15,7 +15,7 @@
 
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKArgumentPrecondition.h>
+#import <ComponentKit/RCArgumentPrecondition.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKComponentContextHelper.h>

@@ -23,7 +23,7 @@
 #import <ComponentKit/CKAnimation.h>
 #import <ComponentKit/CKAnimationComponent.h>
 #import <ComponentKit/CKAnimationComponent+Internal.h>
-#import <ComponentKit/CKArgumentPrecondition.h>
+#import <ComponentKit/RCArgumentPrecondition.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKAssociatedObject.h>
 #import <ComponentKit/CKAutoSizedImageComponent.h>
