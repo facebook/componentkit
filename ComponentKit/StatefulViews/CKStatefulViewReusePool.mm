@@ -24,7 +24,7 @@ struct FBStatefulReusePoolItemEntry {
 
 class FBStatefulReusePoolItem {
 public:
-  UIView *viewWithPreferredSuperview(UIView *preferredSuperview)
+  UIView *viewWithPreferredSuperview(UIView *preferredSuperview) noexcept
   {
     if (_entries.empty()) {
       return nil;
@@ -57,17 +57,17 @@ public:
     return nil;
   };
 
-  NSUInteger viewCount()
+  NSUInteger viewCount() noexcept
   {
     return _entries.size();
   };
 
-  void addEntry(const FBStatefulReusePoolItemEntry &entry)
+  void addEntry(const FBStatefulReusePoolItemEntry &entry) noexcept
   {
     _entries.push_back(entry);
   };
 
-  void absorbPendingPool(const FBStatefulReusePoolItem &otherPool, NSInteger maxEntries)
+  void absorbPendingPool(const FBStatefulReusePoolItem &otherPool, NSInteger maxEntries) noexcept
   {
     for (const FBStatefulReusePoolItemEntry &entry : otherPool._entries) {
       // In the future, we should consider not evaluating the block here immediately, and letting it move into the

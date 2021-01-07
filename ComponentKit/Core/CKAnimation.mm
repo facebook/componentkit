@@ -12,12 +12,12 @@
 
 using namespace CK;
 
-auto Animation::TimingCurve::fromCA(NSString *name) -> TimingCurve
+auto Animation::TimingCurve::fromCA(NSString *name) noexcept -> TimingCurve
 {
   return fromCA([CAMediaTimingFunction functionWithName:name]);
 }
 
-auto Animation::TimingCurve::fromCA(CAMediaTimingFunction *f) -> TimingCurve
+auto Animation::TimingCurve::fromCA(CAMediaTimingFunction *f) noexcept -> TimingCurve
 {
   auto p1 = ControlPoint{};
   auto p2 = ControlPoint{};

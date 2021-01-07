@@ -73,19 +73,19 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   pthread_setspecific(_threadKey(), previousScope);
 }
 
-void CKThreadLocalComponentScope::push(CKComponentScopePair scopePair, BOOL keysSupportEnabled) {
+void CKThreadLocalComponentScope::push(CKComponentScopePair scopePair, BOOL keysSupportEnabled) noexcept {
   stack.push(std::move(scopePair));
   if (keysSupportEnabled) {
     keys.push({});
   }
 }
 
-void CKThreadLocalComponentScope::push(CKComponentScopePair scopePair, BOOL keysSupportEnabled, BOOL ancestorHasStateUpdateValue) {
+void CKThreadLocalComponentScope::push(CKComponentScopePair scopePair, BOOL keysSupportEnabled, BOOL ancestorHasStateUpdateValue) noexcept {
   push(scopePair, keysSupportEnabled);
   ancestorHasStateUpdate.push(ancestorHasStateUpdateValue);
 }
 
-void CKThreadLocalComponentScope::pop(BOOL keysSupportEnabled, BOOL ancestorStateUpdateSupportEnabled) {
+void CKThreadLocalComponentScope::pop(BOOL keysSupportEnabled, BOOL ancestorStateUpdateSupportEnabled) noexcept {
   stack.pop();
   if (keysSupportEnabled) {
     CKCAssert(
@@ -99,7 +99,7 @@ void CKThreadLocalComponentScope::pop(BOOL keysSupportEnabled, BOOL ancestorStat
   }
 }
 
-void CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree()
+void CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree() noexcept
 {
   CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
   if (currentScope != nullptr) {

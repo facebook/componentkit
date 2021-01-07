@@ -78,7 +78,7 @@ namespace CK {
                              transactionProvider);
     }
 
-    void cleanupAppliedAnimationsForComponent(CKComponent *const c);
+    void cleanupAppliedAnimationsForComponent(CKComponent *const c) noexcept;
 
   private:
     using AppliedAnimationsByComponentMap = std::unordered_map<CKComponent *, CKAppliedComponentAnimationMap, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
@@ -129,7 +129,7 @@ namespace CK {
     }
 
     static auto cleanupAppliedAnimationsForComponent(AppliedAnimationsByComponentMap &aas,
-                                                     CKComponent *const c);
+                                                     CKComponent *const c) noexcept;
 
     // Ownership will be shared with transaction completions which can outlive the controller
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsOnInitialMount;

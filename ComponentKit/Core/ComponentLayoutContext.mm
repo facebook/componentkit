@@ -21,7 +21,7 @@ using namespace CK::Component;
 static pthread_key_t kCKLayoutContextThreadKey;
 
 struct ThreadKeyInitializer {
-  static void destroyStack(LayoutContextValue *p) { delete p; }
+  static void destroyStack(LayoutContextValue *p) noexcept { delete p; }
   ThreadKeyInitializer() { pthread_key_create(&kCKLayoutContextThreadKey, (void (*)(void*))destroyStack); }
 };
 
@@ -64,7 +64,7 @@ LayoutContext::~LayoutContext()
   }
 }
 
-const CK::Component::LayoutContextStack &LayoutContext::currentStack()
+const CK::Component::LayoutContextStack &LayoutContext::currentStack() noexcept
 {
   return componentValue().stack;
 }
@@ -80,7 +80,7 @@ static auto componentClassString(CKComponent *component) -> NSString * {
   }
 }
 
-NSString *LayoutContext::currentStackDescription()
+NSString *LayoutContext::currentStackDescription() noexcept
 {
   const auto &stack = componentValue().stack;
   NSMutableString *s = [NSMutableString string];
@@ -98,7 +98,7 @@ NSString *LayoutContext::currentStackDescription()
   return s;
 }
 
-NSString *LayoutContext::currentRootComponentClassName()
+NSString *LayoutContext::currentRootComponentClassName() noexcept
 {
   const auto &stack = componentValue().stack;
   return stack.empty() ? @"" : componentClassString(stack[0]->component);

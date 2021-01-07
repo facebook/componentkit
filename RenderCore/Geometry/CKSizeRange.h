@@ -40,7 +40,7 @@ struct CKSizeRange {
 
 namespace std {
   template <> struct hash<CKSizeRange> {
-    size_t operator ()(const CKSizeRange &);
+    size_t operator ()(const CKSizeRange &) noexcept;
   };
 }
 

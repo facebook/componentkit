@@ -38,8 +38,8 @@ namespace CK {
 
       TimingCurve(ControlPoint p1, ControlPoint p2) :_p1(p1), _p2(p2) {}
 
-      static auto fromCA(NSString *name) -> TimingCurve;
-      static auto fromCA(CAMediaTimingFunction *f) -> TimingCurve;
+      static auto fromCA(NSString *name) noexcept -> TimingCurve;
+      static auto fromCA(CAMediaTimingFunction *f) noexcept -> TimingCurve;
 
       auto toCA() const -> CAMediaTimingFunction *;
 

@@ -24,7 +24,7 @@ namespace CK {
 
     struct MountContext {
       /** Constructs a new mount context for the given view. */
-      static MountContext RootContext(UIView *v, MountAnalyticsContext *mAnalyticsContext) {
+      static MountContext RootContext(UIView *v, MountAnalyticsContext *mAnalyticsContext) noexcept {
         ViewReuseUtilities::mountingInRootView(v);
         return MountContext(std::make_shared<ViewManager>(v, mAnalyticsContext), {0,0}, {}, NO, mAnalyticsContext);
       }
@@ -56,7 +56,7 @@ namespace CK {
       : viewManager(m), position(p), layoutGuide(l), shouldBlockAnimations(b), mountAnalyticsContext(ma) {}
 
       static UIEdgeInsets adjustedGuide(const UIEdgeInsets layoutGuide, const CGPoint offset,
-                                        const CGSize parentSize, const CGSize childSize) {
+                                        const CGSize parentSize, const CGSize childSize) noexcept {
         return {
           .top = layoutGuide.top + offset.y,
           .left = layoutGuide.left + offset.x,

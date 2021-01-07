@@ -100,7 +100,7 @@ size_t CKSizeRange::hash() const
   return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
 }
 
-size_t std::hash<CKSizeRange>::operator()(const CKSizeRange &s)
+size_t std::hash<CKSizeRange>::operator()(const CKSizeRange &s) noexcept
 {
   return s.hash();
 };

@@ -31,16 +31,16 @@ namespace CK {
     class ViewReuseUtilities {
     public:
       /** Called when Components will begin mounting in a root view */
-      static void mountingInRootView(UIView *rootView);
+      static void mountingInRootView(UIView *rootView) noexcept;
       /** Called when Components creates a view */
-      static void createdView(UIView *view, const CKComponentViewClass &viewClass, UIView *parent);
+      static void createdView(UIView *view, const CKComponentViewClass &viewClass, UIView *parent) noexcept;
       /** Called when Components will begin mounting child components in a new child view */
-      static void mountingInChildContext(UIView *view, UIView *parent);
+      static void mountingInChildContext(UIView *view, UIView *parent) noexcept;
 
       /** Called when Components is about to hide a Components-managed view */
-      static void didHide(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
+      static void didHide(UIView *view, MountAnalyticsContext *mountAnalyticsContext) noexcept;
       /** Called when Components is about to unhide a Components-managed view */
-      static void willUnhide(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
+      static void willUnhide(UIView *view, MountAnalyticsContext *mountAnalyticsContext) noexcept;
     };
   }
 }

@@ -25,7 +25,7 @@ namespace CK {
     {
     private:
       // function to load the current listeners vector in a thread safe way
-      static std::shared_ptr<const std::vector<__weak id>> loadListeners(CKComponentAnnouncerBase *self);
+      static std::shared_ptr<const std::vector<__weak id>> loadListeners(CKComponentAnnouncerBase *self) noexcept;
     public:
       template<typename... ARGS>
       static void call(CKComponentAnnouncerBase *self, SEL s, ARGS... args) {
@@ -55,9 +55,9 @@ namespace CK {
         }
       }
 
-      static void addListener(CKComponentAnnouncerBase *self, SEL s, id listener);
+      static void addListener(CKComponentAnnouncerBase *self, SEL s, id listener) noexcept;
 
-      static void removeListener(CKComponentAnnouncerBase *self, SEL s, id listener);
+      static void removeListener(CKComponentAnnouncerBase *self, SEL s, id listener) noexcept;
     };
   }
 }

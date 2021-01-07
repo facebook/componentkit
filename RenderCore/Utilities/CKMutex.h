@@ -76,15 +76,15 @@ namespace CK {
     Mutex (const Mutex&) = delete;
     Mutex &operator=(const Mutex&) = delete;
 
-    void lock () {
+    void lock () noexcept {
       CK_THREAD_ASSERT_ON_ERROR(pthread_mutex_lock (this->mutex()));
     }
 
-    void unlock () {
+    void unlock () noexcept {
       CK_THREAD_ASSERT_ON_ERROR(pthread_mutex_unlock (this->mutex()));
     }
 
-    pthread_mutex_t *mutex () { return &_m; }
+    pthread_mutex_t *mutex () noexcept { return &_m; }
 
   protected:
     explicit Mutex (bool recursive) {
@@ -119,15 +119,15 @@ namespace CK {
   {
     pthread_mutex_t _m; // public so it can be provided by CK_MUTEX_INITIALIZER and friends
 
-    void lock () {
+    void lock () noexcept {
       CK_THREAD_ASSERT_ON_ERROR(pthread_mutex_lock (this->mutex()));
     }
 
-    void unlock () {
+    void unlock () noexcept {
       CK_THREAD_ASSERT_ON_ERROR(pthread_mutex_unlock (this->mutex()));
     }
 
-    pthread_mutex_t *mutex () { return &_m; }
+    pthread_mutex_t *mutex () noexcept { return &_m; }
 
     StaticMutex(const StaticMutex&) = delete;
     StaticMutex &operator=(const StaticMutex&) = delete;

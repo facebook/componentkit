@@ -31,7 +31,7 @@ private:
 
   static BOOL blockAnimationsIfNeeded(CKComponent *oldComponent, CKComponent *newComponent,
                                       const CK::Component::MountContext &ctx,
-                                      const CKComponentViewConfiguration &viewConfig)
+                                      const CKComponentViewConfiguration &viewConfig) noexcept
   {
     if ([CATransaction disableActions]) {
       return NO; // Already blocked
@@ -45,7 +45,7 @@ private:
 
   static BOOL shouldBlockAnimations(CKComponent *oldComponent, CKComponent *newComponent,
                                     const CK::Component::MountContext &ctx,
-                                    const CKComponentViewConfiguration &viewConfig)
+                                    const CKComponentViewConfiguration &viewConfig) noexcept
   {
     // If the context explicitly tells us to block animations, do it.
     if (ctx.shouldBlockAnimations) {

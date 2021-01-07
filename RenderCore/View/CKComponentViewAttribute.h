@@ -182,7 +182,7 @@ private:
    Behind the scenes, these are looked up/created using a map of unordered_set<string> -> int32_t.
    */
   int32_t _identifier;
-  static int32_t computeIdentifier(const CKViewComponentAttributeValueMap &attributes);
+  static int32_t computeIdentifier(const CKViewComponentAttributeValueMap &attributes) noexcept;
 };
 }
 }

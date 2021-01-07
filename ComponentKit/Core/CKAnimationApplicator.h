@@ -51,7 +51,7 @@ namespace CK {
   };
 
   struct AnimationApplicatorFactory final {
-    static auto make()
+    static auto make() noexcept
     {
       return std::make_unique<AnimationApplicator<>>();
     }

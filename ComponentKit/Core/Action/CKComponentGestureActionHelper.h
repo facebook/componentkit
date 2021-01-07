@@ -37,8 +37,8 @@ class CKGestureRecognizerReusePool {
 public:
   /** Pass in a property block if you need to initialize the gesture recognizer **/
   CKGestureRecognizerReusePool(Class gestureRecognizerClass, CKComponentGestureRecognizerSetupFunction setupFunction);
-  UIGestureRecognizer *get();
-  void recycle(UIGestureRecognizer *recognizer);
+  UIGestureRecognizer *get() noexcept;
+  void recycle(UIGestureRecognizer *recognizer) noexcept;
 private:
   Class _gestureRecognizerClass;
   CKComponentGestureRecognizerSetupFunction _setupFunction;

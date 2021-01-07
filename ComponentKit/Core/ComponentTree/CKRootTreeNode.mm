@@ -44,7 +44,7 @@ static auto _existingAndNewParentIdentifiers(
 
 #endif
 
-void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent) {
+void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent) noexcept {
   CKCAssert(parent != nil, @"Cannot register a nil parent node");
   if (node) {
 #if CK_ASSERTIONS_ENABLED
@@ -92,7 +92,7 @@ const CKTreeNodeDirtyIds& CKRootTreeNode::dirtyNodeIdsForPropsUpdates() const {
   return _dirtyNodeIdsForPropsUpdates;
 }
 
-void CKRootTreeNode::markTopRenderComponentAsDirtyForPropsUpdates() {
+void CKRootTreeNode::markTopRenderComponentAsDirtyForPropsUpdates() noexcept {
   while (!_stack.empty()) {
     auto nodeIdentifier = _stack.top();
     _dirtyNodeIdsForPropsUpdates.insert(nodeIdentifier);
@@ -100,11 +100,11 @@ void CKRootTreeNode::markTopRenderComponentAsDirtyForPropsUpdates() {
   }
 }
 
-void CKRootTreeNode::willBuildComponentTree(id<CKTreeNodeProtocol>node) {
+void CKRootTreeNode::willBuildComponentTree(id<CKTreeNodeProtocol>node) noexcept {
   _stack.push(node.nodeIdentifier);
 }
 
-void CKRootTreeNode::didBuildComponentTree() {
+void CKRootTreeNode::didBuildComponentTree() noexcept {
   if (!_stack.empty()) {
     _stack.pop();
   }

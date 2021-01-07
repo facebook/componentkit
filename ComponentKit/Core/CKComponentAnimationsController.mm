@@ -46,7 +46,7 @@ namespace CK {
     };
   }
 
-  auto ComponentAnimationsController::cleanupAppliedAnimationsForComponent(AppliedAnimationsByComponentMap &aas, CKComponent *const c)
+  auto ComponentAnimationsController::cleanupAppliedAnimationsForComponent(AppliedAnimationsByComponentMap &aas, CKComponent *const c) noexcept
   {
     for (const auto &kv : aas[c]) {
       const auto a = kv.second;
@@ -55,7 +55,7 @@ namespace CK {
     aas.erase(c);
   }
 
-  void ComponentAnimationsController::cleanupAppliedAnimationsForComponent(CKComponent *const c)
+  void ComponentAnimationsController::cleanupAppliedAnimationsForComponent(CKComponent *const c) noexcept
   {
     cleanupAppliedAnimationsForComponent(*_appliedAnimationsOnInitialMount, c);
     cleanupAppliedAnimationsForComponent(*_appliedAnimationsFromPreviousComponent, c);

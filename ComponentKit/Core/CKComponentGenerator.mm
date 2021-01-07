@@ -36,22 +36,22 @@ struct CKComponentGeneratorInputs {
 
   CKComponentGeneratorInputs(CK::NonNull<CKComponentScopeRoot *> scopeRoot) : scopeRoot(std::move(scopeRoot)) { }
 
-  void updateModel(id<NSObject> model) {
+  void updateModel(id<NSObject> model) noexcept {
     _didUpdateModelOrContext = _didUpdateModelOrContext || (model != _model);
     _model = model;
   }
 
-  void updateContext(id<NSObject> context) {
+  void updateContext(id<NSObject> context) noexcept {
     _didUpdateModelOrContext = _didUpdateModelOrContext || (context != _context);
     _context = context;
   }
 
-  void updateTraitCollection(UITraitCollection *traitCollection) {
+  void updateTraitCollection(UITraitCollection *traitCollection) noexcept {
     _didUpdateTraitCollection = _didUpdateTraitCollection || !CKObjectIsEqual(traitCollection, _traitCollection);
     _traitCollection = [traitCollection copy];
   }
 
-  void updateAccessibilityStatus(BOOL isAccessibilityEnabled) {
+  void updateAccessibilityStatus(BOOL isAccessibilityEnabled) noexcept {
     _didAccessibilityChange = _didAccessibilityChange || (isAccessibilityEnabled != _isAccessibilityEnabled);
     _isAccessibilityEnabled = isAccessibilityEnabled;
   }
@@ -87,7 +87,7 @@ struct CKComponentGeneratorInputs {
       _isAccessibilityEnabled == i._isAccessibilityEnabled;
   }
 
-  void reset(CK::NonNull<CKComponentScopeRoot *> newScopeRoot) {
+  void reset(CK::NonNull<CKComponentScopeRoot *> newScopeRoot) noexcept {
     scopeRoot = newScopeRoot;
     stateUpdates = {};
     _didUpdateModelOrContext = NO;

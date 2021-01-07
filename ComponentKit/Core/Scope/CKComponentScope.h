@@ -99,7 +99,7 @@ public:
    The analogous feature in React is getDerivedStateFromProps, which allows you to update state in response to
    props changing.
    */
-  static void replaceState(const CKComponentScope &scope, id newState);
+  static void replaceState(const CKComponentScope &scope, id newState) noexcept;
 
 private:
   CKComponentScope(const CKComponentScope&) = delete;

@@ -134,12 +134,12 @@ dispatch_block_t CKActionBase::block() const noexcept {
   return _block;
 }
 
-CKComponentScopeHandle *CKActionBase::scopeHandleFromContext(const CK::BaseSpecContext &context) {
+CKComponentScopeHandle *CKActionBase::scopeHandleFromContext(const CK::BaseSpecContext &context) noexcept {
   // Requires CKComponentInternal.h which shouldn't be imported publicly.
   return componentFromContext(context).scopeHandle;
 }
 
-CKComponent *CKActionBase::componentFromContext(const CK::BaseSpecContext &context) {
+CKComponent *CKActionBase::componentFromContext(const CK::BaseSpecContext &context) noexcept {
   const auto component = context._component;
 #if DEBUG
     CKCAssertNotNil(component, @"BaseSpecContext contains nil component");

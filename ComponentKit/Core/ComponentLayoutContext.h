@@ -63,18 +63,18 @@ namespace CK {
 
        @warning Both the reference to the stack and the pointers within the stack MUST NOT be stored or used later!
        */
-      static const LayoutContextStack &currentStack();
+      static const LayoutContextStack &currentStack() noexcept;
 
       /**
        Returns a string with the contents of the current stack, with each component on one line indented by level.
        Only the class name of each component is printed.
        */
-      static NSString *currentStackDescription();
+      static NSString *currentStackDescription() noexcept;
 
       /**
        Returns a name of the root component class, i.e. component that is at the root of the component tree.
        */
-      static NSString *currentRootComponentClassName();
+      static NSString *currentRootComponentClassName() noexcept;
 
       LayoutContext(const LayoutContext&) = delete;
       LayoutContext &operator=(const LayoutContext&) = delete;

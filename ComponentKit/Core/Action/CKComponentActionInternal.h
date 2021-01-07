@@ -84,8 +84,8 @@ protected:
   CKActionVariant _variant;
   SEL _selector;
 
-  static CKComponent *componentFromContext(const CK::BaseSpecContext &context);
-  static CKComponentScopeHandle *scopeHandleFromContext(const CK::BaseSpecContext &context);
+  static CKComponent *componentFromContext(const CK::BaseSpecContext &context) noexcept;
+  static CKComponentScopeHandle *scopeHandleFromContext(const CK::BaseSpecContext &context) noexcept;
 
 public:
   explicit operator bool() const noexcept;

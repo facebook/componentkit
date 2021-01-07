@@ -24,7 +24,7 @@ class CKRootTreeNode {
 public:
   CKRootTreeNode();
 
-  void registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent);
+  void registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent) noexcept;
   /** Query the parent node of existing node*/
   id<CKTreeNodeProtocol> parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const;
 
@@ -35,16 +35,16 @@ public:
   CKScopeTreeNode *node() const;
 
   /** Mark the top render component in the stack as dirty */
-  void markTopRenderComponentAsDirtyForPropsUpdates();
+  void markTopRenderComponentAsDirtyForPropsUpdates() noexcept;
 
   /** Return the dirty node ids, of the nodes that cannot participate in props updates optimizations. */
   const CKTreeNodeDirtyIds& dirtyNodeIdsForPropsUpdates() const;
 
   /** Called before a render component generates its children */
-  void willBuildComponentTree(id<CKTreeNodeProtocol>node);
+  void willBuildComponentTree(id<CKTreeNodeProtocol>node) noexcept;
 
   /** Called after a render component generates its children */
-  void didBuildComponentTree();
+  void didBuildComponentTree() noexcept;
 
 private:
   /** the root node of the component tree */

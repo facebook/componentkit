@@ -47,7 +47,7 @@ public:
    Marks the current component scope as containing a component tree.
    This is used to ensure that during build component time we are initiating a component tree generation by calling `buildComponentTree:` on the root component.
    */
-  static void markCurrentScopeWithRenderComponentInTree();
+  static void markCurrentScopeWithRenderComponentInTree() noexcept;
 
   CK::NonNull<CKComponentScopeRoot *> const newScopeRoot;
   CKComponentScopeRoot *const previousScopeRoot;
@@ -75,9 +75,9 @@ public:
 
   const BOOL enforceCKComponentSubclasses;
 
-  void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled = NO);
-  void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled, BOOL ancestorHasStateUpdate);
-  void pop(BOOL keysSupportEnabled = NO, BOOL ancestorStateUpdateSupportEnabled = NO);
+  void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled = NO) noexcept;
+  void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled, BOOL ancestorHasStateUpdate) noexcept;
+  void pop(BOOL keysSupportEnabled = NO, BOOL ancestorStateUpdateSupportEnabled = NO) noexcept;
 
 private:
   CKThreadLocalComponentScope *const previousScope;

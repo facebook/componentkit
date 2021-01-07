@@ -114,7 +114,7 @@ CKComponentScopeHandleIdentifier CKComponentScope::identifier(void) const noexce
   return _scopeHandle.globalIdentifier;
 }
 
-void CKComponentScope::replaceState(const CKComponentScope &scope, id state)
+void CKComponentScope::replaceState(const CKComponentScope &scope, id state) noexcept
 {
   [scope._scopeHandle replaceState:state];
 }
