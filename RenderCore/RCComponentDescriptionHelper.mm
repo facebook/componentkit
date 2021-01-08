@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponentDescriptionHelper.h"
+#import "RCComponentDescriptionHelper.h"
 
 #import <RenderCore/CKMountable.h>
 
@@ -17,7 +17,7 @@ static NSString *componentDescriptionOrClass(id<CKMountable> component)
   return [component description] ?: NSStringFromClass([component class]);
 }
 
-static NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace, BOOL nested, BOOL compactDescription) noexcept
+static NSString *RCComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace, BOOL nested, BOOL compactDescription) noexcept
 {
   NSMutableString *const description = [NSMutableString string];
     for (NSInteger index = [componentBacktrace count] - 1; index >= 0; index--) {
@@ -29,28 +29,28 @@ static NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *compo
       if (nested) {
         [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
       }
-      NSString *componentDescription = compactDescription ? CKComponentCompactDescription(component) : componentDescriptionOrClass(component);
+      NSString *componentDescription = compactDescription ? RCComponentCompactDescription(component) : componentDescriptionOrClass(component);
       [description appendString:componentDescription];
     }
     return description;
 }
 
-NSString *CKComponentCompactDescription(id<CKMountable> component)
+NSString *RCComponentCompactDescription(id<CKMountable> component)
 {
   return component.className ?: NSStringFromClass([component class]);
 }
 
-NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept
+NSString *RCComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept
 {
-  return CKComponentBacktraceDescription(componentBacktrace, YES, NO);
+  return RCComponentBacktraceDescription(componentBacktrace, YES, NO);
 }
 
-NSString *CKComponentBacktraceStackDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept
+NSString *RCComponentBacktraceStackDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept
 {
-  return CKComponentBacktraceDescription(componentBacktrace, NO, YES);
+  return RCComponentBacktraceDescription(componentBacktrace, NO, YES);
 }
 
-NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKLayoutChild>> children) noexcept
+NSString *RCComponentChildrenDescription(std::shared_ptr<const std::vector<CKLayoutChild>> children) noexcept
 {
   NSMutableString *const description = [NSMutableString string];
   for (auto childIter = children->begin(); childIter != children->end(); childIter++) {
@@ -65,7 +65,7 @@ NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKLay
   return description;
 }
 
-NSString *CKComponentDescriptionWithChildren(NSString *description, NSArray *children)
+NSString *RCComponentDescriptionWithChildren(NSString *description, NSArray *children)
 {
   NSMutableString *result = [description mutableCopy];
   for (id childComponent in children) {
@@ -79,7 +79,7 @@ NSString *CKComponentDescriptionWithChildren(NSString *description, NSArray *chi
   return result;
 }
 
-NSArray<id<CKMountable>> *CKComponentGenerateBacktrace(id<CKMountable> component)
+NSArray<id<CKMountable>> *RCComponentGenerateBacktrace(id<CKMountable> component)
 {
   NSMutableArray<id<CKMountable>> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
   while ([componentBacktrace lastObject]

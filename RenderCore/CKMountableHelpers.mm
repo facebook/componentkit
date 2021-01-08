@@ -11,7 +11,7 @@
 #import "CKMountableHelpers.h"
 
 #import <RenderCore/CKAssert.h>
-#import <RenderCore/CKComponentDescriptionHelper.h>
+#import <RenderCore/RCComponentDescriptionHelper.h>
 #import <RenderCore/CKMountable.h>
 #import <RenderCore/CKMountableHelpers.h>
 #import <RenderCore/CKMountedObjectForView.h>
@@ -71,8 +71,8 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
       CKSetViewPositionAndBounds(v, context, layout.size);
     } @catch (NSException *exception) {
       NSString *const componentBacktraceDescription =
-        CKComponentBacktraceDescription(CKComponentGenerateBacktrace(supercomponent));
-      NSString *const componentChildrenDescription = CKComponentChildrenDescription(layout.children);
+        RCComponentBacktraceDescription(RCComponentGenerateBacktrace(supercomponent));
+      NSString *const componentChildrenDescription = RCComponentChildrenDescription(layout.children);
       [NSException
        raise:exception.name
        format:@"%@ raised %@ during mount: %@\n backtrace:%@ children:%@",
@@ -87,7 +87,7 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
                           layout.component.class,
                           [mountInfo->view class],
-                          CKComponentBacktraceDescription(CKComponentGenerateBacktrace(layout.component)));
+                          RCComponentBacktraceDescription(RCComponentGenerateBacktrace(layout.component)));
     mountInfo->viewContext = {context.viewManager->view, {context.position, layout.size}};
     return {.mountChildren = YES, .contextForChildren = context};
   }

@@ -14,7 +14,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMountable.h>
-#import <ComponentKit/CKComponentDescriptionHelper.h>
+#import <ComponentKit/RCComponentDescriptionHelper.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKRootTreeNode.h>
@@ -52,7 +52,7 @@ CKDuplicateComponentInfo CKFindDuplicateComponent(const CKLayout &layout)
     if (component && [previouslySeenComponent containsObject:component]) {
       return {
         .component = component,
-        .backtraceDescription = CKComponentBacktraceDescription(generateComponentBacktrace(component, componentsToParentComponents)),
+        .backtraceDescription = RCComponentBacktraceDescription(generateComponentBacktrace(component, componentsToParentComponents)),
       };
     }
     if (component) {
@@ -72,7 +72,7 @@ void CKDetectDuplicateComponent(const CKLayout &layout) {
 #if CK_ASSERTIONS_ENABLED
   auto const info = CKFindDuplicateComponent(layout);
   if (info.component) {
-    CKCFailAssertWithCategory(CKComponentCompactDescription(info.component),
+    CKCFailAssertWithCategory(RCComponentCompactDescription(info.component),
                               @"Duplicate component in the tree. Attempting to use %@ more than once in the component tree can lead to an incorrect and unexpected behavior\n"
                               @"Please make sure to create another instance of %@ if needed. \nComponent backtrace:\n%@",
                               info.component.className,
@@ -96,7 +96,7 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKL
       treeNode = c.treeNode;
       auto const registeredParentNode = rootNode.parentForNodeIdentifier(treeNode.nodeIdentifier);
       if (registeredParentNode == nil) {
-        CKCFailAssertWithCategory(CKComponentCompactDescription(c),
+        CKCFailAssertWithCategory(RCComponentCompactDescription(c),
                                   @"Missing link from node to its parent on the CKRootTreeNode; \n"
                                   @"make sure your component returns all its children on the RCIterable methods.\n"
                                   @"Component:%@\n"
@@ -104,7 +104,7 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKL
                                   c,
                                   parentNode.component);
       } else if (registeredParentNode != parentNode) {
-        CKCFailAssertWithCategory(CKComponentCompactDescription(c),
+        CKCFailAssertWithCategory(RCComponentCompactDescription(c),
                                   @"Incorrect link from node to its parent on the CKRootTreeNode; \n"
                                   @"make sure your component returns all its children on the RCIterable methods.\n"
                                   @"Component:%@\n"

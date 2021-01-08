@@ -8,4 +8,4 @@
  *
  */
 
-#import <RenderCore/CKComponentDescriptionHelper.h>
+#import <RenderCore/RCComponentDescriptionHelper.h>

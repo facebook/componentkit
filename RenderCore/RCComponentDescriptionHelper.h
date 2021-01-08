@@ -19,16 +19,16 @@
 @protocol CKMountable;
 
 /* This functions prints only the class, or in case of Stateless component, the description that will help us identify the Spec */
-NSString *CKComponentCompactDescription(id<CKMountable> component);
-NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
-NSString *CKComponentBacktraceStackDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
+NSString *RCComponentCompactDescription(id<CKMountable> component);
+NSString *RCComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
+NSString *RCComponentBacktraceStackDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
 
-NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKLayoutChild>> children) noexcept;
-NSArray<id<CKMountable>> *CKComponentGenerateBacktrace(id<CKMountable> component);
+NSString *RCComponentChildrenDescription(std::shared_ptr<const std::vector<CKLayoutChild>> children) noexcept;
+NSArray<id<CKMountable>> *RCComponentGenerateBacktrace(id<CKMountable> component);
 
 __BEGIN_DECLS
 
-extern NSString *CKComponentDescriptionWithChildren(NSString *description, NSArray *children);
+extern NSString *RCComponentDescriptionWithChildren(NSString *description, NSArray *children);
 
 __END_DECLS
 

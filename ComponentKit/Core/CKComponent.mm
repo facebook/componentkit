@@ -25,7 +25,7 @@
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKWeakObjectContainer.h>
-#import <ComponentKit/CKComponentDescriptionHelper.h>
+#import <ComponentKit/RCComponentDescriptionHelper.h>
 #import <ComponentKit/CKMountableHelpers.h>
 #import <ComponentKit/CKComponentSize_SwiftBridge+Internal.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge+Internal.h>
@@ -244,8 +244,8 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                            @"Raised %@ during mount: %@\nBacktrace: %@\nChildren: %@",
                            exception.name,
                            exception.reason,
-                           CKComponentBacktraceDescription(CKComponentGenerateBacktrace(supercomponent)),
-                           CKComponentChildrenDescription(layout.children));
+                           RCComponentBacktraceDescription(RCComponentGenerateBacktrace(supercomponent)),
+                           RCComponentChildrenDescription(layout.children));
     }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
@@ -254,7 +254,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   } else {
     CKCAssertWithCategory(_mountInfo->view == nil, self.className,
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
-                          self.className, [_mountInfo->view class], CKComponentBacktraceDescription(CKComponentGenerateBacktrace(self)));
+                          self.className, [_mountInfo->view class], RCComponentBacktraceDescription(RCComponentGenerateBacktrace(self)));
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, layout.size}};
 
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
@@ -263,7 +263,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (NSString *)backtraceStackDescription
 {
-  return CKComponentBacktraceStackDescription(CKComponentGenerateBacktrace(self));
+  return RCComponentBacktraceStackDescription(RCComponentGenerateBacktrace(self));
 }
 
 - (void)unmount

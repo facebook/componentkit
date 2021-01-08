@@ -66,7 +66,7 @@
 #import <ComponentKit/CKComponentDelegateAttribute.h>
 #import <ComponentKit/CKComponentDelegateAttribute.h>
 #import <ComponentKit/CKComponentDelegateForwarder.h>
-#import <ComponentKit/CKComponentDescriptionHelper.h>
+#import <ComponentKit/RCComponentDescriptionHelper.h>
 #import <ComponentKit/CKComponentEvents.h>
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 #import <ComponentKit/CKComponentGestureActionHelper.h>

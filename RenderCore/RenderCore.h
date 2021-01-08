@@ -19,7 +19,7 @@
 #import <RenderCore/CKCasting.h>
 #import <RenderCore/CKCollection.h>
 #import <RenderCore/RCComponentCoalescingMode.h>
-#import <RenderCore/CKComponentDescriptionHelper.h>
+#import <RenderCore/RCComponentDescriptionHelper.h>
 #import <RenderCore/CKComponentSize.h>
 #import <RenderCore/CKComponentViewAttribute.h>
 #import <RenderCore/CKComponentViewClass.h>
