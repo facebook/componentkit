@@ -8,7 +8,7 @@
 *
 */
 
-#import "CKAssociatedObject.h"
+#import "RCAssociatedObject.h"
 
 #import <objc/runtime.h>
 #import <unordered_map>
@@ -38,7 +38,7 @@ static AssociatedObjectMap *CKMainThreadAffinedAssociatedObjectMap()
   return associatedObjectMap;
 }
 
-id _Nullable CKGetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
+id _Nullable RCGetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
                                                      const void *key)
 {
   CKCAssertMainThread();
@@ -59,7 +59,7 @@ id _Nullable CKGetAssociatedObject_MainThreadAffined(__unsafe_unretained id obje
 
 static char CKObjectDeallocationObserverKey = ' ';
 
-void CKSetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
+void RCSetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
                                              const void *key,
                                              __unsafe_unretained id _Nullable value)
 {
@@ -117,7 +117,7 @@ static void removeAllAssociatedObjects(uintptr_t address)
 - (void)dealloc
 {
   CKAssert([NSThread isMainThread],
-           @"Object that has `CKAssociatedObject` must be deallocated on main thread");
+           @"Object that has `RCAssociatedObject` must be deallocated on main thread");
   removeAllAssociatedObjects(_address);
 }
 

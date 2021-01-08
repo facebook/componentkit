@@ -14,7 +14,7 @@
 #import <unordered_map>
 
 #import <RenderCore/CKAssert.h>
-#import <RenderCore/CKAssociatedObject.h>
+#import <RenderCore/RCAssociatedObject.h>
 #import <RenderCore/CKGlobalConfig.h>
 #import <RenderCore/CKMutex.h>
 #import <RenderCore/ComponentViewReuseUtilities.h>
@@ -155,7 +155,7 @@ const char kComponentViewReusePoolMapAssociatedObjectKey = ' ';
 
 void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsContext) noexcept
 {
-  CKComponentViewReusePoolMapWrapper *wrapper = CKGetAssociatedObject_MainThreadAffined(view, &kComponentViewReusePoolMapAssociatedObjectKey);
+  CKComponentViewReusePoolMapWrapper *wrapper = RCGetAssociatedObject_MainThreadAffined(view, &kComponentViewReusePoolMapAssociatedObjectKey);
   if (!wrapper) {
     return;
   }
@@ -174,10 +174,10 @@ ViewReusePoolMap::ViewReusePoolMap() {}
 
 ViewReusePoolMap &ViewReusePoolMap::viewReusePoolMapForView(UIView *v) noexcept
 {
-  CKComponentViewReusePoolMapWrapper *wrapper = CKGetAssociatedObject_MainThreadAffined(v, &kComponentViewReusePoolMapAssociatedObjectKey);
+  CKComponentViewReusePoolMapWrapper *wrapper = RCGetAssociatedObject_MainThreadAffined(v, &kComponentViewReusePoolMapAssociatedObjectKey);
   if (!wrapper) {
     wrapper = [[CKComponentViewReusePoolMapWrapper alloc] init];
-    CKSetAssociatedObject_MainThreadAffined(v, &kComponentViewReusePoolMapAssociatedObjectKey, wrapper);
+    RCSetAssociatedObject_MainThreadAffined(v, &kComponentViewReusePoolMapAssociatedObjectKey, wrapper);
   }
   return wrapper->_viewReusePoolMap;
 }
@@ -233,10 +233,10 @@ static char kPersistentAttributesViewKey = ' ';
 
 static CKComponentAttributeSetWrapper *attributeSetWrapperForView(UIView *view)
 {
-  CKComponentAttributeSetWrapper *wrapper = CKGetAssociatedObject_MainThreadAffined(view, &kPersistentAttributesViewKey);
+  CKComponentAttributeSetWrapper *wrapper = RCGetAssociatedObject_MainThreadAffined(view, &kPersistentAttributesViewKey);
   if (wrapper == nil) {
     wrapper = [[CKComponentAttributeSetWrapper alloc] init];
-    CKSetAssociatedObject_MainThreadAffined(view,
+    RCSetAssociatedObject_MainThreadAffined(view,
                                             &kPersistentAttributesViewKey,
                                             wrapper);
   }

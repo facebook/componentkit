@@ -12,7 +12,7 @@
 #import "CKComponentInternal.h"
 
 #import <ComponentKit/CKAnalyticsListener.h>
-#import <ComponentKit/CKAssociatedObject.h>
+#import <ComponentKit/RCAssociatedObject.h>
 #import <ComponentKit/CKDelayedNonNull.h>
 #import <ComponentKit/CKOptional.h>
 

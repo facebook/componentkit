@@ -14,7 +14,7 @@
 #import <RenderCore/RCComponentBasedAccessibilityMode.h>
 #import <RenderCore/RCArgumentPrecondition.h>
 #import <RenderCore/CKAssert.h>
-#import <RenderCore/CKAssociatedObject.h>
+#import <RenderCore/RCAssociatedObject.h>
 #import <RenderCore/CKAvailability.h>
 #import <RenderCore/CKCasting.h>
 #import <RenderCore/CKCollection.h>

@@ -15,11 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Equivalent to `objc_getAssociatedObject` but main thread affined.
  */
-id _Nullable CKGetAssociatedObject_MainThreadAffined(id object, const void *key);
+id _Nullable RCGetAssociatedObject_MainThreadAffined(id object, const void *key);
 
 /**
  Equivalent to `objc_setAssociatedObject` but main thread affined.
  */
-void CKSetAssociatedObject_MainThreadAffined(id object, const void *key, id _Nullable value);
+void RCSetAssociatedObject_MainThreadAffined(id object, const void *key, id _Nullable value);
 
 NS_ASSUME_NONNULL_END

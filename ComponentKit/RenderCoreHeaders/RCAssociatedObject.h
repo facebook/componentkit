@@ -8,4 +8,4 @@
  *
  */
 
-#import <RenderCore/CKAssociatedObject.h>
+#import <RenderCore/RCAssociatedObject.h>

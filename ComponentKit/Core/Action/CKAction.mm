@@ -16,7 +16,7 @@
 
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKAssociatedObject.h>
+#import <ComponentKit/RCAssociatedObject.h>
 #import <ComponentKit/CKCollection.h>
 #import <ComponentKit/CKMutex.h>
 
@@ -255,10 +255,10 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
     {
       std::string("CKComponentActionAttribute-") + action.identifier() + "-" + std::to_string(controlEvents),
       ^(UIControl *control, id value){
-        CKComponentActionList *list = CKGetAssociatedObject_MainThreadAffined(control, ck_actionListKey);
+        CKComponentActionList *list = RCGetAssociatedObject_MainThreadAffined(control, ck_actionListKey);
         if (list == nil) {
           list = [CKComponentActionList new];
-          CKSetAssociatedObject_MainThreadAffined(control, ck_actionListKey, list);
+          RCSetAssociatedObject_MainThreadAffined(control, ck_actionListKey, list);
         }
         if (list->_registeredForwarders.insert(controlEvents).second) {
           // Since this is the first time we've seen this {control, events} pair, add a Forwarder as a target.
@@ -274,7 +274,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
         list->_actions[controlEvents].push_back(action);
       },
       ^(UIControl *control, id value){
-        CKComponentActionList *const list = CKGetAssociatedObject_MainThreadAffined(control, ck_actionListKey);
+        CKComponentActionList *const list = RCGetAssociatedObject_MainThreadAffined(control, ck_actionListKey);
         CKCAssertNotNil(list, @"Unapplicator should always find an action list installed by applicator");
         auto &actionList = list->_actions[controlEvents];
         auto it = CK::find(actionList, action);
@@ -306,7 +306,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
 
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event
 {
-  CKComponentActionList *const list = CKGetAssociatedObject_MainThreadAffined(sender, ck_actionListKey);
+  CKComponentActionList *const list = RCGetAssociatedObject_MainThreadAffined(sender, ck_actionListKey);
   CKCAssertNotNil(list, @"Forwarder should always find an action list installed by applicator");
   // Protect against mutation-during-enumeration by copying the list of actions to send:
   const std::vector<CKAction<UIEvent *>> copiedActions = list->_actions[_controlEvents];
@@ -324,7 +324,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
 std::unordered_map<UIControlEvents, std::vector<CKAction<UIEvent *>>> _CKComponentDebugControlActionsForComponent(CKComponent *const component)
 {
 #if DEBUG
-  CKComponentActionList *const list = CKGetAssociatedObject_MainThreadAffined(component.viewContext.view, ck_actionListKey);
+  CKComponentActionList *const list = RCGetAssociatedObject_MainThreadAffined(component.viewContext.view, ck_actionListKey);
   if (list == nil) {
     return {};
   }

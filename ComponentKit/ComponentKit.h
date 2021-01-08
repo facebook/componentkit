@@ -25,7 +25,7 @@
 #import <ComponentKit/CKAnimationComponent+Internal.h>
 #import <ComponentKit/RCArgumentPrecondition.h>
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKAssociatedObject.h>
+#import <ComponentKit/RCAssociatedObject.h>
 #import <ComponentKit/CKAutoSizedImageComponent.h>
 #import <ComponentKit/CKAvailability.h>
 #import <ComponentKit/CKBackgroundLayoutComponent.h>

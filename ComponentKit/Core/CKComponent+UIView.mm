@@ -12,7 +12,7 @@
 
 #import <ComponentKit/CKMountedObjectForView.h>
 #import <ComponentKit/CKComponent.h>
-#import <RenderCore/CKAssociatedObject.h>
+#import <RenderCore/RCAssociatedObject.h>
 
 #if CK_ASSERTIONS_ENABLED
 static const void *kMountedComponentClassNameKey = nullptr;
@@ -22,7 +22,7 @@ static const void *kMountedComponentClassNameKey = nullptr;
 NSString *CKLastMountedComponentClassNameForView(UIView *view)
 {
 #if CK_ASSERTIONS_ENABLED
-  return CKGetAssociatedObject_MainThreadAffined(view, &kMountedComponentClassNameKey);
+  return RCGetAssociatedObject_MainThreadAffined(view, &kMountedComponentClassNameKey);
 #else
   return nil;
 #endif
@@ -41,7 +41,7 @@ void CKSetMountedComponentForView(UIView *view, CKComponent *component)
 #if CK_ASSERTIONS_ENABLED
   if (component != nil) {
     // We want to know which component was last mounted - do not clean this up.
-    CKSetAssociatedObject_MainThreadAffined(view, &kMountedComponentClassNameKey, component.className);
+    RCSetAssociatedObject_MainThreadAffined(view, &kMountedComponentClassNameKey, component.className);
   }
 #endif
 }
