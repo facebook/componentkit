@@ -61,7 +61,7 @@
 
   // Make sure the cache contains all the components that have component controller.
   for (id child in children) {
-    const CKLayout cacheLayout = layout.cachedLayoutForComponent(child);
+    const RCLayout cacheLayout = layout.cachedLayoutForComponent(child);
     XCTAssertTrue(cacheLayout.component == nil);
   }
 }
@@ -80,7 +80,7 @@
 
   // Make sure the cache contains all the components that have component controller.
   for (id child in children) {
-    const CKLayout cacheLayout = layout.cachedLayoutForComponent(child);
+    const RCLayout cacheLayout = layout.cachedLayoutForComponent(child);
     XCTAssertTrue(cacheLayout.component == child);
   }
 }

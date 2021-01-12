@@ -70,11 +70,11 @@
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
   const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, block);
-  const CKLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
+  const RCLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil);
 
   const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, block);
-  const CKLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
+  const RCLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *secondMountedComponents = CKMountComponentLayout(secondLayout, container, firstMountedComponents, nil);
 
   CKBoundsAnimationRecordingView *v = (CKBoundsAnimationRecordingView *)secondResult.component.viewContext.view;
@@ -94,7 +94,7 @@
                    .flexGrow(1)
                .build();
   });
-  const CKLayout firstLayout = [firstResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
+  const RCLayout firstLayout = [firstResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil);
 
   const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
@@ -106,7 +106,7 @@
                    .flexGrow(1)
                .build();
   });
-  const CKLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
+  const RCLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *secondMountedComponents = CKMountComponentLayout(secondLayout, container, firstMountedComponents, nil);
 
   XCTAssertEqual([container.subviews count], 2u);
@@ -144,13 +144,13 @@
   const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     return [CKBoundsAnimationComponent newWithIdentifier:@0];
   });
-  const CKLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
+  const RCLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil);
 
   const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
     return [CKBoundsAnimationComponent newWithIdentifier:@1];
   });
-  const CKLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
+  const RCLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *secondMountedComponents = CKMountComponentLayout(secondLayout, container, firstMountedComponents, nil);
 
   CKBoundsAnimationRecordingView *v = (CKBoundsAnimationRecordingView *)secondResult.component.viewContext.view;
@@ -174,7 +174,7 @@
                    .flexGrow(1)
                .build();
   });
-  const CKLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
+  const RCLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil);
 
   const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
@@ -194,7 +194,7 @@
                    .flexGrow(1)
                .build();
   });
-  const CKLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
+  const RCLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *secondMountedComponents = CKMountComponentLayout(secondLayout, container, firstMountedComponents, nil);
 
 #if CK_ASSERTIONS_ENABLED

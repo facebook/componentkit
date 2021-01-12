@@ -19,7 +19,7 @@
 /** Adopted by views that may contain mounted CKLayouts. May be used by debug tools. */
 @protocol CKInspectableView
 /** Call this only on the main thread. */
-- (CKLayout)mountedLayout;
+- (RCLayout)mountedLayout;
 
 /** Unique identifier for the component hierarchy hosted in this view */
 - (id<NSObject>)uniqueIdentifier;

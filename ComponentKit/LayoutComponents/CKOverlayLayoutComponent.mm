@@ -48,7 +48,7 @@
 /**
  First layout the contents, then fit the overlay on top of it.
  */
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -57,7 +57,7 @@
            "(component=%@, overlay=%@)", size.description(), _component, _overlay);
 
   // This variable needs to be mutable so we can move from it.
-  /* const */ CKLayout contentsLayout = [_component layoutThatFits:constrainedSize parentSize:parentSize];
+  /* const */ RCLayout contentsLayout = [_component layoutThatFits:constrainedSize parentSize:parentSize];
 
   const auto contentsLayoutSize = contentsLayout.size;
 
@@ -65,11 +65,11 @@
     self,
     contentsLayoutSize,
     _overlay
-    ? std::vector<CKLayoutChild> {
+    ? std::vector<RCLayoutChild> {
       {{0,0}, std::move(contentsLayout)},
       {{0,0}, [_overlay layoutThatFits:{contentsLayoutSize, contentsLayoutSize} parentSize:contentsLayoutSize]},
     }
-    : std::vector<CKLayoutChild> {
+    : std::vector<RCLayoutChild> {
       {{0,0}, std::move(contentsLayout)},
     }
   };

@@ -37,7 +37,7 @@ static void relinquishMountedView(std::unique_ptr<CKMountInfo> &mountInfo,
 }
 
 CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInfo,
-                                          const CKLayout &layout,
+                                          const RCLayout &layout,
                                           const CKViewConfiguration &viewConfiguration,
                                           const CK::Component::MountContext &context,
                                           const id<CKMountable> supercomponent,

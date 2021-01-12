@@ -4,7 +4,7 @@
 
 #import <numeric>
 
-#import <ComponentKit/CKLayout.h>
+#import <ComponentKit/RCLayout.h>
 
 @implementation CKZStackComponentChild
 - (instancetype)initWithComponent:(CKComponent *_Nullable)component
@@ -53,19 +53,19 @@ static auto positionForSizeAndGravity(CGSize size, CKZStackComponentGravity grav
   }
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                  restrictedToSize:(const CKComponentSize &)s
              relativeToParentSize:(CGSize)parentSize
 {
   auto const childLayouts = CK::map(_children, [&](CKZStackComponentChild *child) {
     return [child.component layoutThatFits:constrainedSize parentSize:parentSize];
   });
-  auto const childSizes = CK::map(childLayouts, [&](const CKLayout &l) { return l.size; });
+  auto const childSizes = CK::map(childLayouts, [&](const RCLayout &l) { return l.size; });
   auto const size = std::accumulate(childSizes.begin(), childSizes.end(), CGRectZero, [](const CGRect &r, const CGSize &s) {
     return CGRectUnion(r, CGRect{CGPointZero, s});
   }).size;
 
-  auto layoutChildren = CK::mapWithIndex(childLayouts, [&](const CKLayout &l, NSUInteger idx) -> CKLayoutChild {
+  auto layoutChildren = CK::mapWithIndex(childLayouts, [&](const RCLayout &l, NSUInteger idx) -> RCLayoutChild {
     return {positionForSizeAndGravity(l.size, _children[idx].gravity, size), l};
   });
 

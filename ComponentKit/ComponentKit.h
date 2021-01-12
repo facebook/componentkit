@@ -131,7 +131,7 @@
 #import <ComponentKit/RCIterable.h>
 #import <ComponentKit/CKIterableHelpers.h>
 #import <ComponentKit/CKLinkable.h>
-#import <ComponentKit/CKLayout.h>
+#import <ComponentKit/RCLayout.h>
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKMountable.h>

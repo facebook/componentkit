@@ -46,7 +46,7 @@
   return RCIterable::childAtIndex(self, index, _component);
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                  restrictedToSize:(const CKComponentSize &)size
              relativeToParentSize:(CGSize)parentSize
 {

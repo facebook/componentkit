@@ -21,7 +21,7 @@
 #import <RenderCore/ComponentMountContext.h>
 
 @protocol CKMountable;
-struct CKLayout;
+struct RCLayout;
 struct CKMountInfo;
 struct CKViewConfiguration;
 
@@ -36,7 +36,7 @@ using CKMountCallbackFunction = void(*)(id<CKMountable> mountable, UIView *view)
  from the class that conforms to CKMountable.
  */
 CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInfo,
-                                          const CKLayout &layout,
+                                          const RCLayout &layout,
                                           const CKViewConfiguration &viewConfiguration,
                                           const CK::Component::MountContext &context,
                                           const id<CKMountable> supercomponent,

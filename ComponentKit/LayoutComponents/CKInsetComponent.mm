@@ -98,7 +98,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
  Inset will compute a new constrained size for it's child after applying insets and re-positioning
  the child to respect the inset.
  */
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -131,7 +131,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
     MAX(0, parentSize.width - insetsX),
     MAX(0, parentSize.height - insetsY)
   };
-  CKLayout childLayout = [_component layoutThatFits:insetConstrainedSize parentSize:insetParentSize];
+  RCLayout childLayout = [_component layoutThatFits:insetConstrainedSize parentSize:insetParentSize];
 
   const CGSize computedSize = constrainedSize.clamp({
     finite(childLayout.size.width + insets.left + insets.right, parentSize.width),

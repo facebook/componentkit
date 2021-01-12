@@ -27,32 +27,32 @@
 @protocol CKAnalyticsListener;
 @protocol CKMountable;
 
-struct CKLayoutChild;
+struct RCLayoutChild;
 
 /** Represents the computed size of a component, as well as the computed sizes and positions of its children. */
-struct CKLayout {
+struct RCLayout {
   id<CKMountable> component;
   CGSize size;
-  std::shared_ptr<const std::vector<CKLayoutChild>> children;
+  std::shared_ptr<const std::vector<RCLayoutChild>> children;
   NSDictionary *extra;
 
-  CKLayout(id<CKMountable> c, CGSize s) noexcept;
-  CKLayout(id<CKMountable> c, CGSize s, const std::vector<CKLayoutChild> &ch, NSDictionary *e = nil) noexcept;
-  CKLayout(id<CKMountable> c, CGSize s, std::vector<CKLayoutChild> &&ch, NSDictionary *e = nil) noexcept;
+  RCLayout(id<CKMountable> c, CGSize s) noexcept;
+  RCLayout(id<CKMountable> c, CGSize s, const std::vector<RCLayoutChild> &ch, NSDictionary *e = nil) noexcept;
+  RCLayout(id<CKMountable> c, CGSize s, std::vector<RCLayoutChild> &&ch, NSDictionary *e = nil) noexcept;
 
-  CKLayout() noexcept;
+  RCLayout() noexcept;
 
-  void enumerateLayouts(const std::function<void(const CKLayout &)> &f) const;
+  void enumerateLayouts(const std::function<void(const RCLayout &)> &f) const;
   std::string description(int indent = 0) const;
 
 private:
-  static std::shared_ptr<const std::vector<CKLayoutChild>> emptyChildren() noexcept;
+  static std::shared_ptr<const std::vector<RCLayoutChild>> emptyChildren() noexcept;
 };
-using CKComponentLayout = CKLayout; // TODO remove after new version is released on Github.
+using CKComponentLayout = RCLayout; // TODO remove after new version is released on Github.
 
-struct CKLayoutChild {
+struct RCLayoutChild {
   CGPoint position;
-  CKLayout layout;
+  RCLayout layout;
 };
 
 @protocol CKMountLayoutListener <NSObject>
@@ -76,7 +76,7 @@ struct CKLayoutChild {
  @param mountAnalyticsContext If non-null, the counters in this context will be incremented during mount.
  @param listener Object collecting all mount layout events. Can be nil.
  */
-NSSet<id<CKMountable>> *CKMountLayout(const CKLayout &layout,
+NSSet<id<CKMountable>> *CKMountLayout(const RCLayout &layout,
                                       UIView *view,
                                       NSSet<id<CKMountable>> *previouslyMountedComponents,
                                       id<CKMountable> supercomponent,

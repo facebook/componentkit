@@ -36,7 +36,7 @@
 #import <RenderCore/CKGlobalConfig.h>
 #import <RenderCore/CKInternalHelpers.h>
 #import <RenderCore/RCIterable.h>
-#import <RenderCore/CKLayout.h>
+#import <RenderCore/RCLayout.h>
 #import <RenderCore/CKMacros.h>
 #import <RenderCore/CKMountable.h>
 #import <RenderCore/CKMountableHelpers.h>

@@ -80,7 +80,7 @@
   return c;
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -88,7 +88,7 @@
            @"CKCompositeComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _child);
 
-  CKLayout l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
+  RCLayout l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
   const auto lSize = l.size;
   return {self, lSize, {{{0,0}, std::move(l)}}};
 }

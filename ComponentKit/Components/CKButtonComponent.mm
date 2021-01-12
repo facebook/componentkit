@@ -181,7 +181,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   return self;
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   return {self, constrainedSize.clamp(_intrinsicSize)};
 }

@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <RenderCore/CKLayout.h>
+#import <RenderCore/RCLayout.h>
 
 @protocol CKMountable;
 
@@ -23,7 +23,7 @@ NSString *RCComponentCompactDescription(id<CKMountable> component);
 NSString *RCComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
 NSString *RCComponentBacktraceStackDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
 
-NSString *RCComponentChildrenDescription(std::shared_ptr<const std::vector<CKLayoutChild>> children) noexcept;
+NSString *RCComponentChildrenDescription(std::shared_ptr<const std::vector<RCLayoutChild>> children) noexcept;
 NSArray<id<CKMountable>> *RCComponentGenerateBacktrace(id<CKMountable> component);
 
 __BEGIN_DECLS

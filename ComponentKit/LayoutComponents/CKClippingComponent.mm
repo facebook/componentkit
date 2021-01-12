@@ -51,7 +51,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   return RCIterable::childAtIndex(self, index, _component);
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -76,7 +76,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
     self,
     // This component will always have the "normal" size as if the child *was* always constrained.
     resolvedRange.clamp(childLayout.size),
-    std::vector<CKLayoutChild> {
+    std::vector<RCLayoutChild> {
       {CGPointZero, finalLayout}
     }
   };

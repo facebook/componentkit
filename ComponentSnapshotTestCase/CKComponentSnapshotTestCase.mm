@@ -53,7 +53,7 @@ static CKComponent *_leakyComponent;
                         identifier:(NSString *)identifier
                              error:(NSError **)errorPtr
 {
-  const CKLayout componentLayout = [component layoutThatFits:sizeRange parentSize:sizeRange.max];
+  const RCLayout componentLayout = [component layoutThatFits:sizeRange parentSize:sizeRange.max];
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:(CKComponentLifecycleTestHelperState){

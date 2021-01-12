@@ -45,12 +45,12 @@
  used to specify that subcomponents should be mounted inside the view.
  */
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                      layout:(const CKLayout &)layout
+                                      layout:(const RCLayout &)layout
                               supercomponent:(CKComponent *)supercomponent NS_REQUIRES_SUPER;
 
 /**
  This method can be used to override what accessible elements are provided by the component. Very similar to UIKit accessibilityElements.
- 
+
  Override this if your component wants needs to return a custom set of accessible children, but this should be very rare!
  */
 - (NSArray<NSObject *> *)accessibilityChildren;

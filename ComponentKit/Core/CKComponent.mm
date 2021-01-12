@@ -200,7 +200,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 #pragma mark - Mounting and Unmounting
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                      layout:(const CKLayout &)layout
+                                      layout:(const RCLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
   CKCAssertWithCategory([NSThread isMainThread], self.className, @"This method must be called on the main thread");
@@ -330,7 +330,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 #if CK_ASSERTIONS_ENABLED
 
-- (void)_validate_layoutThatFits:(const CKSizeRange &)constrainedSize layout:(const CKLayout &)layout parentSize:(const CGSize &)parentSize
+- (void)_validate_layoutThatFits:(const CKSizeRange &)constrainedSize layout:(const RCLayout &)layout parentSize:(const CGSize &)parentSize
 {
   // If this component has children in its layout, this means that it's not a real leaf component.
   // As a result, the infrastructure won't call `buildComponentTree:` on the component's children and can affect the render process.
@@ -364,7 +364,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 #endif
 
-- (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
+- (RCLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
 {
 #if CK_ASSERTIONS_ENABLED
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
@@ -375,7 +375,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   auto const systraceListener = context.systraceListener;
   [systraceListener willLayoutComponent:self];
 
-  CKLayout layout = [self computeLayoutThatFits:constrainedSize
+  RCLayout layout = [self computeLayoutThatFits:constrainedSize
                                         restrictedToSize:_size
                                     relativeToParentSize:parentSize];
 
@@ -388,7 +388,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return layout;
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -397,7 +397,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return [self computeLayoutThatFits:resolvedRange];
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   return {self, constrainedSize.min};
 }

@@ -13,7 +13,7 @@
 #if CK_NOT_SWIFT
 
 #import <ComponentKit/CKBuildTrigger.h>
-#import <ComponentKit/CKLayout.h>
+#import <ComponentKit/RCLayout.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 
@@ -31,7 +31,7 @@
         component responder chain can be connected correctly.
  @param analyticsListener analytics listener used to log mount time.
  */
-NSSet<id<CKMountable>> *CKMountComponentLayout(const CKLayout &layout,
+NSSet<id<CKMountable>> *CKMountComponentLayout(const RCLayout &layout,
                                                UIView *view,
                                                NSSet<id<CKMountable>> *previouslyMountedComponents,
                                                id<CKMountable> supercomponent,
@@ -39,23 +39,23 @@ NSSet<id<CKMountable>> *CKMountComponentLayout(const CKLayout &layout,
 
 struct CKComponentRootLayout { // This is pending renaming
   /** Layout cache for components that have controller. */
-  using ComponentLayoutCache = std::unordered_map<id<CKMountable>, CKLayout, CK::hash<id<CKMountable>>, CK::is_equal<id<CKMountable>>>;
+  using ComponentLayoutCache = std::unordered_map<id<CKMountable>, RCLayout, CK::hash<id<CKMountable>>, CK::is_equal<id<CKMountable>>>;
   using ComponentsByPredicateMap = std::unordered_map<CKMountablePredicate, std::vector<id<CKMountable>>>;
 
   CKComponentRootLayout() {}
-  explicit CKComponentRootLayout(CKLayout layout)
+  explicit CKComponentRootLayout(RCLayout layout)
   : CKComponentRootLayout(layout, {}, {}) {}
-  explicit CKComponentRootLayout(CKLayout layout, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
+  explicit CKComponentRootLayout(RCLayout layout, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
   : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)), _componentsByPredicate(std::move(componentsByPredicate)) {}
 
   /**
-   This method returns a CKLayout from the cache for the component if it has a controller.
+   This method returns a RCLayout from the cache for the component if it has a controller.
    @param component The component to look for the layout with.
    */
   auto cachedLayoutForComponent(id<CKMountable> component) const
   {
     const auto it = _layoutCache.find(component);
-    return it != _layoutCache.end() ? it->second : CKLayout {};
+    return it != _layoutCache.end() ? it->second : RCLayout {};
   }
 
   auto componentsMatchingPredicate(const CKMountablePredicate p) const
@@ -64,14 +64,14 @@ struct CKComponentRootLayout { // This is pending renaming
     return it != _componentsByPredicate.end() ? it->second : std::vector<id<CKMountable>> {};
   }
 
-  void enumerateCachedLayout(void(^block)(const CKLayout &layout)) const;
+  void enumerateCachedLayout(void(^block)(const RCLayout &layout)) const;
 
   const auto &layout() const { return _layout; }
   auto component() const { return _layout.component; }
   auto size() const { return _layout.size; }
 
 private:
-  CKLayout _layout;
+  RCLayout _layout;
   ComponentLayoutCache _layoutCache;
   ComponentsByPredicateMap _componentsByPredicate;
 };
@@ -96,7 +96,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
  @param sizeRange The size range to compute the component layout within.
  @param parentSize The parent size of the component to compute the layout for.
  */
-CKLayout CKComputeComponentLayout(id<CKMountable> component,
+RCLayout CKComputeComponentLayout(id<CKMountable> component,
                                            const CKSizeRange &sizeRange,
                                            const CGSize parentSize);
 

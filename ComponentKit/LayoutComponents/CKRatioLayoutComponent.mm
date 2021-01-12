@@ -60,7 +60,7 @@
   return [[self alloc] initWithRatio:ratio size:size component:component];
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   std::vector<CGSize> sizeOptions;
   if (!isinf(constrainedSize.max.width)) {
@@ -86,7 +86,7 @@
   ? constrainedSize : constrainedSize.intersect(CKSizeRange(*bestSize, *bestSize));
   CKAssertSizeRange(childRange);
   const CGSize parentSize = (bestSize == sizeOptions.end()) ? kCKComponentParentSizeUndefined : *bestSize;
-  const CKLayout childLayout = CKComputeComponentLayout(_component, childRange, parentSize);
+  const RCLayout childLayout = CKComputeComponentLayout(_component, childRange, parentSize);
   return {self, childLayout.size, {{{0,0}, childLayout}}};
 }
 

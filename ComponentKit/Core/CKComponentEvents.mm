@@ -71,7 +71,7 @@ void CKComponentSendDidPrepareLayoutForComponent(id<CKComponentScopeEnumeratorPr
   [scopeEnumeratorProvider enumerateComponentsMatchingPredicate:&CKComponentDidPrepareLayoutForComponentToControllerPredicate
                                                           block:^(id<CKComponentProtocol> c) {
     CKComponent *component = (CKComponent *)c;
-    const CKLayout componentLayout = layout.cachedLayoutForComponent(component);
+    const RCLayout componentLayout = layout.cachedLayoutForComponent(component);
     [component.controller didPrepareLayout:componentLayout forComponent:component];
   }];
 }
@@ -90,7 +90,7 @@ void CKComponentUpdateComponentForComponentControllerWithIndexPaths(id<NSFastEnu
 {
   for (NSIndexPath *indexPath in indexPaths) {
     CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
-    item.rootLayout.enumerateCachedLayout(^(const CKLayout &layout) {
+    item.rootLayout.enumerateCachedLayout(^(const RCLayout &layout) {
       const auto component = (CKComponent *)layout.component;
       component.controller.latestComponent = component;
     });

@@ -20,7 +20,7 @@
 
 #import <pthread.h>
 
-NSSet<id<CKMountable>> *CKMountComponentLayout(const CKLayout &layout,
+NSSet<id<CKMountable>> *CKMountComponentLayout(const RCLayout &layout,
                                                UIView *view,
                                                NSSet<id<CKMountable>> *previouslyMountedComponents,
                                                id<CKMountable> supercomponent,
@@ -49,7 +49,7 @@ NSSet<id<CKMountable>> *CKMountComponentLayout(const CKLayout &layout,
   return mountedComponents;
 }
 
-static auto buildComponentsByPredicateMap(const CKLayout &layout,
+static auto buildComponentsByPredicateMap(const RCLayout &layout,
                                           const std::unordered_set<CKMountablePredicate> &predicates)
 {
   auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
@@ -76,7 +76,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   CK::Component::LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
 
-  CKLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
+  RCLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
   layout.enumerateLayouts([&](const auto &l){
     if ([l.component isKindOfClass:[CKComponent class]] && ((CKComponent *)l.component).controller) {
@@ -96,14 +96,14 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
   return rootLayout;
 }
 
-CKLayout CKComputeComponentLayout(id<CKMountable> component,
+RCLayout CKComputeComponentLayout(id<CKMountable> component,
                                            const CKSizeRange &sizeRange,
                                            const CGSize parentSize)
 {
-  return component ? [component layoutThatFits:sizeRange parentSize:parentSize] : (CKLayout){};
+  return component ? [component layoutThatFits:sizeRange parentSize:parentSize] : (RCLayout){};
 }
 
-void CKLayout::enumerateLayouts(const std::function<void(const CKLayout &)> &f) const
+void RCLayout::enumerateLayouts(const std::function<void(const RCLayout &)> &f) const
 {
   f(*this);
 
@@ -113,7 +113,7 @@ void CKLayout::enumerateLayouts(const std::function<void(const CKLayout &)> &f) 
   }
 }
 
-void CKComponentRootLayout::enumerateCachedLayout(void(^ _Nonnull block)(const CKLayout &layout)) const
+void CKComponentRootLayout::enumerateCachedLayout(void(^ _Nonnull block)(const RCLayout &layout)) const
 {
   for (const auto &it : _layoutCache) {
     block(it.second);

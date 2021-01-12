@@ -51,7 +51,7 @@ auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) 
   return [super newWithView:view size:size];
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -180,7 +180,7 @@ auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) 
   _calledInvalidateController = YES;
 }
 
-- (void)didPrepareLayout:(const CKLayout &)layout forComponent:(CKComponent *)component
+- (void)didPrepareLayout:(const RCLayout &)layout forComponent:(CKComponent *)component
 {
   CKAssertMainThread();
   _calledDidPrepareLayoutForComponent = YES;

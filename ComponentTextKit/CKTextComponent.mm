@@ -87,7 +87,7 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
   return c;
 }
 
-- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   const CKTextKitRenderer *renderer = rendererForAttributes(_attributes, constrainedSize.max);
   return {
@@ -101,7 +101,7 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
 }
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                        layout:(const CKLayout &)layout
+                                        layout:(const RCLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
   CK::Component::MountResult result = [super mountInContext:context
