@@ -18,7 +18,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKAction.h>
-#import <ComponentKit/CKContainerWrapper.h>
+#import <ComponentKit/RCContainerWrapper.h>
 
 template <typename V>
 class CKButtonComponentStateMap {

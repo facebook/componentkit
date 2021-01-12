@@ -16,7 +16,7 @@
  *   invoked with an initializer list: `foo({1,2,3})`,
  *   code is generated to construct and destroy a vector from that initializer
  *   list, usually inlined into the body of the function.
- * For a function of the form: `foo(CKContainerWrapper<std::vector<int>> &&)`,
+ * For a function of the form: `foo(RCContainerWrapper<std::vector<int>> &&)`,
  *   invoked with an initializer list: `foo({1,2,3})`,
  *   the vector constructor and destructor are not inlined. This lack of
  *   inlining helps reduce the size of the compiled output.
@@ -27,15 +27,15 @@
  *   rvalue-reference overload at the cost of an additional move operation.
  */
 template<class Container>
-class CKContainerWrapper {
+class RCContainerWrapper {
 public:
-  CKContainerWrapper() {}
-  CKContainerWrapper(std::initializer_list<typename Container::value_type> items) : _container(items) {}
-  CKContainerWrapper(Container &&container) : _container(std::move(container)) {}
-  CKContainerWrapper(const Container &container) : _container(container) {}
-  CKContainerWrapper(const CKContainerWrapper<Container> &) = delete;
-  CKContainerWrapper(CKContainerWrapper<Container> &&) = default;
-  ~CKContainerWrapper() = default;
+  RCContainerWrapper() {}
+  RCContainerWrapper(std::initializer_list<typename Container::value_type> items) : _container(items) {}
+  RCContainerWrapper(Container &&container) : _container(std::move(container)) {}
+  RCContainerWrapper(const Container &container) : _container(container) {}
+  RCContainerWrapper(const RCContainerWrapper<Container> &) = delete;
+  RCContainerWrapper(RCContainerWrapper<Container> &&) = default;
+  ~RCContainerWrapper() = default;
 
   Container take() { return std::move(_container); }
 

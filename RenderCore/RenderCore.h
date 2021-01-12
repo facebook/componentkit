@@ -23,7 +23,7 @@
 #import <RenderCore/CKComponentSize.h>
 #import <RenderCore/CKComponentViewAttribute.h>
 #import <RenderCore/CKComponentViewClass.h>
-#import <RenderCore/CKContainerWrapper.h>
+#import <RenderCore/RCContainerWrapper.h>
 #import <RenderCore/CKDefines.h>
 #import <RenderCore/CKDelayedInitialisationWrapper.h>
 #import <RenderCore/CKDelayedNonNull.h>

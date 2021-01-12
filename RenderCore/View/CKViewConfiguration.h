@@ -21,7 +21,7 @@
 #import <RenderCore/CKAccessibilityContext.h>
 #import <RenderCore/CKComponentViewAttribute.h>
 #import <RenderCore/CKComponentViewClass.h>
-#import <RenderCore/CKContainerWrapper.h>
+#import <RenderCore/RCContainerWrapper.h>
 
 typedef void (^CKComponentViewReuseBlock)(UIView *);
 
@@ -41,10 +41,10 @@ struct CKViewConfiguration {
   // Prefer overloaded constructors to default arguments to prevent code bloat; with default arguments
   // the compiler must insert initialization of each default value inline at the callsite.
   CKViewConfiguration(CKComponentViewClass &&cls,
-                      CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs) noexcept;
+                      RCContainerWrapper<CKViewComponentAttributeValueMap> &&attrs) noexcept;
 
   CKViewConfiguration(CKComponentViewClass &&cls,
-                      CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
+                      RCContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
                       CKAccessibilityContext &&accessibilityCtx,
                       bool blockImplicitAnimations = false) noexcept;
 

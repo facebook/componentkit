@@ -710,7 +710,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
 
   @param c component to add.
   */
-  auto &children(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&c)
+  auto &children(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&c)
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _children.push_back(_currentChild);

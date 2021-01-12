@@ -100,7 +100,7 @@
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge+Internal.h>
 #import <ComponentKit/CKCompositeComponent.h>
-#import <ComponentKit/CKContainerWrapper.h>
+#import <ComponentKit/RCContainerWrapper.h>
 #import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
 #import <ComponentKit/CKDataSourceChangeset.h>

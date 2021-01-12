@@ -26,7 +26,7 @@
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
-                   children:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
+                   children:(RCContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
   CKStaticLayoutComponent *c = [super newWithView:view size:size];
   if (c) {
@@ -35,7 +35,7 @@
   return c;
 }
 
-+ (instancetype)newWithChildren:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
++ (instancetype)newWithChildren:(RCContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
   return [self newWithView:{} size:{} children:std::move(children)];
 }

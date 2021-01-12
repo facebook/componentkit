@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKContainerWrapper.h>
+#import <ComponentKit/RCContainerWrapper.h>
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
@@ -52,12 +52,12 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  */
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
-                   children:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children;
+                   children:(RCContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children;
 
 /**
  Convenience that does not have a view or size.
  */
-+ (instancetype)newWithChildren:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children;
++ (instancetype)newWithChildren:(RCContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children;
 
 @end
 

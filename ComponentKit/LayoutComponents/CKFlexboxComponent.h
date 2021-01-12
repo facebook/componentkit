@@ -16,7 +16,7 @@
 
 #endif
 
-#import <ComponentKit/CKContainerWrapper.h>
+#import <ComponentKit/RCContainerWrapper.h>
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKOptional.h>
@@ -418,12 +418,12 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
-                   children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
+                   children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
                         size:(const CKComponentSize &)size
                        style:(const CKFlexboxComponentStyle &)style
-                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children NS_DESIGNATED_INITIALIZER;
+                    children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children NS_DESIGNATED_INITIALIZER;
 
 #else
 

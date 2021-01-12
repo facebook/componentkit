@@ -190,7 +190,7 @@ template class std::vector<CKFlexboxComponentChild>;
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
                         size:(const CKComponentSize &)size
                        style:(const CKFlexboxComponentStyle &)style
-                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+                    children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
   CKComponentPerfScope perfScope(self.class);
   if (self = [super initWithView:view size:size]) {
@@ -225,7 +225,7 @@ template class std::vector<CKFlexboxComponentChild>;
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
-                   children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+                   children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
   return [[self alloc] initWithView:view size:size style:style children:std::move(children)];
 }
