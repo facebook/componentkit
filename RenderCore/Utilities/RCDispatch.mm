@@ -8,9 +8,9 @@
  *
  */
 
-#import "CKDispatch.h"
+#import "RCDispatch.h"
 
-void CKDispatchMainDefaultMode(dispatch_block_t block) noexcept
+void RCDispatchMainDefaultMode(dispatch_block_t block) noexcept
 {
   CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopDefaultMode, block);
 }

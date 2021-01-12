@@ -29,7 +29,7 @@
 #import <RenderCore/CKDelayedNonNull.h>
 #import <RenderCore/CKDictionary.h>
 #import <RenderCore/CKDimension.h>
-#import <RenderCore/CKDispatch.h>
+#import <RenderCore/RCDispatch.h>
 #import <RenderCore/CKEqualityHelpers.h>
 #import <RenderCore/CKFunctionalHelpers.h>
 #import <RenderCore/CKGeometryHelpers.h>

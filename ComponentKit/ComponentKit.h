@@ -117,7 +117,7 @@
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKDimension_SwiftBridge.h>
 #import <ComponentKit/CKDimension_SwiftBridge+Internal.h>
-#import <ComponentKit/CKDispatch.h>
+#import <ComponentKit/RCDispatch.h>
 #import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKFatal.h>
 #import <ComponentKit/CKFlexboxComponent.h>
