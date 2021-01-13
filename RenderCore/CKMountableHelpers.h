@@ -26,6 +26,8 @@ struct CKMountInfo;
 struct CKViewConfiguration;
 
 using CKMountCallbackFunction = void(*)(id<CKMountable> mountable, UIView *view);
+using CKMountAnimationBlockCallbackFunction = BOOL(*)(id<CKMountable> oldComponent, id<CKMountable> newComponent, const CK::Component::MountContext &ctx, const CKViewConfiguration &viewConfig);
+using CKMountAnimationUnblockCallbackFunction = void(*)();
 
 /**
  The CKMountable protocol requires implementing the mounting method
@@ -41,7 +43,9 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
                                           const CK::Component::MountContext &context,
                                           const id<CKMountable> supercomponent,
                                           const CKMountCallbackFunction didAcquireViewFunction,
-                                          const CKMountCallbackFunction willRelinquishViewFunction);
+                                          const CKMountCallbackFunction willRelinquishViewFunction,
+                                          const CKMountAnimationBlockCallbackFunction blockAnimationIfNeededFunction,
+                                          const CKMountAnimationUnblockCallbackFunction unblockAnimationFunction);
 
 /**
  Similar to CKPerformMount: a standard implementation of unmounting that can

@@ -11,42 +11,32 @@
 #import <QuartzCore/QuartzCore.h>
 
 /** Used by CKComponent internally to block animations when configuring a new or recycled view */
+
 class CKMountAnimationGuard {
 public:
-  CKMountAnimationGuard(CKComponent *oldComponent, CKComponent *newComponent, const CK::Component::MountContext &ctx, const CKComponentViewConfiguration &viewConfig)
-  : didBlockAnimations(blockAnimationsIfNeeded(oldComponent, newComponent, ctx, viewConfig)) {}
-
-  ~CKMountAnimationGuard()
-  {
-    if (didBlockAnimations) {
-      [CATransaction setDisableActions:NO];
-    }
-  }
-
-  const BOOL didBlockAnimations;
-
-private:
-  CKMountAnimationGuard(const CKMountAnimationGuard&) = delete;
-  CKMountAnimationGuard &operator=(const CKMountAnimationGuard&) = delete;
-
-  static BOOL blockAnimationsIfNeeded(CKComponent *oldComponent, CKComponent *newComponent,
+  static BOOL blockAnimationsIfNeeded(id<CKMountable> oldComponent, id<CKMountable> newComponent,
                                       const CK::Component::MountContext &ctx,
                                       const CKComponentViewConfiguration &viewConfig) noexcept
   {
-    if ([CATransaction disableActions]) {
-      return NO; // Already blocked
-    }
     if (shouldBlockAnimations(oldComponent, newComponent, ctx, viewConfig)) {
       [CATransaction setDisableActions:YES];
       return YES;
     }
     return NO;
   }
-
-  static BOOL shouldBlockAnimations(CKComponent *oldComponent, CKComponent *newComponent,
+  
+  static void unblockAnimation() {
+    [CATransaction setDisableActions:NO];
+  }
+  
+private:
+  static BOOL shouldBlockAnimations(id<CKMountable> oldComponent, id<CKMountable> newComponent,
                                     const CK::Component::MountContext &ctx,
                                     const CKComponentViewConfiguration &viewConfig) noexcept
   {
+    if ([CATransaction disableActions]) {
+      return NO; // Already blocked
+    }
     // If the context explicitly tells us to block animations, do it.
     if (ctx.shouldBlockAnimations) {
       return YES;

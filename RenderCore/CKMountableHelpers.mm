@@ -42,7 +42,9 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
                                           const CK::Component::MountContext &context,
                                           const id<CKMountable> supercomponent,
                                           const CKMountCallbackFunction didAcquireViewFunction,
-                                          const CKMountCallbackFunction willRelinquishViewFunction)
+                                          const CKMountCallbackFunction willRelinquishViewFunction,
+                                          const CKMountAnimationBlockCallbackFunction blockAnimationIfNeededFunction,
+                                          const CKMountAnimationUnblockCallbackFunction unblockAnimationFunction)
 {
   CKCAssertMainThread();
 
@@ -54,6 +56,10 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
   UIView *v = context.viewManager->viewForConfiguration(layout.component.class, viewConfiguration);
   if (v) {
     auto const currentMountedComponent = (id<CKMountable>)CKMountedObjectForView(v);
+    BOOL didBlockAnimation = NO;
+    if (blockAnimationIfNeededFunction) {
+      didBlockAnimation = blockAnimationIfNeededFunction(currentMountedComponent, layout.component, context, viewConfiguration);
+    }
     if (mountInfo->view != v) {
       relinquishMountedView(mountInfo, layout.component, willRelinquishViewFunction); // First release our old view
       [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
@@ -81,7 +87,12 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
     }
 
     mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
-    return {.mountChildren = YES, .contextForChildren = context.childContextForSubview(v, NO)};
+
+    if (didBlockAnimation && unblockAnimationFunction) {
+      unblockAnimationFunction();
+    }
+
+    return {.mountChildren = YES, .contextForChildren = context.childContextForSubview(v, didBlockAnimation)};
   } else {
     CKCAssertWithCategory(mountInfo->view == nil, layout.component.class,
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",

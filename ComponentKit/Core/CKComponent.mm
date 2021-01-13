@@ -211,54 +211,27 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
     ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration)
     : _viewConfiguration;
 
-  if (_mountInfo == nullptr) {
-    _mountInfo.reset(new CKMountInfo());
-  }
-  _mountInfo->supercomponent = supercomponent;
-
   CKComponentController *controller = _treeNode.scopeHandle.controller;
   [controller componentWillMount:self];
 
   const CK::Component::MountContext &effectiveContext = [CKComponentDebugController debugMode]
   ? CKDebugMountContext([self class], context, _viewConfiguration, layout.size) : context;
 
-  UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
-  if (v) {
-    CKComponent *currentMountedComponent = CKMountedComponentForView(v);
-    CKMountAnimationGuard g(currentMountedComponent, self, context, _viewConfiguration);
-    if (_mountInfo->view != v) {
-      [self _relinquishMountedView];     // First release our old view
-      [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
-      CKSetMountedComponentForView(v, self);
-      CK::Component::AttributeApplicator::apply(v, viewConfiguration);
-      [controller component:self didAcquireView:v];
-      _mountInfo->view = v;
-    } else {
-      CKAssert(currentMountedComponent == self, @"");
-    }
+  return CKPerformMount(_mountInfo, layout, viewConfiguration, effectiveContext, supercomponent, &didAcquireView, &willRelinquishView, &blockAnimationIfNeeded, &unblockAnimation);
+}
 
-    @try {
-      CKSetViewPositionAndBounds(v, context, layout.size);
-    } @catch (NSException *exception) {
-      CKCFatalWithCategory(self.className,
-                           @"Raised %@ during mount: %@\nBacktrace: %@\nChildren: %@",
-                           exception.name,
-                           exception.reason,
-                           RCComponentBacktraceDescription(RCComponentGenerateBacktrace(supercomponent)),
-                           RCComponentChildrenDescription(layout.children));
-    }
+__attribute__((objc_externally_retained)) // parameters are retained by the caller
+static void didAcquireView(id<CKMountable> mountable, UIView *view)
+{
+  CKComponent *component = (CKComponent *)mountable;
+  CKComponentController *controller = component.treeNode.scopeHandle.controller;
+  [controller component:component didAcquireView:view];
+}
 
-    _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
-
-    return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
-  } else {
-    CKCAssertWithCategory(_mountInfo->view == nil, self.className,
-                          @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
-                          self.className, [_mountInfo->view class], RCComponentBacktraceDescription(RCComponentGenerateBacktrace(self)));
-    _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, layout.size}};
-
-    return {.mountChildren = YES, .contextForChildren = effectiveContext};
-  }
+__attribute__((objc_externally_retained)) // parameters are retained by the caller
+static void willRelinquishView(id<CKMountable> mountable, UIView *view)
+{
+  [(CKComponent *)mountable _relinquishMountedView];
 }
 
 - (NSString *)backtraceStackDescription
@@ -324,6 +297,18 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 {
   CKAssertMainThread();
   return _mountInfo ? _mountInfo->view : nil;
+}
+
+__attribute__((objc_externally_retained)) // parameters are retained by the caller
+static BOOL blockAnimationIfNeeded(id<CKMountable> oldComponent, id<CKMountable> newComponent, const CK::Component::MountContext &ctx, const CKViewConfiguration &viewConfig)
+{
+  return CKMountAnimationGuard::blockAnimationsIfNeeded(oldComponent, newComponent, ctx, viewConfig);
+}
+
+__attribute__((objc_externally_retained)) // parameters are retained by the caller
+static void unblockAnimation()
+{
+  CKMountAnimationGuard::unblockAnimation();
 }
 
 #pragma mark - Layout
