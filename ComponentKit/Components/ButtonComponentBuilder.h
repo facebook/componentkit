@@ -648,7 +648,7 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
    @note  Calling this method on a builder that already has a complete set of options specified using \c options() will
    trigger a compilation error.
    */
-  auto &accessibilityContext(CKAccessibilityContext c)
+  auto &accessibilityContext(RCAccessibilityContext c)
   {
     constexpr auto accessibilityContextOverridesExistingOptions =
       PropBitmap::isSet(PropsBitmap, ButtonComponentPropId::options);

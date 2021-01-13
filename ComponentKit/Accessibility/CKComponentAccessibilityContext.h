@@ -15,14 +15,14 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAction.h>
-#import <RenderCore/CKAccessibilityContext.h>
+#import <RenderCore/RCAccessibilityContext.h>
 
 /**
  Sometimes you may wish to trigger the CKAction for a component externally
  as part of implementing a UIAccessibilityCustomAction for VoiceOver.
  ComponentKit itself never does this, but components may expose their action
  for such external use by storing an entry in the extra dictionary
- of CKAccessibilityContext under this key.
+ of RCAccessibilityContext under this key.
 
  The corresponding value should be an Objective-C block that returns a
  CKAction<>. You can safely generate this using the
@@ -31,7 +31,7 @@
  For example:
 
  ```
- CKAccessibilityContext {
+ RCAccessibilityContext {
    .extra = @{
      CKAccessibilityExtraActionKey: CKAccessibilityExtraActionValue(action)
    }
@@ -56,7 +56,7 @@ id CKAccessibilityExtraActionValue(CKAction<> action);
  */
 CKAction<> CKAccessibilityActionFromExtraValue(id extraValue);
 
-/** An obsolete name for CKAccessibilityContext. Should be removed. */
-using CKComponentAccessibilityContext = CKAccessibilityContext;
+/** An obsolete name for RCAccessibilityContext. Should be removed. */
+using CKComponentAccessibilityContext = RCAccessibilityContext;
 
 #endif

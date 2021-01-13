@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <RenderCore/CKAccessibilityContext.h>
+#import <RenderCore/RCAccessibilityContext.h>
 #import <RenderCore/RCComponentBasedAccessibilityMode.h>
 #import <RenderCore/RCArgumentPrecondition.h>
 #import <RenderCore/CKAssert.h>

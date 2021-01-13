@@ -147,7 +147,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     CKComponentActionAttribute(action, UIControlEventTouchUpInside),
   });
 
-  CKAccessibilityContext accessibilityContext(options.accessibilityContext);
+  RCAccessibilityContext accessibilityContext(options.accessibilityContext);
   if (!accessibilityContext.extra[CKAccessibilityExtraActionKey]) {
     NSMutableDictionary *extra = [accessibilityContext.extra mutableCopy] ?: [NSMutableDictionary new];
     extra[CKAccessibilityExtraActionKey] = CKAccessibilityExtraActionValue(CKAction<>::demotedFrom(action, static_cast<UIEvent*>(nil)));

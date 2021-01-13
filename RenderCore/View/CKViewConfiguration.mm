@@ -26,7 +26,7 @@ CKViewConfiguration(std::move(cls), std::move(attrs), {}) {}
 
 CKViewConfiguration::CKViewConfiguration(CKComponentViewClass &&cls,
                   RCContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
-                  CKAccessibilityContext &&accessibilityCtx,
+                  RCAccessibilityContext &&accessibilityCtx,
                   bool blockImplicitAnimations) noexcept
 {
   // Need to use attrs before we move it below.
@@ -71,7 +71,7 @@ std::shared_ptr<const CKViewComponentAttributeValueMap> CKViewConfiguration::att
   return rep->attributes;
 }
 
-const CKAccessibilityContext &CKViewConfiguration::accessibilityContext() const noexcept
+const RCAccessibilityContext &CKViewConfiguration::accessibilityContext() const noexcept
 {
   return rep->accessibilityContext;
 }

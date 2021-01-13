@@ -18,7 +18,7 @@
 #import <UIKit/UIKit.h>
 
 #import <RenderCore/ComponentViewReuseUtilities.h>
-#import <RenderCore/CKAccessibilityContext.h>
+#import <RenderCore/RCAccessibilityContext.h>
 #import <RenderCore/CKComponentViewAttribute.h>
 #import <RenderCore/CKComponentViewClass.h>
 #import <RenderCore/RCContainerWrapper.h>
@@ -45,7 +45,7 @@ struct CKViewConfiguration {
 
   CKViewConfiguration(CKComponentViewClass &&cls,
                       RCContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
-                      CKAccessibilityContext &&accessibilityCtx,
+                      RCAccessibilityContext &&accessibilityCtx,
                       bool blockImplicitAnimations = false) noexcept;
 
   ~CKViewConfiguration();
@@ -54,7 +54,7 @@ struct CKViewConfiguration {
 
   std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const noexcept;
 
-  const CKAccessibilityContext &accessibilityContext() const noexcept;
+  const RCAccessibilityContext &accessibilityContext() const noexcept;
 
   BOOL isDefaultConfiguration() const;
 
@@ -68,7 +68,7 @@ private:
   struct Repr {
     CKComponentViewClass viewClass;
     std::shared_ptr<const CKViewComponentAttributeValueMap> attributes;
-    CKAccessibilityContext accessibilityContext;
+    RCAccessibilityContext accessibilityContext;
     CK::Component::PersistentAttributeShape attributeShape;
     bool blockImplicitAnimations;
   };

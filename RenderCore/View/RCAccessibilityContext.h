@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NSString *(^CKAccessibilityLazyTextBlock)();
+typedef NSString *(^RCAccessibilityLazyTextBlock)();
 
 /**
  A text attribute used for accessibility, this attribute can be initialized in two ways :
@@ -23,10 +23,10 @@ typedef NSString *(^CKAccessibilityLazyTextBlock)();
    unnecessary computations when VoiceOver is not enabled.
  - Use an NSString directly; reserve this for when no computation is needed to get the string
  */
-struct CKAccessibilityTextAttribute {
-  CKAccessibilityTextAttribute() {};
-  CKAccessibilityTextAttribute(CKAccessibilityLazyTextBlock textBlock) : accessibilityLazyTextBlock(textBlock) {};
-  CKAccessibilityTextAttribute(NSString *text) : accessibilityLazyTextBlock(text ? ^{ return text; } : (CKAccessibilityLazyTextBlock)nil) {};
+struct RCAccessibilityTextAttribute {
+  RCAccessibilityTextAttribute() {};
+  RCAccessibilityTextAttribute(RCAccessibilityLazyTextBlock textBlock) : accessibilityLazyTextBlock(textBlock) {};
+  RCAccessibilityTextAttribute(NSString *text) : accessibilityLazyTextBlock(text ? ^{ return text; } : (RCAccessibilityLazyTextBlock)nil) {};
 
   BOOL hasText() const {
     return accessibilityLazyTextBlock != nil;
@@ -37,7 +37,7 @@ struct CKAccessibilityTextAttribute {
   };
 
 private:
-  CKAccessibilityLazyTextBlock accessibilityLazyTextBlock;
+  RCAccessibilityLazyTextBlock accessibilityLazyTextBlock;
 };
 
 /**
@@ -51,11 +51,11 @@ private:
  {@selector(setAccessibilityIdentifier:), @"accessibilityId"}
  ```
  */
-struct CKAccessibilityContext {
+struct RCAccessibilityContext {
   NSNumber *isAccessibilityElement;
-  CKAccessibilityTextAttribute accessibilityLabel;
-  CKAccessibilityTextAttribute accessibilityHint;
-  CKAccessibilityTextAttribute accessibilityValue;
+  RCAccessibilityTextAttribute accessibilityLabel;
+  RCAccessibilityTextAttribute accessibilityHint;
+  RCAccessibilityTextAttribute accessibilityValue;
   NSNumber *accessibilityTraits;
   /**
    Arbitrary extra data about accessibility. ComponentKit ignores this data,
