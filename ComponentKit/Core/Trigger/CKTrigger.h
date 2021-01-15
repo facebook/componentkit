@@ -54,6 +54,10 @@ public:
 
     _observers->erase(key);
   };
+
+  auto operator==(const CKTriggerObservable<T...>& rhs) const -> bool {
+    return _observers == rhs._observers;
+  }
 };
 
 template<typename... T>
