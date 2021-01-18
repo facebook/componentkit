@@ -435,7 +435,7 @@ void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *han
   // argument indices.
   const Class klass = objc_getClass(handle.componentTypeName);
 
-  CKCAssertWithCategory(klass != nil,
+  CKCAssertWithCategory(klass != nil || [handle.acquiredComponent.class coalescingMode] != RCComponentCoalescingModeNone,
                         [NSString stringWithUTF8String:handle.componentTypeName],
                         @"Creating an action from a scope should always yield a class");
 
