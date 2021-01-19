@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <ComponentKit/CKDefines.h>
 
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/ComponentUtilities.h>
 
 /** Unique identifier for tree nodes. */

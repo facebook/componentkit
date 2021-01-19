@@ -13,7 +13,7 @@
 #import <tgmath.h>
 
 #import <RenderCore/CKAssert.h>
-#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKMacros.h>
 #import <RenderCore/CKInternalHelpers.h>
 
@@ -71,7 +71,7 @@ size_t std::hash<CKRelativeDimension>::operator ()(const CKRelativeDimension &si
     (size_t)(size._type),
     std::hash<CGFloat>()(size._value),
   };
-  return CKIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));
+  return RCIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));
 };
 
 

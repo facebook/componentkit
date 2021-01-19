@@ -95,7 +95,7 @@ namespace std {
         std::hash<CKViewComponentAttributeValueMap>()(*cl.attributes()),
         std::hash<bool>()(cl.blockImplicitAnimations()),
       };
-      return CKIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));
+      return RCIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));
     }
   };
 }

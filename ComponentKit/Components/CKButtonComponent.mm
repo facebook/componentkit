@@ -25,10 +25,10 @@ struct CKStateConfiguration {
 
   bool operator==(const CKStateConfiguration &other) const
   {
-    return CKObjectIsEqual(title, other.title)
-    && CKObjectIsEqual(titleColor, other.titleColor)
-    && CKObjectIsEqual(image, other.image)
-    && CKObjectIsEqual(backgroundImage, other.backgroundImage);
+    return RCObjectIsEqual(title, other.title)
+    && RCObjectIsEqual(titleColor, other.titleColor)
+    && RCObjectIsEqual(image, other.image)
+    && RCObjectIsEqual(backgroundImage, other.backgroundImage);
   }
 };
 
@@ -97,16 +97,16 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
       enumerateAllStates(^(UIControlState state) {
         const CKStateConfiguration &oldStateConfig = oldConfig->_configurations[indexForState(state)];
         const CKStateConfiguration &newStateConfig = newConfig->_configurations[indexForState(state)];
-        if (!CKObjectIsEqual(oldStateConfig.title, newStateConfig.title)) {
+        if (!RCObjectIsEqual(oldStateConfig.title, newStateConfig.title)) {
           [view setTitle:newStateConfig.title forState:state];
         }
-        if (!CKObjectIsEqual(oldStateConfig.titleColor, newStateConfig.titleColor)) {
+        if (!RCObjectIsEqual(oldStateConfig.titleColor, newStateConfig.titleColor)) {
           [view setTitleColor:newStateConfig.titleColor forState:state];
         }
-        if (!CKObjectIsEqual(oldStateConfig.image, newStateConfig.image)) {
+        if (!RCObjectIsEqual(oldStateConfig.image, newStateConfig.image)) {
           [view setImage:newStateConfig.image forState:state];
         }
-        if (!CKObjectIsEqual(oldStateConfig.backgroundImage, newStateConfig.backgroundImage)) {
+        if (!RCObjectIsEqual(oldStateConfig.backgroundImage, newStateConfig.backgroundImage)) {
           [view setBackgroundImage:newStateConfig.backgroundImage forState:state];
         }
       });

@@ -10,7 +10,7 @@
 
 #import "CKDataSourceStateInternal.h"
 
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
@@ -96,7 +96,7 @@
     [_configuration hash],
     [_sections hash]
   };
-  return CKIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
+  return RCIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
 }
 
 static NSArray *flattenedModelsFromSections(NSArray *sections)
@@ -140,7 +140,7 @@ static auto fingerprintFromItemTypes(const std::vector<NSString *> &types) -> NS
     return @"";
   }
   auto const hashes = CK::map(uniqueTypes, [](NSString *t) { return [t hash]; });
-  auto const hash = CKIntegerArrayHash(hashes.data(), hashes.size());
+  auto const hash = RCIntegerArrayHash(hashes.data(), hashes.size());
   return [NSString stringWithFormat:@"%lu", static_cast<unsigned long>(hash)];
 }
 

@@ -32,7 +32,7 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 bool CKActionBase::operator==(const CKActionBase& rhs) const
 {
   return (_variant == rhs._variant
-          && CKObjectIsEqual(_target, rhs._target)
+          && RCObjectIsEqual(_target, rhs._target)
           // If we are using a scoped action, we are only concerned that the selector and the
           // responder unique identifier matches.
           && _scopedResponderAndKey.responder.uniqueIdentifier == rhs._scopedResponderAndKey.responder.uniqueIdentifier

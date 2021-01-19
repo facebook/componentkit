@@ -30,7 +30,7 @@
 #import <RenderCore/CKDictionary.h>
 #import <RenderCore/CKDimension.h>
 #import <RenderCore/RCDispatch.h>
-#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKFunctionalHelpers.h>
 #import <RenderCore/CKGeometryHelpers.h>
 #import <RenderCore/CKGlobalConfig.h>

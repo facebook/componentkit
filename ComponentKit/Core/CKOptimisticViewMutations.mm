@@ -45,9 +45,9 @@ void CKPerformOptimisticViewMutation(UIView *view,
     __block CKOptimisticMutationToken token = CKOptimisticMutationTokenNull;
     
     auto undo = ^(UIView *v) {
-      if (!CKObjectIsEqual(getter(v, context), oldValue)) {
+      if (!RCObjectIsEqual(getter(v, context), oldValue)) {
         setter(v, oldValue, context);
-        CKCAssert(CKObjectIsEqual(getter(v, context), oldValue), @"Setter failed to undo to old value");
+        CKCAssert(RCObjectIsEqual(getter(v, context), oldValue), @"Setter failed to undo to old value");
       }
     };
     
@@ -66,9 +66,9 @@ void CKPerformOptimisticViewMutation(UIView *view,
       };
     
     auto apply = ^(UIView *v) {
-      if (!CKObjectIsEqual(getter(v, context), value)) {
+      if (!RCObjectIsEqual(getter(v, context), value)) {
         setter(v, value, context);
-        CKCAssert(CKObjectIsEqual(getter(view, context), value), @"Setter failed to redo to new value");
+        CKCAssert(RCObjectIsEqual(getter(view, context), value), @"Setter failed to redo to new value");
       }
     };
     
@@ -86,10 +86,10 @@ void CKPerformOptimisticViewMutation(UIView *view,
     id oldValue = getter(view, context);
     CK::Component::AttributeApplicator::addOptimisticViewMutationTeardown_Old(view, ^(UIView *v) {
       setter(v, oldValue, context);
-      CKCAssert(CKObjectIsEqual(getter(v, context), oldValue), @"Setter failed to restore old value");
+      CKCAssert(RCObjectIsEqual(getter(v, context), oldValue), @"Setter failed to restore old value");
     });
     setter(view, value, context);
-    CKCAssert(CKObjectIsEqual(getter(view, context), value), @"Setter failed to apply new value");
+    CKCAssert(RCObjectIsEqual(getter(view, context), value), @"Setter failed to apply new value");
   }
 }
 

@@ -61,7 +61,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   NSUInteger keyCounter = kTreeNodeParentBaseKey;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<0>(childKey) == componentTypeName && CKObjectIsEqual(std::get<2>(childKey), identifier)) {
+    if (std::get<0>(childKey) == componentTypeName && RCObjectIsEqual(std::get<2>(childKey), identifier)) {
       keyCounter += 2;
     }
   }
@@ -100,7 +100,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   NSUInteger keyCounter = kTreeNodeOwnerBaseKey;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<0>(childKey) == componentTypeName && CKObjectIsEqual(std::get<2>(childKey), identifier)) {
+    if (std::get<0>(childKey) == componentTypeName && RCObjectIsEqual(std::get<2>(childKey), identifier)) {
       keyCounter += 2;
     }
   }

@@ -13,7 +13,7 @@
 
 #import <ComponentKit/CKComponentAnimations.h>
 
-namespace CK {
+namespace RC {
   auto animationsAreEqual(const std::vector<CKComponentAnimation> &as1,
                           const std::vector<CKComponentAnimation> &as2) -> bool;
 

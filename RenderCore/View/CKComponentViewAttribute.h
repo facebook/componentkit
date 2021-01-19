@@ -16,7 +16,7 @@
 #import <unordered_map>
 
 #import <UIKit/UIKit.h>
-#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/RCEqualityHelpers.h>
 
 /**
  View attributes usually correspond to properties (like background color or alpha) but can represent arbitrarily complex
@@ -84,7 +84,7 @@ struct CKComponentViewAttribute {
 struct CKBoxedValue {
   CKBoxedValue() noexcept : __actual(nil) {};
 
-  // Could replace this with !CK::is_objc_class<T>
+  // Could replace this with !RC::is_objc_class<T>
   CKBoxedValue(bool v) noexcept : __actual(@(v)) {};
   CKBoxedValue(int8_t v) noexcept : __actual(@(v)) {};
   CKBoxedValue(uint8_t v) noexcept : __actual(@(v)) {};
@@ -148,10 +148,10 @@ namespace std {
     {
       uint64_t hash = 0;
       for (const auto& it: attr) {
-        hash = CKHashCombine(hash, std::hash<CKComponentViewAttribute>()(it.first));
-        hash = CKHashCombine(hash, CK::hash<id>()(it.second));
+        hash = RCHashCombine(hash, std::hash<CKComponentViewAttribute>()(it.first));
+        hash = RCHashCombine(hash, RC::hash<id>()(it.second));
       }
-      return CKHash64ToNative(hash);
+      return RCHash64ToNative(hash);
     }
   };
 

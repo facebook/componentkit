@@ -10,7 +10,7 @@
 
 #import <ComponentTextKit/CKTextKitRendererCache.h>
 
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
 namespace CK {
@@ -33,7 +33,7 @@ namespace CK {
           std::hash<CGFloat>()(constrainedSize.width),
           std::hash<CGFloat>()(constrainedSize.height)
         };
-        hash = CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
+        hash = RCIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
       }
     }
   }

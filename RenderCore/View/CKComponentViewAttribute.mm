@@ -15,7 +15,7 @@
 
 #import <RenderCore/CKAssert.h>
 #import <RenderCore/CKAssert.h>
-#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKMacros.h>
 
 /**
@@ -48,7 +48,7 @@ namespace std {
     std::size_t operator()(const SetterCacheKey &key) const
     {
       NSUInteger subhashes[] = { [key.cls hash], std::hash<void *>()((void *)key.sel) };
-      return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
+      return RCIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
     }
   };
 }

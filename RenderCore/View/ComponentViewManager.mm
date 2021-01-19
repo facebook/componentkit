@@ -284,7 +284,7 @@ void AttributeApplicator::applyAttributes(UIView *view, std::shared_ptr<const CK
       if (newAttr == newAttributes.end()) {
         // There is no new attribute, so we always must call "unapplicator".
         oldAttr.first.unapplicator(view, oldAttr.second);
-      } else if (!CKObjectIsEqual(newAttr->second, oldAttr.second)) {
+      } else if (!RCObjectIsEqual(newAttr->second, oldAttr.second)) {
         // If the attribute has an updater, don't call the unapplicator; instead, the updater will be called below.
         if (newAttr->first.updater == nil) {
           oldAttr.first.unapplicator(view, oldAttr.second);
@@ -299,7 +299,7 @@ void AttributeApplicator::applyAttributes(UIView *view, std::shared_ptr<const CK
     if (oldAttr == oldAttributes.end()) {
       // There is no old attribute, so we always must call "applicator".
       newAttr.first.applicator(view, newAttr.second);
-    } else if (!CKObjectIsEqual(oldAttr->second, newAttr.second)) {
+    } else if (!RCObjectIsEqual(oldAttr->second, newAttr.second)) {
       // If the attribute has an "updater", call that. Otherwise, call the applicator.
       if (newAttr.first.updater) {
         newAttr.first.updater(view, oldAttr->second, newAttr.second);

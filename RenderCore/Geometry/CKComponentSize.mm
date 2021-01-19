@@ -11,7 +11,7 @@
 #import "CKComponentSize.h"
 
 #import <RenderCore/CKAssert.h>
-#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/RCEqualityHelpers.h>
 
 #define CKCAssertConstrainedValue(val) \
   CKCAssert(!isnan(val), @"Constrained value must not be NaN.")
@@ -91,5 +91,5 @@ size_t std::hash<CKComponentSize>::operator ()(const CKComponentSize &size) noex
     std::hash<CKRelativeDimension>()(size.maxHeight),
   };
 
-  return CKIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));
+  return RCIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));
 };

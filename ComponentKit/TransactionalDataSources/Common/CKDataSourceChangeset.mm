@@ -13,7 +13,7 @@
 #import <UIKit/UICollectionView.h>
 #import <UIKit/UITableView.h>
 
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKAssert.h>
 
@@ -99,7 +99,7 @@
     [_insertedSections hash],
     [_insertedItems hash]
   };
-  return CKIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
+  return RCIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
 }
 
 @end

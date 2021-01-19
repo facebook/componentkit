@@ -10,7 +10,7 @@
 
 #import "CKDataSourceAppliedChanges.h"
 
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
 #import "CKIndexSetDescription.h"
@@ -82,14 +82,14 @@
 
 - (BOOL)isEqual:(id)object
 {
-  return CKCompareObjectEquality(self, object, ^BOOL(CKDataSourceAppliedChanges *a, CKDataSourceAppliedChanges *b) {
-    return CKObjectIsEqual(a.updatedIndexPaths, b.updatedIndexPaths)
-    && CKObjectIsEqual(a.removedIndexPaths, b.removedIndexPaths)
-    && CKObjectIsEqual(a.removedSections, b.removedSections)
-    && CKObjectIsEqual(a.movedIndexPaths, b.movedIndexPaths)
-    && CKObjectIsEqual(a.insertedSections, b.insertedSections)
-    && CKObjectIsEqual(a.insertedIndexPaths, b.insertedIndexPaths)
-    && CKObjectIsEqual(a.userInfo, b.userInfo);
+  return RCCompareObjectEquality(self, object, ^BOOL(CKDataSourceAppliedChanges *a, CKDataSourceAppliedChanges *b) {
+    return RCObjectIsEqual(a.updatedIndexPaths, b.updatedIndexPaths)
+    && RCObjectIsEqual(a.removedIndexPaths, b.removedIndexPaths)
+    && RCObjectIsEqual(a.removedSections, b.removedSections)
+    && RCObjectIsEqual(a.movedIndexPaths, b.movedIndexPaths)
+    && RCObjectIsEqual(a.insertedSections, b.insertedSections)
+    && RCObjectIsEqual(a.insertedIndexPaths, b.insertedIndexPaths)
+    && RCObjectIsEqual(a.userInfo, b.userInfo);
   });
 }
 
@@ -104,7 +104,7 @@
     [_insertedIndexPaths hash],
     [_userInfo hash],
   };
-  return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
+  return RCIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
 }
 
 static auto withNewLineIfNotEmpty(NSString *s) -> NSString *

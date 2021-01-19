@@ -72,7 +72,7 @@ public:
   /**
    A value changes in which are used to trigger the transition.
 
-   @note  @c CKObjectIsEqual is used to compare the previous and the new value.
+   @note  @c RCObjectIsEqual is used to compare the previous and the new value.
    */
   auto &triggerValue(NS_RELEASES_ARGUMENT id<NSObject> triggerValue)
   {

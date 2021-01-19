@@ -47,7 +47,7 @@ struct CKComponentGeneratorInputs {
   }
 
   void updateTraitCollection(UITraitCollection *traitCollection) noexcept {
-    _didUpdateTraitCollection = _didUpdateTraitCollection || !CKObjectIsEqual(traitCollection, _traitCollection);
+    _didUpdateTraitCollection = _didUpdateTraitCollection || !RCObjectIsEqual(traitCollection, _traitCollection);
     _traitCollection = [traitCollection copy];
   }
 
@@ -83,7 +83,7 @@ struct CKComponentGeneratorInputs {
       stateUpdates == i.stateUpdates &&
       forceReloadInNextGeneration == i.forceReloadInNextGeneration &&
       _didUpdateModelOrContext == i._didUpdateModelOrContext &&
-      CKObjectIsEqual(_traitCollection, i._traitCollection) &&
+      RCObjectIsEqual(_traitCollection, i._traitCollection) &&
       _isAccessibilityEnabled == i._isAccessibilityEnabled;
   }
 

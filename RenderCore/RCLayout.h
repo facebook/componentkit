@@ -18,7 +18,7 @@
 #import <UIKit/UIKit.h>
 
 #import <RenderCore/CKAssert.h>
-#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKMountable.h>
 #import <RenderCore/CKNonNull.h>
 #import <RenderCore/CKOptional.h>

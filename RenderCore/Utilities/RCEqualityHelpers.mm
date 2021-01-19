@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKEqualityHelpers.h"
+#import "RCEqualityHelpers.h"
 
 #import <functional>
 #import <objc/runtime.h>
@@ -16,12 +16,12 @@
 #import <string>
 
 
-NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count)
+NSUInteger RCIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count)
 {
   uint64_t result = subhashes[0];
   for (int ii = 1; ii < count; ++ii) {
-    result = CKHashCombine(result, subhashes[ii]);
+    result = RCHashCombine(result, subhashes[ii]);
   }
-  return CKHash64ToNative(result);
+  return RCHash64ToNative(result);
 }
 

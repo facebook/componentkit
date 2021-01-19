@@ -105,7 +105,7 @@ static auto disappearingPreviousComponentAnimation(CAAnimation *disappearAnimati
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent
 {
   auto const prev = CK::objCForceCast<CKTransitionComponent>(previousComponent);
-  if (CKObjectIsEqual(_trigger, prev->_trigger)) {
+  if (RCObjectIsEqual(_trigger, prev->_trigger)) {
     return {};
   }
 

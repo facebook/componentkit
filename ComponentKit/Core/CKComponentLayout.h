@@ -39,7 +39,7 @@ NSSet<id<CKMountable>> *CKMountComponentLayout(const RCLayout &layout,
 
 struct CKComponentRootLayout { // This is pending renaming
   /** Layout cache for components that have controller. */
-  using ComponentLayoutCache = std::unordered_map<id<CKMountable>, RCLayout, CK::hash<id<CKMountable>>, CK::is_equal<id<CKMountable>>>;
+  using ComponentLayoutCache = std::unordered_map<id<CKMountable>, RCLayout, RC::hash<id<CKMountable>>, RC::is_equal<id<CKMountable>>>;
   using ComponentsByPredicateMap = std::unordered_map<CKMountablePredicate, std::vector<id<CKMountable>>>;
 
   CKComponentRootLayout() {}

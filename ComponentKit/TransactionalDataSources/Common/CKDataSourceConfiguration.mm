@@ -11,7 +11,7 @@
 #import "CKDataSourceConfiguration.h"
 #import "CKDataSourceConfigurationInternal.h"
 
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
 
@@ -178,7 +178,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     [_context hash],
     _sizeRange.hash()
   };
-  return CKIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
+  return RCIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
 }
 
 @end

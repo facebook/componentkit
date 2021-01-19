@@ -152,7 +152,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
   const auto as = CK::animationsForComponents({}, [UIView new]);
 
   const auto expected = CKComponentAnimations::AnimationsByComponentMap {};
-  XCTAssert(animationsAreEqual(as.animationsOnInitialMount(), expected));
+  XCTAssert(RC::animationsAreEqual(as.animationsOnInitialMount(), expected));
 }
 
 - (void)test_ForAllAppearedComponents_AnimationsOnInitialMountAreCollected
@@ -175,7 +175,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
     {c1, {a1}},
     {c2, {a2}},
   };
-  XCTAssert(animationsAreEqual(as.animationsOnInitialMount(), expected));
+  XCTAssert(RC::animationsAreEqual(as.animationsOnInitialMount(), expected));
 }
 
 - (void)test_ForAllUpdatedComponents_AnimationsFromPreviousComponentAreCollected
@@ -201,7 +201,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
     {c1, {a1}},
     {c2, {a2}},
   };
-  XCTAssert(animationsAreEqual(as.animationsFromPreviousComponent(), expected));
+  XCTAssert(RC::animationsAreEqual(as.animationsFromPreviousComponent(), expected));
 }
 
 - (void)test_ForAllDisappearedComponents_AnimationsOnFinalUnmountAreCollected

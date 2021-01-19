@@ -13,7 +13,7 @@
 #import <functional>
 
 #import <RenderCore/CKDimension.h>
-#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKMacros.h>
 
 #define CKCAssertPositiveReal(description, num) \
@@ -97,7 +97,7 @@ size_t CKSizeRange::hash() const
     hasher(max.width),
     hasher(max.height)
   };
-  return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
+  return RCIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
 }
 
 size_t std::hash<CKSizeRange>::operator()(const CKSizeRange &s) noexcept

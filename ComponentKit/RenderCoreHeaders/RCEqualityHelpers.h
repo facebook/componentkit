@@ -8,4 +8,4 @@
  *
  */
 
-#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/RCEqualityHelpers.h>

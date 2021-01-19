@@ -10,7 +10,7 @@
 
 #import <ComponentTextKit/CKTextKitAttributes.h>
 
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
 #include <functional>
@@ -33,5 +33,5 @@ size_t CKTextKitAttributes::hash() const
     std::hash<CGFloat>()(shadowOpacity),
     std::hash<CGFloat>()(shadowRadius),
   };
-  return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
+  return RCIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
 }

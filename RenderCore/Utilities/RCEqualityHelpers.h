@@ -21,7 +21,7 @@
 // This is the Hash128to64 function from Google's cityhash (available
 // under the MIT License).  We use it to reduce multiple 64 bit hashes
 // into a single hash.
-inline uint64_t CKHashCombine(const uint64_t upper, const uint64_t lower) {
+inline uint64_t RCHashCombine(const uint64_t upper, const uint64_t lower) {
   // Murmur-inspired hashing.
   const uint64_t kMul = 0x9ddfea08eb382d69ULL;
   uint64_t a = (lower ^ upper) * kMul;
@@ -33,7 +33,7 @@ inline uint64_t CKHashCombine(const uint64_t upper, const uint64_t lower) {
 }
 
 // fnv-1 hash function
-inline uint64_t CKHashCString(const char *str)
+inline uint64_t RCHashCString(const char *str)
 {
   uint64_t retval = 0;
   unsigned char *s = (unsigned char *)str;
@@ -47,12 +47,12 @@ inline uint64_t CKHashCString(const char *str)
 }
 
 #if defined(__LP64__) && __LP64__
-inline size_t CKHash64ToNative(uint64_t key) {
+inline size_t RCHash64ToNative(uint64_t key) {
   return key;
 }
 #else
 // Thomas Wang downscaling hash function
-inline size_t CKHash64ToNative(uint64_t key) {
+inline size_t RCHash64ToNative(uint64_t key) {
   key = (~key) + (key << 18);
   key = key ^ (key >> 31);
   key = key * 21;
@@ -63,9 +63,9 @@ inline size_t CKHash64ToNative(uint64_t key) {
 }
 #endif
 
-NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count);
+NSUInteger RCIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count);
 
-namespace CK {
+namespace RC {
   // Default is not an ObjC class
   template<typename T, typename V = bool>
   struct is_objc_class : std::false_type { };
@@ -109,7 +109,7 @@ namespace CK {
 
 };
 
-namespace CKTupleOperations
+namespace RCTupleOperations
 {
   // Recursive case (hash up to Index)
   template <class Tuple, size_t Index = std::tuple_size<Tuple>::value - 1>
@@ -119,8 +119,8 @@ namespace CKTupleOperations
     {
       size_t prev = _hash_helper<Tuple, Index-1>::hash(tuple);
       using TypeForIndex = typename std::tuple_element<Index,Tuple>::type;
-      size_t thisHash = CK::hash<TypeForIndex>()(std::get<Index>(tuple));
-      return CKHash64ToNative(CKHashCombine(prev, thisHash));
+      size_t thisHash = RC::hash<TypeForIndex>()(std::get<Index>(tuple));
+      return RCHash64ToNative(RCHashCombine(prev, thisHash));
     }
   };
 
@@ -131,7 +131,7 @@ namespace CKTupleOperations
     static size_t hash(Tuple const& tuple)
     {
       using TypeForIndex = typename std::tuple_element<0,Tuple>::type;
-      return CK::hash<TypeForIndex>()(std::get<0>(tuple));
+      return RC::hash<TypeForIndex>()(std::get<0>(tuple));
     }
   };
 
@@ -145,7 +145,7 @@ namespace CKTupleOperations
       using TypeForIndex = typename std::tuple_element<Index,Tuple>::type;
       auto aValue = std::get<Index>(a);
       auto bValue = std::get<Index>(b);
-      return prev && CK::is_equal<TypeForIndex>()(aValue, bValue);
+      return prev && RC::is_equal<TypeForIndex>()(aValue, bValue);
     }
   };
 
@@ -158,7 +158,7 @@ namespace CKTupleOperations
       using TypeForIndex = typename std::tuple_element<0,Tuple>::type;
       auto& aValue = std::get<0>(a);
       auto& bValue = std::get<0>(b);
-      return CK::is_equal<TypeForIndex>()(aValue, bValue);
+      return RC::is_equal<TypeForIndex>()(aValue, bValue);
     }
   };
 
@@ -189,18 +189,18 @@ namespace CKTupleOperations
 }
 
 /** Correctly equates two objects, including cases where both objects are nil (where `isEqual:` would return NO). */
-inline BOOL CKObjectIsEqual(id<NSObject> obj, id<NSObject> otherObj)
+inline BOOL RCObjectIsEqual(id<NSObject> obj, id<NSObject> otherObj)
 {
   return obj == otherObj || [obj isEqual:otherObj];
 }
 
-typedef BOOL (^CKEqualityComparisonBlock)(id object, id comparisonObject);
+typedef BOOL (^RCEqualityComparisonBlock)(id object, id comparisonObject);
 
 /**
  * Correctly executes the comparisonBlock for two objects, including cases one of the objects is nil or
  * of a different type (where `isEqual:` would return NO).
  */
-inline BOOL CKCompareObjectEquality(id object, id comparisonObject, CKEqualityComparisonBlock comparisonBlock) {
+inline BOOL RCCompareObjectEquality(id object, id comparisonObject, RCEqualityComparisonBlock comparisonBlock) {
   if (object == comparisonObject) {
     return YES;
   } else if (!object || !comparisonObject || ![comparisonObject isKindOfClass:[object class]]) {
@@ -210,13 +210,13 @@ inline BOOL CKCompareObjectEquality(id object, id comparisonObject, CKEqualityCo
 }
 
 /** Correctly equates two vectors of keys (scope state key) */
-inline bool CKKeyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vector<id<NSObject>> &b)
+inline bool RCKeyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vector<id<NSObject>> &b)
 {
   if (a.size() != b.size()) {
     return false;
   }
   return std::equal(a.begin(), a.end(), b.begin(), [](id<NSObject> x, id<NSObject> y){
-    return CKObjectIsEqual(x, y); // be pedantic and use a lambda here becuase BOOL != bool
+    return RCObjectIsEqual(x, y); // be pedantic and use a lambda here becuase BOOL != bool
   });
 }
 

@@ -89,9 +89,9 @@
     return YES;
   } else if ([object isKindOfClass:[self class]]) {
     CKNetworkImageSpecifier *other = object;
-    return CKObjectIsEqual(_url, other->_url)
-    && CKObjectIsEqual(_defaultImage, other->_defaultImage)
-    && CKObjectIsEqual(_imageDownloader, other->_imageDownloader)
+    return RCObjectIsEqual(_url, other->_url)
+    && RCObjectIsEqual(_defaultImage, other->_defaultImage)
+    && RCObjectIsEqual(_imageDownloader, other->_imageDownloader)
     && CGRectEqualToRect(_cropRect, other->_cropRect);
   }
   return NO;
@@ -123,7 +123,7 @@
 
 - (void)setSpecifier:(CKNetworkImageSpecifier *)specifier
 {
-  if (CKObjectIsEqual(specifier, _specifier)) {
+  if (RCObjectIsEqual(specifier, _specifier)) {
     return;
   }
 
@@ -131,8 +131,8 @@
     [self setNeedsLayout];
   }
 
-  BOOL urlIsDifferent = !CKObjectIsEqual(_specifier.url, specifier.url);
-  BOOL isShowingCurrentDefaultImage = CKObjectIsEqual(self.image, _specifier.defaultImage);
+  BOOL urlIsDifferent = !RCObjectIsEqual(_specifier.url, specifier.url);
+  BOOL isShowingCurrentDefaultImage = RCObjectIsEqual(self.image, _specifier.defaultImage);
   if (urlIsDifferent || isShowingCurrentDefaultImage) {
     self.image = specifier.defaultImage;
   }

@@ -19,12 +19,12 @@
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentTreeDiff.h>
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/RCEqualityHelpers.h>
 
 @class CKComponentScopeRoot;
 
 struct CKComponentAnimations {
-  using AnimationsByComponentMap = std::unordered_map<CKComponent *, std::vector<CKComponentAnimation>, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
+  using AnimationsByComponentMap = std::unordered_map<CKComponent *, std::vector<CKComponentAnimation>, RC::hash<CKComponent *>, RC::is_equal<CKComponent *>>;
 
   CKComponentAnimations() {}
   CKComponentAnimations(AnimationsByComponentMap animationsOnInitialMount,

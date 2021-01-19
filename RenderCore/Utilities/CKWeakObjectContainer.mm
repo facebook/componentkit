@@ -12,7 +12,7 @@
 
 #import <objc/runtime.h>
 
-#import "CKEqualityHelpers.h"
+#import "RCEqualityHelpers.h"
 
 @implementation CKWeakObjectContainer
 
@@ -33,7 +33,7 @@
     return NO;
   } else {
     CKWeakObjectContainer *container = (CKWeakObjectContainer *)other;
-    return CKObjectIsEqual(self->_object, container->_object);
+    return RCObjectIsEqual(self->_object, container->_object);
   }
 }
 
