@@ -66,8 +66,8 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  The amount of space to inset on the top, left, bottom and right.
-  */
+   Relative amount of space to inset on each side.
+   */
   auto &insets(CKRelativeDimension i)
   {
     _top = i;
@@ -78,8 +78,20 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  The amount of space to inset on the top and bottom.
-  */
+   The amount of space to inset on each side.
+   */
+  auto &insets(CGFloat i)
+  {
+    _top = i;
+    _left = i;
+    _bottom = i;
+    _right = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+   Relative amount of space to inset on top and bottom.
+   */
   auto &insetsVertical(CKRelativeDimension i)
   {
     _top = i;
@@ -88,8 +100,18 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  The amount of space to inset on the left and right.
-  */
+   The amount of space to inset on top and bottom.
+   */
+  auto &insetsVertical(CGFloat i)
+  {
+    _top = i;
+    _bottom = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+   Relative amount of space to inset on left and right.
+   */
   auto &insetsHorizontal(CKRelativeDimension i)
   {
     _left = i;
@@ -98,17 +120,18 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  The amount of space to inset on the top.
-  */
-  auto &insetsTop(CGFloat i)
+   The amount of space to inset on left and right.
+   */
+  auto &insetsHorizontal(CGFloat i)
   {
-    _top = i;
+    _left = i;
+    _right = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
   /**
-  Relative amount of inset to parent component's width.
-  */
+   Relative amount of inset to parent component's height.
+   */
   auto &insetsTop(CKRelativeDimension i)
   {
     _top = i;
@@ -116,17 +139,17 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  The amount of space to inset on the left.
-  */
-  auto &insetsLeft(CGFloat i)
+   The amount of space to inset on the top.
+   */
+  auto &insetsTop(CGFloat i)
   {
-    _left = i;
+    _top = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
   /**
-  Relative amount of inset to parent component's width.
-  */
+   Relative amount of inset to parent component's width.
+   */
   auto &insetsLeft(CKRelativeDimension i)
   {
     _left = i;
@@ -134,8 +157,26 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  The amount of space to inset on the bottom.
-  */
+   The amount of space to inset on the left.
+   */
+  auto &insetsLeft(CGFloat i)
+  {
+    _left = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+   Relative amount of inset to parent component's height.
+   */
+  auto &insetsBottom(CKRelativeDimension i)
+  {
+    _bottom = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+   The amount of space to inset on the bottom.
+   */
   auto &insetsBottom(CGFloat i)
   {
     _bottom = i;
@@ -143,11 +184,11 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  Relative amount of inset to parent component's width.
-  */
-  auto &insetsBottom(CKRelativeDimension i)
+   Relative amount of inset to parent component's width.
+   */
+  auto &insetsRight(CKRelativeDimension i)
   {
-    _bottom = i;
+    _right = i;
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
@@ -161,17 +202,22 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  Relative amount of inset to parent component's width.
-  */
-  auto &insetsRight(CKRelativeDimension i)
+   Relative amount of parent component's width to inset. Left in left-to-right languages, right in right-to-left languages.
+   */
+  auto &insetsStart(CKRelativeDimension i)
   {
-    _right = i;
+    if (CKGetWritingDirection() == CKWritingDirection::RightToLeft) {
+      _right = i;
+    } else {
+      _left = i;
+    }
+
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
   /**
-  The amount of space to inset. Left in left-to-right languages, right in right-to-left languages.
-  */
+   The amount of space to inset. Left in left-to-right languages, right in right-to-left languages.
+   */
   auto &insetsStart(CGFloat i)
   {
     if (CKGetWritingDirection() == CKWritingDirection::RightToLeft) {
@@ -184,8 +230,22 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  The amount of space to inset. Right in left-to-right languages, left in right-to-left languages.
-  */
+   Relative amount of parent component's width to inset. Right in left-to-right languages, left in right-to-left languages.
+   */
+  auto &insetsEnd(CKRelativeDimension i)
+  {
+    if (CKGetWritingDirection() == CKWritingDirection::RightToLeft) {
+      _left = i;
+    } else {
+      _right = i;
+    }
+
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+   The amount of space to inset. Right in left-to-right languages, left in right-to-left languages.
+   */
   auto &insetsEnd(CGFloat i)
   {
     if (CKGetWritingDirection() == CKWritingDirection::RightToLeft) {
@@ -198,8 +258,8 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
   /**
-  The wrapped child component to inset.
-  */
+   The wrapped child component to inset.
+   */
   auto &component(NS_RELEASES_ARGUMENT CKComponent *c)
   {
     _component = c;
