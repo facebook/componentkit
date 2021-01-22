@@ -16,7 +16,6 @@
 #import <RenderCore/CKMountableHelpers.h>
 #import <RenderCore/CKMountedObjectForView.h>
 #import <RenderCore/CKViewConfiguration.h>
-#import <RenderCore/RCFatal.h>
 
 static void relinquishMountedView(std::unique_ptr<CKMountInfo> &mountInfo,
                                   id<CKMountable> mountable,
@@ -80,7 +79,11 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
       NSString *const componentBacktraceDescription =
         RCComponentBacktraceDescription(RCComponentGenerateBacktrace(supercomponent));
       NSString *const componentChildrenDescription = RCComponentChildrenDescription(layout.children);
-      RCCFatalWithCategory(exception.name, @"%@ raised %@ during mount: %@\n backtrace:%@ children:%@", layout.component.class, exception.name, exception.reason, componentBacktraceDescription, componentChildrenDescription);
+      [NSException
+       raise:exception.name
+       format:@"%@ raised %@ during mount: %@\n backtrace:%@ children:%@",
+       layout.component.class, exception.name, exception.reason,
+       componentBacktraceDescription, componentChildrenDescription];
     }
 
     mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
