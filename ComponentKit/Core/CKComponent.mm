@@ -231,7 +231,8 @@ static void didAcquireView(id<CKMountable> mountable, UIView *view)
 __attribute__((objc_externally_retained)) // parameters are retained by the caller
 static void willRelinquishView(id<CKMountable> mountable, UIView *view)
 {
-  [(CKComponent *)mountable _relinquishMountedView];
+  CKComponent *component = (CKComponent *)mountable;
+  [(CKComponentController *)component.treeNode.scopeHandle.controller component:component willRelinquishView:view];
 }
 
 - (NSString *)backtraceStackDescription
@@ -245,24 +246,8 @@ static void willRelinquishView(id<CKMountable> mountable, UIView *view)
   if (_mountInfo != nullptr) {
     CKComponentController *const controller = _treeNode.scopeHandle.controller;
     [controller componentWillUnmount:self];
-    [self _relinquishMountedView];
-    _mountInfo.reset();
+    CKPerformUnmount(_mountInfo, self, &willRelinquishView);
     [controller componentDidUnmount:self];
-  }
-}
-
-- (void)_relinquishMountedView
-{
-  CKAssertMainThread();
-  CKAssert(_mountInfo != nullptr, @"_mountInfo should not be null");
-  if (_mountInfo != nullptr) {
-    UIView *view = _mountInfo->view;
-    if (view) {
-      CKAssert(CKMountedComponentForView(view) == self, @"");
-      [(CKComponentController *)_treeNode.scopeHandle.controller component:self willRelinquishView:view];
-      CKSetMountedComponentForView(view, nil);
-      _mountInfo->view = nil;
-    }
   }
 }
 
