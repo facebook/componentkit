@@ -48,10 +48,10 @@
  First layout the contents, then fit the background image.
  */
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
+                          restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == CKComponentSize(),
+  CKAssert(size == RCComponentSize(),
            @"CKBackgroundLayoutComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@, background=%@)", size.description(), _component, _background);
 

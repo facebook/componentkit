@@ -18,7 +18,7 @@
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKSizeAssert.h>
 
-#import "CKComponentSize_SwiftBridge+Internal.h"
+#import "RCComponentSize_SwiftBridge+Internal.h"
 
 @implementation CKRatioLayoutComponent
 {
@@ -27,16 +27,16 @@
 }
 
 - (instancetype)initWithRatio:(CGFloat)ratio
-                    swiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+                    swiftSize:(RCComponentSize_SwiftBridge *)swiftSize
                     component:(CKComponent *)component
 {
   const auto finalRatio = ratio <= 0 ? 1 : ratio;
-  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  const auto size = swiftSize != nil ? swiftSize.componentSize : RCComponentSize{};
   return [self initWithRatio:finalRatio size:size component:component];
 }
 
 - (instancetype)initWithRatio:(CGFloat)ratio
-                         size:(const CKComponentSize &)size
+                         size:(const RCComponentSize &)size
                     component:(CKComponent *)component
 
 {
@@ -54,7 +54,7 @@
 }
 
 + (instancetype)newWithRatio:(CGFloat)ratio
-                        size:(const CKComponentSize &)size
+                        size:(const RCComponentSize &)size
                    component:(CKComponent *_Nullable)component
 {
   return [[self alloc] initWithRatio:ratio size:size component:component];

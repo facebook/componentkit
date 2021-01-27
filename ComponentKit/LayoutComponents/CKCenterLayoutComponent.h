@@ -55,7 +55,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (instancetype)initWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
                            sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
                                    child:(CKComponent *)child
-                               swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize NS_DESIGNATED_INITIALIZER;
+                               swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize NS_DESIGNATED_INITIALIZER;
 
 
 #else
@@ -69,7 +69,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (instancetype)initWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
                            sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
                                    child:(CKComponent *_Nullable)child
-                                    size:(const CKComponentSize &)size NS_DESIGNATED_INITIALIZER;
+                                    size:(const RCComponentSize &)size NS_DESIGNATED_INITIALIZER;
 
 #endif
 

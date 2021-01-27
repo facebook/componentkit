@@ -33,7 +33,7 @@
 
 + (instancetype)newWithURL:(NSURL *)url
            imageDownloader:(id<CKNetworkImageDownloading>)imageDownloader
-                      size:(const CKComponentSize &)size
+                      size:(const RCComponentSize &)size
                    options:(const CKNetworkImageComponentOptions &)options
                 attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
 {

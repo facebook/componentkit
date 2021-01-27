@@ -8,8 +8,8 @@
  *
  */
 
-#import <ComponentKit/CKComponentSize_SwiftBridge.h>
-#import <ComponentKit/CKComponentSize_SwiftBridge+Internal.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge+Internal.h>
 
 #import <ComponentKit/CKCasting.h>
 #import <ComponentKit/CKDimension_SwiftBridge+Internal.h>
@@ -18,11 +18,11 @@ static auto toRelativeDimention(CKDimension_SwiftBridge *_Nullable swiftDimensio
   return swiftDimension != nil ? swiftDimension.dimension : CKRelativeDimension();
 }
 
-@implementation CKComponentSize_SwiftBridge {
-  CKComponentSize _size;
+@implementation RCComponentSize_SwiftBridge {
+  RCComponentSize _size;
 }
 
-- (instancetype)initWithComponentSize:(const CKComponentSize &)componentSize
+- (instancetype)initWithComponentSize:(const RCComponentSize &)componentSize
 {
   if (self = [super init]) {
     _size = componentSize;
@@ -37,7 +37,7 @@ static auto toRelativeDimention(CKDimension_SwiftBridge *_Nullable swiftDimensio
 
 - (instancetype)initWithSize:(CGSize)size
 {
-  return [self initWithComponentSize:CKComponentSize::fromCGSize(size)];
+  return [self initWithComponentSize:RCComponentSize::fromCGSize(size)];
 }
 
 - (instancetype)initWithWidth:(CKDimension_SwiftBridge *)width
@@ -58,7 +58,7 @@ static auto toRelativeDimention(CKDimension_SwiftBridge *_Nullable swiftDimensio
   }];
 }
 
-- (const CKComponentSize &)componentSize
+- (const RCComponentSize &)componentSize
 {
   return _size;
 }
@@ -71,13 +71,13 @@ static auto toRelativeDimention(CKDimension_SwiftBridge *_Nullable swiftDimensio
     return YES;
   } else {
     // Intentionally treat passing a different type as a programming error
-    return _size == CK::objCForceCast<CKComponentSize_SwiftBridge>(other)->_size;
+    return _size == CK::objCForceCast<RCComponentSize_SwiftBridge>(other)->_size;
   }
 }
 
 - (NSUInteger)hash
 {
-  return std::hash<CKComponentSize>{}(_size);
+  return std::hash<RCComponentSize>{}(_size);
 }
 
 - (NSString *)description

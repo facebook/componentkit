@@ -10,7 +10,7 @@
 
 #import "CKAutoSizedImageComponent.h"
 
-#import <ComponentKit/CKComponentSize.h>
+#import <ComponentKit/RCComponentSize.h>
 
 #import "CKImageComponent.h"
 
@@ -24,7 +24,7 @@
                     CK::ImageComponentBuilder()
                         .image(image)
                         .attributes(attributes)
-                        .size(CKComponentSize::fromCGSize(image.size))
+                        .size(RCComponentSize::fromCGSize(image.size))
                         .build()];
 }
 

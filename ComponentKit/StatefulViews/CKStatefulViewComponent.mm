@@ -12,7 +12,7 @@
 
 @implementation CKStatefulViewComponent
 
-+ (instancetype)newWithSize:(const CKComponentSize &)size
++ (instancetype)newWithSize:(const RCComponentSize &)size
               accessibility:(const CKStatefulViewComponentAccessibility &)accessibility
 {
   // We need a component-created view in the hierarchy to serve as the stateful view's parent to ensure proper ordering.

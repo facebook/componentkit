@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponentSize.h"
+#import "RCComponentSize.h"
 
 #import <RenderCore/CKAssert.h>
 #import <RenderCore/RCEqualityHelpers.h>
@@ -16,7 +16,7 @@
 #define CKCAssertConstrainedValue(val) \
   CKCAssert(!isnan(val), @"Constrained value must not be NaN.")
 
-CKComponentSize CKComponentSize::fromCGSize(CGSize size) noexcept
+RCComponentSize RCComponentSize::fromCGSize(CGSize size) noexcept
 {
   return {size.width, size.height};
 }
@@ -53,7 +53,7 @@ static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVa
     }
 }
 
-CKSizeRange CKComponentSize::resolve(const CGSize &parentSize) const noexcept
+CKSizeRange RCComponentSize::resolve(const CGSize &parentSize) const noexcept
 {
   CGSize resolvedExact = CKRelativeSize(width, height).resolveSize(parentSize, {NAN, NAN});
   CGSize resolvedMin = CKRelativeSize(minWidth, minHeight).resolveSize(parentSize, {0, 0});
@@ -65,23 +65,23 @@ CKSizeRange CKComponentSize::resolve(const CGSize &parentSize) const noexcept
   return {rangeMin, rangeMax};
 }
 
-bool CKComponentSize::operator==(const CKComponentSize &other) const noexcept
+bool RCComponentSize::operator==(const RCComponentSize &other) const noexcept
 {
   return width == other.width && height == other.height
   && minWidth == other.minWidth && minHeight == other.minHeight
   && maxWidth == other.maxWidth && maxHeight == other.maxHeight;
 }
 
-NSString *CKComponentSize::description() const noexcept
+NSString *RCComponentSize::description() const noexcept
 {
   return [NSString stringWithFormat:
-          @"<CKComponentSize: exact=%@, min=%@, max=%@>",
+          @"<RCComponentSize: exact=%@, min=%@, max=%@>",
           CKRelativeSize(width, height).description(),
           CKRelativeSize(minWidth, minHeight).description(),
           CKRelativeSize(maxWidth, maxHeight).description()];
 }
 
-size_t std::hash<CKComponentSize>::operator ()(const CKComponentSize &size) noexcept {
+size_t std::hash<RCComponentSize>::operator ()(const RCComponentSize &size) noexcept {
   NSUInteger subhashes[] = {
     std::hash<CKRelativeDimension>()(size.width),
     std::hash<CKRelativeDimension>()(size.height),

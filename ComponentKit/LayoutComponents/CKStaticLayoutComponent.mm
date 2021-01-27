@@ -25,7 +25,7 @@
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
+                       size:(const RCComponentSize &)size
                    children:(RCContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
   CKStaticLayoutComponent *c = [super newWithView:view size:size];

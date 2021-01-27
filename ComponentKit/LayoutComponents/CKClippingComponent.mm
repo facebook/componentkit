@@ -11,7 +11,7 @@ CK_INIT_UNAVAILABLE;
 CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 
 + (instancetype)newWithComponent:(CKComponent *)child
-                            size:(const CKComponentSize &)size
+                            size:(const RCComponentSize &)size
                clippedDimensions:(CK::ClippingComponentDimensions)dimensions;
 @end
 
@@ -21,7 +21,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
-                            size:(const CKComponentSize &)size
+                            size:(const RCComponentSize &)size
                clippedDimensions:(CK::ClippingComponentDimensions)dimensions
 {
   if (component == nil) {
@@ -52,7 +52,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
+                          restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
   auto const resolvedRange = constrainedSize.intersect(size.resolve(parentSize));
@@ -97,7 +97,7 @@ static auto adjustedMaxSizeForClippedDimensions(CGSize originalMaxSize, CK::Clip
 
 @end
 
-auto CK::BuilderDetails::ClippingComponentDetails::factory(CKComponent *component, const CKComponentSize &size, CK::ClippingComponentDimensions dimensions) -> CKComponent *
+auto CK::BuilderDetails::ClippingComponentDetails::factory(CKComponent *component, const RCComponentSize &size, CK::ClippingComponentDimensions dimensions) -> CKComponent *
 {
   return [CKClippingComponent newWithComponent:component size:size clippedDimensions:dimensions];
 }

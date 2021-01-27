@@ -8,4 +8,4 @@
  *
  */
 
-#import <RenderCore/CKComponentSize.h>
+#import <RenderCore/RCComponentSize.h>

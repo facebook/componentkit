@@ -30,7 +30,7 @@
 #import "CKCompositeComponent.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
-#import "CKComponentSize_SwiftBridge+Internal.h"
+#import "RCComponentSize_SwiftBridge+Internal.h"
 #import "CKDimension_SwiftBridge+Internal.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
@@ -73,7 +73,7 @@ template class std::vector<CKFlexboxComponentChild>;
   // TODO: Support position
   NSInteger _zIndex;
   // TODO: Support aspectRatio
-  CKComponentSize _sizeConstraints;
+  RCComponentSize _sizeConstraints;
   BOOL _useTextRounding;
   BOOL _useHeightAsBaseline;
 }
@@ -86,7 +86,7 @@ template class std::vector<CKFlexboxComponentChild>;
                    swiftFlexBasis:(CKDimension_SwiftBridge *)swiftFlexBasis
                         alignSelf:(CKFlexboxAlignSelf)alignSelf
                            zIndex:(NSInteger)zIndex
-                  sizeConstraints:(CKComponentSize_SwiftBridge *)sizeConstraints
+                  sizeConstraints:(RCComponentSize_SwiftBridge *)sizeConstraints
                   useTextRounding:(BOOL)useTextRounding
               useHeightAsBaseline:(BOOL)useHeightAsBaseline
 {
@@ -188,7 +188,7 @@ template class std::vector<CKFlexboxComponentChild>;
 }
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
-                        size:(const CKComponentSize &)size
+                        size:(const RCComponentSize &)size
                        style:(const CKFlexboxComponentStyle &)style
                     children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
@@ -211,11 +211,11 @@ template class std::vector<CKFlexboxComponentChild>;
 
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
                        swiftStyle:(CKFlexboxComponentStyle_SwiftBridge *)swiftStyle
-                        swiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+                        swiftSize:(RCComponentSize_SwiftBridge *)swiftSize
                     swiftChildren:(NSArray<CKFlexboxChild_SwiftBridge *> *)swiftChildren
 {
   const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};
-  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  const auto size = swiftSize != nil ? swiftSize.componentSize : RCComponentSize{};
   const auto style = swiftStyle != nil ? [swiftStyle style] : CKFlexboxComponentStyle{};
   return [self initWithView:view size:size style:style children:CK::map(swiftChildren, [](const CKFlexboxChild_SwiftBridge *swiftChild){
     return swiftChild.child;
@@ -223,7 +223,7 @@ template class std::vector<CKFlexboxComponentChild>;
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
+                       size:(const RCComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
                    children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
@@ -700,12 +700,12 @@ static void applySizeAttribute(YGNodeRef node,
 
 static void applySizeAttributes(YGNodeRef node,
                                 const CKFlexboxComponentChild &child,
-                                const CKComponentSize &nodeSize,
+                                const RCComponentSize &nodeSize,
                                 CGFloat parentWidth,
                                 CGFloat parentHeight,
                                 BOOL setPercentOnChildNode)
 {
-  const CKComponentSize childSize = child.sizeConstraints;
+  const RCComponentSize childSize = child.sizeConstraints;
 
   applySizeAttribute(node, &YGNodeStyleSetWidthPercent, &YGNodeStyleSetWidth, childSize.width, nodeSize.width, parentWidth, setPercentOnChildNode);
   applySizeAttribute(node, &YGNodeStyleSetHeightPercent, &YGNodeStyleSetHeight, childSize.height, nodeSize.height, parentHeight, setPercentOnChildNode);

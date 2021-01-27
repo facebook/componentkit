@@ -34,7 +34,7 @@ CK_LINKABLE(CKComponent_Yoga)
   return NO;
 }
 
-- (CKComponentSize)nodeSize
+- (RCComponentSize)nodeSize
 {
   return [self size];
 }
@@ -67,7 +67,7 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
   return NO;
 }
 
-- (CKComponentSize)nodeSize
+- (RCComponentSize)nodeSize
 {
   CKCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
   return [(id)self.child nodeSize];;
@@ -91,11 +91,11 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
 CK_LINKABLE(CKOverlayLayoutComponent_Yoga)
 @implementation CKOverlayLayoutComponent (Yoga)
 
-- (CKComponentSize)nodeSize
+- (RCComponentSize)nodeSize
 {
   return CKReadGlobalConfig().useNodeSizeOverlayComponent
   ? [(CKComponent *)[self childAtIndex:0] nodeSize]
-  : CKComponentSize();
+  : RCComponentSize();
 }
 
 @end

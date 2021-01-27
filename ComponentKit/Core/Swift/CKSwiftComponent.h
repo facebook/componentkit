@@ -12,7 +12,7 @@
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge.h>
-#import <ComponentKit/CKComponentSize_SwiftBridge.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,7 +43,7 @@ CK_INIT_UNAVAILABLE;
 CK_COMPONENT_INIT_UNAVAILABLE
 
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)viewConfig
-                        swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
+                        swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize
                             child:(CKComponent *_Nullable)child
                             model:(CKSwiftComponentModel_SwiftBridge *_Nullable)model NS_DESIGNATED_INITIALIZER;
 

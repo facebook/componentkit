@@ -10,7 +10,7 @@
 
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import <ComponentKit/CKComponentSize.h>
+#import <ComponentKit/RCComponentSize.h>
 #import <ComponentKit/CKImageComponent.h>
 #import <ComponentKit/CKAutoSizedImageComponent.h>
 

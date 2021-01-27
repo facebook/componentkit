@@ -51,7 +51,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param children Children to be positioned at fixed positions.
  */
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
+                       size:(const RCComponentSize &)size
                    children:(RCContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children;
 
 /**

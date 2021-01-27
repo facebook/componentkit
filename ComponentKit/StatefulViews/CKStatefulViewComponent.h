@@ -31,13 +31,13 @@ CK_INIT_UNAVAILABLE;
 
 CK_COMPONENT_INIT_UNAVAILABLE;
 
-+ (instancetype)newWithSize:(const CKComponentSize &)size
++ (instancetype)newWithSize:(const RCComponentSize &)size
               accessibility:(const CKStatefulViewComponentAccessibility &)accessibility;
 
 @end
 
 #define CK_STATEFUL_COMPONENT_INIT_UNAVAILABLE \
-  + (instancetype)newWithSize:(const CKComponentSize &)size \
+  + (instancetype)newWithSize:(const RCComponentSize &)size \
                 accessibility:(const CKStatefulViewComponentAccessibility &)accessibility NS_UNAVAILABLE;
 
 #endif

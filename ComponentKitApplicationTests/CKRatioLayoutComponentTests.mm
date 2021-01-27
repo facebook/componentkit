@@ -28,7 +28,7 @@
   self.recordMode = NO;
 }
 
-static CKComponent *ratioLayoutComponent(CGFloat ratio, const CKComponentSize &size)
+static CKComponent *ratioLayoutComponent(CGFloat ratio, const RCComponentSize &size)
 {
   return
   CK::RatioLayoutComponentBuilder()
@@ -50,7 +50,7 @@ static CKComponent *ratioLayoutComponent(CGFloat ratio, const CKComponentSize &s
   CKSnapshotVerifyComponent(ratioLayoutComponent(2.0, {100, 100}), kFixedSize, @"DoubleRatio");
   CKSnapshotVerifyComponent(ratioLayoutComponent(7.0, {100, 100}), kFixedSize, @"SevenTimesRatio");
 
-  CKComponentSize tallSize = {20, 200};
+  RCComponentSize tallSize = {20, 200};
   CKSnapshotVerifyComponent(ratioLayoutComponent(10.0, tallSize), kFixedSize, @"TenTimesRatioWithItemTooBig");
 }
 

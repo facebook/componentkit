@@ -76,7 +76,7 @@
 @property (nonatomic, weak) UIView *rootComponentMountedView;
 
 /** The size that was passed into the component; don't touch this. */
-@property (nonatomic, assign, readonly) CKComponentSize size;
+@property (nonatomic, assign, readonly) RCComponentSize size;
 
 /** Used to get the scope root enumerator; during component creation only */
 @property (nonatomic, strong, readonly) id<CKComponentScopeEnumeratorProvider> scopeEnumeratorProvider;

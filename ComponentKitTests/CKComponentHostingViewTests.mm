@@ -55,7 +55,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
 {
   auto const model = [[CKComponentHostingViewTestModel alloc]
                       initWithColor:[UIColor orangeColor]
-                      size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))
+                      size:RCComponentSize::fromCGSize(CGSizeMake(50, 50))
                       wrapperType:options.wrapperType
                       willGenerateComponent:options.willGenerateComponent];
   auto const view = [self makeHostingView:options];
@@ -126,7 +126,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
 - (void)testImmediatelyUpdatesViewOnSynchronousModelChange
 {
   CKComponentHostingView *view = [[self class] hostingView:{}];
-  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:RCComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
 
@@ -137,7 +137,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
 - (void)testEventuallyUpdatesViewOnAsynchronousModelChange
 {
   CKComponentHostingView *view = [[self class] hostingView:{}];
-  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:RCComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeAsynchronous];
   [view layoutIfNeeded];
 
@@ -152,7 +152,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
 {
   CKComponentHostingView *view = [[self class] hostingView:{}];
   view.delegate = self;
-  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:RCComponentSize::fromCGSize(CGSizeMake(75, 75))]
                mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
 }
@@ -177,7 +177,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
 
 - (void)testUpdateWithEmptyBoundsMountLayout
 {
-  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
+  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:RCComponentSize::fromCGSize(CGSizeMake(50, 50))];
   auto const view = [CKComponentHostingViewTests makeHostingView:{}];
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];

@@ -74,7 +74,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
  @warning Overriding this method should be done VERY rarely.
  */
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
+                          restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize;
 
 #endif

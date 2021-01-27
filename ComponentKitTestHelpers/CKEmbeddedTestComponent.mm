@@ -19,7 +19,7 @@
   return @NO;
 }
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const RCComponentSize &)size
 {
   CKComponentScope scope(self);
   const BOOL isLifecycleTestComponentHidden = [scope.state() boolValue];

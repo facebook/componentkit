@@ -17,9 +17,9 @@
 /**
  A representation of a component's desired size relative to the size of its parent.
 
- CKComponentSize is much more expressive than CGSize. For example consider the following example:
+ RCComponentSize is much more expressive than CGSize. For example consider the following example:
 
-   const CKComponentSize size = {
+   const RCComponentSize size = {
      .width = CKRelativeDimension::Percent(0.5),
      .maxWidth = 200,
      .minHeight = CKRelativeDimension::Percent(0.75),
@@ -30,7 +30,7 @@
  to ComponentKit deferring the decision to layout. The final size of the component will be determined by the size of its
  parent and children.
  */
-struct CKComponentSize {
+struct RCComponentSize {
   /**
    The width of the component relative to its parent's size.
    @see CKRelativeDimension
@@ -69,7 +69,7 @@ struct CKComponentSize {
    @param size The size used to create the component size.
    @return A component size with the given size's width and height.
    */
-  static CKComponentSize fromCGSize(CGSize size) noexcept;
+  static RCComponentSize fromCGSize(CGSize size) noexcept;
 
   /**
    Resolves the component's size against the exact size of its parent.
@@ -78,13 +78,13 @@ struct CKComponentSize {
    */
   CKSizeRange resolve(const CGSize &parentSize) const noexcept;
 
-  bool operator==(const CKComponentSize &other) const noexcept;
+  bool operator==(const RCComponentSize &other) const noexcept;
   NSString *description() const noexcept;
 };
 
 namespace std {
-  template <> struct hash<CKComponentSize> {
-    size_t operator ()(const CKComponentSize &) noexcept;
+  template <> struct hash<RCComponentSize> {
+    size_t operator ()(const RCComponentSize &) noexcept;
   };
 }
 

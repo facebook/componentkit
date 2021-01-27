@@ -77,7 +77,7 @@ CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE;
 
 - (instancetype)initWithLabelAttributes:(const CKLabelAttributes &)attributes
                          viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                                   size:(const CKComponentSize &)size NS_DESIGNATED_INITIALIZER;
+                                   size:(const RCComponentSize &)size NS_DESIGNATED_INITIALIZER;
 
 /**
  @param attributes The content and styling information for the text component.
@@ -86,7 +86,7 @@ CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE;
  */
 + (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
                         viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                                  size:(const CKComponentSize &)size;
+                                  size:(const RCComponentSize &)size;
 
 #else
 
@@ -110,7 +110,7 @@ CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE;
                  lineSpacing:(CGFloat)lineSpacing
             paragraphSpacing:(CGFloat)paragraphSpacing
       paragraphSpacingBefore:(CGFloat)paragraphSpacingBefore
-                   swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
+                   swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize
              swiftAttributes:(NSArray<CKComponentViewAttribute_SwiftBridge *> *_Nullable)attributes NS_DESIGNATED_INITIALIZER NS_REFINED_FOR_SWIFT;
 
 #endif

@@ -66,7 +66,7 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
 + (instancetype)newWithTextAttributes:(const CKTextKitAttributes &)attributes
                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
                               options:(const CKTextComponentOptions &)options
-                                 size:(const CKComponentSize &)size
+                                 size:(const RCComponentSize &)size
 {
   CKTextKitAttributes copyAttributes = attributes.copy();
   CKViewComponentAttributeValueMap copiedMap = viewAttributes;

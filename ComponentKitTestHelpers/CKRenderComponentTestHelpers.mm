@@ -116,7 +116,7 @@
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
+                          restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
   _computeCalledCounter++;

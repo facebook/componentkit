@@ -29,7 +29,7 @@ constexpr static auto __max = clippedDimensions;
 }
 
 namespace ClippingComponentDetails {
-auto factory(CKComponent *, const CKComponentSize &, ClippingComponentDimensions) -> CKComponent *;
+auto factory(CKComponent *, const RCComponentSize &, ClippingComponentDimensions) -> CKComponent *;
 }
 
 template <PropsBitmapType PropsBitmap = 0>

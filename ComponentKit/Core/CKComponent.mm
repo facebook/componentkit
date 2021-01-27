@@ -27,7 +27,7 @@
 #import <ComponentKit/CKWeakObjectContainer.h>
 #import <ComponentKit/RCComponentDescriptionHelper.h>
 #import <ComponentKit/CKMountableHelpers.h>
-#import <ComponentKit/CKComponentSize_SwiftBridge+Internal.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge+Internal.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge+Internal.h>
 
 #import "CKComponent+UIView.h"
@@ -71,7 +71,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 }
 #endif
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const RCComponentSize &)size
 {
   return [[self alloc] initWithView:view size:size];
 }
@@ -82,15 +82,15 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 }
 
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
-                        swiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+                        swiftSize:(RCComponentSize_SwiftBridge *)swiftSize
 {
   const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};
-  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  const auto size = swiftSize != nil ? swiftSize.componentSize : RCComponentSize{};
   return [self initWithView:view size:size];
 }
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
-                        size:(const CKComponentSize &)size
+                        size:(const RCComponentSize &)size
 {
   if (self = [super init]) {
     _viewConfiguration = view;
@@ -359,7 +359,7 @@ static void unblockAnimation()
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
+                          restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
   CKAssertResolvedSize(_size, parentSize);

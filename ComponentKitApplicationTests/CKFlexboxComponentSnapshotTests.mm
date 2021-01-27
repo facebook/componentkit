@@ -23,7 +23,7 @@
 @interface CKCustomBaselineComponent : CKComponent
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
+                       size:(const RCComponentSize &)size
                    baseline:(CGFloat)baseline;
 @end
 
@@ -33,7 +33,7 @@
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
+                       size:(const RCComponentSize &)size
                    baseline:(CGFloat)baseline
 {
   CKCustomBaselineComponent *c = [super newWithView:view size:size];
@@ -135,14 +135,14 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testCorrectnessOfDeeplyNestedFlexboxHierarchies
 {
-  CKComponent *(^component)(UIColor *, const CKComponentSize &) = ^CKComponent *(UIColor *color, const CKComponentSize &size) {
+  CKComponent *(^component)(UIColor *, const RCComponentSize &) = ^CKComponent *(UIColor *color, const RCComponentSize &size) {
     return CK::ComponentBuilder()
             .viewClass([UIView class])
             .backgroundColor(color)
             .size(size)
             .build();
   };
-  CKFlexboxComponentChild(^leaf)(UIColor *, const CKComponentSize &) = ^CKFlexboxComponentChild (UIColor *color, const CKComponentSize &size) {
+  CKFlexboxComponentChild(^leaf)(UIColor *, const RCComponentSize &) = ^CKFlexboxComponentChild (UIColor *color, const RCComponentSize &size) {
     return {
       .component = component(color, size),
       .position = {

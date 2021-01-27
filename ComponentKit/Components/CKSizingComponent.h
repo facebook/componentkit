@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKLayoutComponent.h>
-#import <ComponentKit/CKComponentSize_SwiftBridge.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,12 +22,12 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE
 
 #if CK_SWIFT
 
-- (instancetype)initWithSwiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+- (instancetype)initWithSwiftSize:(RCComponentSize_SwiftBridge *)swiftSize
                         component:(NS_RELEASES_ARGUMENT CKComponent *)component NS_DESIGNATED_INITIALIZER;
 
 #else
 
-- (instancetype _Nullable)initWithSize:(const CKComponentSize &)size
+- (instancetype _Nullable)initWithSize:(const RCComponentSize &)size
                              component:(CKComponent *)component NS_DESIGNATED_INITIALIZER;
 
 #endif
@@ -36,11 +36,11 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE
 
 #if CK_SWIFT
 #define CK_SIZING_COMPONENT_INIT_UNAVAILABLE \
-- (instancetype)initWithSwiftSize:(CKComponentSize_SwiftBridge *)swiftSize \
+- (instancetype)initWithSwiftSize:(RCComponentSize_SwiftBridge *)swiftSize \
                         component:(NS_RELEASES_ARGUMENT CKComponent *)component NS_DESIGNATED_INITIALIZER;
 #else
 #define CK_SIZING_COMPONENT_INIT_UNAVAILABLE \
-- (instancetype _Nullable)initWithSize:(const CKComponentSize &)size \
+- (instancetype _Nullable)initWithSize:(const RCComponentSize &)size \
                              component:(NS_RELEASES_ARGUMENT id<CKMountable>)component NS_DESIGNATED_INITIALIZER;
 #endif
 

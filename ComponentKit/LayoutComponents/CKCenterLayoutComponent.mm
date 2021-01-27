@@ -13,7 +13,7 @@
 #import <ComponentKit/CKComponentPerfScope.h>
 #import <ComponentKit/CKInternalHelpers.h>
 
-#import "CKComponentSize_SwiftBridge+Internal.h"
+#import "RCComponentSize_SwiftBridge+Internal.h"
 #import "CKComponentSubclass.h"
 #import "ComponentUtilities.h"
 
@@ -27,9 +27,9 @@
 - (instancetype)initWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
                            sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
                                    child:(CKComponent *)child
-                               swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
+                               swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize
 {
-  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  const auto size = swiftSize != nil ? swiftSize.componentSize : RCComponentSize{};
   return [self initWithCenteringOptions:centeringOptions
                           sizingOptions:sizingOptions
                                   child:child
@@ -39,7 +39,7 @@
 - (instancetype)initWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
                            sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
                                    child:(CKComponent *)child
-                                    size:(const CKComponentSize &)size
+                                    size:(const RCComponentSize &)size
 {
   CKComponentPerfScope perfScope(self.class);
   CKCenterLayoutComponent *c = [super initWithView:{} size:size];

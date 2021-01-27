@@ -14,7 +14,7 @@
 
 #import <ComponentKit/CKComponent.h>
 
-struct CKComponentSize;
+struct RCComponentSize;
 
 /**
  A component that displays an image using UIImageView.
@@ -28,7 +28,7 @@ CK_COMPONENT_INIT_UNAVAILABLE;
  */
 - (instancetype)initWithImage:(UIImage *)image
                   attributes:(const CKViewComponentAttributeValueMap &)attributes
-                        size:(const CKComponentSize &)size NS_DESIGNATED_INITIALIZER;
+                        size:(const RCComponentSize &)size NS_DESIGNATED_INITIALIZER;
 
 @end
 

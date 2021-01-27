@@ -639,7 +639,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   If constraint is Auto, will resolve against size of children Component
   By default all values are Auto
   */
-  auto &sizeConstraints(const CKComponentSize &s)
+  auto &sizeConstraints(const RCComponentSize &s)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -830,7 +830,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   /**
   Specifies a size constraint that should apply to this component.
   */
-  auto &size(CKComponentSize &&s)
+  auto &size(RCComponentSize &&s)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
@@ -843,7 +843,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   /**
   Specifies a size constraint that should apply to this component.
   */
-  auto &size(const CKComponentSize &s)
+  auto &size(const RCComponentSize &s)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
@@ -863,7 +863,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
       isNotSettingPropertiesForChild,
       "Properties for the container must be set before the first call to .child(). To set size for a particular child, use 'sizeConstraints'."
     );
-    return Super::size(CKComponentSize::fromCGSize(s));
+    return Super::size(RCComponentSize::fromCGSize(s));
   }
 
   /**
@@ -1225,7 +1225,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   If constraint is Auto, will resolve against size of children Component
   By default all values are Auto
   */
-  auto &sizeConstraints(const CKComponentSize &s)
+  auto &sizeConstraints(const RCComponentSize &s)
   {
     _child.sizeConstraints = s;
     return *this;

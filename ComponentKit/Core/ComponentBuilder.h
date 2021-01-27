@@ -730,7 +730,7 @@ public:
   /**
    Specifies a size constraint that should apply to this component.
    */
-  auto &size(CKComponentSize &&s)
+  auto &size(RCComponentSize &&s)
   {
     _size = std::move(s);
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
@@ -739,7 +739,7 @@ public:
   /**
    Specifies a size constraint that should apply to this component.
    */
-  auto &size(const CKComponentSize &s)
+  auto &size(const RCComponentSize &s)
   {
     _size = s;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
@@ -750,12 +750,12 @@ public:
    */
   auto &size(const CGSize &s)
   {
-    _size = CKComponentSize::fromCGSize(s);
+    _size = RCComponentSize::fromCGSize(s);
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
   }
 
 protected:
-  CKComponentSize _size;
+  RCComponentSize _size;
 };
 
 namespace ComponentBuilderBasePropId {
@@ -872,7 +872,7 @@ public:
   /**
    Specifies a size constraint that should apply to this component.
    */
-  auto &size(CKComponentSize &&s)
+  auto &size(RCComponentSize &&s)
   {
     _size = std::move(s);
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -881,7 +881,7 @@ public:
   /**
    Specifies a size constraint that should apply to this component.
    */
-  auto &size(const CKComponentSize &s)
+  auto &size(const RCComponentSize &s)
   {
     _size = s;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -892,13 +892,13 @@ public:
    */
   auto &size(const CGSize &s)
   {
-    _size = CKComponentSize::fromCGSize(s);
+    _size = RCComponentSize::fromCGSize(s);
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
 protected:
   CKComponentViewConfiguration _viewConfig{};
-  CKComponentSize _size{};
+  RCComponentSize _size{};
 };
 
 template <PropsBitmapType = 0>

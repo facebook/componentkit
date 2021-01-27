@@ -8,19 +8,19 @@
  *
  */
 
-#import <ComponentKit/CKComponentSize_SwiftBridge.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge.h>
 #import <ComponentKit/CKDefines.h>
-#import <ComponentKit/CKComponentSize.h>
+#import <ComponentKit/RCComponentSize.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 #if CK_NOT_SWIFT
 
-@interface CKComponentSize_SwiftBridge ()
+@interface RCComponentSize_SwiftBridge ()
 
-- (instancetype)initWithComponentSize:(const CKComponentSize &)componentSize NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithComponentSize:(const RCComponentSize &)componentSize NS_DESIGNATED_INITIALIZER;
 
-- (const CKComponentSize &)componentSize;
+- (const RCComponentSize &)componentSize;
 
 @end
 

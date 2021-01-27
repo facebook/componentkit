@@ -54,7 +54,7 @@ static auto positionForSizeAndGravity(CGSize size, CKZStackComponentGravity grav
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                 restrictedToSize:(const CKComponentSize &)s
+                 restrictedToSize:(const RCComponentSize &)s
              relativeToParentSize:(CGSize)parentSize
 {
   auto const childLayouts = CK::map(_children, [&](CKZStackComponentChild *child) {

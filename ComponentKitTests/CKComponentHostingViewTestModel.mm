@@ -17,7 +17,7 @@
 @implementation CKComponentHostingViewTestModel
 
 - (instancetype)initWithColor:(UIColor *)color
-                         size:(const CKComponentSize &)size
+                         size:(const RCComponentSize &)size
 {
   return [self initWithColor:color
                         size:size
@@ -26,7 +26,7 @@
 }
 
 - (instancetype)initWithColor:(UIColor *)color
-                         size:(const CKComponentSize &)size
+                         size:(const RCComponentSize &)size
                   wrapperType:(CKComponentHostingViewWrapperType)wrapperType
         willGenerateComponent:(void (^)())willGenerateComponent
 {

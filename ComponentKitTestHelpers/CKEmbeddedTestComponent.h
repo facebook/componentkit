@@ -9,7 +9,7 @@
     Call setLifecycleTestComponentIsHidden to trigger the corresponding state change. */
 @interface CKEmbeddedTestComponent : CKCompositeComponent
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size;
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const RCComponentSize &)size;
 
 - (void)setLifecycleTestComponentIsHidden:(BOOL)isHidden;
 - (CKLifecycleTestComponent *)lifecycleTestComponent;

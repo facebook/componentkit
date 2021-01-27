@@ -99,10 +99,10 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
  the child to respect the inset.
  */
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
+                          restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == CKComponentSize(),
+  CKAssert(size == RCComponentSize(),
            @"CKInsetComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _component);
 

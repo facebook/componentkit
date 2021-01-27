@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-struct CKComponentSize;
+struct RCComponentSize;
 
 /**
  A component that displays an image using UIImageView.

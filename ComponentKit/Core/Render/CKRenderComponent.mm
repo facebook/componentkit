@@ -76,10 +76,10 @@
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
+                          restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == CKComponentSize(),
+  CKAssert(size == RCComponentSize(),
            @"CKRenderComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _child);
 

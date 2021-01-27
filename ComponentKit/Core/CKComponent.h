@@ -24,8 +24,8 @@
 #endif
 
 #import <ComponentKit/CKComponentProtocol.h>
-#import <ComponentKit/CKComponentSize.h>
-#import <ComponentKit/CKComponentSize_SwiftBridge.h>
+#import <ComponentKit/RCComponentSize.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge.h>
 #import <ComponentKit/CKMountable.h>
@@ -39,7 +39,7 @@ NS_SWIFT_NAME(Component)
 #if CK_SWIFT
 
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView
-                        swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize NS_REFINED_FOR_SWIFT NS_DESIGNATED_INITIALIZER;
+                        swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize NS_REFINED_FOR_SWIFT NS_DESIGNATED_INITIALIZER;
 
 #else
 
@@ -51,7 +51,7 @@ NS_SWIFT_NAME(Component)
  [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{100, 100}]
 */
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
-                        size:(const CKComponentSize &)size NS_DESIGNATED_INITIALIZER;
+                        size:(const RCComponentSize &)size NS_DESIGNATED_INITIALIZER;
 
 /**
  DEPRECATED - Do not use. Use CK::ComponentBuilder instead.
@@ -62,7 +62,7 @@ NS_SWIFT_NAME(Component)
  [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{100, 100}]
  */
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size;
+                       size:(const RCComponentSize &)size;
 
 #endif
 
@@ -79,13 +79,13 @@ NS_SWIFT_NAME(Component)
 #if CK_SWIFT
 #define CK_COMPONENT_INIT_UNAVAILABLE \
   - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView \
-                          swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize NS_UNAVAILABLE;
+                          swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize NS_UNAVAILABLE;
 #else
 #define CK_COMPONENT_INIT_UNAVAILABLE \
   + (instancetype)newWithView:(const CKComponentViewConfiguration &)view \
-                         size:(const CKComponentSize &)size NS_UNAVAILABLE; \
+                         size:(const RCComponentSize &)size NS_UNAVAILABLE; \
   - (instancetype)initWithView:(const CKComponentViewConfiguration &)view \
-                          size:(const CKComponentSize &)size NS_UNAVAILABLE;
+                          size:(const RCComponentSize &)size NS_UNAVAILABLE;
 #endif
 
 NS_ASSUME_NONNULL_END

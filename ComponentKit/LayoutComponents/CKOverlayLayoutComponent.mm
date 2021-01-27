@@ -49,10 +49,10 @@
  First layout the contents, then fit the overlay on top of it.
  */
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
+                          restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == CKComponentSize(),
+  CKAssert(size == RCComponentSize(),
            @"CKOverlayLayoutComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@, overlay=%@)", size.description(), _component, _overlay);
 

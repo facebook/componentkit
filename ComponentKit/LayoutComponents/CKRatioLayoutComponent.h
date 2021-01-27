@@ -44,18 +44,18 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 #if CK_SWIFT
 
 - (instancetype)initWithRatio:(CGFloat)ratio
-                    swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
+                    swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize
                     component:(CKComponent *)component NS_DESIGNATED_INITIALIZER;
 
 #else
 
 - (instancetype)initWithRatio:(CGFloat)ratio
-                         size:(const CKComponentSize &)size
+                         size:(const RCComponentSize &)size
                     component:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER;
 
 // DEPRECATED - Do not use. Use CK::RatioLayoutComponentBuilder instead.
 + (instancetype)newWithRatio:(CGFloat)ratio
-                        size:(const CKComponentSize &)size
+                        size:(const RCComponentSize &)size
                    component:(CKComponent *_Nullable)component;
 
 #endif

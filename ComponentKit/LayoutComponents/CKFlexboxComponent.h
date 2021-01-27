@@ -20,7 +20,7 @@
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKOptional.h>
-#import <ComponentKit/CKComponentSize_SwiftBridge.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -322,7 +322,7 @@ struct CKFlexboxComponentChild {
    If constraint is Auto, will resolve against size of children Component
    By default all values are Auto
    **/
-  CKComponentSize sizeConstraints;
+  RCComponentSize sizeConstraints;
   /**
    This property allows node to force rounding only up.
    Text should never be rounded down as this may cause it to be truncated.
@@ -366,7 +366,7 @@ CK_INIT_UNAVAILABLE;
                    swiftFlexBasis:(CKDimension_SwiftBridge *_Nullable)swiftFlexBasis
                         alignSelf:(CKFlexboxAlignSelf)alignSelf
                            zIndex:(NSInteger)zIndex
-                  sizeConstraints:(CKComponentSize_SwiftBridge *_Nullable)sizeConstraints
+                  sizeConstraints:(RCComponentSize_SwiftBridge *_Nullable)sizeConstraints
                   useTextRounding:(BOOL)useTextRounding
               useHeightAsBaseline:(BOOL)useHeightAsBaseline NS_DESIGNATED_INITIALIZER NS_REFINED_FOR_SWIFT;
 
@@ -416,12 +416,12 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param children A vector of children components.
  */
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
+                       size:(const RCComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
                    children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
-                        size:(const CKComponentSize &)size
+                        size:(const RCComponentSize &)size
                        style:(const CKFlexboxComponentStyle &)style
                     children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children NS_DESIGNATED_INITIALIZER;
 
@@ -429,7 +429,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView
                        swiftStyle:(CKFlexboxComponentStyle_SwiftBridge *_Nullable)swiftStyle
-                        swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
+                        swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize
                     swiftChildren:(NSArray<CKFlexboxChild_SwiftBridge *> *)swiftChildren NS_REFINED_FOR_SWIFT NS_DESIGNATED_INITIALIZER;
 
 #endif

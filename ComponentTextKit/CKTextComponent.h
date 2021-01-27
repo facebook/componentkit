@@ -42,7 +42,7 @@ struct CKTextComponentOptions
 + (instancetype)newWithTextAttributes:(const CKTextKitAttributes &)attributes
                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
                               options:(const CKTextComponentOptions &)options
-                                 size:(const CKComponentSize &)size;
+                                 size:(const RCComponentSize &)size;
 
 @end
 

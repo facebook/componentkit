@@ -11,7 +11,7 @@
 #import "CKSwiftComponent.h"
 
 #import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
-#import "CKComponentSize_SwiftBridge+Internal.h"
+#import "RCComponentSize_SwiftBridge+Internal.h"
 #import "CKIterableHelpers.h"
 
 #import <ComponentKit/CKComponentSubclass.h>
@@ -104,12 +104,12 @@ static CKComponentViewConfiguration _viewConfigurationWithViewIfAnimated(
 }
 
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
-                        swiftSize:(CKComponentSize_SwiftBridge *_Nullable)swiftSize
+                        swiftSize:(RCComponentSize_SwiftBridge *_Nullable)swiftSize
                             child:(CKComponent *)child
                             model:(CKSwiftComponentModel_SwiftBridge *)model
 
 {
-  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  const auto size = swiftSize != nil ? swiftSize.componentSize : RCComponentSize{};
   const auto view = _viewConfigurationWithViewIfAnimated(swiftView, model.hasAnimations);
   if (self = [super initWithView:view size:size]) {
     _model = model;
@@ -120,12 +120,12 @@ static CKComponentViewConfiguration _viewConfigurationWithViewIfAnimated(
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                 restrictedToSize:(const CKComponentSize &)size
+                 restrictedToSize:(const RCComponentSize &)size
              relativeToParentSize:(CGSize)parentSize
 {
   if (_child) {
     // Non leaf component
-    CKAssert(size == CKComponentSize(),
+    CKAssert(size == RCComponentSize(),
              @"CKSwiftComponent only passes size {} to the super class initializer, but received size %@ "
              "(component=%@)", size.description(), _child);
 

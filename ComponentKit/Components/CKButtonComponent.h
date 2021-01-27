@@ -64,7 +64,7 @@ struct CKButtonComponentOptions {
   /// Accessibility context for the button.
   RCAccessibilityContext accessibilityContext;
   /// Size restrictions for the button.
-  CKComponentSize size;
+  RCComponentSize size;
   /// The inset or outset margins for the rectangle around the button's content.
   UIEdgeInsets contentEdgeInsets = UIEdgeInsetsZero;
   /// The inset or outset margins for the rectangle around the button's title text.

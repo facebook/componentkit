@@ -13,7 +13,7 @@
 #import <ComponentTextKit/CKTextComponent.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge+Internal.h>
 #import <ComponentKit/CKComponentViewAttribute_SwiftBridge+Internal.h>
-#import <ComponentKit/CKComponentSize_SwiftBridge+Internal.h>
+#import <ComponentKit/RCComponentSize_SwiftBridge+Internal.h>
 
 @implementation CKLabelComponent
 
@@ -37,7 +37,7 @@
                  lineSpacing:(CGFloat )lineSpacing
             paragraphSpacing:(CGFloat )paragraphSpacing
       paragraphSpacingBefore:(CGFloat )paragraphSpacingBefore
-                   swiftSize:(CKComponentSize_SwiftBridge *)swiftSize
+                   swiftSize:(RCComponentSize_SwiftBridge *)swiftSize
              swiftAttributes:(NSArray<CKComponentViewAttribute_SwiftBridge *> *)swiftAttributes
 
 {
@@ -62,7 +62,7 @@
     .paragraphSpacing = paragraphSpacing,
     .paragraphSpacingBefore = paragraphSpacingBefore,
   };
-  const auto size = swiftSize != nil ? swiftSize.componentSize : CKComponentSize{};
+  const auto size = swiftSize != nil ? swiftSize.componentSize : RCComponentSize{};
   return [self initWithLabelAttributes:labelAttributes
                         viewAttributes:CKComponentViewAttribute_SwiftBridgeToMap(swiftAttributes)
                                   size:size];
@@ -70,7 +70,7 @@
 
 - (instancetype)initWithLabelAttributes:(const CKLabelAttributes &)attributes
                          viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                                   size:(const CKComponentSize &)size
+                                   size:(const RCComponentSize &)size
 {
   CKViewComponentAttributeValueMap copiedMap = viewAttributes;
   return [super initWithView:{} component:
@@ -83,7 +83,7 @@
 
 + (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
                         viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                                  size:(const CKComponentSize &)size
+                                  size:(const RCComponentSize &)size
 {
   return [[self alloc] initWithLabelAttributes:attributes viewAttributes:viewAttributes size:size];;
 }

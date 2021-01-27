@@ -44,7 +44,7 @@ static NSString *nameForInsets(UIEdgeInsets insets)
 }
 
 @interface CKInsetTestBlockComponent : CKCompositeComponent
-+ (instancetype)newWithColor:(UIColor *)color size:(const CKComponentSize &)size;
++ (instancetype)newWithColor:(UIColor *)color size:(const RCComponentSize &)size;
 @end
 
 @interface CKInsetTestBackgroundComponent : CKCompositeComponent
@@ -121,7 +121,7 @@ static NSString *nameForInsets(UIEdgeInsets insets)
 
 @implementation CKInsetTestBlockComponent
 
-+ (instancetype)newWithColor:(UIColor *)color size:(const CKComponentSize &)size
++ (instancetype)newWithColor:(UIColor *)color size:(const RCComponentSize &)size
 {
   return [super newWithComponent:CK::ComponentBuilder()
                                    .viewClass(UIView.class)
