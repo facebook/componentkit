@@ -260,6 +260,7 @@
 		2DBF1D7B1D3425ED004F28E8 /* CKTreeVerificationHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKTreeVerificationHelpers.mm */; };
 		2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2DCA4E731D889D1500AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; };
+		37CA30A925BAF51000E6F9C6 /* RCFatal.h in Headers */ = {isa = PBXBuildFile; fileRef = 37CA309E25BAF51000E6F9C6 /* RCFatal.h */; };
 		39B090BF1B71645600A5470B /* CKComponentAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentAttachControllerTests.mm */; };
 		3E9D6723215E39530019429E /* CKRenderComponentTestHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */; };
 		3E9D6724215E39530019429E /* CKRenderComponentTestHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3E9D6722215E39530019429E /* CKRenderComponentTestHelpers.mm */; };
@@ -1582,6 +1583,7 @@
 		2DBF1D781D3425ED004F28E8 /* CKTreeVerificationHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeVerificationHelpers.h; sourceTree = "<group>"; };
 		2DBF1D791D3425ED004F28E8 /* CKTreeVerificationHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTreeVerificationHelpers.mm; sourceTree = "<group>"; };
 		2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDataSourceConfigurationInternal.h; sourceTree = "<group>"; };
+		37CA309E25BAF51000E6F9C6 /* RCFatal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFatal.h; sourceTree = "<group>"; };
 		39B090BE1B71645600A5470B /* CKComponentAttachControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAttachControllerTests.mm; sourceTree = "<group>"; };
 		3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentTestHelpers.h; sourceTree = "<group>"; };
 		3E9D6722215E39530019429E /* CKRenderComponentTestHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderComponentTestHelpers.mm; sourceTree = "<group>"; };
@@ -2559,6 +2561,7 @@
 				723958E1238E9B21005B570A /* CKPropBitmap.h */,
 				723958E5238E9B21005B570A /* CKRequired.h */,
 				723958DD238E9B21005B570A /* CKVariant.h */,
+				37CA309E25BAF51000E6F9C6 /* RCFatal.h */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -4194,6 +4197,7 @@
 				D431884B23E205F00024AA12 /* ComponentViewManager.h in Headers */,
 				728D25DE23E8857A0016D672 /* RCAssociatedObject.h in Headers */,
 				D431885223E205F00024AA12 /* RCIterable.h in Headers */,
+				37CA30A925BAF51000E6F9C6 /* RCFatal.h in Headers */,
 				D43188D323E20A980024AA12 /* RenderCore.h in Headers */,
 				D431884223E205F00024AA12 /* CKCollection.h in Headers */,
 				D431884023E205F00024AA12 /* CKGeometryHelpers.h in Headers */,
