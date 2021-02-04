@@ -63,7 +63,7 @@ struct CKBuildComponentTreeParams {
   BOOL shouldCollectTreeNodeCreationInformation;
 
   // The current coalescing mode.
-  RCComponentCoalescingMode coalescingMode = RCComponentCoalescingModeNone;
+  RCComponentCoalescingMode coalescingMode = RCComponentCoalescingModeRender;
 };
 
 #endif

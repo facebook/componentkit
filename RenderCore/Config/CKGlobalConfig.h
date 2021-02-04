@@ -40,7 +40,7 @@ struct CKGlobalConfig {
   /**
    Component coalescing mode.
    */
-  RCComponentCoalescingMode coalescingMode = RCComponentCoalescingModeNone;
+  RCComponentCoalescingMode coalescingMode = RCComponentCoalescingModeRender;
   /**
    Component based accessibility mode
    */
