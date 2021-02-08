@@ -260,6 +260,7 @@
 		2DBF1D7B1D3425ED004F28E8 /* CKTreeVerificationHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKTreeVerificationHelpers.mm */; };
 		2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2DCA4E731D889D1500AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; };
+		3762401225D1AEED0073040A /* RCFatal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3762401125D1AEED0073040A /* RCFatal.mm */; };
 		37CA30A925BAF51000E6F9C6 /* RCFatal.h in Headers */ = {isa = PBXBuildFile; fileRef = 37CA309E25BAF51000E6F9C6 /* RCFatal.h */; };
 		39B090BF1B71645600A5470B /* CKComponentAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentAttachControllerTests.mm */; };
 		3E9D6723215E39530019429E /* CKRenderComponentTestHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */; };
@@ -1067,8 +1068,6 @@
 		D4C1270A2517ACB6006AD1A4 /* CKSizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4D9CF022342AECE00D1BA22 /* CKTransitions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D9D3D2342606B003DDC41 /* CKTransitions.mm */; };
 		D4DEA539254C478D00A295E0 /* CKAccessibilityAwareComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51557C7E2541C91800E47E6B /* CKAccessibilityAwareComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4DEA545254C4C1C00A295E0 /* RCComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DEA544254C4C1C00A295E0 /* RCComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4DEA546254C4C1C00A295E0 /* RCComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4DEA544254C4C1C00A295E0 /* RCComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4E807B6257E7FDC003C0804 /* CKDeflatedComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4E807BF257E7FED003C0804 /* CKDeflatedComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4EAA5552513A09400F32DC1 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5542513A09400F32DC1 /* State.swift */; };
@@ -1583,6 +1582,7 @@
 		2DBF1D781D3425ED004F28E8 /* CKTreeVerificationHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeVerificationHelpers.h; sourceTree = "<group>"; };
 		2DBF1D791D3425ED004F28E8 /* CKTreeVerificationHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTreeVerificationHelpers.mm; sourceTree = "<group>"; };
 		2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDataSourceConfigurationInternal.h; sourceTree = "<group>"; };
+		3762401125D1AEED0073040A /* RCFatal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RCFatal.mm; sourceTree = "<group>"; };
 		37CA309E25BAF51000E6F9C6 /* RCFatal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFatal.h; sourceTree = "<group>"; };
 		39B090BE1B71645600A5470B /* CKComponentAttachControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAttachControllerTests.mm; sourceTree = "<group>"; };
 		3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentTestHelpers.h; sourceTree = "<group>"; };
@@ -2122,7 +2122,6 @@
 		D4BC579123E37A1B0075D688 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4BC579D23E37A240075D688 /* CKSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKSwift.swift; sourceTree = "<group>"; };
 		D4BC57C423E387510075D688 /* CKSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKSwift.xcconfig; sourceTree = "<group>"; };
-		D4DEA544254C4C1C00A295E0 /* RCComponentBasedAccessibilityMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCComponentBasedAccessibilityMode.h; sourceTree = "<group>"; };
 		D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDeflatedComponentContext.h; sourceTree = "<group>"; };
 		D4EAA5542513A09400F32DC1 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScopeHandleLinkable.swift; sourceTree = "<group>"; };
@@ -2562,6 +2561,7 @@
 				723958E5238E9B21005B570A /* CKRequired.h */,
 				723958DD238E9B21005B570A /* CKVariant.h */,
 				37CA309E25BAF51000E6F9C6 /* RCFatal.h */,
+				3762401125D1AEED0073040A /* RCFatal.mm */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -3429,7 +3429,6 @@
 			children = (
 				D4BC570E23E3765B0075D688 /* RCArgumentPrecondition.h */,
 				D4BC570523E3765B0075D688 /* CKAssert.h */,
-				D4DEA544254C4C1C00A295E0 /* RCComponentBasedAccessibilityMode.h */,
 				728D25D123E8853A0016D672 /* RCAssociatedObject.h */,
 				D4BC56FE23E3765B0075D688 /* CKAvailability.h */,
 				D4BC571023E3765B0075D688 /* CKCasting.h */,
@@ -3729,7 +3728,6 @@
 				03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */,
 				D48D9D40234261C4003DDC41 /* CKTransitions.h in Headers */,
 				D4BC575723E3765C0075D688 /* CKDictionary.h in Headers */,
-				D4DEA546254C4C1C00A295E0 /* RCComponentBasedAccessibilityMode.h in Headers */,
 				23FEC5A0203B30DA0068E09D /* CKTreeNode.h in Headers */,
 				03B8B5321D2A346F00EDFF59 /* CKUpdateMode.h in Headers */,
 				23309AA92045C61000833BDB /* CKTreeNodeProtocol.h in Headers */,
@@ -3984,7 +3982,6 @@
 				D0B47CF41CBD948E00BB33CE /* CKComponentControllerInternal.h in Headers */,
 				D0B47CEE1CBD948E00BB33CE /* CKNetworkImageDownloading.h in Headers */,
 				D0B47D2A1CBD948E00BB33CE /* CKComponentFlexibleSizeRangeProvider.h in Headers */,
-				D4DEA545254C4C1C00A295E0 /* RCComponentBasedAccessibilityMode.h in Headers */,
 				72F0729323903A7C00338AB0 /* CKSizeAssert.h in Headers */,
 				D68F8738242018D600C16A2A /* CKExceptionInfo.h in Headers */,
 				D4BC575823E3765C0075D688 /* ComponentMountContext.h in Headers */,
@@ -5404,6 +5401,7 @@
 				D431888023E2060E0024AA12 /* RCComponentSize.mm in Sources */,
 				728D25E123E885830016D672 /* RCAssociatedObject.mm in Sources */,
 				D431888823E2060E0024AA12 /* ComponentViewManager.mm in Sources */,
+				3762401225D1AEED0073040A /* RCFatal.mm in Sources */,
 				D431887F23E2060E0024AA12 /* CKGlobalConfig.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

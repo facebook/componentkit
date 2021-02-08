@@ -8,6 +8,8 @@
  *
  */
 
+#import <Foundation/Foundation.h>
+
 #if CK_NOT_SWIFT
 
 void RCCFatalWithCategory(NSExceptionName category, NSString *description, ...);
