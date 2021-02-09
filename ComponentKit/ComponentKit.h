@@ -135,7 +135,6 @@
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKMountable.h>
 #import <ComponentKit/CKMountableHelpers.h>
-#import <ComponentKit/CKMountController.h>
 #import <ComponentKit/CKMountedObjectForView.h>
 #import <ComponentKit/CKMutex.h>
 #import <ComponentKit/CKNetworkImageComponent.h>
