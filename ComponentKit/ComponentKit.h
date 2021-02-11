@@ -113,9 +113,9 @@
 #import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKDelayedNonNull.h>
 #import <ComponentKit/CKDictionary.h>
-#import <ComponentKit/CKDimension.h>
-#import <ComponentKit/CKDimension_SwiftBridge.h>
-#import <ComponentKit/CKDimension_SwiftBridge+Internal.h>
+#import <RenderCore/RCDimension.h>
+#import <ComponentKit/RCDimension_SwiftBridge.h>
+#import <ComponentKit/RCDimension_SwiftBridge+Internal.h>
 #import <ComponentKit/RCDispatch.h>
 #import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/CKFatal.h>

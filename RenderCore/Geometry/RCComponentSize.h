@@ -12,7 +12,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <RenderCore/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 
 /**
  A representation of a component's desired size relative to the size of its parent.
@@ -20,9 +20,9 @@
  RCComponentSize is much more expressive than CGSize. For example consider the following example:
 
    const RCComponentSize size = {
-     .width = CKRelativeDimension::Percent(0.5),
+     .width = RCRelativeDimension::Percent(0.5),
      .maxWidth = 200,
-     .minHeight = CKRelativeDimension::Percent(0.75),
+     .minHeight = RCRelativeDimension::Percent(0.75),
    };
 
  This leads to a component size that is 50% of the width of its parent's width, up to a maximum width of 200 points. Its
@@ -33,36 +33,36 @@
 struct RCComponentSize {
   /**
    The width of the component relative to its parent's size.
-   @see CKRelativeDimension
+   @see RCRelativeDimension
    */
-  CKRelativeDimension width;
+  RCRelativeDimension width;
   /**
    The height of the component relative to its parent's size.
-   @see CKRelativeDimension
+   @see RCRelativeDimension
    */
-  CKRelativeDimension height;
+  RCRelativeDimension height;
 
   /**
    The minumum allowable width of the component relative to its parent's size.
-   @see CKRelativeDimension
+   @see RCRelativeDimension
    */
-  CKRelativeDimension minWidth;
+  RCRelativeDimension minWidth;
   /**
    The minumum allowable height of the component relative to its parent's size.
-   @see CKRelativeDimension
+   @see RCRelativeDimension
    */
-  CKRelativeDimension minHeight;
+  RCRelativeDimension minHeight;
 
   /**
    The maximum allowable width of the component relative to its parent's size.
-   @see CKRelativeDimension
+   @see RCRelativeDimension
    */
-  CKRelativeDimension maxWidth;
+  RCRelativeDimension maxWidth;
   /**
    The maximum allowable height of the component relative to its parent's size.
-   @see CKRelativeDimension
+   @see RCRelativeDimension
    */
-  CKRelativeDimension maxHeight;
+  RCRelativeDimension maxHeight;
 
   /**
    Creates a component size with the given size's width and height.

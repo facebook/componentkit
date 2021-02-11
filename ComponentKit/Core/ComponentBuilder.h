@@ -658,7 +658,7 @@ public:
   /**
    The width of the component relative to its parent's size.
    */
-  auto &width(CKRelativeDimension w)
+  auto &width(RCRelativeDimension w)
   {
     _size.width = w;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
@@ -676,7 +676,7 @@ public:
   /**
    The height of the component relative to its parent's size.
    */
-  auto &height(CKRelativeDimension h)
+  auto &height(RCRelativeDimension h)
   {
     _size.height = h;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
@@ -694,7 +694,7 @@ public:
   /**
    The minumum allowable width of the component relative to its parent's size.
    */
-  auto &minWidth(CKRelativeDimension w)
+  auto &minWidth(RCRelativeDimension w)
   {
     _size.minWidth = w;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
@@ -703,7 +703,7 @@ public:
   /**
    The minumum allowable height of the component relative to its parent's size.
    */
-  auto &minHeight(CKRelativeDimension h)
+  auto &minHeight(RCRelativeDimension h)
   {
     _size.minHeight = h;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
@@ -712,7 +712,7 @@ public:
   /**
    The maximum allowable width of the component relative to its parent's size.
    */
-  auto &maxWidth(CKRelativeDimension w)
+  auto &maxWidth(RCRelativeDimension w)
   {
     _size.maxWidth = w;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
@@ -721,7 +721,7 @@ public:
   /**
    The maximum allowable height of the component relative to its parent's size.
    */
-  auto &maxHeight(CKRelativeDimension h)
+  auto &maxHeight(RCRelativeDimension h)
   {
     _size.maxHeight = h;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
@@ -800,7 +800,7 @@ public:
   /**
    The width of the component relative to its parent's size.
    */
-  auto &width(CKRelativeDimension w)
+  auto &width(RCRelativeDimension w)
   {
     _size.width = w;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -818,7 +818,7 @@ public:
   /**
    The height of the component relative to its parent's size.
    */
-  auto &height(CKRelativeDimension h)
+  auto &height(RCRelativeDimension h)
   {
     _size.height = h;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -836,7 +836,7 @@ public:
   /**
    The minumum allowable width of the component relative to its parent's size.
    */
-  auto &minWidth(CKRelativeDimension w)
+  auto &minWidth(RCRelativeDimension w)
   {
     _size.minWidth = w;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -845,7 +845,7 @@ public:
   /**
    The minumum allowable height of the component relative to its parent's size.
    */
-  auto &minHeight(CKRelativeDimension h)
+  auto &minHeight(RCRelativeDimension h)
   {
     _size.minHeight = h;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -854,7 +854,7 @@ public:
   /**
    The maximum allowable width of the component relative to its parent's size.
    */
-  auto &maxWidth(CKRelativeDimension w)
+  auto &maxWidth(RCRelativeDimension w)
   {
     _size.maxWidth = w;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -863,7 +863,7 @@ public:
   /**
    The maximum allowable height of the component relative to its parent's size.
    */
-  auto &maxHeight(CKRelativeDimension h)
+  auto &maxHeight(RCRelativeDimension h)
   {
     _size.maxHeight = h;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);

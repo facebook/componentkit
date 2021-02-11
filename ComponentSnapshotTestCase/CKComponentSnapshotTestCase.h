@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 #import <ComponentKit/CKInsetComponent.h>
 #import <ComponentKit/CKAvailability.h>
 

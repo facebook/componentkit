@@ -64,7 +64,7 @@
      {
        .component = quoteTextComponent,
        .flexShrink = 1,
-       .flexBasis = CKRelativeDimension::Percent(1.0)
+       .flexBasis = RCRelativeDimension::Percent(1.0)
      }
    }];
 

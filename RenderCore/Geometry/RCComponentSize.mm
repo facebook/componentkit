@@ -55,9 +55,9 @@ static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVa
 
 CKSizeRange RCComponentSize::resolve(const CGSize &parentSize) const noexcept
 {
-  CGSize resolvedExact = CKRelativeSize(width, height).resolveSize(parentSize, {NAN, NAN});
-  CGSize resolvedMin = CKRelativeSize(minWidth, minHeight).resolveSize(parentSize, {0, 0});
-  CGSize resolvedMax = CKRelativeSize(maxWidth, maxHeight).resolveSize(parentSize, {INFINITY, INFINITY});
+  CGSize resolvedExact = RCRelativeSize(width, height).resolveSize(parentSize, {NAN, NAN});
+  CGSize resolvedMin = RCRelativeSize(minWidth, minHeight).resolveSize(parentSize, {0, 0});
+  CGSize resolvedMax = RCRelativeSize(maxWidth, maxHeight).resolveSize(parentSize, {INFINITY, INFINITY});
 
   CGSize rangeMin, rangeMax;
   CKCSConstrain(resolvedMin.width, resolvedExact.width, resolvedMax.width, &rangeMin.width, &rangeMax.width);
@@ -76,19 +76,19 @@ NSString *RCComponentSize::description() const noexcept
 {
   return [NSString stringWithFormat:
           @"<RCComponentSize: exact=%@, min=%@, max=%@>",
-          CKRelativeSize(width, height).description(),
-          CKRelativeSize(minWidth, minHeight).description(),
-          CKRelativeSize(maxWidth, maxHeight).description()];
+          RCRelativeSize(width, height).description(),
+          RCRelativeSize(minWidth, minHeight).description(),
+          RCRelativeSize(maxWidth, maxHeight).description()];
 }
 
 size_t std::hash<RCComponentSize>::operator ()(const RCComponentSize &size) noexcept {
   NSUInteger subhashes[] = {
-    std::hash<CKRelativeDimension>()(size.width),
-    std::hash<CKRelativeDimension>()(size.height),
-    std::hash<CKRelativeDimension>()(size.minWidth),
-    std::hash<CKRelativeDimension>()(size.minHeight),
-    std::hash<CKRelativeDimension>()(size.maxWidth),
-    std::hash<CKRelativeDimension>()(size.maxHeight),
+    std::hash<RCRelativeDimension>()(size.width),
+    std::hash<RCRelativeDimension>()(size.height),
+    std::hash<RCRelativeDimension>()(size.minWidth),
+    std::hash<RCRelativeDimension>()(size.minHeight),
+    std::hash<RCRelativeDimension>()(size.maxWidth),
+    std::hash<RCRelativeDimension>()(size.maxHeight),
   };
 
   return RCIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));

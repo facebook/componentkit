@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentProvider.h>
-#import <ComponentKit/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 
 /** Immutable value object that configures a data source */
 @interface CKDataSourceConfiguration<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> : NSObject

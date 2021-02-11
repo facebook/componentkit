@@ -31,21 +31,21 @@
 
  A number of convenience constructors have been provided to make using RelativeDimension straight-forward.
 
- CKRelativeDimension x;                                     // Auto (default case)
- CKRelativeDimension z = 10;                                // 10 Points
- CKRelativeDimension y = CKRelativeDimension::Auto();       // Auto
- CKRelativeDimension u = CKRelativeDimension::Percent(0.5); // 50%
+ RCRelativeDimension x;                                     // Auto (default case)
+ RCRelativeDimension z = 10;                                // 10 Points
+ RCRelativeDimension y = RCRelativeDimension::Auto();       // Auto
+ RCRelativeDimension u = RCRelativeDimension::Percent(0.5); // 50%
 
  */
-class CKRelativeDimension;
+class RCRelativeDimension;
 
 namespace std {
-  template <> struct hash<CKRelativeDimension> {
-    size_t operator ()(const CKRelativeDimension &) noexcept;
+  template <> struct hash<RCRelativeDimension> {
+    size_t operator ()(const RCRelativeDimension &) noexcept;
   };
 }
 
-class CKRelativeDimension {
+class RCRelativeDimension {
 public:
   // Make sizeof(Type) == sizeof(CGFloat) so that the default
   // constructor takes fewer instructions (because of SLP
@@ -56,70 +56,70 @@ public:
     PERCENT,
   };
   /** Default constructor is equivalent to "Auto". */
-  constexpr CKRelativeDimension() noexcept : _type(Type::AUTO), _value(0) {}
-  CKRelativeDimension(CGFloat points) noexcept : CKRelativeDimension(Type::POINTS, points) {}
+  constexpr RCRelativeDimension() noexcept : _type(Type::AUTO), _value(0) {}
+  RCRelativeDimension(CGFloat points) noexcept : RCRelativeDimension(Type::POINTS, points) {}
 
-  constexpr static CKRelativeDimension Auto() noexcept { return CKRelativeDimension(); }
-  static CKRelativeDimension Points(CGFloat p) noexcept { return CKRelativeDimension(p); }
-  static CKRelativeDimension Percent(CGFloat p) noexcept { return {CKRelativeDimension::Type::PERCENT, p}; }
+  constexpr static RCRelativeDimension Auto() noexcept { return RCRelativeDimension(); }
+  static RCRelativeDimension Points(CGFloat p) noexcept { return RCRelativeDimension(p); }
+  static RCRelativeDimension Percent(CGFloat p) noexcept { return {RCRelativeDimension::Type::PERCENT, p}; }
 
-  CKRelativeDimension(const CKRelativeDimension &) = default;
-  CKRelativeDimension &operator=(const CKRelativeDimension &) = default;
+  RCRelativeDimension(const RCRelativeDimension &) = default;
+  RCRelativeDimension &operator=(const RCRelativeDimension &) = default;
 
-  bool operator==(const CKRelativeDimension &) const noexcept;
+  bool operator==(const RCRelativeDimension &) const noexcept;
   NSString *description() const noexcept;
   CGFloat resolve(CGFloat autoSize, CGFloat parent) const noexcept;
   Type type() const noexcept;
   CGFloat value() const noexcept;
 
 private:
-  CKRelativeDimension(Type type, CGFloat value)
+  RCRelativeDimension(Type type, CGFloat value)
     : _type(type), _value(value) {}
 
   Type _type;
   CGFloat _value;
 
-  friend std::hash<CKRelativeDimension>;
+  friend std::hash<RCRelativeDimension>;
 };
 
 
 /** Expresses a size with relative dimensions. */
-struct CKRelativeSize {
-  CKRelativeDimension width;
-  CKRelativeDimension height;
-  CKRelativeSize(const CKRelativeDimension &width, const CKRelativeDimension &height) noexcept;
+struct RCRelativeSize {
+  RCRelativeDimension width;
+  RCRelativeDimension height;
+  RCRelativeSize(const RCRelativeDimension &width, const RCRelativeDimension &height) noexcept;
 
   /** Convenience constructor to provide size in Points. */
-  CKRelativeSize(const CGSize &size) noexcept;
+  RCRelativeSize(const CGSize &size) noexcept;
 
   /** Convenience constructor for {Auto, Auto} */
-  constexpr CKRelativeSize() = default;
+  constexpr RCRelativeSize() = default;
 
   /** Resolve this size relative to a parent size and an auto size. */
   CGSize resolveSize(const CGSize &parentSize, const CGSize &autoSize) const noexcept;
 
-  bool operator==(const CKRelativeSize &other) const noexcept;
+  bool operator==(const RCRelativeSize &other) const noexcept;
   NSString *description() const noexcept;
 };
 
 /**
  Expresses an inclusive range of relative sizes. Used to provide additional constraint to component layout.
  */
-struct CKRelativeSizeRange {
-  CKRelativeSize min;
-  CKRelativeSize max;
-  CKRelativeSizeRange(const CKRelativeSize &min, const CKRelativeSize &max);
+struct RCRelativeSizeRange {
+  RCRelativeSize min;
+  RCRelativeSize max;
+  RCRelativeSizeRange(const RCRelativeSize &min, const RCRelativeSize &max);
 
   /**
    Convenience constructors to provide an exact size (min == max).
-   CKRelativeSizeRange r = {80, 60} // width: [80, 80], height: [60, 60].
+   RCRelativeSizeRange r = {80, 60} // width: [80, 80], height: [60, 60].
    */
-  CKRelativeSizeRange(const CKRelativeSize &exact) noexcept;
-  CKRelativeSizeRange(const CGSize &exact) noexcept;
-  CKRelativeSizeRange(const CKRelativeDimension &exactWidth, const CKRelativeDimension &exactHeight) noexcept;
+  RCRelativeSizeRange(const RCRelativeSize &exact) noexcept;
+  RCRelativeSizeRange(const CGSize &exact) noexcept;
+  RCRelativeSizeRange(const RCRelativeDimension &exactWidth, const RCRelativeDimension &exactHeight) noexcept;
 
   /** Convenience constructor for {{Auto, Auto}, {Auto, Auto}}. */
-  constexpr CKRelativeSizeRange() = default;
+  constexpr RCRelativeSizeRange() = default;
 
   /**
    Provided a parent size and values to use in place of Auto, compute final dimensions for this RelativeSizeRange

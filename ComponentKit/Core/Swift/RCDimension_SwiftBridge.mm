@@ -8,16 +8,16 @@
  *
  */
 
-#import <ComponentKit/CKDimension_SwiftBridge.h>
-#import <ComponentKit/CKDimension_SwiftBridge+Internal.h>
+#import <ComponentKit/RCDimension_SwiftBridge.h>
+#import <ComponentKit/RCDimension_SwiftBridge+Internal.h>
 
 #import <ComponentKit/CKCasting.h>
 
-@implementation CKDimension_SwiftBridge {
-  CKRelativeDimension _dimension;
+@implementation RCDimension_SwiftBridge {
+  RCRelativeDimension _dimension;
 }
 
-- (instancetype)initWithDimension:(const CKRelativeDimension &)dimension
+- (instancetype)initWithDimension:(const RCRelativeDimension &)dimension
 {
   self = [super init];
   _dimension = dimension;
@@ -36,15 +36,15 @@
 
 - (instancetype)initWithPercent:(CGFloat)percent
 {
-  return [self initWithDimension:CKRelativeDimension::Percent(percent)];
+  return [self initWithDimension:RCRelativeDimension::Percent(percent)];
 }
 
 + (instancetype)autoInstance
 {
-  return [[self alloc] initWithDimension:CKRelativeDimension::Auto()];
+  return [[self alloc] initWithDimension:RCRelativeDimension::Auto()];
 }
 
-- (const CKRelativeDimension &)dimension
+- (const RCRelativeDimension &)dimension
 {
   return _dimension;
 }
@@ -57,13 +57,13 @@
     return YES;
   } else {
     // Intentionally treat passing a different type as a programming error
-    return _dimension == CK::objCForceCast<CKDimension_SwiftBridge>(other)->_dimension;
+    return _dimension == CK::objCForceCast<RCDimension_SwiftBridge>(other)->_dimension;
   }
 }
 
 - (NSUInteger)hash
 {
-  return std::hash<CKRelativeDimension>{}(_dimension);
+  return std::hash<RCRelativeDimension>{}(_dimension);
 }
 
 - (NSString *)description

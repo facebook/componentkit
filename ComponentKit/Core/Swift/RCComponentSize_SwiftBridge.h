@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDimension_SwiftBridge.h>
+#import <ComponentKit/RCDimension_SwiftBridge.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,12 +17,12 @@ NS_SWIFT_NAME(ComponentSizeSwiftBridge)
 @interface RCComponentSize_SwiftBridge : NSObject
 
 - (instancetype)initWithSize:(CGSize)size;
-- (instancetype)initWithWidth:(CKDimension_SwiftBridge *_Nullable)width
-                       height:(CKDimension_SwiftBridge *_Nullable)height
-                     minWidth:(CKDimension_SwiftBridge *_Nullable)minWidth
-                    minHeight:(CKDimension_SwiftBridge *_Nullable)minHeight
-                     maxWidth:(CKDimension_SwiftBridge *_Nullable)maxWidth
-                    maxHeight:(CKDimension_SwiftBridge *_Nullable)maxHeight;
+- (instancetype)initWithWidth:(RCDimension_SwiftBridge *_Nullable)width
+                       height:(RCDimension_SwiftBridge *_Nullable)height
+                     minWidth:(RCDimension_SwiftBridge *_Nullable)minWidth
+                    minHeight:(RCDimension_SwiftBridge *_Nullable)minHeight
+                     maxWidth:(RCDimension_SwiftBridge *_Nullable)maxWidth
+                    maxHeight:(RCDimension_SwiftBridge *_Nullable)maxHeight;
 
 @end
 

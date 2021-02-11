@@ -12,10 +12,10 @@
 #import <ComponentKit/RCComponentSize_SwiftBridge+Internal.h>
 
 #import <ComponentKit/CKCasting.h>
-#import <ComponentKit/CKDimension_SwiftBridge+Internal.h>
+#import <ComponentKit/RCDimension_SwiftBridge+Internal.h>
 
-static auto toRelativeDimention(CKDimension_SwiftBridge *_Nullable swiftDimension) {
-  return swiftDimension != nil ? swiftDimension.dimension : CKRelativeDimension();
+static auto toRelativeDimention(RCDimension_SwiftBridge *_Nullable swiftDimension) {
+  return swiftDimension != nil ? swiftDimension.dimension : RCRelativeDimension();
 }
 
 @implementation RCComponentSize_SwiftBridge {
@@ -40,12 +40,12 @@ static auto toRelativeDimention(CKDimension_SwiftBridge *_Nullable swiftDimensio
   return [self initWithComponentSize:RCComponentSize::fromCGSize(size)];
 }
 
-- (instancetype)initWithWidth:(CKDimension_SwiftBridge *)width
-                       height:(CKDimension_SwiftBridge *)height
-                     minWidth:(CKDimension_SwiftBridge *)minWidth
-                    minHeight:(CKDimension_SwiftBridge *)minHeight
-                     maxWidth:(CKDimension_SwiftBridge *)maxWidth
-                    maxHeight:(CKDimension_SwiftBridge *)maxHeight
+- (instancetype)initWithWidth:(RCDimension_SwiftBridge *)width
+                       height:(RCDimension_SwiftBridge *)height
+                     minWidth:(RCDimension_SwiftBridge *)minWidth
+                    minHeight:(RCDimension_SwiftBridge *)minHeight
+                     maxWidth:(RCDimension_SwiftBridge *)maxWidth
+                    maxHeight:(RCDimension_SwiftBridge *)maxHeight
 {
   return
   [self initWithComponentSize:{

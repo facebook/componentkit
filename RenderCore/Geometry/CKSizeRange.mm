@@ -12,7 +12,7 @@
 
 #import <functional>
 
-#import <RenderCore/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 #import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKMacros.h>
 

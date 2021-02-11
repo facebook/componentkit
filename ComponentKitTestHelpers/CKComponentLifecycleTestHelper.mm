@@ -20,7 +20,7 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
 #import <ComponentKit/CKComponentRootLayoutProvider.h>
-#import <ComponentKit/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 
 using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
 

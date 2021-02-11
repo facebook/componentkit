@@ -15,7 +15,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKComponentHostingViewProtocol.h>
-#import <ComponentKit/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeTypes.h>

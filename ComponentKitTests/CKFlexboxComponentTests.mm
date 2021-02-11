@@ -252,7 +252,7 @@
                                       .child(CK::ComponentBuilder()
             .viewClass([UIView class])
             .build())
-                                          .flexBasis(CKRelativeDimension::Auto())
+                                          .flexBasis(RCRelativeDimension::Auto())
                                       .child(CK::ComponentBuilder()
             .viewClass([UIView class])
             .build())
@@ -260,7 +260,7 @@
                                       .child(CK::ComponentBuilder()
             .viewClass([UIView class])
             .build())
-                                          .flexBasis(CKRelativeDimension::Percent(0.5))
+                                          .flexBasis(RCRelativeDimension::Percent(0.5))
                                       .build();
   YGNodeRef node = [component ygNode:{{0, 300}, {0, 300}}];
 

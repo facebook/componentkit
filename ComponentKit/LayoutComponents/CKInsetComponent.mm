@@ -18,16 +18,16 @@
 #import <ComponentKit/CKSizeAssert.h>
 
 #import "CKComponentSubclass.h"
-#import "CKDimension_SwiftBridge+Internal.h"
+#import "RCDimension_SwiftBridge+Internal.h"
 #import "ComponentLayoutContext.h"
 #import "CKComponentViewConfiguration_SwiftBridge+Internal.h"
 
 @interface CKInsetComponent ()
 {
-  CKRelativeDimension _top;
-  CKRelativeDimension _left;
-  CKRelativeDimension _bottom;
-  CKRelativeDimension _right;
+  RCRelativeDimension _top;
+  RCRelativeDimension _left;
+  RCRelativeDimension _bottom;
+  RCRelativeDimension _right;
   CKComponent *_component;
 }
 @end
@@ -53,10 +53,10 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
 @implementation CKInsetComponent
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
-                         top:(CKRelativeDimension)top
-                        left:(CKRelativeDimension)left
-                      bottom:(CKRelativeDimension)bottom
-                       right:(CKRelativeDimension)right
+                         top:(RCRelativeDimension)top
+                        left:(RCRelativeDimension)left
+                      bottom:(RCRelativeDimension)bottom
+                       right:(RCRelativeDimension)right
                    component:(CKComponent *)component
 {
   if (component == nil) {
@@ -74,20 +74,20 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
   return c;
 }
 
-- (instancetype)initWithTop:(CKRelativeDimension)top
-                       left:(CKRelativeDimension)left
-                     bottom:(CKRelativeDimension)bottom
-                      right:(CKRelativeDimension)right
+- (instancetype)initWithTop:(RCRelativeDimension)top
+                       left:(RCRelativeDimension)left
+                     bottom:(RCRelativeDimension)bottom
+                      right:(RCRelativeDimension)right
                      component:(CKComponent *_Nullable)component
 {
   return [self initWithView:{} top:top left:left bottom:bottom right:right component:component];
 }
 
 - (nullable instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *)swiftView
-                                       top:(CKDimension_SwiftBridge *)top
-                                      left:(CKDimension_SwiftBridge *)left
-                                    bottom:(CKDimension_SwiftBridge *)bottom
-                                     right:(CKDimension_SwiftBridge *)right
+                                       top:(RCDimension_SwiftBridge *)top
+                                      left:(RCDimension_SwiftBridge *)left
+                                    bottom:(RCDimension_SwiftBridge *)bottom
+                                     right:(RCDimension_SwiftBridge *)right
                                  component:(CKComponent *_Nullable)component
 {
   const auto view = swiftView != nil ? swiftView.viewConfig : CKComponentViewConfiguration{};

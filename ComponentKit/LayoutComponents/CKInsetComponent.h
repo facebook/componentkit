@@ -50,10 +50,10 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param component The wrapped child component to inset. If nil, this method returns nil.
  */
 - (instancetype)initWithSwiftView:(CKComponentViewConfiguration_SwiftBridge *_Nullable)swiftView
-                              top:(CKDimension_SwiftBridge *)top
-                             left:(CKDimension_SwiftBridge *)left
-                           bottom:(CKDimension_SwiftBridge *)bottom
-                            right:(CKDimension_SwiftBridge *)right
+                              top:(RCDimension_SwiftBridge *)top
+                             left:(RCDimension_SwiftBridge *)left
+                           bottom:(RCDimension_SwiftBridge *)bottom
+                            right:(RCDimension_SwiftBridge *)right
                         component:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER;
 
 #else
@@ -64,20 +64,20 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
  @param component The wrapped child component to inset. If nil, this method returns nil.
  */
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
-                         top:(CKRelativeDimension)top
-                        left:(CKRelativeDimension)left
-                      bottom:(CKRelativeDimension)bottom
-                       right:(CKRelativeDimension)right
+                         top:(RCRelativeDimension)top
+                        left:(RCRelativeDimension)left
+                      bottom:(RCRelativeDimension)bottom
+                       right:(RCRelativeDimension)right
                    component:(CKComponent *_Nullable)component NS_DESIGNATED_INITIALIZER;
 
 /**
  @param insets The amount of space to inset on each side.
  @param component The wrapped child component to inset. If nil, this method returns nil.
  */
-- (instancetype)initWithTop:(CKRelativeDimension)top
-                       left:(CKRelativeDimension)left
-                     bottom:(CKRelativeDimension)bottom
-                      right:(CKRelativeDimension)right
+- (instancetype)initWithTop:(RCRelativeDimension)top
+                       left:(RCRelativeDimension)left
+                     bottom:(RCRelativeDimension)bottom
+                      right:(RCRelativeDimension)right
                   component:(CKComponent *_Nullable)component;
 
 #endif

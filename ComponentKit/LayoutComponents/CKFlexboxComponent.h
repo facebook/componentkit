@@ -134,17 +134,17 @@ typedef NS_CLOSED_ENUM(NSInteger, CKFlexboxPositionType) {
 struct CKFlexboxPosition {
   CKFlexboxPositionType type;
   /** Defines offset from starting edge of parent to starting edge of child */
-  CKRelativeDimension start;
+  RCRelativeDimension start;
   /** Defines offset from top edge of parent to top edge of child */
-  CKRelativeDimension top;
+  RCRelativeDimension top;
   /** Defines offset from end edge of parent to end edge of child */
-  CKRelativeDimension end;
+  RCRelativeDimension end;
   /** Defines offset from bottom edge of parent to bottom edge of child */
-  CKRelativeDimension bottom;
+  RCRelativeDimension bottom;
   /** Defines offset from left edge of parent to left edge of child */
-  CKRelativeDimension left;
+  RCRelativeDimension left;
   /** Defines offset from right edge of parent to right edge of child */
-  CKRelativeDimension right;
+  RCRelativeDimension right;
 };
 
 /** Allows us to differentiate between an explicitly set border and an undefined border */
@@ -181,15 +181,15 @@ struct CKFlexboxBorder {
 /** Allows us to differentiate between an explicitly set auto-dimension and an undefined dimension */
 class CKFlexboxDimension {
 public:
-  constexpr CKFlexboxDimension() noexcept : _relativeDimension(CKRelativeDimension()), _isDefined(false) {}
+  constexpr CKFlexboxDimension() noexcept : _relativeDimension(RCRelativeDimension()), _isDefined(false) {}
 
   /** Convenience initializer for points */
-  CKFlexboxDimension(CGFloat points) noexcept : CKFlexboxDimension(CKRelativeDimension(points), true) {}
+  CKFlexboxDimension(CGFloat points) noexcept : CKFlexboxDimension(RCRelativeDimension(points), true) {}
 
   /** Convenience initializer for a dimension object */
-  CKFlexboxDimension(CKRelativeDimension dimension) noexcept : CKFlexboxDimension(dimension, true) {}
+  CKFlexboxDimension(RCRelativeDimension dimension) noexcept : CKFlexboxDimension(dimension, true) {}
 
-  CKRelativeDimension dimension() const noexcept {
+  RCRelativeDimension dimension() const noexcept {
     return _relativeDimension;
   }
 
@@ -198,9 +198,9 @@ public:
   }
 
 private:
-  CKFlexboxDimension(CKRelativeDimension dimension, bool isDefined)
+  CKFlexboxDimension(RCRelativeDimension dimension, bool isDefined)
   : _relativeDimension(dimension), _isDefined(isDefined) {}
-  CKRelativeDimension _relativeDimension;
+  RCRelativeDimension _relativeDimension;
   // Make sizeof(_isDefined) == sizeof(void *) to get smaller code via SLP vectorization.
   NSUInteger _isDefined;
 };
@@ -303,7 +303,7 @@ struct CKFlexboxComponentChild {
    */
   CGFloat flexShrink{0.0};
   /** Specifies the initial size in the stack dimension for the child. */
-  CKRelativeDimension flexBasis;
+  RCRelativeDimension flexBasis;
   /** Orientation of the child along cross axis, overriding alignItems */
   CKFlexboxAlignSelf alignSelf;
   /** Position for the child */
@@ -363,7 +363,7 @@ CK_INIT_UNAVAILABLE;
                      spacingAfter:(CGFloat)spacingAfter
                          flexGrow:(CGFloat)flexGrow
                        flexShrink:(CGFloat)flexShrink
-                   swiftFlexBasis:(CKDimension_SwiftBridge *_Nullable)swiftFlexBasis
+                   swiftFlexBasis:(RCDimension_SwiftBridge *_Nullable)swiftFlexBasis
                         alignSelf:(CKFlexboxAlignSelf)alignSelf
                            zIndex:(NSInteger)zIndex
                   sizeConstraints:(RCComponentSize_SwiftBridge *_Nullable)sizeConstraints

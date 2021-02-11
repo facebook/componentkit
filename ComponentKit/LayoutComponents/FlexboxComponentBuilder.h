@@ -96,7 +96,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Start margin applied to the child. Left in left-to-right languages, right in right-to-left languages */
-  auto &marginStart(CKRelativeDimension m)
+  auto &marginStart(RCRelativeDimension m)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -116,7 +116,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** End margin applied to the child. Right in left-to-right languages, left in right-to-left languages */
-  auto &marginEnd(CKRelativeDimension m)
+  auto &marginEnd(RCRelativeDimension m)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -188,7 +188,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Top padding applied to the container */
-  auto &paddingTop(CKRelativeDimension p)
+  auto &paddingTop(RCRelativeDimension p)
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _currentChild.padding.top = p;
@@ -210,7 +210,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Bottom padding applied to the container */
-  auto &paddingBottom(CKRelativeDimension p)
+  auto &paddingBottom(RCRelativeDimension p)
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _currentChild.padding.bottom = p;
@@ -232,7 +232,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Start padding applied to the container. Left in left-to-right languages, right in right-to-left languages */
-  auto &paddingStart(CKRelativeDimension p)
+  auto &paddingStart(RCRelativeDimension p)
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _currentChild.padding.start = p;
@@ -254,7 +254,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** End padding applied to the container. Right in left-to-right languages, left in right-to-left languages */
-  auto &paddingEnd(CKRelativeDimension p)
+  auto &paddingEnd(RCRelativeDimension p)
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _currentChild.padding.end = p;
@@ -457,7 +457,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Specifies the initial size in the stack dimension for the child. */
-  auto &flexBasis(CKRelativeDimension fb)
+  auto &flexBasis(RCRelativeDimension fb)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -497,7 +497,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Defines offset from left edge of parent to left edge of child */
-  auto &positionLeft(CKRelativeDimension p)
+  auto &positionLeft(RCRelativeDimension p)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -517,7 +517,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Defines offset from end edge of parent to end edge of child */
-  auto &positionEnd(CKRelativeDimension p)
+  auto &positionEnd(RCRelativeDimension p)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -537,7 +537,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Defines offset from starting edge of parent to starting edge of child */
-  auto &positionStart(CKRelativeDimension p)
+  auto &positionStart(RCRelativeDimension p)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -557,7 +557,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Defines offset from top edge of parent to top edge of child */
-  auto &positionTop(CKRelativeDimension p)
+  auto &positionTop(RCRelativeDimension p)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -577,7 +577,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Defines offset from bottom edge of parent to bottom edge of child */
-  auto &positionBottom(CKRelativeDimension p)
+  auto &positionBottom(RCRelativeDimension p)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -597,7 +597,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /** Defines offset from right edge of parent to right edge of child */
-  auto &positionRight(CKRelativeDimension p)
+  auto &positionRight(RCRelativeDimension p)
   {
     constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isSettingPropertiesForChild,
@@ -726,7 +726,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   /**
   The width of the component relative to its parent's size.
   */
-  auto &width(CKRelativeDimension w)
+  auto &width(RCRelativeDimension w)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
@@ -752,7 +752,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   /**
   The height of the component relative to its parent's size.
   */
-  auto &height(CKRelativeDimension h)
+  auto &height(RCRelativeDimension h)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
@@ -778,7 +778,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   /**
   The minumum allowable width of the component relative to its parent's size.
   */
-  auto &minWidth(CKRelativeDimension w)
+  auto &minWidth(RCRelativeDimension w)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
@@ -791,7 +791,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   /**
   The minumum allowable height of the component relative to its parent's size.
   */
-  auto &minHeight(CKRelativeDimension h)
+  auto &minHeight(RCRelativeDimension h)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
@@ -804,7 +804,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   /**
   The maximum allowable width of the component relative to its parent's size.
   */
-  auto &maxWidth(CKRelativeDimension w)
+  auto &maxWidth(RCRelativeDimension w)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
@@ -817,7 +817,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   /**
   The maximum allowable height of the component relative to its parent's size.
   */
-  auto &maxHeight(CKRelativeDimension h)
+  auto &maxHeight(RCRelativeDimension h)
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
@@ -961,7 +961,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Start margin applied to the child. Left in left-to-right languages, right in right-to-left languages */
-  auto &marginStart(CKRelativeDimension m)
+  auto &marginStart(RCRelativeDimension m)
   {
     _child.margin.start = m;
     return *this;
@@ -975,7 +975,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** End margin applied to the child. Right in left-to-right languages, left in right-to-left languages */
-  auto &marginEnd(CKRelativeDimension m)
+  auto &marginEnd(RCRelativeDimension m)
   {
     _child.margin.end = m;
     return *this;
@@ -996,7 +996,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Top padding applied to the container */
-  auto &paddingTop(CKRelativeDimension p)
+  auto &paddingTop(RCRelativeDimension p)
   {
     _child.padding.top = p;
     return *this;
@@ -1010,7 +1010,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Bottom padding applied to the container */
-  auto &paddingBottom(CKRelativeDimension p)
+  auto &paddingBottom(RCRelativeDimension p)
   {
     _child.padding.bottom = p;
     return *this;
@@ -1024,7 +1024,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Start padding applied to the container. Left in left-to-right languages, right in right-to-left languages */
-  auto &paddingStart(CKRelativeDimension p)
+  auto &paddingStart(RCRelativeDimension p)
   {
     _child.padding.start = p;
     return *this;
@@ -1038,7 +1038,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** End padding applied to the container. Right in left-to-right languages, left in right-to-left languages */
-  auto &paddingEnd(CKRelativeDimension p)
+  auto &paddingEnd(RCRelativeDimension p)
   {
     _child.padding.end = p;
     return *this;
@@ -1094,7 +1094,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Specifies the initial size in the stack dimension for the child. */
-  auto &flexBasis(CKRelativeDimension fb)
+  auto &flexBasis(RCRelativeDimension fb)
   {
     _child.flexBasis = fb;
     return *this;
@@ -1122,7 +1122,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Defines offset from left edge of parent to left edge of child */
-  auto &positionLeft(CKRelativeDimension p)
+  auto &positionLeft(RCRelativeDimension p)
   {
     _child.position.left = p;
     return *this;
@@ -1136,7 +1136,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Defines offset from end edge of parent to end edge of child */
-  auto &positionEnd(CKRelativeDimension p)
+  auto &positionEnd(RCRelativeDimension p)
   {
     _child.position.end = p;
     return *this;
@@ -1150,7 +1150,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Defines offset from starting edge of parent to starting edge of child */
-  auto &positionStart(CKRelativeDimension p)
+  auto &positionStart(RCRelativeDimension p)
   {
     _child.position.start = p;
     return *this;
@@ -1164,7 +1164,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Defines offset from top edge of parent to top edge of child */
-  auto &positionTop(CKRelativeDimension p)
+  auto &positionTop(RCRelativeDimension p)
   {
     _child.position.top = p;
     return *this;
@@ -1178,7 +1178,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Defines offset from bottom edge of parent to bottom edge of child */
-  auto &positionBottom(CKRelativeDimension p)
+  auto &positionBottom(RCRelativeDimension p)
   {
     _child.position.bottom = p;
     return *this;
@@ -1192,7 +1192,7 @@ class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
   }
 
   /** Defines offset from right edge of parent to right edge of child */
-  auto &positionRight(CKRelativeDimension p)
+  auto &positionRight(RCRelativeDimension p)
   {
     _child.position.right = p;
     return *this;

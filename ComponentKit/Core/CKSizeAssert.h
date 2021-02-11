@@ -40,8 +40,8 @@
 
 #if CK_ASSERTIONS_ENABLED
   #define CKAssertResolvedSize(componentSize, parentSize) \
-    CGSize resolvedMin = CKRelativeSize(componentSize.minWidth, componentSize.minHeight).resolveSize(parentSize, {0, 0}); \
-    CGSize resolvedMax = CKRelativeSize(componentSize.maxWidth, componentSize.maxHeight).resolveSize(parentSize, {INFINITY, INFINITY}); \
+    CGSize resolvedMin = RCRelativeSize(componentSize.minWidth, componentSize.minHeight).resolveSize(parentSize, {0, 0}); \
+    CGSize resolvedMax = RCRelativeSize(componentSize.maxWidth, componentSize.maxHeight).resolveSize(parentSize, {INFINITY, INFINITY}); \
     CKAssertConstrainedValue(resolvedMin.width); \
     CKAssertConstrainedValue(resolvedMin.height); \
     CKAssertConstrainedValue(resolvedMax.width); \

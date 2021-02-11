@@ -30,7 +30,7 @@
 
 - (void)testPercentageWidthIsResolvedAgainstParentDimension
 {
-  RCComponentSize s = {.width = CKRelativeDimension::Percent(1.0)};
+  RCComponentSize s = {.width = RCRelativeDimension::Percent(1.0)};
   CKSizeRange r = s.resolve({500, 300});
   XCTAssertEqual(r.min.width, 500.0f, @"Expected min of resolved range to match");
   XCTAssertEqual(r.max.width, 500.0f, @"Expected max of resolved range to match");
@@ -38,7 +38,7 @@
 
 - (void)testMaxSizeClampsComponentSize
 {
-  RCComponentSize s = {.width = CKRelativeDimension::Percent(1.0), .maxWidth = 300};
+  RCComponentSize s = {.width = RCRelativeDimension::Percent(1.0), .maxWidth = 300};
   CKSizeRange r = s.resolve({500, 300});
   XCTAssertEqual(r.min.width, 300.0f, @"Expected max-size to clamp the width to exactly 300 pts");
   XCTAssertEqual(r.max.width, 300.0f, @"Expected max-size to clamp the width to exactly 300 pts");
@@ -47,7 +47,7 @@
 - (void)testMinSizeOverridesMaxSizeWhenTheyConflict
 {
   // Min-size overriding max-size matches CSS.
-  RCComponentSize s = {.minWidth = CKRelativeDimension::Percent(0.5), .maxWidth = 300};
+  RCComponentSize s = {.minWidth = RCRelativeDimension::Percent(0.5), .maxWidth = 300};
   CKSizeRange r = s.resolve({800, 300});
   XCTAssertEqual(r.min.width, 400.0f, @"Expected min-size to override max-size");
   XCTAssertEqual(r.max.width, 400.0f, @"Expected min-size to override max-size");

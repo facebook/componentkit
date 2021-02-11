@@ -28,7 +28,7 @@
 #import <RenderCore/CKDelayedInitialisationWrapper.h>
 #import <RenderCore/CKDelayedNonNull.h>
 #import <RenderCore/CKDictionary.h>
-#import <RenderCore/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 #import <RenderCore/RCDispatch.h>
 #import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKFunctionalHelpers.h>

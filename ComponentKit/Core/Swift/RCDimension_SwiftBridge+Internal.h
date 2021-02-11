@@ -8,20 +8,22 @@
  *
  */
 
-#import <CoreGraphics/CoreGraphics.h>
-#import <Foundation/Foundation.h>
+#import <ComponentKit/RCDimension_SwiftBridge.h>
+#import <ComponentKit/CKDefines.h>
+#import <RenderCore/RCDimension.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-__attribute__((objc_subclassing_restricted))
-NS_SWIFT_NAME(DimensionSwiftBridge)
-@interface CKDimension_SwiftBridge : NSObject
+#if CK_NOT_SWIFT
 
-- (instancetype)initWithPoints:(CGFloat)points;
-- (instancetype)initWithPercent:(CGFloat)percent;
+@interface RCDimension_SwiftBridge ()
 
-+ (instancetype)autoInstance;
+- (instancetype)initWithDimension:(const RCRelativeDimension &)dimension NS_DESIGNATED_INITIALIZER;
+
+- (const RCRelativeDimension &)dimension;
 
 @end
+
+#endif
 
 NS_ASSUME_NONNULL_END

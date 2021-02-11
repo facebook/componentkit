@@ -900,7 +900,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        }],
        .flexGrow = 1,
        .flexShrink = 0,
-       .flexBasis = CKRelativeDimension::Percent(0.5)
+       .flexBasis = RCRelativeDimension::Percent(0.5)
      },
    }];
 
@@ -931,7 +931,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
          .build()
        )
        .build(),
-       .flexBasis = CKRelativeDimension::Percent(1),
+       .flexBasis = RCRelativeDimension::Percent(1),
        .flexGrow = 1,
        .flexShrink = 1
      },
@@ -1305,10 +1305,10 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{.minWidth = 20, .minHeight = 20}],
        .padding = {
-         .start = CKRelativeDimension::Percent(0.4),
-         .end = CKRelativeDimension::Percent(0.2),
-         .top = CKRelativeDimension::Percent(0.35),
-         .bottom = CKRelativeDimension::Percent(0.4),
+         .start = RCRelativeDimension::Percent(0.4),
+         .end = RCRelativeDimension::Percent(0.2),
+         .top = RCRelativeDimension::Percent(0.35),
+         .bottom = RCRelativeDimension::Percent(0.4),
        },
      },
      {
@@ -1645,8 +1645,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
           {
             .position = {
               .type = CKFlexboxPositionTypeAbsolute,
-              .top = CKRelativeDimension::Percent(0.2),
-              .start = CKRelativeDimension::Percent(0.05),
+              .top = RCRelativeDimension::Percent(0.2),
+              .start = RCRelativeDimension::Percent(0.05),
             },
             .component =
             [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}]
@@ -1687,8 +1687,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
           {
             .position = {
               .type = CKFlexboxPositionTypeAbsolute,
-              .right = CKRelativeDimension::Percent(0.2),
-              .bottom = CKRelativeDimension::Percent(0.2),
+              .right = RCRelativeDimension::Percent(0.2),
+              .bottom = RCRelativeDimension::Percent(0.2),
             },
             .component =
             [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}]
@@ -1825,7 +1825,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    }
    children:{
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}}
-                          size:{.width = CKRelativeDimension::Percent(1.0), .height = 50}]},
+                          size:{.width = RCRelativeDimension::Percent(1.0), .height = 50}]},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150, 150}], 20},
    }];
   static CKSizeRange kVariableSize = {{100, 100}, {200, 200}};
@@ -1847,7 +1847,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
     .child(CK::ComponentBuilder()
            .viewClass([UIView class])
            .backgroundColor([UIColor redColor])
-           .width(CKRelativeDimension::Percent(1.0))
+           .width(RCRelativeDimension::Percent(1.0))
            .height(50)
            .build())
     .child(CK::ComponentBuilder()
@@ -1965,7 +1965,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        .flexGrow = 1,
        // This should override the intrinsic size of 50pts and instead compute to 50% = 100pts.
        // The result should be that the red box is twice as wide as the blue and gree boxes after flexing.
-       .flexBasis = CKRelativeDimension::Percent(0.5)
+       .flexBasis = RCRelativeDimension::Percent(0.5)
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],

@@ -15,7 +15,7 @@
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
-#import <ComponentKit/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 #import <ComponentKit/CKUpdateMode.h>
 
 NS_ASSUME_NONNULL_BEGIN

@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/RCContainerWrapper.h>
-#import <ComponentKit/CKDimension.h>
+#import <RenderCore/RCDimension.h>
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
 
@@ -30,7 +30,7 @@ struct CKStaticLayoutComponentChild {
    The default is Auto in both dimensions, which sets the child's min size to zero and max size to the maximum available
    space it can consume without overflowing the component's bounds.
    */
-  CKRelativeSizeRange size;
+  RCRelativeSizeRange size;
 };
 
 /**

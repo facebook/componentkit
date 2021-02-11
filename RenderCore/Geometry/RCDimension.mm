@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKDimension.h"
+#import "RCDimension.h"
 
 #import <tgmath.h>
 
@@ -17,7 +17,7 @@
 #import <RenderCore/CKMacros.h>
 #import <RenderCore/CKInternalHelpers.h>
 
-bool CKRelativeDimension::operator==(const CKRelativeDimension &other) const noexcept
+bool RCRelativeDimension::operator==(const RCRelativeDimension &other) const noexcept
 {
   // Implementation assumes that "auto" assigns '0' to value.
   if (_type != other._type) {
@@ -32,7 +32,7 @@ bool CKRelativeDimension::operator==(const CKRelativeDimension &other) const noe
   }
 }
 
-NSString *CKRelativeDimension::description() const noexcept
+NSString *RCRelativeDimension::description() const noexcept
 {
   switch (_type) {
     case Type::AUTO:
@@ -44,7 +44,7 @@ NSString *CKRelativeDimension::description() const noexcept
   }
 }
 
-CGFloat CKRelativeDimension::resolve(CGFloat autoSize, CGFloat parent) const noexcept
+CGFloat RCRelativeDimension::resolve(CGFloat autoSize, CGFloat parent) const noexcept
 {
   switch (_type) {
     case Type::AUTO:
@@ -56,17 +56,17 @@ CGFloat CKRelativeDimension::resolve(CGFloat autoSize, CGFloat parent) const noe
   }
 }
 
-CKRelativeDimension::Type CKRelativeDimension::type(void) const noexcept
+RCRelativeDimension::Type RCRelativeDimension::type(void) const noexcept
 {
   return _type;
 }
 
-CGFloat CKRelativeDimension::value(void) const noexcept
+CGFloat RCRelativeDimension::value(void) const noexcept
 {
   return _value;
 }
 
-size_t std::hash<CKRelativeDimension>::operator ()(const CKRelativeDimension &size) noexcept {
+size_t std::hash<RCRelativeDimension>::operator ()(const RCRelativeDimension &size) noexcept {
   NSUInteger subhashes[] = {
     (size_t)(size._type),
     std::hash<CGFloat>()(size._value),
@@ -75,10 +75,10 @@ size_t std::hash<CKRelativeDimension>::operator ()(const CKRelativeDimension &si
 };
 
 
-CKRelativeSize::CKRelativeSize(const CKRelativeDimension &_width, const CKRelativeDimension &_height) noexcept : width(_width), height(_height) {}
-CKRelativeSize::CKRelativeSize(const CGSize &size) noexcept : CKRelativeSize(size.width, size.height) {}
+RCRelativeSize::RCRelativeSize(const RCRelativeDimension &_width, const RCRelativeDimension &_height) noexcept : width(_width), height(_height) {}
+RCRelativeSize::RCRelativeSize(const CGSize &size) noexcept : RCRelativeSize(size.width, size.height) {}
 
-CGSize CKRelativeSize::resolveSize(const CGSize &parentSize, const CGSize &autoSize) const noexcept
+CGSize RCRelativeSize::resolveSize(const CGSize &parentSize, const CGSize &autoSize) const noexcept
 {
   return {
     width.resolve(autoSize.width, parentSize.width),
@@ -86,22 +86,22 @@ CGSize CKRelativeSize::resolveSize(const CGSize &parentSize, const CGSize &autoS
   };
 }
 
-bool CKRelativeSize::operator==(const CKRelativeSize &other) const noexcept
+bool RCRelativeSize::operator==(const RCRelativeSize &other) const noexcept
 {
   return width == other.width && height == other.height;
 }
 
-NSString *CKRelativeSize::description() const noexcept
+NSString *RCRelativeSize::description() const noexcept
 {
   return [NSString stringWithFormat:@"{%@, %@}", width.description(), height.description()];
 }
 
-CKRelativeSizeRange::CKRelativeSizeRange(const CKRelativeSize &_min, const CKRelativeSize &_max) : min(_min), max(_max) {}
-CKRelativeSizeRange::CKRelativeSizeRange(const CKRelativeSize &exact) noexcept : CKRelativeSizeRange(exact, exact) {}
-CKRelativeSizeRange::CKRelativeSizeRange(const CGSize &exact) noexcept : CKRelativeSizeRange(CKRelativeSize(exact)) {}
-CKRelativeSizeRange::CKRelativeSizeRange(const CKRelativeDimension &exactWidth, const CKRelativeDimension &exactHeight) noexcept : CKRelativeSizeRange(CKRelativeSize(exactWidth, exactHeight)) {}
+RCRelativeSizeRange::RCRelativeSizeRange(const RCRelativeSize &_min, const RCRelativeSize &_max) : min(_min), max(_max) {}
+RCRelativeSizeRange::RCRelativeSizeRange(const RCRelativeSize &exact) noexcept : RCRelativeSizeRange(exact, exact) {}
+RCRelativeSizeRange::RCRelativeSizeRange(const CGSize &exact) noexcept : RCRelativeSizeRange(RCRelativeSize(exact)) {}
+RCRelativeSizeRange::RCRelativeSizeRange(const RCRelativeDimension &exactWidth, const RCRelativeDimension &exactHeight) noexcept : RCRelativeSizeRange(RCRelativeSize(exactWidth, exactHeight)) {}
 
-CKSizeRange CKRelativeSizeRange::resolveSizeRange(const CGSize &parentSize, const CKSizeRange &autoCKSizeRange) const noexcept
+CKSizeRange RCRelativeSizeRange::resolveSizeRange(const CGSize &parentSize, const CKSizeRange &autoCKSizeRange) const noexcept
 {
   return {
     min.resolveSize(parentSize, autoCKSizeRange.min),
