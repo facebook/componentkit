@@ -10,7 +10,7 @@
 
 #import <RenderCore/RCDimension.h>
 #import <ComponentKit/CKInsetComponent.h>
-#import <ComponentKit/CKAvailability.h>
+#import <RenderCore/RCAvailability.h>
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 
@@ -26,10 +26,10 @@
 #define CKSnapshotReferenceDirectorySuffix() \
 ({ \
 NSString *suffix = \
-CK_AT_LEAST_IOS12 ? @"_IOS12" : \
-CK_AT_LEAST_IOS11_3 ? @"_IOS11_3" : \
-CK_AT_LEAST_IOS11 ? @"_IOS11" : \
-CK_AT_LEAST_IOS10_BETA_4 ? @"_IOS10" : \
+RC_AT_LEAST_IOS12 ? @"_IOS12" : \
+RC_AT_LEAST_IOS11_3 ? @"_IOS11_3" : \
+RC_AT_LEAST_IOS11 ? @"_IOS11" : \
+RC_AT_LEAST_IOS10_BETA_4 ? @"_IOS10" : \
 @""; \
 CK_64 ? [suffix stringByAppendingString:@"_64"] : suffix; \
 })

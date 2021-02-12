@@ -15,7 +15,7 @@
 #import <RenderCore/RCArgumentPrecondition.h>
 #import <RenderCore/CKAssert.h>
 #import <RenderCore/RCAssociatedObject.h>
-#import <RenderCore/CKAvailability.h>
+#import <RenderCore/RCAvailability.h>
 #import <RenderCore/CKCasting.h>
 #import <RenderCore/CKCollection.h>
 #import <RenderCore/RCComponentCoalescingMode.h>

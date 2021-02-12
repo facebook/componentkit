@@ -11,7 +11,7 @@
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKAvailability.h>
+#import <RenderCore/RCAvailability.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKExceptionInfo.h>
@@ -85,7 +85,7 @@ void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, 
         }
         case UICollectionElementCategorySupplementaryView: {
           supplementaryElementIndexPathsToOriginalLayoutAttributes[indexPath] = attributes;
-          if (CK_AT_LEAST_IOS9 && CGRectIntersectsRect(attributes.frame, visibleRect)) {
+          if (RC_AT_LEAST_IOS9 && CGRectIntersectsRect(attributes.frame, visibleRect)) {
             UIView *snapshotView =
             [[collectionView supplementaryViewForElementKind:attributes.representedElementKind atIndexPath:indexPath] snapshotViewAfterScreenUpdates:NO];
             if (snapshotView) {
@@ -178,7 +178,7 @@ void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, 
       }
     }];
     [_supplementaryElementIndexPathsToOriginalLayoutAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UICollectionViewLayoutAttributes *attributes, BOOL *stop) {
-      if (CK_AT_LEAST_IOS9 && CGRectIntersectsRect(visibleRect, [[_collectionView layoutAttributesForSupplementaryElementOfKind:attributes.representedElementKind atIndexPath:indexPath] frame])) {
+      if (RC_AT_LEAST_IOS9 && CGRectIntersectsRect(visibleRect, [[_collectionView layoutAttributesForSupplementaryElementOfKind:attributes.representedElementKind atIndexPath:indexPath] frame])) {
         UICollectionReusableView *supplementaryView = [_collectionView supplementaryViewForElementKind:attributes.representedElementKind atIndexPath:indexPath];
         if (supplementaryView) {
           [supplementaryView setBounds:attributes.bounds];

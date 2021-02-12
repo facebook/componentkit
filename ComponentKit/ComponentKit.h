@@ -26,7 +26,6 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/RCAssociatedObject.h>
 #import <ComponentKit/CKAutoSizedImageComponent.h>
-#import <ComponentKit/CKAvailability.h>
 #import <ComponentKit/CKBackgroundLayoutComponent.h>
 #import <ComponentKit/CKBaseSpecContext.h>
 #import <ComponentKit/CKBuildComponent.h>
@@ -184,3 +183,4 @@
 #import <ComponentKit/RatioLayoutComponentBuilder.h>
 #import <ComponentKit/AutoSizedImageComponentBuilder.h>
 #import <ComponentKit/CKSwiftComponent.h>
+#import <RenderCore/RCAvailability.h>
