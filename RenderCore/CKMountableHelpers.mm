@@ -10,7 +10,7 @@
 
 #import "CKMountableHelpers.h"
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/RCComponentDescriptionHelper.h>
 #import <RenderCore/CKMountable.h>
 #import <RenderCore/CKMountableHelpers.h>
@@ -22,15 +22,15 @@ static void relinquishMountedView(std::unique_ptr<CKMountInfo> &mountInfo,
                                   id<CKMountable> mountable,
                                   CKMountCallbackFunction willRelinquishViewFunction)
 {
-  CKCAssertMainThread();
-  CKCAssert(mountInfo, @"mountInfo should not be null");
+  RCCAssertMainThread();
+  RCCAssert(mountInfo, @"mountInfo should not be null");
   if (mountInfo) {
     UIView *view = mountInfo->view;
     if (view) {
       if (willRelinquishViewFunction) {
         willRelinquishViewFunction(mountable, view);
       }
-      CKCAssert(CKMountedObjectForView(view) == mountable, @"");
+      RCCAssert(CKMountedObjectForView(view) == mountable, @"");
       CKSetMountedObjectForView(view, nil);
       mountInfo->view = nil;
     }
@@ -47,7 +47,7 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
                                           const CKMountAnimationBlockCallbackFunction blockAnimationIfNeededFunction,
                                           const CKMountAnimationUnblockCallbackFunction unblockAnimationFunction)
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
 
   if (!mountInfo) {
     mountInfo.reset(new CKMountInfo());
@@ -71,7 +71,7 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
       }
       mountInfo->view = v;
     } else {
-      CKCAssert(currentMountedComponent == layout.component, @"");
+      RCCAssert(currentMountedComponent == layout.component, @"");
     }
 
     @try {
@@ -91,7 +91,7 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
 
     return {.mountChildren = YES, .contextForChildren = context.childContextForSubview(v, didBlockAnimation)};
   } else {
-    CKCAssertWithCategory(mountInfo->view == nil, layout.component.class,
+    RCCAssertWithCategory(mountInfo->view == nil, layout.component.class,
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
                           layout.component.class,
                           [mountInfo->view class],
@@ -105,7 +105,7 @@ void CKPerformUnmount(std::unique_ptr<CKMountInfo> &mountInfo,
                       const id<CKMountable> mountable,
                       const CKMountCallbackFunction willRelinquishViewFunction)
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   if (mountInfo) {
     relinquishMountedView(mountInfo, mountable, willRelinquishViewFunction);
     mountInfo.reset();

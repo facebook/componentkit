@@ -13,7 +13,7 @@
 #import <pthread.h>
 #import <stack>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKRenderHelpers.h>
@@ -67,9 +67,9 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
 CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
 {
   stack.pop();
-  CKCAssert(stack.empty(), @"Didn't expect stack to contain anything in destructor");
-  CKCAssert(keys.size() == 1 && keys.top().empty(), @"Expected keys to be at initial state in destructor");
-  CKCAssert(ancestorHasStateUpdate.size() == 1 && ancestorHasStateUpdate.top() == NO, @"Expected ancestorHasStateUpdate to be at initial state in destructor");
+  RCCAssert(stack.empty(), @"Didn't expect stack to contain anything in destructor");
+  RCCAssert(keys.size() == 1 && keys.top().empty(), @"Expected keys to be at initial state in destructor");
+  RCCAssert(ancestorHasStateUpdate.size() == 1 && ancestorHasStateUpdate.top() == NO, @"Expected ancestorHasStateUpdate to be at initial state in destructor");
   pthread_setspecific(_threadKey(), previousScope);
 }
 
@@ -88,7 +88,7 @@ void CKThreadLocalComponentScope::push(CKComponentScopePair scopePair, BOOL keys
 void CKThreadLocalComponentScope::pop(BOOL keysSupportEnabled, BOOL ancestorStateUpdateSupportEnabled) noexcept {
   stack.pop();
   if (keysSupportEnabled) {
-    CKCAssert(
+    RCCAssert(
         keys.top().empty(),
         @"Expected keys to be cleared on pop");
     keys.pop();

@@ -13,8 +13,8 @@
 #import <objc/runtime.h>
 #import <unordered_map>
 
-#import <RenderCore/CKAssert.h>
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKMacros.h>
 
@@ -23,13 +23,13 @@
  * a primitive type.
  */
 #if DEBUG
-#define CKCAssertSizeOfEquals(type, encodedType, ...) do {          \
+#define RCCAssertSizeOfEquals(type, encodedType, ...) do {          \
   NSUInteger encodedTypeSize = 0;                                   \
   NSGetSizeAndAlignment((encodedType), &encodedTypeSize, nullptr);  \
-  CKCAssert(sizeof(type) == encodedTypeSize, ##__VA_ARGS__);        \
+  RCCAssert(sizeof(type) == encodedTypeSize, ##__VA_ARGS__);        \
 } while (0)
 #else
-#define CKCAssertSizeOfEquals(type, encodedType, ...) do {} while(0)
+#define RCCAssertSizeOfEquals(type, encodedType, ...) do {} while(0)
 #endif
 
 struct SetterCacheKey {
@@ -63,7 +63,7 @@ struct CachedSetter {
 
 static const CachedSetter &cachedSetterInvocation(id object, SEL setter)
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   static auto *cachedInvocations = new std::unordered_map<SetterCacheKey, CachedSetter>();
   SetterCacheKey key = {[object class], setter};
   auto existingInvocation = cachedInvocations->find(key);
@@ -95,95 +95,95 @@ static void performSetter(id object, SEL setter, id value)
         // See https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
         // for more information on type encodings
         if (set.argumentType == nullptr || strlen(set.argumentType) != 1) {
-          CKCAssert(NO, @"NSNumber: %@ cannot be used as an argument to a selector requiring '%s'; selector: %@; class %@",
+          RCCAssert(NO, @"NSNumber: %@ cannot be used as an argument to a selector requiring '%s'; selector: %@; class %@",
                     value, set.argumentType ?: "NULL", NSStringFromSelector(setter), [object class]);
           return;
         }
         NSNumber *numValue = (NSNumber *)value;
         switch (*set.argumentType) {
           case 'c': {
-            CKCAssertSizeOfEquals(char, set.argumentType, @"");
+            RCCAssertSizeOfEquals(char, set.argumentType, @"");
             char charValue = [numValue charValue];
             [set.invocation setArgument:&charValue atIndex:2];
             break;
           }
           case 'i': {
-            CKCAssertSizeOfEquals(int, set.argumentType, @"");
+            RCCAssertSizeOfEquals(int, set.argumentType, @"");
             int intValue = [numValue intValue];
             [set.invocation setArgument:&intValue atIndex:2];
             break;
           }
           case 's': {
-            CKCAssertSizeOfEquals(short, set.argumentType, @"");
+            RCCAssertSizeOfEquals(short, set.argumentType, @"");
             short shortValue = [numValue shortValue];
             [set.invocation setArgument:&shortValue atIndex:2];
             break;
           }
           case 'l': {
             // This is inconsistent, from the docs: "l is treated as a 32-bit quantity on 64-bit programs."
-            CKCAssertSizeOfEquals(int32_t, set.argumentType, @"");
+            RCCAssertSizeOfEquals(int32_t, set.argumentType, @"");
             int32_t longValue = [numValue intValue];
             [set.invocation setArgument:&longValue atIndex:2];
             break;
           }
           case 'q': {
-            CKCAssertSizeOfEquals(long long, set.argumentType, @"");
+            RCCAssertSizeOfEquals(long long, set.argumentType, @"");
             long long longLongValue = [numValue longLongValue];
             [set.invocation setArgument:&longLongValue atIndex:2];
             break;
           }
           case 'C': {
-            CKCAssertSizeOfEquals(unsigned char, set.argumentType, @"");
+            RCCAssertSizeOfEquals(unsigned char, set.argumentType, @"");
             unsigned char uCharValue = [numValue unsignedCharValue];
             [set.invocation setArgument:&uCharValue atIndex:2];
             break;
           }
           case 'I': {
-            CKCAssertSizeOfEquals(unsigned int, set.argumentType, @"");
+            RCCAssertSizeOfEquals(unsigned int, set.argumentType, @"");
             unsigned int uIntValue = [numValue unsignedIntValue];
             [set.invocation setArgument:&uIntValue atIndex:2];
             break;
           }
           case 'S': {
-            CKCAssertSizeOfEquals(unsigned short, set.argumentType, @"");
+            RCCAssertSizeOfEquals(unsigned short, set.argumentType, @"");
             unsigned short uShortValue = [numValue unsignedShortValue];
             [set.invocation setArgument:&uShortValue atIndex:2];
             break;
           }
           case 'L': {
             // This is also inconsistent, and undocumented
-            CKCAssertSizeOfEquals(uint32_t, set.argumentType, @"");
+            RCCAssertSizeOfEquals(uint32_t, set.argumentType, @"");
             uint32_t uLongValue = [numValue unsignedIntValue];
             [set.invocation setArgument:&uLongValue atIndex:2];
             break;
           }
           case 'Q': {
-            CKCAssertSizeOfEquals(unsigned long long, set.argumentType, @"");
+            RCCAssertSizeOfEquals(unsigned long long, set.argumentType, @"");
             unsigned long long uLongLongValue = [numValue unsignedLongLongValue];
             [set.invocation setArgument:&uLongLongValue atIndex:2];
             break;
           }
           case 'f': {
-            CKCAssertSizeOfEquals(float, set.argumentType, @"");
+            RCCAssertSizeOfEquals(float, set.argumentType, @"");
             float floatValue = [numValue floatValue];
             [set.invocation setArgument:&floatValue atIndex:2];
             break;
           }
           case 'd': {
-            CKCAssertSizeOfEquals(double, set.argumentType, @"");
+            RCCAssertSizeOfEquals(double, set.argumentType, @"");
             double doubleValue = [numValue doubleValue];
             [set.invocation setArgument:&doubleValue atIndex:2];
             break;
           }
           case 'B': {
-            CKCAssertSizeOfEquals(BOOL, set.argumentType, @"");
+            RCCAssertSizeOfEquals(BOOL, set.argumentType, @"");
             BOOL boolValue = [numValue boolValue];
             [set.invocation setArgument:&boolValue atIndex:2];
             break;
           }
           default:
             // This should just be: 'v', '*', '@', '#', ':', '?', none of which should be boxed as NSNumber
-            CKCAssert(NO, @"NSNumber: %@ cannot be used as an argument to a selector requiring '%s'", value, set.argumentType);
+            RCCAssert(NO, @"NSNumber: %@ cannot be used as an argument to a selector requiring '%s'", value, set.argumentType);
             return;
         }
       } else {

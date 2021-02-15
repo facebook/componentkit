@@ -10,7 +10,7 @@
 
 #import "CKCompositeComponent.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKInternalHelpers.h>
 
@@ -29,11 +29,11 @@
 + (void)initialize
 {
   if (self != [CKCompositeComponent class]) {
-    CKAssert(!CKSubclassOverridesInstanceMethod([CKCompositeComponent class], self, @selector(computeLayoutThatFits:)),
+    RCAssert(!CKSubclassOverridesInstanceMethod([CKCompositeComponent class], self, @selector(computeLayoutThatFits:)),
              @"%@ overrides -computeLayoutThatFits: which is not allowed. "
              "Consider subclassing CKComponent directly if you need to perform custom layout.",
              self);
-    CKAssert(!CKSubclassOverridesInstanceMethod([CKCompositeComponent class], self, @selector(layoutThatFits:parentSize:)),
+    RCAssert(!CKSubclassOverridesInstanceMethod([CKCompositeComponent class], self, @selector(layoutThatFits:parentSize:)),
              @"%@ overrides -layoutThatFits:parentSize: which is not allowed. "
              "Consider subclassing CKComponent directly if you need to perform custom layout.",
              self);
@@ -84,7 +84,7 @@
                           restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == RCComponentSize(),
+  RCAssert(size == RCComponentSize(),
            @"CKCompositeComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _child);
 

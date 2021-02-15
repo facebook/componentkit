@@ -13,7 +13,7 @@
 #import <vector>
 #import <objc/runtime.h>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKCollection.h>
 
 #import "CKComponent+UIView.h"
@@ -77,7 +77,7 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
     CKComponent *responder = CKMountedComponentForView(_view);
     id target = [responder targetForAction:selector withSender:responder];
     if (!target) {
-      CKFailAssertWithCategory(
+      RCFailAssertWithCategory(
         CKLastMountedComponentClassNameForView(_view),
         @"Delegate method is being called on an unmounted component's view: %@ selector:%@",
         _view,

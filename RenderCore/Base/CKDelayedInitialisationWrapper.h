@@ -18,7 +18,7 @@
 #include <type_traits>
 #include <utility>
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/CKOptional.h>
 
 namespace CK {
@@ -45,7 +45,7 @@ struct DelayedInitialisationWrapper final {
 
   auto get() const -> const T& {
     if (_value.hasValue() == false) {
-      CKCFailAssert(@"Expecting value to be set");
+      RCCFailAssert(@"Expecting value to be set");
       std::abort();
     }
     return *_value.unsafeValuePtrOrNull();
@@ -57,7 +57,7 @@ struct DelayedInitialisationWrapper final {
 
   auto get() -> T& {
     if (_value.hasValue() == false) {
-      CKCFailAssert(@"Expecting value to be set");
+      RCCFailAssert(@"Expecting value to be set");
       std::abort();
     }
     return *_value.unsafeValuePtrOrNull();
@@ -73,7 +73,7 @@ struct DelayedInitialisationWrapper final {
   template <typename U, typename = std::enable_if_t<std::is_convertible<T, U>::value>>
   operator U() const {
     if (_value.hasValue() == false) {
-      CKCFailAssert(@"Expecting value to be set");
+      RCCFailAssert(@"Expecting value to be set");
       std::abort();
     }
     return *_value.unsafeValuePtrOrNull();

@@ -98,13 +98,13 @@
 
 - (id<CKComponentControllerProtocol>)controller
 {
-  CKAssert(_resolved, @"Requesting controller from scope handle before resolution. The controller will be nil.");
+  RCAssert(_resolved, @"Requesting controller from scope handle before resolution. The controller will be nil.");
   return _controller;
 }
 
 - (void)dealloc
 {
-  CKAssert(_resolved, @"Must be resolved before deallocation.");
+  RCAssert(_resolved, @"Must be resolved before deallocation.");
 }
 
 #pragma mark - State
@@ -113,7 +113,7 @@
            metadata:(const CKStateUpdateMetadata &)metadata
                mode:(CKUpdateMode)mode
 {
-  CKAssertNotNil(updateBlock, @"The update block cannot be nil");
+  RCAssertNotNil(updateBlock, @"The update block cannot be nil");
   if (![NSThread isMainThread] && [(id<CKComponentStateListener>)[_listener class] requiresMainThreadAffinedStateUpdates]) {
     // Passing a const& into a block is scary, make a local copy to be safe.
     const auto metadataCopy = metadata;
@@ -131,7 +131,7 @@
 
 - (void)replaceState:(id)state
 {
-  CKAssertFalse(_resolved);
+  RCAssertFalse(_resolved);
   _state = state;
 }
 
@@ -155,15 +155,15 @@
 
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component
 {
-  CKAssert(component.typeName == _componentTypeName, @"%s has to be a member of %s class", component.typeName, _componentTypeName);
-  CKAssert(!_acquired, @"scope handle cannot be acquired twice");
+  RCAssert(component.typeName == _componentTypeName, @"%s has to be a member of %s class", component.typeName, _componentTypeName);
+  RCAssert(!_acquired, @"scope handle cannot be acquired twice");
   _acquired = YES;
   _acquiredComponent = component;
 }
 
 - (void)setTreeNode:(id<CKTreeNodeProtocol>)treeNode
 {
-  CKAssertWithCategory(_treeNodeIdentifier == 0,
+  RCAssertWithCategory(_treeNodeIdentifier == 0,
                        NSStringFromClass([_acquiredComponent class]),
                        @"_treeNodeIdentifier cannot be set twice");
   _treeNodeIdentifier = treeNode.nodeIdentifier;
@@ -178,7 +178,7 @@
 
 - (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
-  CKAssertFalse(_resolved);
+  RCAssertFalse(_resolved);
 
   // Strong ref: _acquiredComponent may be nil when rendering-to-nil as the
   // handle won't be acquired.
@@ -249,7 +249,7 @@
   auto result = CK::find(_handles, handle);
 
   if (result == _handles.end()) {
-    CKFailAssert(@"This scope handle is not associated with this Responder.");
+    RCFailAssert(@"This scope handle is not associated with this Responder.");
     return notFoundKey;
   }
 
@@ -263,7 +263,7 @@
 
   const size_t numberOfHandles = _handles.size();
   if (key < 0 || key >= numberOfHandles) {
-    CKFailAssert(@"Invalid key \"%d\" for responder with %zu handles", key, numberOfHandles);
+    RCFailAssert(@"Invalid key \"%d\" for responder with %zu handles", key, numberOfHandles);
     return nil;
   }
 

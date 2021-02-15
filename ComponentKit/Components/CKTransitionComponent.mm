@@ -31,7 +31,7 @@ static auto disappearingPreviousComponentAnimation(CAAnimation *disappearAnimati
   return CKComponentAnimationHooks{
     .willRemount = ^{
       auto const childView = [previousComponent viewForAnimation];
-      CKCAssertWithCategory(
+      RCCAssertWithCategory(
                             childView != nil,
                             [previousComponent className],
                             @"Can't animate component without a view. "
@@ -46,7 +46,7 @@ static auto disappearingPreviousComponentAnimation(CAAnimation *disappearAnimati
     },
     .didRemount = ^UIView *(UIView *snapshotView) {
       auto const newView = [newComponent viewForAnimation];
-      CKCAssertWithCategory(newView != nil, [newComponent className], @"Can't animate %@ without a view.", [newComponent className]);
+      RCCAssertWithCategory(newView != nil, [newComponent className], @"Can't animate %@ without a view.", [newComponent className]);
       if (newView == nil || snapshotView == nil) {
         return nil; // Avoid crashing in insertSubview:aboveSubview:
       }

@@ -1,6 +1,6 @@
 // (c) Facebook, Inc. and its affiliates. Confidential and proprietary.
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKTrigger.h>
@@ -11,7 +11,7 @@ static auto _scopedResponderAndKey(id<CKTreeNodeComponentProtocol> component, NS
   auto const scopedResponder = handle.scopedResponder;
   auto const responderKey = [scopedResponder keyForHandle:handle];
 
-  CKCAssertWithCategory(
+  RCCAssertWithCategory(
       component != nil && handle != nil && scopedResponder != nil,
       context,
       @"Binding a trigger but something is nil (component %@, handle: %@, scopedResponder: %@)",

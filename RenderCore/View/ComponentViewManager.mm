@@ -13,7 +13,7 @@
 #import <objc/runtime.h>
 #import <unordered_map>
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/RCAssociatedObject.h>
 #import <RenderCore/CKGlobalConfig.h>
 #import <RenderCore/CKMutex.h>
@@ -120,7 +120,7 @@ UIView *ViewReusePool::viewForClass(const CKComponentViewClass &viewClass, UIVie
 {
   if (position == pool.end()) {
     UIView *v = viewClass.createView();
-    CKCAssertNotNil(v, @"Expected non-nil view to be created for view class %s", viewClass.getIdentifier().description().c_str());
+    RCCAssertNotNil(v, @"Expected non-nil view to be created for view class %s", viewClass.getIdentifier().description().c_str());
     [container addSubview:v];
     pool.push_back(v);
     position = pool.end();
@@ -214,7 +214,7 @@ void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsCon
         [subviews exchangeObjectAtIndex:i withObjectAtIndex:swapIndex];
         [container exchangeSubviewAtIndex:i withSubviewAtIndex:swapIndex];
       }
-      CKCAssertWithCategory(swapIndex != NSNotFound,
+      RCCAssertWithCategory(swapIndex != NSNotFound,
                             [CKMountedObjectForView(*nextVendedViewIt) class],
                             @"Expected to find subview %@ (mounted object: %@) in %@ (mounted object: %@)",
                             [*nextVendedViewIt class],

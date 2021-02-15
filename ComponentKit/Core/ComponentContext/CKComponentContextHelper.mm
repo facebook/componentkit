@@ -10,7 +10,7 @@
 
 #import "CKComponentContextHelper.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKRootTreeNode.h>
@@ -88,7 +88,7 @@ void CKComponentContextHelper::restore(const CKComponentContextPreviousState &st
   CKComponentContextValue *const v = contextValue(YES);
   NSMutableDictionary *const c = v->_dictionary;
   id<NSCopying> storeResultKey = (id<NSCopying>)storeResult.key;
-  CKCAssert(c[storeResultKey] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
+  RCCAssert(c[storeResultKey] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
   c[storeResultKey] = storeResult.originalValue;
   clearContextValueIfEmpty(v);
 }
@@ -136,8 +136,8 @@ void CKComponentContextHelper::didBuildComponentTree(id component) noexcept
 
   NSMutableDictionary *renderDictionary = [v->_renderToDictionaryCache objectForKey:component];
   if (renderDictionary) {
-    CKCAssert(!v->_stack.empty(), @"The stack cannot be empty if there is a render dictionary in the cache");
-    CKCAssert(v->_dictionary == renderDictionary, @"The current store is different than the renderDictionary");
+    RCCAssert(!v->_stack.empty(), @"The stack cannot be empty if there is a render dictionary in the cache");
+    RCCAssert(v->_dictionary == renderDictionary, @"The current store is different than the renderDictionary");
 
     // Update the pointer to the latest render dictionary
     if (!v->_stack.empty()) {

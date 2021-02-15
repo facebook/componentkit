@@ -12,7 +12,7 @@
 
 #import <algorithm>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentPerfScope.h>
 #import <ComponentKit/CKInternalHelpers.h>
@@ -40,7 +40,7 @@
                     component:(CKComponent *)component
 
 {
-  CKAssert(ratio > 0, @"Ratio should be strictly positive, but received %f", ratio);
+  RCAssert(ratio > 0, @"Ratio should be strictly positive, but received %f", ratio);
   if (ratio <= 0 || component == nil) {
     return nil;
   }

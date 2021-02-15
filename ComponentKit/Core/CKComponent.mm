@@ -14,7 +14,7 @@
 #import "CKComponentSubclass.h"
 
 #import <ComponentKit/CKAnalyticsListener.h>
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/RCArgumentPrecondition.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
@@ -63,7 +63,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 + (void)initialize
 {
   if (self != [CKComponent class]) {
-    CKAssert(!CKSubclassOverridesInstanceMethod([CKComponent class], self, @selector(layoutThatFits:parentSize:)),
+    RCAssert(!CKSubclassOverridesInstanceMethod([CKComponent class], self, @selector(layoutThatFits:parentSize:)),
              @"%@ overrides -layoutThatFits:parentSize: which is not allowed. Override -computeLayoutThatFits: "
              "or -computeLayoutThatFits:restrictedToSize:relativeToParentSize: instead.",
              self);
@@ -104,7 +104,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 - (void)dealloc
 {
   // Since the component and its view hold strong references to each other, this should never happen!
-  CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", self.className);
+  RCAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", self.className);
 }
 
 - (NSString *)description
@@ -162,7 +162,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (void)setViewConfiguration:(const CKComponentViewConfiguration &)viewConfiguration
 {
-  CKAssert(_viewConfiguration.isDefaultConfiguration(), @"Component(%@) already has '_viewConfiguration'.", self);
+  RCAssert(_viewConfiguration.isDefaultConfiguration(), @"Component(%@) already has '_viewConfiguration'.", self);
   _viewConfiguration = viewConfiguration;
 }
 
@@ -173,7 +173,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (CKComponentViewContext)viewContext
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   return _mountInfo ? _mountInfo->viewContext : CKComponentViewContext();
 }
 
@@ -203,7 +203,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                                       layout:(const RCLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
-  CKCAssertWithCategory([NSThread isMainThread], self.className, @"This method must be called on the main thread");
+  RCCAssertWithCategory([NSThread isMainThread], self.className, @"This method must be called on the main thread");
 
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
   const CKComponentViewConfiguration &viewConfiguration =
@@ -242,7 +242,7 @@ static void willRelinquishView(id<CKMountable> mountable, UIView *view)
 
 - (void)unmount
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (_mountInfo != nullptr) {
     CKComponentController *const controller = _treeNode.scopeHandle.controller;
     [controller componentWillUnmount:self];
@@ -280,7 +280,7 @@ static void willRelinquishView(id<CKMountable> mountable, UIView *view)
 
 - (UIView *)viewForAnimation
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   return _mountInfo ? _mountInfo->view : nil;
 }
 
@@ -308,7 +308,7 @@ static void unblockAnimation()
     const auto overridesIterableMethods =
     CKSubclassOverridesInstanceMethod([CKComponent class], self.class, @selector(childAtIndex:)) &&
     CKSubclassOverridesInstanceMethod([CKComponent class], self.class, @selector(numberOfChildren));
-    CKAssertWithCategory(overridesIterableMethods,
+    RCAssertWithCategory(overridesIterableMethods,
                          self.className,
                          @"%@ is subclassing CKComponent directly, you need to subclass CKLayoutComponent instead. "
                          "Context: we’re phasing out CKComponent subclasses for in favor of CKLayoutComponent subclasses. "
@@ -316,13 +316,13 @@ static void unblockAnimation()
                          self.className);
   }
 
-  CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
+  RCAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
            self.className, layout.component.className);
 
   CKAssertResolvedSize(_size, parentSize);
   CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
   CKAssertSizeRange(resolvedRange);
-  CKAssertWithCategory(CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.width, layout.size.width)
+  RCAssertWithCategory(CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.width, layout.size.width)
                        && CKIsGreaterThanOrEqualWithTolerance(layout.size.width, resolvedRange.min.width)
                        && CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.height,layout.size.height)
                        && CKIsGreaterThanOrEqualWithTolerance(layout.size.height,resolvedRange.min.height),
@@ -381,7 +381,7 @@ static void unblockAnimation()
 
 - (id)nextResponderAfterController
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (_mountInfo && _mountInfo->supercomponent) {
     return _mountInfo->supercomponent;
   }
@@ -439,7 +439,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
     return Nil; // Don't create root CKComponentControllers as it does nothing interesting.
   }
 
-  CKAssertWithCategory(!NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]),
+  RCAssertWithCategory(!NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]),
                        [self class], @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
   return Nil;
 }
@@ -453,8 +453,8 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
 {
-  CKAssertWithCategory(_treeNode.scopeHandle != nil, self.className, @"A component without state cannot update its state.");
-  CKAssertWithCategory(updateBlock != nil, self.className, @"Cannot enqueue component state modification with a nil update block.");
+  RCAssertWithCategory(_treeNode.scopeHandle != nil, self.className, @"A component without state cannot update its state.");
+  RCAssertWithCategory(updateBlock != nil, self.className, @"Cannot enqueue component state modification with a nil update block.");
   [_treeNode.scopeHandle updateState:updateBlock metadata:{} mode:mode];
 }
 
@@ -542,7 +542,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 }
 
 - (void)setAccessibilityElements:(NSArray *)accessibilityElements {
-  CKFailAssert(@"Attempt to setAccessibilityElements in %@", NSStringFromClass([self class]));
+  RCFailAssert(@"Attempt to setAccessibilityElements in %@", NSStringFromClass([self class]));
 }
 
 // In base Component we rely on the view to provide the accessible elements:

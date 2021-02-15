@@ -10,7 +10,7 @@
 
 #import "CKAsyncTransactionContainer+Private.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 #import "CKAsyncTransaction.h"
 #import "CKAsyncTransactionGroup.h"

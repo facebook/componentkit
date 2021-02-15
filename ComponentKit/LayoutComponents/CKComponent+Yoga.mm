@@ -10,7 +10,7 @@
 
 #import "CKComponent+Yoga.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKInternalHelpers.h>
 
 #import "CKComponentInternal.h"
@@ -69,19 +69,19 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
 
 - (RCComponentSize)nodeSize
 {
-  CKCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
+  RCCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
   return [(id)self.child nodeSize];;
 }
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
 {
-  CKCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
+  RCCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
   return [(id)self.child ygNode:constrainedSize];
 }
 
 - (RCLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
 {
-  CKCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
+  RCCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
   auto const l = [(id)self.child layoutFromYgNode:layoutNode thatFits:constrainedSize];
   return {self, l.size, {{{0,0}, l}}};
 }

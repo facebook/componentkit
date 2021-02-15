@@ -63,7 +63,7 @@
 
 - (CKDataSourceState *)currentState
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   return _currentState;
 }
 
@@ -293,13 +293,13 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
 
 - (void)setAllowTapPassthroughForCells:(BOOL)allowTapPassthroughForCells
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _allowTapPassthroughForCells = allowTapPassthroughForCells;
 }
 
 - (void)setState:(CKDataSourceState *)state
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (_currentState == state) {
     return;
   }

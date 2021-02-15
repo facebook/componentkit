@@ -23,17 +23,17 @@ using namespace CK::Component;
 
 RCLayout::RCLayout(id<CKMountable> c, CGSize s) noexcept
 : component(c), size(s), children(emptyChildren()), extra(nil) {
-  CKCAssertNotNil(c, @"Nil components are not allowed");
+  RCCAssertNotNil(c, @"Nil components are not allowed");
 };
 
 RCLayout::RCLayout(id<CKMountable> c, CGSize s, const std::vector<RCLayoutChild> &ch, NSDictionary *e) noexcept
 : component(c), size(s), children(new std::vector<RCLayoutChild>(ch), CKOffMainThreadDeleter()), extra(e) {
-  CKCAssertNotNil(c, @"Nil components are not allowed");
+  RCCAssertNotNil(c, @"Nil components are not allowed");
 };
 
 RCLayout::RCLayout(id<CKMountable> c, CGSize s, std::vector<RCLayoutChild> &&ch, NSDictionary *e) noexcept
 : component(c), size(s), children(new std::vector<RCLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
-  CKCAssertNotNil(c, @"Nil components are not allowed");
+  RCCAssertNotNil(c, @"Nil components are not allowed");
 };
 
 RCLayout::RCLayout() noexcept

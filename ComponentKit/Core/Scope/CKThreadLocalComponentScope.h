@@ -17,7 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKGlobalConfig.h>

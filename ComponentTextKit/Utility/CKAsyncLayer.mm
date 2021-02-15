@@ -14,7 +14,7 @@
 
 #include <libkern/OSAtomic.h>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 #import "CKAsyncTransaction.h"
 #import "CKAsyncTransactionContainer.h"
@@ -59,7 +59,7 @@
 
 - (void)setNeedsDisplay
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [self cancelAsyncDisplay];
   [super setNeedsDisplay];
   // Be sure to override any previous calls to -setNeedsAsyncDisplay:
@@ -68,7 +68,7 @@
 
 - (void)setNeedsAsyncDisplay
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
   if ([self needsDisplay]) {
     // Either of these two situations:
@@ -86,7 +86,7 @@
 
 - (void)cancelAsyncDisplay
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   OSAtomicIncrement32(&_displaySentinel);
 }
 
@@ -130,7 +130,7 @@
 
 - (void)display
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
   BOOL renderSynchronously = NO;
   CALayer *parentTransactionContainer;
@@ -178,7 +178,7 @@
   int32_t displaySentinelValue = OSAtomicIncrement32(&_displaySentinel);
   CALayer *containerLayer = parentTransactionContainer ?: self;
   CKAsyncTransaction *transaction = containerLayer.ck_asyncTransaction;
-  CKAssertNotNil(transaction, @"Expected async layer transaction to be non-nil");
+  RCAssertNotNil(transaction, @"Expected async layer transaction to be non-nil");
   ck_async_transaction_operation_block_t transactionBlock = [[self class] asyncDisplayBlockWithBounds:bounds
                                                                                         contentsScale:self.contentsScale
                                                                                                opaque:self.opaque
@@ -188,7 +188,7 @@
                                                                                       drawingDelegate:(id<CKAsyncLayerDrawingDelegate>)[self class]
                                                                                        drawParameters:drawParameters];
   ck_async_transaction_operation_completion_block_t completionBlock = ^(id<NSObject> value, BOOL canceled) {
-    CKCAssertMainThread();
+    RCCAssertMainThread();
     if (!canceled && (_displaySentinel == displaySentinelValue)) {
       [self didDisplayAsynchronously:value withDrawParameters:drawParameters];
       self.contents = value;
@@ -222,7 +222,7 @@
 
 - (void)drawInContext:(CGContextRef)context
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [[self class] drawInContext:context parameters:[self drawParameters]];
 }
 

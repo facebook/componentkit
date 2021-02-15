@@ -238,7 +238,7 @@ public:
    */
   template<typename... Ts>
   explicit CKAction<>(const CKAction<Ts...> &action) noexcept : CKActionBase(action) {
-    CKCAssert(_variant != CKActionVariant::Block, @"Block actions cannot take fewer arguments than provided in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
+    RCCAssert(_variant != CKActionVariant::Block, @"Block actions cannot take fewer arguments than provided in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
   };
 
   ~CKAction() {};

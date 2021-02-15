@@ -17,7 +17,7 @@
 
 #import <libkern/OSAtomic.h>
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 #if defined (__GNUC__)
 # define CK_NOTHROW __attribute__ ((nothrow))
@@ -32,13 +32,13 @@
 #define CK_MUTEX_RECURSIVE_INITIALIZER {PTHREAD_RECURSIVE_MUTEX_INITIALIZER}
 
 // This MUST always execute, even when assertions are disabled. Otherwise all lock operations become no-ops!
-// (To be explicit, do not turn this into an CKAssert, NSAssert, assert(), or any other kind of statement where the
+// (To be explicit, do not turn this into an RCAssert, NSAssert, assert(), or any other kind of statement where the
 // evaluation of x_ can be compiled out.)
 #define CK_THREAD_ASSERT_ON_ERROR(x_) do { \
   _Pragma("clang diagnostic push"); \
   _Pragma("clang diagnostic ignored \"-Wunused-variable\""); \
   volatile int res = (x_); \
-  CKCAssert(res == 0, @" %@ returned %d", @#x_, res); \
+  RCCAssert(res == 0, @" %@ returned %d", @#x_, res); \
   _Pragma("clang diagnostic pop"); \
 } while (0)
 

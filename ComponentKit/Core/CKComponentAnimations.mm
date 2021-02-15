@@ -22,7 +22,7 @@
 namespace CK {
   static auto getScopeHandle(id<CKMountable> const c) {
     const auto scopeHandle = objCForceCast<CKComponent>(c).scopeHandle;
-    CKCAssertNotNil(scopeHandle, @"Scope must be provided for component animation");
+    RCCAssertNotNil(scopeHandle, @"Scope must be provided for component animation");
     return scopeHandle;
   }
   static auto isSameHandle(CKComponentScopeHandle *const h1, CKComponentScopeHandle *const &h2) { return h1.globalIdentifier == h2.globalIdentifier; };

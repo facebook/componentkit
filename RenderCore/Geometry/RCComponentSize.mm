@@ -10,11 +10,11 @@
 
 #import "RCComponentSize.h"
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/RCEqualityHelpers.h>
 
-#define CKCAssertConstrainedValue(val) \
-  CKCAssert(!isnan(val), @"Constrained value must not be NaN.")
+#define RCCAssertConstrainedValue(val) \
+  RCCAssert(!isnan(val), @"Constrained value must not be NaN.")
 
 RCComponentSize RCComponentSize::fromCGSize(CGSize size) noexcept
 {
@@ -23,8 +23,8 @@ RCComponentSize RCComponentSize::fromCGSize(CGSize size) noexcept
 
 static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVal, CGFloat *outMin, CGFloat *outMax) noexcept
 {
-    CKCAssertConstrainedValue(minVal);
-    CKCAssertConstrainedValue(maxVal);
+    RCCAssertConstrainedValue(minVal);
+    RCCAssertConstrainedValue(maxVal);
     // Avoid use of min/max primitives since they're harder to reason
     // about in the presence of NaN (in exactVal)
     // Follow CSS: min overrides max overrides exact.

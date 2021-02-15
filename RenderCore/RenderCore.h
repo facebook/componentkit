@@ -13,7 +13,7 @@
 #import <RenderCore/RCAccessibilityContext.h>
 #import <RenderCore/RCComponentBasedAccessibilityMode.h>
 #import <RenderCore/RCArgumentPrecondition.h>
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/RCAssociatedObject.h>
 #import <RenderCore/RCAvailability.h>
 #import <RenderCore/CKCasting.h>

@@ -11,18 +11,18 @@
 #import <ComponentKit/ComponentLayoutContext.h>
 
 #define CKAssertPositiveReal(description, num) \
-  CKCAssertWithCategory(num >= 0 && num < CGFLOAT_MAX, CK::Component::LayoutContext::currentRootComponentClassName(), @"%@ (%f) must be a real positive integer.\n%@", description, num, CK::Component::LayoutContext::currentStackDescription())
+  RCCAssertWithCategory(num >= 0 && num < CGFLOAT_MAX, CK::Component::LayoutContext::currentRootComponentClassName(), @"%@ (%f) must be a real positive integer.\n%@", description, num, CK::Component::LayoutContext::currentStackDescription())
 
 #define CKAssertInfOrPositiveReal(description, num) \
-  CKCAssertWithCategory(isinf(num) || (num >= 0 && num < CGFLOAT_MAX), CK::Component::LayoutContext::currentRootComponentClassName(), @"%@ (%f) must be infinite or a real positive integer.\n%@", description, num, CK::Component::LayoutContext::currentStackDescription())
+  RCCAssertWithCategory(isinf(num) || (num >= 0 && num < CGFLOAT_MAX), CK::Component::LayoutContext::currentRootComponentClassName(), @"%@ (%f) must be infinite or a real positive integer.\n%@", description, num, CK::Component::LayoutContext::currentStackDescription())
 
 #define CKAssertWidth(min, max) \
-  CKCAssertWithCategory(min.width <= max.width, \
+  RCCAssertWithCategory(min.width <= max.width, \
     CK::Component::LayoutContext::currentRootComponentClassName(), \
     @"Range min width (%f) must not be larger than max width (%f).\n%@", min.width, max.width, CK::Component::LayoutContext::currentStackDescription())
 
 #define CKAssertHeight(min, max) \
-  CKCAssertWithCategory(min.height <= max.height, \
+  RCCAssertWithCategory(min.height <= max.height, \
     CK::Component::LayoutContext::currentRootComponentClassName(), \
     @"Range min height (%f) must not be larger than max height (%f).\n%@", min.height, max.height, CK::Component::LayoutContext::currentStackDescription())
 
@@ -35,7 +35,7 @@
   CKAssertHeight(sizeRange.min, sizeRange.max)
 
 #define CKAssertConstrainedValue(val) \
-  CKCAssert(!isnan(val), @"Constrained value must not be NaN. Current stack description: %@", \
+  RCCAssert(!isnan(val), @"Constrained value must not be NaN. Current stack description: %@", \
     CK::Component::LayoutContext::currentStackDescription())
 
 #if CK_ASSERTIONS_ENABLED

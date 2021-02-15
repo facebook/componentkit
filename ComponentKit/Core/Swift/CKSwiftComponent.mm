@@ -21,7 +21,7 @@
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKIdValueWrapper.h>
 #import <ComponentKit/CKAnimationComponentPassthroughView.h>
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 @interface CKSwiftComponentController : CKComponentController
 @end
@@ -125,7 +125,7 @@ static CKComponentViewConfiguration _viewConfigurationWithViewIfAnimated(
 {
   if (_child) {
     // Non leaf component
-    CKAssert(size == RCComponentSize(),
+    RCAssert(size == RCComponentSize(),
              @"CKSwiftComponent only passes size {} to the super class initializer, but received size %@ "
              "(component=%@)", size.description(), _child);
 
@@ -231,7 +231,7 @@ static CKComponentViewConfiguration _viewConfigurationWithViewIfAnimated(
 - (instancetype)initWithComponent:(CKSwiftComponent *)component
 {
   if (component->_model == nil) {
-    CKFailAssert(@"Building controller without model");
+    RCFailAssert(@"Building controller without model");
     return nil;
   }
 
@@ -308,7 +308,7 @@ static CKComponentViewConfiguration _viewConfigurationWithViewIfAnimated(
 static CKComponentScopePair *CKSwiftGetCurrentPair() {
   const auto threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (threadLocalScope == nullptr || threadLocalScope->stack.size() <= 1) {
-    CKCFailAssert(@"No TLS on get node");
+    RCCFailAssert(@"No TLS on get node");
     return nil;
   } else {
     return &threadLocalScope->stack.top();
@@ -318,7 +318,7 @@ static CKComponentScopePair *CKSwiftGetCurrentPair() {
 void CKSwiftPopClass() {
   const auto threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (threadLocalScope == nullptr) {
-    CKCFailAssert(@"No TLS on class pop");
+    RCCFailAssert(@"No TLS on class pop");
     return;
   }
 
@@ -331,7 +331,7 @@ void CKSwiftPopClass() {
 CKComponentScopeHandle *CKSwiftCreateScopeHandle(Class klass, id identifier) {
   const auto threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (threadLocalScope == nullptr) {
-    CKCFailAssert(@"Create scope handle but no TLS");
+    RCCFailAssert(@"Create scope handle but no TLS");
     return nil;
   }
 
@@ -353,27 +353,27 @@ void CKSwiftInitializeState(CKComponentScopeHandle *handle,
   const auto pair = CKSwiftGetCurrentPair();
 
   if (pair == nullptr) {
-    CKCFailAssert(@"Initialising state but pair is nil");
+    RCCFailAssert(@"Initialising state but pair is nil");
     return;
   }
 
   if (pair->previousNode == nil) {
-    CKCAssert([handle.state isKindOfClass:CKSwiftStateWrapper.class], @"Unexpected state: %@", handle.state);
+    RCCAssert([handle.state isKindOfClass:CKSwiftStateWrapper.class], @"Unexpected state: %@", handle.state);
     const auto wrapper = (CKSwiftStateWrapper *)handle.state;
     [wrapper add:initialValueProvider()];
   }
 }
 
 id CKSwiftFetchState(CKComponentScopeHandle *scopeHandle, NSInteger index) {
-  CKCAssert(CKThreadLocalComponentScope::currentScope() != nullptr ||
+  RCCAssert(CKThreadLocalComponentScope::currentScope() != nullptr ||
             NSThread.currentThread.isMainThread, @"Fetching state out of the main thread (or body) non permitted");
   const auto stateWrapper = (CKSwiftStateWrapper *)scopeHandle.state;
   return stateWrapper->_values[index];
 }
 
 void CKSwiftUpdateState(CKComponentScopeHandle *scopeHandle, NSInteger index, id _Nullable newValue) {
-  CKCAssert(NSThread.currentThread.isMainThread, @"Updating state out of the main thread not permitted");
-  CKCAssert(CKThreadLocalComponentScope::currentScope() == nullptr, @"Updating state during build not permitted");
+  RCCAssert(NSThread.currentThread.isMainThread, @"Updating state out of the main thread not permitted");
+  RCCAssert(CKThreadLocalComponentScope::currentScope() == nullptr, @"Updating state during build not permitted");
 
   const auto stateWrapper = (CKSwiftStateWrapper *)scopeHandle.state;
   stateWrapper->_values[index] = newValue;
@@ -390,18 +390,18 @@ BOOL CKSwiftInitializeAction(Class klass, CKScopedResponder **responder, CKScope
   const auto pair = CKSwiftGetCurrentPair();
 
   if (responder == nil || key == nil) {
-    CKCFailAssert(@"Initialising action but passing nil responder/key");
+    RCCFailAssert(@"Initialising action but passing nil responder/key");
     return NO;
   }
 
   if (pair == nullptr) {
-    CKCFailAssert(@"Initialising action but pair is nil");
+    RCCFailAssert(@"Initialising action but pair is nil");
     return NO;
   }
 
   const auto handle = pair->node.scopeHandle;
   if (class_getName(klass) != handle.componentTypeName) {
-    CKCFailAssert(@"Creating an action outside the view's body function. Expected: %@, Found: %s", klass, handle.componentTypeName);
+    RCCFailAssert(@"Creating an action outside the view's body function. Expected: %@, Found: %s", klass, handle.componentTypeName);
     return NO;
   }
 

@@ -10,7 +10,7 @@
 
 #import "CKRootTreeNode.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 #import "CKRenderHelpers.h"
 #import "CKScopeTreeNode.h"
@@ -45,7 +45,7 @@ static auto _existingAndNewParentIdentifiers(
 #endif
 
 void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent) noexcept {
-  CKCAssert(parent != nil, @"Cannot register a nil parent node");
+  RCCAssert(parent != nil, @"Cannot register a nil parent node");
   if (node) {
 #if CK_ASSERTIONS_ENABLED
     const auto registeredParent = _nodesToParentNodes.find(node.nodeIdentifier);
@@ -54,12 +54,12 @@ void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProt
         _existingAndNewParentIdentifiers(_nodesToParentNodes, node, parent);
       if (registeredParent->second.nodeIdentifier == parent.nodeIdentifier) {
         // Suggests non optimal tree build/reuse logic.
-        CKCFailAssertWithCategory(node.component.className,
+        RCCFailAssertWithCategory(node.component.className,
                                   @"Duplicate parent registration.\n%@",
                                   parentComponentTreeDescription);
       } else {
         // Suggests same component instance is used in two subtrees or reuse error.
-        CKCFailAssertWithCategory(node.component.className,
+        RCCFailAssertWithCategory(node.component.className,
                                   @"Distinct parent registration (current: %ld - new: %ld).\n%@",
                                   (long)registeredParent->second.nodeIdentifier,
                                   (long)parent.nodeIdentifier,
@@ -72,7 +72,7 @@ void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProt
 }
 
 id<CKTreeNodeProtocol> CKRootTreeNode::parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const {
-  CKCAssert(nodeIdentifier != 0, @"Cannot retrieve parent for an empty node");
+  RCCAssert(nodeIdentifier != 0, @"Cannot retrieve parent for an empty node");
   auto const it = _nodesToParentNodes.find(nodeIdentifier);
   if (it != _nodesToParentNodes.end()) {
     return it->second;

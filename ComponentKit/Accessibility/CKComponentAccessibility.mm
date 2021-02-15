@@ -10,7 +10,7 @@
 
 #import "CKComponentAccessibility.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 /** Helper that converts the accessibility context characteristics to a map of component view attributes */
 static CKViewComponentAttributeValueMap ViewAttributesFromAccessibilityContext(const RCAccessibilityContext &accessibilityContext)
@@ -36,7 +36,7 @@ static CKViewComponentAttributeValueMap ViewAttributesFromAccessibilityContext(c
 
 CKComponentViewConfiguration CK::Component::Accessibility::AccessibleViewConfiguration(const CKComponentViewConfiguration &viewConfiguration)
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   // Copy is intentional so we can move later.
   RCAccessibilityContext accessibilityContext = viewConfiguration.accessibilityContext();
   const CKViewComponentAttributeValueMap &accessibilityAttributes = ViewAttributesFromAccessibilityContext(accessibilityContext);
@@ -71,7 +71,7 @@ void CK::Component::Accessibility::ResetForceAccessibility()
 
 BOOL CK::Component::Accessibility::IsAccessibilityEnabled()
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   return !_forceAccessibilityDisabled && (_forceAccessibilityEnabled || UIAccessibilityIsVoiceOverRunning());
 }
 

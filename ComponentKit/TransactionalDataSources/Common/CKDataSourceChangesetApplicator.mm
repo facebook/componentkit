@@ -69,8 +69,8 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
     _changesetApplicatorId = @(OSAtomicIncrement32(&globalChangesetApplicatorId));
     [_dataSource addListener:self];
 
-    CKAssertNotNil(_queue, @"A dispatch queue must be specified for changeset applicator.");
-    CKAssert(dispatch_queue_get_specific(_queue, kQueueKey) == NULL,
+    RCAssertNotNil(_queue, @"A dispatch queue must be specified for changeset applicator.");
+    RCAssert(dispatch_queue_get_specific(_queue, kQueueKey) == NULL,
              @"Sharing queue between changeset applicators is not allowed.");
     dispatch_queue_set_specific(_queue, kQueueKey, kQueueKey, NULL);
 
@@ -198,7 +198,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
       }
     }, qos));
     __unused const auto isApplied = [dataSource applyChange:change];
-    CKCAssert(isApplied == isValid, @"`CKDataSourceChange` is verified but not able to be applied.");
+    RCCAssert(isApplied == isValid, @"`CKDataSourceChange` is verified but not able to be applied.");
   });
 
   if (shouldSplitChangeset && deferredChangeset) {
@@ -250,7 +250,7 @@ static NSDictionary *_mergeUserInfoWithChangesetApplicatorId(NSDictionary *userI
 
 - (void)createNewPipelineWithNewDataSourceState:(CKDataSourceState *)newState
 {
-  CKAssert(_isRunningOnQueue(), @"Pipeline must be created on process queue.");
+  RCAssert(_isRunningOnQueue(), @"Pipeline must be created on process queue.");
   if (![_dataSourceState.configuration isEqual:newState.configuration]) {
     // Discard item cache if configuraiton is updated because `sizeRange` or `context` could affect layout.
     _dataSourceItemCache = _createMapTable();
@@ -278,7 +278,7 @@ static NSDictionary *_mergeUserInfoWithChangesetApplicatorId(NSDictionary *userI
                                                  context:(id)context
                                                 itemType:(CKDataSourceChangesetModificationItemType)itemType
 {
-  CKAssert(_isRunningOnQueue(), @"`CKDataSourceItem` should be generated on process queue.");
+  RCAssert(_isRunningOnQueue(), @"`CKDataSourceItem` should be generated on process queue.");
   if (itemType != CKDataSourceChangesetModificationItemTypeInsert) {
     return CKBuildDataSourceItem(previousRoot, stateUpdates, sizeRange, configuration, model, context);
   }

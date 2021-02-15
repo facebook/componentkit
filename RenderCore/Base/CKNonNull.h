@@ -14,7 +14,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 namespace CK {
 
@@ -32,8 +32,8 @@ class RelaxedNonNull {
 public:
   static_assert(!NonNullDetail::IsNonNull<Ptr>::value, "Pointer is already non-null");
 
-  RelaxedNonNull(const Ptr &ptr) :_ptr(ptr) { CKCAssertNotNil(_ptr, @"The pointer can't be nil"); }
-  RelaxedNonNull(Ptr &&ptr) :_ptr(ptr) { CKCAssertNotNil(_ptr, @"The pointer can't be nil"); }
+  RelaxedNonNull(const Ptr &ptr) :_ptr(ptr) { RCCAssertNotNil(_ptr, @"The pointer can't be nil"); }
+  RelaxedNonNull(Ptr &&ptr) :_ptr(ptr) { RCCAssertNotNil(_ptr, @"The pointer can't be nil"); }
 
   template <typename OtherPtr, typename = std::enable_if_t<std::is_convertible<OtherPtr, Ptr>::value>>
   RelaxedNonNull(const RelaxedNonNull<OtherPtr> &ptr) :_ptr(ptr.operator OtherPtr()) {}

@@ -12,7 +12,7 @@
 
 #import <queue>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKMountable.h>
 #import <ComponentKit/RCComponentDescriptionHelper.h>
 #import <ComponentKit/CKComponentInternal.h>
@@ -72,7 +72,7 @@ void CKDetectDuplicateComponent(const RCLayout &layout) {
 #if CK_ASSERTIONS_ENABLED
   auto const info = CKFindDuplicateComponent(layout);
   if (info.component) {
-    CKCFailAssertWithCategory(RCComponentCompactDescription(info.component),
+    RCCFailAssertWithCategory(RCComponentCompactDescription(info.component),
                               @"Duplicate component in the tree. Attempting to use %@ more than once in the component tree can lead to an incorrect and unexpected behavior\n"
                               @"Please make sure to create another instance of %@ if needed. \nComponent backtrace:\n%@",
                               info.component.className,
@@ -96,7 +96,7 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const RCL
       treeNode = c.treeNode;
       auto const registeredParentNode = rootNode.parentForNodeIdentifier(treeNode.nodeIdentifier);
       if (registeredParentNode == nil) {
-        CKCFailAssertWithCategory(RCComponentCompactDescription(c),
+        RCCFailAssertWithCategory(RCComponentCompactDescription(c),
                                   @"Missing link from node to its parent on the CKRootTreeNode; \n"
                                   @"make sure your component returns all its children on the RCIterable methods.\n"
                                   @"Component:%@\n"
@@ -104,7 +104,7 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const RCL
                                   c,
                                   parentNode.component);
       } else if (registeredParentNode != parentNode) {
-        CKCFailAssertWithCategory(RCComponentCompactDescription(c),
+        RCCFailAssertWithCategory(RCComponentCompactDescription(c),
                                   @"Incorrect link from node to its parent on the CKRootTreeNode; \n"
                                   @"make sure your component returns all its children on the RCIterable methods.\n"
                                   @"Component:%@\n"

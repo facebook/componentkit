@@ -13,7 +13,7 @@
 #import <mutex>
 
 #import <ComponentKit/CKAnalyticsListener.h>
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentControllerEvents.h>
@@ -27,7 +27,7 @@
 
 static void *kAffinedQueueKey = &kAffinedQueueKey;
 
-#define CKAssertAffinedQueue() CKCAssert(_isRunningOnAffinedQueue(), @"This method must only be called on the affined queue")
+#define RCAssertAffinedQueue() RCCAssert(_isRunningOnAffinedQueue(), @"This method must only be called on the affined queue")
 
 struct CKComponentGeneratorInputs {
   CK::NonNull<CKComponentScopeRoot *> scopeRoot;
@@ -137,7 +137,7 @@ struct CKComponentGeneratorInputsStore {
   template <typename T>
   T acquireInputs(NS_NOESCAPE T(^block)(CKComponentGeneratorInputs &)) {
     if (_affinedQueue) {
-      CKAssertAffinedQueue();
+      RCAssertAffinedQueue();
       return block(_inputs);
     } else {
       std::lock_guard<std::mutex> lock(_inputsMutex);
@@ -422,7 +422,7 @@ static std::vector<CKComponentController *> _addedComponentControllersBetweenSco
                     metadata:(const CKStateUpdateMetadata &)metadata
                         mode:(CKUpdateMode)mode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
   const auto enqueueStateUpdate = ^{
     _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){

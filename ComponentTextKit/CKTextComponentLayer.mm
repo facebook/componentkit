@@ -14,7 +14,7 @@
 #import <ComponentTextKit/CKTextKitAttributes.h>
 #import <ComponentTextKit/CKTextKitRenderer.h>
 #import <ComponentTextKit/CKTextKitRendererCache.h>
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 #import "CKTextComponentLayerHighlighter.h"
 
@@ -59,7 +59,7 @@ static CK::TextKit::Renderer::Cache *rasterContentsCache()
 
 - (void)setRenderer:(CKTextKitRenderer *)renderer
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (renderer != _renderer) {
     if (renderer && _renderer) {
       if (renderer.attributes == _renderer.attributes
@@ -118,7 +118,7 @@ static CK::TextKit::Renderer::Cache *rasterContentsCache()
 
 - (CKTextComponentLayerHighlighter *)highlighter
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (!_highlighter) {
     _highlighter = [[CKTextComponentLayerHighlighter alloc] initWithTextComponentLayer:self];
   }

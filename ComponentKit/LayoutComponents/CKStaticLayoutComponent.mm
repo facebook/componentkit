@@ -50,7 +50,7 @@
   if (index < _children.size()) {
     return _children[index].component;
   }
-  CKFailAssertWithCategory(self.className, @"Index %u is out of bounds %u", index, [self numberOfChildren]);
+  RCFailAssertWithCategory(self.className, @"Index %u is out of bounds %u", index, [self numberOfChildren]);
   return nil;
 }
 

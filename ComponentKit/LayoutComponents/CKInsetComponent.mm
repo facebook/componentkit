@@ -10,7 +10,7 @@
 
 #import "CKInsetComponent.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentPerfScope.h>
@@ -102,7 +102,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
                           restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == RCComponentSize(),
+  RCAssert(size == RCComponentSize(),
            @"CKInsetComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _component);
 
@@ -138,7 +138,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
     finite(childLayout.size.height + insets.top + insets.bottom, parentSize.height),
   });
 
-  CKAssert(!isnan(computedSize.width) && !isnan(computedSize.height),
+  RCAssert(!isnan(computedSize.width) && !isnan(computedSize.height),
            @"Inset component computed size is NaN; you may not specify infinite insets against a NaN parent size\n"
            "parentSize = %@, insets = %@\n%@", NSStringFromCGSize(parentSize), NSStringFromUIEdgeInsets(insets),
            CK::Component::LayoutContext::currentStackDescription());

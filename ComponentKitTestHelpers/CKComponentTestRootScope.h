@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentCreationValidation.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
@@ -40,7 +40,7 @@ class CKComponentTestRootScope {
      outside of a test.FBSwitchComponentServerSnapshotTests.mm Component test root scopes are intended to only be used by tests, and attempting to use them
      in production code can lead to subtle issues (e.g. dropping component state updates).
      */
-     CKCAssert(_previousThreadLocalComponentScope == nullptr,
+     RCCAssert(_previousThreadLocalComponentScope == nullptr,
                @"Unable to create a component test root scope if another component scope is available\n" \
                "This can happen if a component test root scope is created outside of a test, this is not supported");
   };

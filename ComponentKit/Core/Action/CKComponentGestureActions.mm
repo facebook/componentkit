@@ -63,7 +63,7 @@ CKComponentViewAttributeValue CKComponentGestureAttributeInternal(Class gestureR
       + "-" + action.identifier()
       + identifierSuffix,
       ^(UIView *view, id value){
-        CKCAssertNil(CKRecognizerForAction(view, blockAction),
+        RCCAssertNil(CKRecognizerForAction(view, blockAction),
                      @"Registered two gesture recognizers with the same action %@", NSStringFromSelector(blockAction.selector()));
         UIGestureRecognizer *gestureRecognizer = reusePool->get();
         CKSetComponentActionForGestureRecognizer(gestureRecognizer, blockAction);
@@ -116,7 +116,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
     ^(UIView *view, UIGestureRecognizer *recognizer) {
       // Setup delegate proxying if applicable
       if (delegateSelectors.size() > 0) {
-        CKCAssertNil(recognizer.delegate, @"Doesn't make sense to set the gesture delegate and provide selectors to proxy");
+        RCCAssertNil(recognizer.delegate, @"Doesn't make sense to set the gesture delegate and provide selectors to proxy");
         CKComponentDelegateForwarder *proxy = [CKComponentDelegateForwarder newWithSelectors:delegateSelectors];
         proxy.view = view;
         recognizer.delegate = (id<UIGestureRecognizerDelegate>)proxy;

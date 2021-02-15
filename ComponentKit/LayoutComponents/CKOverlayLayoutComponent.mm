@@ -10,7 +10,7 @@
 
 #import "CKOverlayLayoutComponent.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentPerfScope.h>
@@ -52,7 +52,7 @@
                           restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == RCComponentSize(),
+  RCAssert(size == RCComponentSize(),
            @"CKOverlayLayoutComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@, overlay=%@)", size.description(), _component, _overlay);
 

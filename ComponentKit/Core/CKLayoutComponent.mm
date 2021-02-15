@@ -28,19 +28,19 @@
 
 - (unsigned int)numberOfChildren
 {
-  CKFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
+  RCFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
   return 0;
 }
 
 - (id<CKMountable>)childAtIndex:(unsigned int)index
 {
-  CKFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
+  RCFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
   return nil;
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
-  CKFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
+  RCFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
   return [super computeLayoutThatFits:constrainedSize];
 }
 

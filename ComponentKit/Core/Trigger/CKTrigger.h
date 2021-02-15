@@ -16,7 +16,7 @@
 #import <vector>
 #import <memory>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 
 @protocol CKTreeNodeComponentProtocol;
@@ -54,13 +54,13 @@ public:
 
   void addObserver(const ScopedResponderAndKey& scope, const SpecBinderCallback& specCallback) const
   {
-    CKCAssert(
+    RCCAssert(
       [NSThread isMainThread],
       @"Triggers are expected to be bound/unbound on the main thread (e.g., from didInit/willDispose lifecycle events)"
     );
 
     if (findObserver(scope) != _observers->end()) {
-      CKCFailAssert(@"Attempting to add duplicate observer!");
+      RCCFailAssert(@"Attempting to add duplicate observer!");
       return;
     }
 
@@ -69,13 +69,13 @@ public:
 
   void removeObserver(const ScopedResponderAndKey& scope) const
   {
-    CKCAssert(
+    RCCAssert(
       [NSThread isMainThread],
       @"Triggers are expected to be bound/unbound on the main thread (e.g., from didInit/willDispose lifecycle events)"
     );
 
     if (findObserver(scope) == _observers->end()) {
-      CKCFailAssert(@"Observer not present!");
+      RCCFailAssert(@"Observer not present!");
       return;
     }
 
@@ -97,7 +97,7 @@ class CKTrigger : public CKTriggerObservable<T...> {
 public:
   void operator()(T... args) const
   {
-    CKCAssert(
+    RCCAssert(
       [NSThread isMainThread],
       @"Triggers are expected to be invoked on the main thread"
     );

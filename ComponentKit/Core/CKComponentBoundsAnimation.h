@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 typedef NS_ENUM(NSInteger, CKComponentBoundsAnimationMode) {
   /** Wraps changes in a UIView animation block */

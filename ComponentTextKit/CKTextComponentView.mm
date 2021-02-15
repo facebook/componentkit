@@ -11,7 +11,7 @@
 #import "CKTextComponentView.h"
 #import "CKTextComponentViewInternal.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentTextKit/CKAsyncLayer.h>
 #import <ComponentTextKit/CKAsyncLayerSubclass.h>
 #import <ComponentTextKit/CKTextKitRenderer.h>

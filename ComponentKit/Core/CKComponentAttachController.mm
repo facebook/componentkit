@@ -63,9 +63,9 @@ void CKComponentAttachControllerAttachComponentRootLayout(
     CKComponentAttachController *const self,
     const CKComponentAttachControllerAttachComponentRootLayoutParams &params)
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   if (self == nil) {
-    CKCAssert(self, @"Impossible to attach a component layout to a nil attachController");
+    RCCAssert(self, @"Impossible to attach a component layout to a nil attachController");
     return;
   }
 
@@ -104,13 +104,13 @@ void CKComponentAttachControllerAttachComponentRootLayout(
 
 - (void)detachComponentLayoutWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [self _detachComponentLayoutWithScopeIdentifier:@(scopeIdentifier)];
 }
 
 - (void)detachAll
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   for (NSNumber *const scopeIdentifier in _scopeIdentifierToAttachedViewMap.allKeys) {
     [self _detachComponentLayoutWithScopeIdentifier:scopeIdentifier];
   }
@@ -154,7 +154,7 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
                                                           const CKComponentBoundsAnimation &boundsAnimation,
                                                           id<CKAnalyticsListener> analyticsListener)
 {
-  CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
+  RCCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
   [analyticsListener willCollectAnimationsFromComponentTreeWithRootComponent:rootLayout.component()];
   const auto animatedComponents = CK::animatedComponentsBetweenLayouts(rootLayout, prevLayout);
   const auto animations = CK::animationsForComponents(animatedComponents, view);

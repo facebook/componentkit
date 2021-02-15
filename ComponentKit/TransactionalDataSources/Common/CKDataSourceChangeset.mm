@@ -15,7 +15,7 @@
 
 #import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 #import "CKIndexSetDescription.h"
 

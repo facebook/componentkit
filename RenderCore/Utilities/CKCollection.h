@@ -19,7 +19,7 @@
 #import <functional>
 #import <type_traits>
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/CKFunctionalHelpers.h>
 #import <RenderCore/CKOptional.h>
 
@@ -160,7 +160,7 @@ public:
 private:
   static auto assertCollectionRespondsToSelector(id c, SEL sel)
   {
-    CKCAssert([c respondsToSelector:sel],
+    RCCAssert([c respondsToSelector:sel],
               @"%@ is not a collection since it doesn't respond to %@",
               c,
               NSStringFromSelector(sel));

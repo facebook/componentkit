@@ -94,7 +94,7 @@ private:
 
 - (void)setRootLayout:(const CKComponentRootLayout &)rootLayout
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   // In the case when layout has no chance to be mounted, we need to make sure the correct previous layout is still retained.
   _previousLayoutProvider = _previousLayoutProvider ?: _layoutProvider;
   _layoutProvider = [[CKComponentHostingContainerLayoutProvider alloc] initWithRootLayout:rootLayout];
@@ -103,19 +103,19 @@ private:
 
 - (void)setBoundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _boundsAnimation = boundsAnimation;
 }
 
 - (void)setComponent:(CKComponent *)component
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_containerView setComponent:component];
 }
 
 - (void)mount
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (!_needsMount) {
     return;
   }
@@ -138,7 +138,7 @@ private:
 
 - (void)unmount
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_attachController detachComponentLayoutWithScopeIdentifier:_scopeIdentifier];
 }
 
@@ -184,14 +184,14 @@ private:
 
 - (void)setComponent:(CKComponent *)component
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _component = component;
   _sizeCache = none;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (!_component) {
     return CGSizeZero;
   }

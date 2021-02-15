@@ -10,7 +10,7 @@
 
 #import "CKAccessibilityAggregation.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <RenderCore/CKInternalHelpers.h>
@@ -61,7 +61,7 @@
 
 + (instancetype)newWithComponent:(CKComponent *)component aggregatedAttributes:(CKAccessibilityAggregatedAttributes)attributes
 {
-  CKAssertWithCategory(attributes != CKAccessibilityAggregatedAttributeNone,
+  RCAssertWithCategory(attributes != CKAccessibilityAggregatedAttributeNone,
                        [component className],
                        @"A CKAccessibilityAggregatorComponent should not be allocated without at least one aggregated accessibility attribute");
   const auto c = [super newWithComponent:component];
@@ -128,7 +128,7 @@
   if ([actions count] == 1) {
     return [(NSObject *)[actions pointerAtIndex:0] accessibilityActivate];
   } else {
-    CKAssert(actions.count == 0, @"Multiple actions not supported, yet");
+    RCAssert(actions.count == 0, @"Multiple actions not supported, yet");
     return NO;
   }
 

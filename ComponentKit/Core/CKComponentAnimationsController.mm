@@ -10,7 +10,7 @@
 
 #import "CKComponentAnimationsController.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
 
 namespace CK {

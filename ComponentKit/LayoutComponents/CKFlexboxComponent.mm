@@ -15,7 +15,7 @@
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKInternalHelpers.h>
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
 #import <ComponentKit/CKWritingDirection.h>
 #import <ComponentKit/CKSizeAssert.h>
@@ -199,7 +199,7 @@ template class std::vector<CKFlexboxComponentChild>;
 #if CK_ASSERTIONS_ENABLED
     for (const auto &child : _children) {
       if (child.component) {
-        CKAssertWithCategory(child.component.typeName != nullptr,
+        RCAssertWithCategory(child.component.typeName != nullptr,
                              @"non_prod_validation_T79773577",
                              @"Expected `child.component` to be a valid object.");
       }
@@ -324,7 +324,7 @@ static float computeBaseline(YGNodeRef node, const float width, const float heig
 {
   CKFlexboxChildCachedLayout *const cachedLayout = getCKFlexboxChildCachedLayoutFromYogaNode(node, width, height);
   if ([cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey]) {
-    CKCAssert([[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] isKindOfClass:[NSNumber class]], @"You must set a NSNumber for kCKComponentLayoutExtraBaselineKey");
+    RCCAssert([[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] isKindOfClass:[NSNumber class]], @"You must set a NSNumber for kCKComponentLayoutExtraBaselineKey");
     return [[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] floatValue];
   }
 
@@ -905,7 +905,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   if (index < _children.size()) {
     return _children[index].component;
   }
-  CKFailAssertWithCategory(self.className, @"Index %u is out of bounds %lu", index, _children.size());
+  RCFailAssertWithCategory(self.className, @"Index %u is out of bounds %lu", index, _children.size());
   return nil;
 }
 

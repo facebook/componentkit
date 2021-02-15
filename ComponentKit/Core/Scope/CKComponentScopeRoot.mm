@@ -89,7 +89,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
         hashTable = [NSHashTable weakObjectsHashTable];
         _registeredComponents[predicate] = hashTable;
       }
-      CKWarn([hashTable containsObject:component] == NO, @"Double registration of component %@", component.className);
+      RCWarn([hashTable containsObject:component] == NO, @"Double registration of component %@", component.className);
       [hashTable addObject:component];
     }
   }
@@ -109,7 +109,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
         _registeredComponentControllers[predicate] = hashTable;
       }
 
-      CKWarn([hashTable containsObject:componentController] == NO, @"Double registration of component controller %@", componentController.class);
+      RCWarn([hashTable containsObject:componentController] == NO, @"Double registration of component controller %@", componentController.class);
       [hashTable addObject:componentController];
     }
   }
@@ -119,10 +119,10 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
                                        block:(CKComponentScopeEnumerator)block
 {
   if (!block) {
-    CKFailAssert(@"Must be given a block to enumerate.");
+    RCFailAssert(@"Must be given a block to enumerate.");
     return;
   }
-  CKAssert(_componentPredicates.find(predicate) != _componentPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
+  RCAssert(_componentPredicates.find(predicate) != _componentPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
 
   const auto foundIter = _registeredComponents.find(predicate);
   if (foundIter != _registeredComponents.end()) {
@@ -134,7 +134,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 
 - (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentPredicate)predicate
 {
-  CKCAssert(CK::Collection::contains(_componentPredicates, predicate), @"Scope root must be initialized with predicate to enumerate.");
+  RCCAssert(CK::Collection::contains(_componentPredicates, predicate), @"Scope root must be initialized with predicate to enumerate.");
   const auto componentsIt = _registeredComponents.find(predicate);
   const auto components = componentsIt != _registeredComponents.end() ? componentsIt->second : @[];
   return CKCocoaCollectionAdapter<id<CKComponentProtocol>>(components);
@@ -144,10 +144,10 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
                                                  block:(CKComponentControllerScopeEnumerator)block
 {
   if (!block) {
-    CKFailAssert(@"Must be given a block to enumerate.");
+    RCFailAssert(@"Must be given a block to enumerate.");
     return;
   }
-  CKAssert(_componentControllerPredicates.find(predicate) != _componentControllerPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
+  RCAssert(_componentControllerPredicates.find(predicate) != _componentControllerPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
 
   const auto foundIter = _registeredComponentControllers.find(predicate);
   if (foundIter != _registeredComponentControllers.end()) {
@@ -159,7 +159,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 
 - (CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>)componentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate
 {
-  CKAssert(_componentControllerPredicates.find(predicate) != _componentControllerPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
+  RCAssert(_componentControllerPredicates.find(predicate) != _componentControllerPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
   const auto componentControllersIt = _registeredComponentControllers.find(predicate);
   const auto componentControllers = componentControllersIt != _registeredComponentControllers.end() ? componentControllersIt->second : @[];
   return CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>(componentControllers);

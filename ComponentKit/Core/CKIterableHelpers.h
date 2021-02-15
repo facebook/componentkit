@@ -12,7 +12,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKMountable.h>
 
 // Helper functions.
@@ -35,7 +35,7 @@ id<CKMountable> childAtIndex(__unsafe_unretained id<RCIterable> self, unsigned i
   if (idx == 0 && first != nil) {
     return first;
   }
-  CKCFailAssertWithCategory([self class], @"Index out of bounds %u", [self numberOfChildren]);
+  RCCFailAssertWithCategory([self class], @"Index out of bounds %u", [self numberOfChildren]);
   return nil;
 }
 

@@ -11,7 +11,7 @@
 #import "CKComponentRootView.h"
 #import "CKComponentRootViewInternal.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponent+UIView.h>
 #import "CKComponentAttachControllerInternal.h"
 
@@ -25,13 +25,13 @@ static NSMutableArray *hitTestHooks;
 
 - (void)setAllowTapPassthrough:(BOOL)allowTapPassthrough
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _allowTapPassthrough = allowTapPassthrough;
 }
 
 + (void)addHitTestHook:(CKComponentRootViewHitTestHook)hook
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (hitTestHooks == nil) {
     hitTestHooks = [NSMutableArray array];
   }
@@ -40,7 +40,7 @@ static NSMutableArray *hitTestHooks;
 
 + (NSArray *)hitTestHooks
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   return [NSArray arrayWithArray:hitTestHooks];
 }
 
@@ -79,7 +79,7 @@ static NSMutableArray *hitTestHooks;
 }
 
 - (void)setAccessibilityElements:(NSArray *)accessibilityElements {
-  CKFailAssert(@"Attempt to setAccessibilityElements in %@", NSStringFromClass([self class]));
+  RCFailAssert(@"Attempt to setAccessibilityElements in %@", NSStringFromClass([self class]));
 }
 
 - (NSArray *)accessibilityElements {

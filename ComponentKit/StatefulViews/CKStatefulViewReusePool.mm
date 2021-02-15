@@ -9,7 +9,7 @@
  */
 #import "CKStatefulViewComponentController.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKCollection.h>
 #import <ComponentKit/RCDispatch.h>
 
@@ -116,8 +116,8 @@ struct PoolKeyHasher {
                                preferredSuperview:(UIView *)preferredSuperview
                                           context:(id)context
 {
-  CKAssertMainThread();
-  CKAssertNotNil(controllerClass, @"Must provide a controller class");
+  RCAssertMainThread();
+  RCAssertNotNil(controllerClass, @"Must provide a controller class");
   const std::pair<__unsafe_unretained Class, id> key = std::make_pair(controllerClass, context);
   const auto it = _pool.find(key);
   if (it == _pool.end()) { // Avoid overhead of creating the item unless it already exists
@@ -139,10 +139,10 @@ struct PoolKeyHasher {
                     context:(id)context
          mayRelinquishBlock:(CKStatefulViewReusePoolPendingMayRelinquishBlock)mayRelinquishBlock
 {
-  CKAssertMainThread();
-  CKAssertNotNil(view, @"Must provide a view");
-  CKAssertNotNil(controllerClass, @"Must provide a controller class");
-  CKAssertNotNil(mayRelinquishBlock, @"Must provide a relinquish block");
+  RCAssertMainThread();
+  RCAssertNotNil(view, @"Must provide a view");
+  RCAssertNotNil(controllerClass, @"Must provide a controller class");
+  RCAssertNotNil(mayRelinquishBlock, @"Must provide a relinquish block");
 
   auto const addEntry = ^{
     auto &poolItem = _pendingPool[std::make_pair(controllerClass, context)];
@@ -170,7 +170,7 @@ struct PoolKeyHasher {
 
 - (void)purgePendingPool
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   for (const auto &it : _pendingPool) {
     // maximumPoolSize will be -1 by default
     NSInteger maximumPoolSize = [it.first.first maximumPoolSize:it.first.second];

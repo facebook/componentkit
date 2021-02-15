@@ -102,7 +102,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
       _thread.stackSize = kBackgroundThreadStackSizeInBytes;
       [_thread start];
     } else {
-      CKFailAssert(@"ComponentKit requires iOS 10 or higher when running under TSan.");
+      RCFailAssert(@"ComponentKit requires iOS 10 or higher when running under TSan.");
     }
   }
   return self;
@@ -185,8 +185,8 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (instancetype)initWithState:(CKDataSourceState *)state
 {
-  CKAssertNotNil(state, @"Initial state is required");
-  CKAssertNotNil(state.configuration, @"Configuration is required");
+  RCAssertNotNil(state, @"Initial state is required");
+  RCAssertNotNil(state.configuration, @"Configuration is required");
   if (self = [super init]) {
     const auto configuration = state.configuration;
     _state = state;
@@ -220,7 +220,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (CKDataSourceState *)state
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   return _state;
 }
 
@@ -236,7 +236,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
                    qos:(CKDataSourceQOS)qos
               userInfo:(NSDictionary *)userInfo
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
 #if CK_ASSERTIONS_ENABLED
   CKVerifyChangeset(changeset, _state, _pendingAsynchronousModifications);
@@ -267,7 +267,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
                        mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   id<CKDataSourceStateModifying> modification =
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:configuration userInfo:userInfo];
   switch (mode) {
@@ -285,7 +285,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 - (void)reloadWithMode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   id<CKDataSourceStateModifying> modification =
   [[CKDataSourceReloadModification alloc] initWithUserInfo:userInfo];
   switch (mode) {
@@ -302,7 +302,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (BOOL)applyChange:(CKDataSourceChange *)change
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (![self verifyChange:change]) {
     return NO;
   }
@@ -312,7 +312,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (BOOL)verifyChange:(CKDataSourceChange *)change
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   // We don't check `_pendingAsynchronousModifications` here because we want pre-computed `CKDataSourceChange`
   // to have higher chance to be applied. Asynchronous modifications will be re-applied anyway if they fail.
   return change.previousState == _state;
@@ -320,7 +320,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (void)setViewport:(CKDataSourceViewport)viewport
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (!_changesetSplittingEnabled) {
     return;
   }
@@ -329,19 +329,19 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (void)addListener:(id<CKDataSourceListener>)listener
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_announcer addListener:listener];
 }
 
 - (void)removeListener:(id<CKDataSourceListener>)listener
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_announcer removeListener:listener];
 }
 
 - (void)setShouldPauseStateUpdates:(BOOL)shouldPauseStateUpdates
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _shouldPauseStateUpdates = shouldPauseStateUpdates;
   if (!_shouldPauseStateUpdates) {
     [self _processStateUpdates];
@@ -350,25 +350,25 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (BOOL)shouldPauseStateUpdates
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   return _shouldPauseStateUpdates;
 }
 
 - (void)setIsBackgroundMode:(BOOL)isBackgroundMode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _isBackgroundMode = isBackgroundMode;
 }
 
 - (BOOL)isBackgroundMode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   return _isBackgroundMode;
 }
 
 - (void)setTraitCollection:(UITraitCollection *)traitCollection
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _traitCollection = [traitCollection copy];
 }
 
@@ -380,7 +380,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
                     metadata:(const CKStateUpdateMetadata &)metadata
                         mode:(CKUpdateMode)mode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
   [_state.configuration.analyticsListener didReceiveStateUpdateFromScopeHandle:handle
                                                                 rootIdentifier:rootIdentifier];
@@ -431,7 +431,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (void)_enqueueModification:(id<CKDataSourceStateModifying>)modification
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
   [_pendingAsynchronousModifications addObject:modification];
   if (_pendingAsynchronousModifications.count == 1) {
@@ -441,7 +441,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (void)_startAsynchronousModificationIfNeeded
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
   id<CKDataSourceStateModifying> modification = _pendingAsynchronousModifications.firstObject;
   if (!_processingAsynchronousModification && _pendingAsynchronousModifications.count > 0) {
@@ -467,7 +467,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 /** Returns the canceled matching modifications, in the order they would have been applied. */
 - (NSArray *)_cancelEnqueuedModificationsOfType:(Class)modificationType
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
   NSIndexSet *indexes = [_pendingAsynchronousModifications indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
     return [obj isKindOfClass:modificationType];
@@ -488,7 +488,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (void)_synchronouslyApplyChange:(CKDataSourceChange *)change qos:(CKDataSourceQOS)qos
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   CKDataSourceAppliedChanges *const appliedChanges = [change appliedChanges];
   CKDataSourceState *const previousState = _state;
   CKDataSourceState *const newState = [change state];
@@ -552,7 +552,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (void)_processStateUpdates
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (_shouldPauseStateUpdates) {
     return;
   }
@@ -570,7 +570,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (id<CKDataSourceStateModifying>)_consumePendingSynchronousStateUpdates
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (_pendingSynchronousStateUpdates.empty()) {
     return nil;
   }
@@ -583,7 +583,7 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
 
 - (id<CKDataSourceStateModifying>)_consumePendingAsynchronousStateUpdates
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (_pendingAsynchronousStateUpdates.empty()) {
     return nil;
   }

@@ -10,7 +10,7 @@
 
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/RCAvailability.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKNonNull.h>
@@ -133,7 +133,7 @@ void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, 
 
   NSIndexPath *largestAnimatingVisibleElement = largestAnimatingVisibleElementForOriginalLayout(_indexPathsToOriginalLayoutAttributes, visibleRect);
   if (largestAnimatingVisibleElement == nil) {
-    CKCWarnWithCategory(NO, animation.component.className, @"largestAnimatingVisibleElement cannot be nil since it will later be passed to [UICollectionView layoutAttributesForItemAtIndexPath:] which expects a non-null pointer.\nOriginal layout attrs by index path: %@\nVisible rect: %@", _indexPathsToOriginalLayoutAttributes, NSStringFromCGRect(visibleRect));
+    RCCWarnWithCategory(NO, animation.component.className, @"largestAnimatingVisibleElement cannot be nil since it will later be passed to [UICollectionView layoutAttributesForItemAtIndexPath:] which expects a non-null pointer.\nOriginal layout attrs by index path: %@\nVisible rect: %@", _indexPathsToOriginalLayoutAttributes, NSStringFromCGRect(visibleRect));
     return;
   }
 

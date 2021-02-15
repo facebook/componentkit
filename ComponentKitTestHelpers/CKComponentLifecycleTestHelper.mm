@@ -54,7 +54,7 @@ using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
                                                  constrainedSize:(CKSizeRange)constrainedSize
                                                          context:(id<NSObject>)context
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   CKComponentScopeRoot *previousScopeRoot = _previousScopeRoot ?: CKComponentScopeRootWithDefaultPredicates(self, nil);
   CKBuildComponentResult result = CKBuildComponent(CK::makeNonNull(previousScopeRoot), _pendingStateUpdates, ^{
     return _componentProvider ? _componentProvider(model, context) : nil;
@@ -74,7 +74,7 @@ using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
 
 - (void)updateWithState:(const CKComponentLifecycleTestHelperState &)state
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [self updateWithStateWithoutMounting:state];
   if (_mountedView) {
     CKComponentBoundsAnimationApply(state.boundsAnimation, ^{
@@ -85,14 +85,14 @@ using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
 
 - (void)updateWithStateWithoutMounting:(const CKComponentLifecycleTestHelperState &)state
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _state = state;
   _rootLayout = CKComponentRootLayout{_state.componentLayout};
 }
 
 - (void)attachToView:(UIView *)view
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _mountedView = view;
   CKComponentAttachControllerAttachComponentRootLayout(
       _componentAttachController,
@@ -105,14 +105,14 @@ using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
 
 - (void)detachFromView
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _mountedView = nil;
   [_componentAttachController detachComponentLayoutWithScopeIdentifier:_state.scopeRoot.globalIdentifier];
 }
 
 - (const CKComponentLifecycleTestHelperState &)state
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   return _state;
 }
 
@@ -122,7 +122,7 @@ using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
                     metadata:(const CKStateUpdateMetadata &)metadata
                         mode:(CKUpdateMode)mode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
 
   _pendingStateUpdates[handle].push_back(stateUpdate);
   const CKSizeRange constrainedSize = _sizeRangeProvider ? [_sizeRangeProvider sizeRangeForBoundingSize:_state.constrainedSize.max] : _state.constrainedSize;

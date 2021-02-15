@@ -10,7 +10,7 @@
 
 #import "CKBackgroundLayoutComponent.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentPerfScope.h>
@@ -51,7 +51,7 @@
                           restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == RCComponentSize(),
+  RCAssert(size == RCComponentSize(),
            @"CKBackgroundLayoutComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@, background=%@)", size.description(), _component, _background);
 

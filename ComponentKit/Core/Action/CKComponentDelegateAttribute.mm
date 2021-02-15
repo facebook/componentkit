@@ -13,7 +13,7 @@
 #import <vector>
 #import <objc/runtime.h>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 #import "CKComponent+UIView.h"
 #import "CKComponentSubclass.h"
@@ -38,7 +38,7 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
 
         // Create a proxy for this set of selectors
 
-        CKCAssertNil(CKDelegateProxyForObject(view),
+        RCCAssertNil(CKDelegateProxyForObject(view),
                      @"Unsupported: registered two delegate proxies for the same view: %@ %@", view, CKDelegateProxyForObject(view));
 
         CKComponentDelegateForwarder *proxy = [CKComponentDelegateForwarder newWithSelectors:selectors];

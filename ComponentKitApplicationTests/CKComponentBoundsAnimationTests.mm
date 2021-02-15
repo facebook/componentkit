@@ -200,7 +200,7 @@
 #if CK_ASSERTIONS_ENABLED
   CKBoundsAnimationRecordingView *v = (CKBoundsAnimationRecordingView *)secondResult.component.viewContext.view;
   CKBoundsAnimationRecordingView *subview = [[v subviews] firstObject];
-  CKAssertTrue(subview != nil && subview.animatedLastBoundsChange == NO);
+  RCAssertTrue(subview != nil && subview.animatedLastBoundsChange == NO);
 #endif
 
   CKUnmountComponents(secondMountedComponents);

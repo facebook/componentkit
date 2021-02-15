@@ -27,7 +27,7 @@
 
 + (UIView *)newStatefulView:(id)context
 {
-  CKFailAssertWithCategory(NSStringFromClass(self), @"Should be implemented by subclasses.");
+  RCFailAssertWithCategory(NSStringFromClass(self), @"Should be implemented by subclasses.");
   return nil;
 }
 
@@ -39,7 +39,7 @@
 + (void)configureStatefulView:(UIView *)statefulView
                  forComponent:(CKComponent *)component
 {
-  CKFailAssertWithCategory(NSStringFromClass(self), @"Should be implemented by subclasses.");
+  RCFailAssertWithCategory(NSStringFromClass(self), @"Should be implemented by subclasses.");
 }
 
 + (NSInteger)maximumPoolSize:(id)context
@@ -77,8 +77,8 @@
 {
   [super didMount];
 
-  CKAssertWithCategory([[self component] isKindOfClass:[CKStatefulViewComponent class]], self.component.className, @"Component should be a stateful view component.");
-  CKAssertWithCategory(
+  RCAssertWithCategory([[self component] isKindOfClass:[CKStatefulViewComponent class]], self.component.className, @"Component should be a stateful view component.");
+  RCAssertWithCategory(
     method_getImplementation(class_getInstanceMethod([CKStatefulViewComponentController class], @selector(statefulView))) ==
     method_getImplementation(class_getInstanceMethod([self class], @selector(statefulView))),
     self.component.className,
@@ -127,7 +127,7 @@
   const CKComponentViewContext &context = [[self component] viewContext];
   [_statefulView setFrame:context.frame];
 
-  CKAssertWithCategory([context.view.subviews count] <= 1, self.component.className, @"Should never have more than a single stateful subview.");
+  RCAssertWithCategory([context.view.subviews count] <= 1, self.component.className, @"Should never have more than a single stateful subview.");
   UIView *existingView = [context.view.subviews lastObject];
   if (existingView != _statefulView) {
     [existingView removeFromSuperview];

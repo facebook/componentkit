@@ -127,8 +127,8 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                      requiresScopeHandle:(BOOL)requiresScopeHandle
 {
-  CKAssertNotNil(pair.node, @"Must have a node");
-  CKAssertNotNil(initialStateCreator, @"Must has an initial state creator");
+  RCAssertNotNil(pair.node, @"Must have a node");
+  RCAssertNotNil(initialStateCreator, @"Must has an initial state creator");
 
   // Generate key inside the new parent
   CKTreeNodeComponentKey componentKey = [pair.node createKeyForComponentTypeName:componentTypeName
@@ -156,8 +156,8 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                      requiresScopeHandle:(BOOL)requiresScopeHandle
 {
-  CKAssertNotNil(pair.node, @"Must have a node");
-  CKAssertNotNil(initialStateCreator, @"Must has an initial state creator");
+  RCAssertNotNil(pair.node, @"Must have a node");
+  RCAssertNotNil(initialStateCreator, @"Must has an initial state creator");
 
   // Create new handle.
   CKComponentScopeHandle *newHandle;
@@ -171,7 +171,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                                     initialState:(initialStateCreator ? initialStateCreator() : nil)];
   }
 
-  CKAssert((newHandle != nil) == requiresScopeHandle, @"Expecting scopeHandle (%@) to be [un]set for requiresScopeHandleValue", newHandle);
+  RCAssert((newHandle != nil) == requiresScopeHandle, @"Expecting scopeHandle (%@) to be [un]set for requiresScopeHandleValue", newHandle);
 
   // Create new node.
   CKScopeTreeNode *newChild = [[CKScopeTreeNode alloc]

@@ -15,12 +15,12 @@
 #ifndef CKCasting_h
 #define CKCasting_h
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 
 namespace CK {
   template <typename T>
   T *objCForceCast(id any) {
-    CKCAssert([any isKindOfClass:[T class]], @"Dynamic cast of %@ to %@ failed", any, [T class]);
+    RCCAssert([any isKindOfClass:[T class]], @"Dynamic cast of %@ to %@ failed", any, [T class]);
     return static_cast<T *>(any);
   }
 }

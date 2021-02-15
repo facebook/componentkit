@@ -33,7 +33,7 @@ CKComponentScope::~CKComponentScope()
 
     if (_threadLocalScope->systraceListener) {
       auto const componentTypeName = _scopeHandle.componentTypeName ?: "UnkownTypeName";
-      CKCAssertWithCategory(objc_getClass(componentTypeName) != nil,
+      RCCAssertWithCategory(objc_getClass(componentTypeName) != nil,
                             [NSString stringWithUTF8String:componentTypeName],
                             @"Creating an action from a scope should always yield a class");
 
@@ -46,25 +46,25 @@ CKComponentScope::~CKComponentScope()
 
 CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id identifier, id (^initialStateCreator)(void)) noexcept
 {
-  CKCAssert(class_isMetaClass(object_getClass(componentClass)), @"Expected %@ to be a meta class", componentClass);
-  CKCWarnWithCategory(
+  RCCAssert(class_isMetaClass(object_getClass(componentClass)), @"Expected %@ to be a meta class", componentClass);
+  RCCWarnWithCategory(
     [componentClass conformsToProtocol:@protocol(CKReusableComponentProtocol)] == NO,
     NSStringFromClass(componentClass),
     @"Reusable components shouldn't use scopes.");
-  CKCAssertWithCategory(
+  RCCAssertWithCategory(
     identifier == nil ||
     class_isMetaClass(object_getClass(identifier)) ||
     [identifier conformsToProtocol:@protocol(CKComponentProtocol)] == NO,
     NSStringFromClass(componentClass),
     @"Identifier should never be an instance of CKComponent. Identifiers should be **constant**.");
-  CKCAssertWithCategory(
+  RCCAssertWithCategory(
     identifier != componentClass,
     NSStringFromClass(componentClass),
     @"Passing the component class as the identifier is redundant.");
 
   _threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (_threadLocalScope != nullptr) {
-    CKCWarnWithCategory(
+    RCCWarnWithCategory(
       [componentClass isSubclassOfClass:[CKComponent class]] == _threadLocalScope->enforceCKComponentSubclasses,
       NSStringFromClass(componentClass),
       @"Component type doesn't match the TLS's type. Have you created the component **outside** a component provider function?");
@@ -99,7 +99,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
     _threadLocalScope->push({.node = childPair.node, .previousNode = childPair.previousNode}, YES, ancestorHasStateUpdate);
   }
-  CKCAssertWithCategory(_threadLocalScope != nullptr,
+  RCCAssertWithCategory(_threadLocalScope != nullptr,
                         NSStringFromClass(componentClass),
                         @"Component with scope must be created inside component provider function.");
 }

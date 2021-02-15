@@ -13,7 +13,7 @@
 
 #import <mutex>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKInternalHelpers.h>
 
@@ -82,7 +82,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (void)dealloc
 {
 #if CK_ASSERTIONS_ENABLED
-  CKWarn(
+  RCWarn(
     _lifecycleState == CKComponentControllerInvalidated ||
     _lifecycleState == CKComponentControllerAllocated ||
     (_lifecycleState == CKComponentControllerInitialized &&
@@ -93,7 +93,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (void)setLatestComponent:(CKComponent *)latestComponent
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   if (latestComponent != _latestComponent) {
     [self willUpdateComponent];
     if (self.shouldAcquireLockWhenUpdatingComponent) {
@@ -111,13 +111,13 @@ static NSString *componentStateName(CKComponentControllerState state)
 {
 #if CK_ASSERTIONS_ENABLED
   if (_initializationThread != [NSThread currentThread]) {
-    CKAssertWithCategory([NSThread isMainThread],
+    RCAssertWithCategory([NSThread isMainThread],
                          NSStringFromClass(self.class),
                          @"`self.component` must be called on the main thread");
   }
 #endif
   const auto component = _component ?: _latestComponent;
-  CKWarn(component != nil, @"`nil` component shouldn't be returned");
+  RCWarn(component != nil, @"`nil` component shouldn't be returned");
   return component;
 }
 
@@ -127,13 +127,13 @@ static NSString *componentStateName(CKComponentControllerState state)
   if ([NSThread isMainThread]) {
     component = _component ?: _latestComponent;
   } else {
-    CKAssert(self.shouldAcquireLockWhenUpdatingComponent,
+    RCAssert(self.shouldAcquireLockWhenUpdatingComponent,
              @"threadSafe_component should only be called when updating component is thread safe as well");
     std::lock_guard<std::mutex> lock(_componentMutex);
     component = _component ?: _latestComponent;
   }
 
-  CKWarn(component != nil, @"`nil` component shouldn't be returned");
+  RCWarn(component != nil, @"`nil` component shouldn't be returned");
   return component;
 }
 
@@ -143,66 +143,66 @@ static NSString *componentStateName(CKComponentControllerState state)
 }
 
 - (void)didInit {
-  CKAssertMainThread();
+  RCAssertMainThread();
 #if CK_ASSERTIONS_ENABLED
-  CKWarn(_lifecycleState == CKComponentControllerAllocated,
+  RCWarn(_lifecycleState == CKComponentControllerAllocated,
          @"Did init called but controller (%@) was: %td", self.class, _lifecycleState);
   _lifecycleState = CKComponentControllerInitialized;
 #endif
 }
 
 - (void)willMount {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)didMount {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)willRemount {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)didRemount {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)willUnmount {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)didUnmount {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)willUpdateComponent {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)didUpdateComponent {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)componentWillRelinquishView {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)componentDidAcquireView {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)componentTreeWillAppear {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)componentTreeDidDisappear {
-  CKAssertMainThread();
+  RCAssertMainThread();
 }
 
 - (void)invalidateController {
-  CKAssertMainThread();
+  RCAssertMainThread();
 #if CK_ASSERTIONS_ENABLED
-  CKWarnWithCategory(_lifecycleState == CKComponentControllerInitialized ||
+  RCWarnWithCategory(_lifecycleState == CKComponentControllerInitialized ||
                      (_lifecycleState == CKComponentControllerAllocated &&
                      !CKSubclassOverridesInstanceMethod([CKComponentController class], self.class, @selector(didInit))),
                      self.component.className,
@@ -262,7 +262,7 @@ static NSString *componentStateName(CKComponentControllerState state)
       [self willRemount];
       break;
     default:
-      CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
+      RCCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
   }
 }
 
@@ -278,7 +278,7 @@ static NSString *componentStateName(CKComponentControllerState state)
       [self didRemount];
       break;
     default:
-     CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
+     RCCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
   }
 
   [self didFinishComponentUpdate];
@@ -295,10 +295,10 @@ static NSString *componentStateName(CKComponentControllerState state)
       }
       break;
     case CKComponentControllerStateRemounting:
-      CKAssert(component != _component, @"Didn't expect the new component to be unmounting during remount");
+      RCAssert(component != _component, @"Didn't expect the new component to be unmounting during remount");
       break;
     default:
-      CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
+      RCCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
   }
 }
 
@@ -306,18 +306,18 @@ static NSString *componentStateName(CKComponentControllerState state)
 {
   switch (_state) {
     case CKComponentControllerStateUnmounting:
-      CKAssert(component == _component, @"Unexpected component mismatch during unmount from unmounting");
+      RCAssert(component == _component, @"Unexpected component mismatch during unmount from unmounting");
       _state = CKComponentControllerStateUnmounted;
       [self didUnmount];
       break;
     case CKComponentControllerStateRemounting:
-      CKAssert(component != _component, @"Didn't expect the new component to be unmounted during remount");
+      RCAssert(component != _component, @"Didn't expect the new component to be unmounted during remount");
       break;
     case CKComponentControllerStateMounted:
-      CKAssert(component != _component, @"Didn't expect the new component to be unmounted while mounted");
+      RCAssert(component != _component, @"Didn't expect the new component to be unmounted while mounted");
       break;
     default:
-      CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
+      RCCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
   }
 }
 
@@ -330,7 +330,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (void)component:(CKComponent *)component willRelinquishView:(UIView *)view
 {
   if (component == _component) {
-    CKAssert(view == _view, @"Didn't expect to be relinquishing view %@ when _view is %@", view, _view);
+    RCAssert(view == _view, @"Didn't expect to be relinquishing view %@ when _view is %@", view, _view);
     [self _relinquishView];
   }
 }
@@ -340,7 +340,7 @@ static NSString *componentStateName(CKComponentControllerState state)
   if (component == _component) {
     if (view != _view) {
       if (_view) {
-        CKAssert(_updatingComponent, @"Only expect to acquire a new view before relinquishing old if updating");
+        RCAssert(_updatingComponent, @"Only expect to acquire a new view before relinquishing old if updating");
         [self _relinquishView];
       }
       _view = view;

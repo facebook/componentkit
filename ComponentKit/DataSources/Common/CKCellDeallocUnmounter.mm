@@ -23,19 +23,19 @@
 
 - (void)setScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _scopeIdentifier = scopeIdentifier;
 }
 
 - (void)setAttachController:(CKComponentAttachController *)attachController
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _attachController = attachController;
 }
 
 - (void)dealloc
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_attachController detachComponentLayoutWithScopeIdentifier:_scopeIdentifier];
 }
 

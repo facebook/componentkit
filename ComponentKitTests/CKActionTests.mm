@@ -806,7 +806,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
 
 - (void)testActionParamsFailedValidation
 {
-  // We need to set an assertion handler as `checkMethodSignatureAgainstTypeEncodings` throws `CKCFailAssert` in case it fails.
+  // We need to set an assertion handler as `checkMethodSignatureAgainstTypeEncodings` throws `RCCFailAssert` in case it fails.
   auto const assertionHandler = [CKComponentActionTestAssertionHandler new];
   [[[NSThread currentThread] threadDictionary] setValue:assertionHandler forKey:NSAssertionHandlerKey];
 

@@ -14,7 +14,7 @@
 #import <unordered_map>
 #import <vector>
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/CKCollection.h>
 
 /**
@@ -33,7 +33,7 @@ using AssociatedObjectMap = std::unordered_map<uintptr_t, std::vector<KeyValue>>
 
 static AssociatedObjectMap *CKMainThreadAffinedAssociatedObjectMap()
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   static AssociatedObjectMap *associatedObjectMap = new AssociatedObjectMap {};
   return associatedObjectMap;
 }
@@ -41,7 +41,7 @@ static AssociatedObjectMap *CKMainThreadAffinedAssociatedObjectMap()
 id _Nullable RCGetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
                                                      const void *key)
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   const auto map = CKMainThreadAffinedAssociatedObjectMap();
   const auto it = map->find(uintptr_t(object));
   if (it == map->end()) {
@@ -63,7 +63,7 @@ void RCSetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
                                              const void *key,
                                              __unsafe_unretained id _Nullable value)
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   const auto map = CKMainThreadAffinedAssociatedObjectMap();
   const auto address = (uintptr_t)object;
   const auto it = map->find(address);
@@ -97,7 +97,7 @@ void RCSetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
 
 static void removeAllAssociatedObjects(uintptr_t address)
 {
-  CKCAssertMainThread();
+  RCCAssertMainThread();
   CKMainThreadAffinedAssociatedObjectMap()->erase(address);
 }
 
@@ -116,7 +116,7 @@ static void removeAllAssociatedObjects(uintptr_t address)
 
 - (void)dealloc
 {
-  CKAssert([NSThread isMainThread],
+  RCAssert([NSThread isMainThread],
            @"Object that has `RCAssociatedObject` must be deallocated on main thread");
   removeAllAssociatedObjects(_address);
 }

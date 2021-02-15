@@ -11,7 +11,7 @@
 #import "CKComponentHostingView.h"
 #import "CKComponentHostingViewInternal.h"
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKBlockSizeRangeProvider.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
@@ -135,7 +135,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (void)layoutSubviews
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [super layoutSubviews];
 
   // It is possible for a view change due to mounting to trigger a re-layout of the entire screen. This can
@@ -169,7 +169,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [self _synchronouslyUpdateComponentIfNeeded];
   if (!_component) {
     // This could only happen when `initialSize` is specified.
@@ -200,28 +200,28 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_componentGenerator updateModel:model];
   [self _setNeedsUpdateWithMode:mode];
 }
 
 - (void)updateContext:(id<NSObject>)context mode:(CKUpdateMode)mode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_componentGenerator updateContext:context];
   [self _setNeedsUpdateWithMode:mode];
 }
 
 - (void)updateAccessibilityStatus:(BOOL)accessibilityStatus mode:(CKUpdateMode)mode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_componentGenerator updateAccessibilityStatus:accessibilityStatus];
   [self _setNeedsUpdateWithMode:mode];
 }
 
 - (void)applyResult:(const CKBuildComponentResult &)result
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _componentGenerator.scopeRoot = result.scopeRoot;
   [self _applyResult:result];
   [self setNeedsLayout];
@@ -230,7 +230,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (void)reloadWithMode:(CKUpdateMode)mode
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   [_componentGenerator forceReloadInNextGeneration];
   [self _setNeedsUpdateWithMode:mode];
 }
@@ -342,7 +342,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   }
 
   if (_isSynchronouslyUpdatingComponent) {
-    CKFailAssert(@"CKComponentHostingView is not re-entrant. This is called by -layoutSubviews, so ensure "
+    RCFailAssert(@"CKComponentHostingView is not re-entrant. This is called by -layoutSubviews, so ensure "
                  "that there is nothing that is triggering a nested call to -layoutSubviews.");
     return CK::none;
   }

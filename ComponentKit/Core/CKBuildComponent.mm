@@ -85,7 +85,7 @@ auto CKBuildComponentTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
       trigger |= CKBuildTriggerPropsUpdate;
     }
   } else {
-    CKCAssert(stateUpdates.empty(), @"No previous scope root but state updates");
+    RCCAssert(stateUpdates.empty(), @"No previous scope root but state updates");
   }
 
   return trigger;
@@ -106,7 +106,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                         CKReflowTrigger reflowTrigger,
                                         RCComponentCoalescingMode coalescingMode)
 {
-  CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
+  RCCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
 
   auto const analyticsListener = [previousRoot analyticsListener];

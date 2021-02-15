@@ -182,7 +182,7 @@ auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) 
 
 - (void)didPrepareLayout:(const RCLayout &)layout forComponent:(CKComponent *)component
 {
-  CKAssertMainThread();
+  RCAssertMainThread();
   _calledDidPrepareLayoutForComponent = YES;
 }
 

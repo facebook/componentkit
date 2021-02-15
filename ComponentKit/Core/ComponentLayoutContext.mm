@@ -13,7 +13,7 @@
 #import <pthread.h>
 #import <stack>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponent.h>
 
 using namespace CK::Component;
@@ -56,7 +56,7 @@ LayoutContext::LayoutContext(CKComponent *c, CKSizeRange r) : component(c), size
 LayoutContext::~LayoutContext()
 {
   auto &stack = componentValue().stack;
-  CKCAssert(stack.back() == this,
+  RCCAssert(stack.back() == this,
             @"Last component layout context %@ is not %@", stack.back()->component, component);
   stack.pop_back();
   if (stack.empty()) {

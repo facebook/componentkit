@@ -51,13 +51,13 @@
 
 - (CKComponentBoundsAnimation)boundsAnimation
 {
-  CKAssert(_hasRootLayoutAndBoundsAnimation, @"When using the initializer without giving a layout you must override this method");
+  RCAssert(_hasRootLayoutAndBoundsAnimation, @"When using the initializer without giving a layout you must override this method");
   return _boundsAnimation;
 }
 
 - (const CKComponentRootLayout &)rootLayout
 {
-  CKAssert(_hasRootLayoutAndBoundsAnimation, @"When using the initializer without giving a layout you must override this method");
+  RCAssert(_hasRootLayoutAndBoundsAnimation, @"When using the initializer without giving a layout you must override this method");
   return _rootLayout;
 }
 

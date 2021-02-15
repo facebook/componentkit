@@ -40,7 +40,7 @@ namespace TreeNode {
     if ([node.scopeHandle acquireFromComponent:component]) {
       return node;
     }
-    CKCAssertWithCategory([component.class controllerClass] == nil ||
+    RCCAssertWithCategory([component.class controllerClass] == nil ||
                           CKSubclassOverridesInstanceMethod([CKComponent class], component.class, @selector(buildController)) ||
                           [component conformsToProtocol:@protocol(CKRenderComponentProtocol)],
                           NSStringFromClass([component class]),
@@ -143,7 +143,7 @@ namespace TreeNode {
 - (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
                inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
-  CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
+  RCAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
   scopeRoot.rootNode.registerNode(self, parent);
   if (_scopeHandle) {
     // Register the reused comopnent in the new scope root.

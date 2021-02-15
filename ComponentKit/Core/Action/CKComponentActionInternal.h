@@ -16,7 +16,7 @@
 
 #import <vector>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
@@ -179,7 +179,7 @@ static void CKActionSendResponderChain(SEL selector, id target, CKComponent *sen
   if (!info.responder) {
     return;
   }
-  CKCAssert([info.responder methodSignatureForSelector:selector].numberOfArguments <= sizeof...(args) + 3,
+  RCCAssert([info.responder methodSignatureForSelector:selector].numberOfArguments <= sizeof...(args) + 3,
             @"Target invocation contains too many arguments => sender: %@ | SEL: %@ | target: %@",
             sender, NSStringFromSelector(selector), [target class]);
 

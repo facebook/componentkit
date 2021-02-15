@@ -30,11 +30,11 @@
 + (void)initialize
 {
   if (self != [CKRenderComponent class]) {
-    CKAssert(!CKSubclassOverridesInstanceMethod([CKRenderComponent class], self, @selector(computeLayoutThatFits:)),
+    RCAssert(!CKSubclassOverridesInstanceMethod([CKRenderComponent class], self, @selector(computeLayoutThatFits:)),
              @"%@ overrides -computeLayoutThatFits: which is not allowed. "
              "Consider subclassing CKLayoutComponent directly if you need to perform custom layout.",
              self);
-    CKAssert(!CKSubclassOverridesInstanceMethod([CKRenderComponent class], self, @selector(layoutThatFits:parentSize:)),
+    RCAssert(!CKSubclassOverridesInstanceMethod([CKRenderComponent class], self, @selector(layoutThatFits:parentSize:)),
              @"%@ overrides -layoutThatFits:parentSize: which is not allowed. "
              "Consider subclassing CKLayoutComponent directly if you need to perform custom layout.",
              self);
@@ -52,7 +52,7 @@
 
 - (CKComponent *)render:(id)state
 {
-  CKFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
+  RCFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
   return nil;
 }
 
@@ -79,7 +79,7 @@
                           restrictedToSize:(const RCComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  CKAssert(size == RCComponentSize(),
+  RCAssert(size == RCComponentSize(),
            @"CKRenderComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _child);
 
@@ -156,7 +156,7 @@
     it = cache->insert({componentClass, requiresScopeHandle}).first;
   }
   const BOOL requiresScopeHandle = it->second;
-  CKAssert(requiresScopeHandle ||
+  RCAssert(requiresScopeHandle ||
            (!self.hasAnimations && !self.hasInitialMountAnimations && !self.hasFinalUnmountAnimations),
            @"%@ changes the default logic of -has*Animations properties; Make sure to override -requiresScopeHandle "
            "and return YES when animations are present.",

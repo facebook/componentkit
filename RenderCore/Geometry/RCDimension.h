@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/CKSizeRange.h>
 
 /**

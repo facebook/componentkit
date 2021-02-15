@@ -1,6 +1,6 @@
 #import <ComponentKit/CKClippingComponent.h>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKLayoutComponent.h>
 
@@ -90,7 +90,7 @@ static auto adjustedMaxSizeForClippedDimensions(CGSize originalMaxSize, CK::Clip
     case CK::ClippingComponentDimensions::height:
       return {originalMaxSize.width, INFINITY};
     case CK::ClippingComponentDimensions::none:
-      CKCFailAssert(@"When no dimension is clipped, the original size constraints must be used");
+      RCCFailAssert(@"When no dimension is clipped, the original size constraints must be used");
       return originalMaxSize;
   }
 }

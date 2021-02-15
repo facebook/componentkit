@@ -12,7 +12,7 @@
 
 #import <tgmath.h>
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKMacros.h>
 #import <RenderCore/CKInternalHelpers.h>

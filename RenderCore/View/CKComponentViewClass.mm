@@ -10,7 +10,7 @@
 
 #import "CKComponentViewClass.h"
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/CKInternalHelpers.h>
 
 std::string CKComponentViewClassIdentifier::description() const
@@ -38,7 +38,7 @@ static CKComponentViewReuseBlock blockFromSEL(SEL sel) noexcept
 
 static CKComponentViewFactoryBlock viewFactoryFromViewClass(Class viewClass) noexcept
 {
-  CKCAssert([viewClass isSubclassOfClass:[UIView class]], @"%@ is not a subclass of UIView", viewClass);
+  RCCAssert([viewClass isSubclassOfClass:[UIView class]], @"%@ is not a subclass of UIView", viewClass);
   // Passing a nil `viewClass` is unexpected. We should return a nil view factory and treat this as a viewless component.
   // Otherwise nil will be returned by view factory and it will crash.
   if (viewClass) {

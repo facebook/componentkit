@@ -13,7 +13,7 @@
 #import <objc/runtime.h>
 #import <unordered_map>
 
-#import <RenderCore/CKAssert.h>
+#import <RenderCore/RCAssert.h>
 #import <RenderCore/RCAssociatedObject.h>
 
 #import "CKComponentViewClass.h"
@@ -48,7 +48,7 @@ void ViewReuseUtilities::mountingInRootView(UIView *rootView) noexcept
 
 void ViewReuseUtilities::createdView(UIView *view, const CKComponentViewClass &viewClass, UIView *parent) noexcept
 {
-  CKCAssertNil(RCGetAssociatedObject_MainThreadAffined(view, &kViewReuseInfoKey),
+  RCCAssertNil(RCGetAssociatedObject_MainThreadAffined(view, &kViewReuseInfoKey),
                @"Didn't expect reuse info on just-created view %@", view);
 
   CKComponentViewReuseInfo *info = [[CKComponentViewReuseInfo alloc] initWithView:view
@@ -57,7 +57,7 @@ void ViewReuseUtilities::createdView(UIView *view, const CKComponentViewClass &v
   RCSetAssociatedObject_MainThreadAffined(view, &kViewReuseInfoKey, info);
 
   CKComponentViewReuseInfo *parentInfo = RCGetAssociatedObject_MainThreadAffined(parent, &kViewReuseInfoKey);
-  CKCAssertNotNil(parentInfo, @"Expected parentInfo but found none on %@", parent);
+  RCCAssertNotNil(parentInfo, @"Expected parentInfo but found none on %@", parent);
   [parentInfo registerChildViewInfo:info];
 }
 
@@ -75,21 +75,21 @@ void ViewReuseUtilities::mountingInChildContext(UIView *view, UIView *parent) no
   RCSetAssociatedObject_MainThreadAffined(view, &kViewReuseInfoKey, info);
 
   CKComponentViewReuseInfo *parentInfo = RCGetAssociatedObject_MainThreadAffined(parent, &kViewReuseInfoKey);
-  CKCAssertNotNil(parentInfo, @"Expected parentInfo but found none on %@", parent);
+  RCCAssertNotNil(parentInfo, @"Expected parentInfo but found none on %@", parent);
   [parentInfo registerChildViewInfo:info];
 }
 
 void ViewReuseUtilities::didHide(UIView *view, CK::Component::MountAnalyticsContext *mountAnalyticsContext) noexcept
 {
   CKComponentViewReuseInfo *info = RCGetAssociatedObject_MainThreadAffined(view, &kViewReuseInfoKey);
-  CKCAssertNotNil(info, @"Expect to find reuse info on all components-managed views but found none on %@", view);
+  RCCAssertNotNil(info, @"Expect to find reuse info on all components-managed views but found none on %@", view);
   [info didHide:mountAnalyticsContext];
 }
 
 void ViewReuseUtilities::willUnhide(UIView *view, CK::Component::MountAnalyticsContext *mountAnalyticsContext) noexcept
 {
   CKComponentViewReuseInfo *info = RCGetAssociatedObject_MainThreadAffined(view, &kViewReuseInfoKey);
-  CKCAssertNotNil(info, @"Expect to find reuse info on all components-managed views but found none on %@", view);
+  RCCAssertNotNil(info, @"Expect to find reuse info on all components-managed views but found none on %@", view);
   [info willUnhide:mountAnalyticsContext];
 }
 
