@@ -61,14 +61,15 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
     if (blockAnimationIfNeededFunction) {
       didBlockAnimation = blockAnimationIfNeededFunction(currentMountedComponent, layout.component, context, viewConfiguration);
     }
+
+    // Mount a view for the component if needed.
+    UIView *acquiredView = nil;
     if (mountInfo->view != v) {
       relinquishMountedView(mountInfo, layout.component, willRelinquishViewFunction); // First release our old view
       [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
       CKSetMountedObjectForView(v, layout.component);
       CK::Component::AttributeApplicator::apply(v, viewConfiguration);
-      if (didAcquireViewFunction) {
-        didAcquireViewFunction(layout.component, v);
-      }
+      acquiredView = v;
       mountInfo->view = v;
     } else {
       RCCAssert(currentMountedComponent == layout.component, @"");
@@ -84,6 +85,11 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
     }
 
     mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
+
+    // If the mount process acquired a new view, trigger the didAcquireView callback.
+    if (acquiredView && didAcquireViewFunction) {
+      didAcquireViewFunction(layout.component, acquiredView);
+    }
 
     if (didBlockAnimation && unblockAnimationFunction) {
       unblockAnimationFunction();
