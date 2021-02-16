@@ -120,7 +120,6 @@
 #import <ComponentKit/CKFatal.h>
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
-#import <ComponentKit/CKGeometryHelpers.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKImageComponent.h>
 #import <ComponentKit/CKInsetComponent.h>

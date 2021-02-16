@@ -32,7 +32,7 @@
 #import <RenderCore/RCDispatch.h>
 #import <RenderCore/RCEqualityHelpers.h>
 #import <RenderCore/CKFunctionalHelpers.h>
-#import <RenderCore/CKGeometryHelpers.h>
+#import <RenderCore/RCGeometryHelpers.h>
 #import <RenderCore/CKGlobalConfig.h>
 #import <RenderCore/CKInternalHelpers.h>
 #import <RenderCore/RCIterable.h>

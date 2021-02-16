@@ -16,7 +16,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <RenderCore/CKGeometryHelpers.h>
+#import <RenderCore/RCGeometryHelpers.h>
 #import <RenderCore/ComponentViewManager.h>
 
 namespace CK {
