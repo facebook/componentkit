@@ -23,22 +23,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   std::unordered_set<CKComponentPredicate> _componentPredicates;
   std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
   CKDataSourceOptions _options;
-  CKComponentProviderBlock _componentProviderBlock;
-  // These are preserved only for the purposes of equality checking
-  Class _componentProviderClass;
-}
-
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange
-{
-  return [self initWithComponentProvider:componentProvider
-                                 context:context
-                               sizeRange:sizeRange
-                                 options:{}
-                     componentPredicates:{}
-           componentControllerPredicates:{}
-                       analyticsListener:nil];
+  CKComponentProviderFunc _componentProvider;
 }
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
@@ -62,49 +47,8 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
-  componentProvider = componentProvider ?: nilProvider;
-
-  return [self initWithComponentProviderClass:Nil
-                       componentProviderBlock:^(id<NSObject> m, id<NSObject> c){ return componentProvider(m, c); }
-                                      context:context
-                                    sizeRange:sizeRange
-                                      options:options
-                          componentPredicates:componentPredicates
-                componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener];
-}
-
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange
-                                  options:(const CKDataSourceOptions &)options
-                      componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-{
-  auto const pb = ^(id<NSObject> m, id<NSObject> c){ return [componentProvider componentForModel:m context:c]; };
-  return [self initWithComponentProviderClass:componentProvider
-                       componentProviderBlock:pb
-                                      context:context
-                                    sizeRange:sizeRange
-                                      options:options
-                          componentPredicates:componentPredicates
-                componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener];
-}
-
-- (instancetype)initWithComponentProviderClass:(Class<CKComponentProvider>)componentProviderClass
-                        componentProviderBlock:(CKComponentProviderBlock)componentProviderBlock
-                                       context:(id<NSObject>)context
-                                     sizeRange:(const CKSizeRange &)sizeRange
-                                       options:(const CKDataSourceOptions &)options
-                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-{
   if (self = [super init]) {
-    _componentProviderClass = componentProviderClass;
-    _componentProviderBlock = componentProviderBlock;
+    _componentProvider = componentProvider ?: nilProvider;
     _context = context;
     _sizeRange = sizeRange;
     _componentPredicates = componentPredicates;
@@ -117,14 +61,15 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (instancetype)copyWithContext:(id<NSObject>)context sizeRange:(const CKSizeRange &)sizeRange
 {
-  return [[CKDataSourceConfiguration alloc] initWithComponentProviderClass:_componentProviderClass
-                                                    componentProviderBlock:_componentProviderBlock
-                                                                   context:context
-                                                                 sizeRange:sizeRange
-                                                                   options:_options
-                                                       componentPredicates:_componentPredicates
-                                             componentControllerPredicates:_componentControllerPredicates
-                                                         analyticsListener:_analyticsListener];
+  return
+  [[CKDataSourceConfiguration alloc]
+   initWithComponentProviderFunc:_componentProvider
+   context:context
+   sizeRange:sizeRange
+   options:_options
+   componentPredicates:_componentPredicates
+   componentControllerPredicates:_componentControllerPredicates
+   analyticsListener:_analyticsListener];
 }
 
 - (const CKDataSourceOptions &)options
@@ -147,9 +92,9 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   return _sizeRange;
 }
 
-- (CKComponentProviderBlock)componentProvider
+- (CKComponentProviderFunc)componentProvider
 {
-  return _componentProviderBlock;
+  return _componentProvider;
 }
 
 - (BOOL)isEqual:(id)object
@@ -158,7 +103,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     return NO;
   } else {
     CKDataSourceConfiguration *obj = (CKDataSourceConfiguration *)object;
-    return (_componentProviderClass == obj->_componentProviderClass
+    return (_componentProvider == obj->_componentProvider
             && (_context == obj.context || [_context isEqual:obj.context])
             && _sizeRange == obj.sizeRange);
   }
@@ -169,7 +114,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   if (other == nil) {
     return NO;
   }
-  return _componentProviderClass == other->_componentProviderClass && (_context == other.context || [_context isEqual:other.context]);
+  return _componentProvider == other->_componentProvider && (_context == other.context || [_context isEqual:other.context]);
 }
 
 - (NSUInteger)hash

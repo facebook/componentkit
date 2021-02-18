@@ -24,7 +24,6 @@
 @class CKDataSourceConfiguration;
 @class CKDataSourceState;
 
-@protocol CKComponentProvider;
 @protocol CKComponentStateListener;
 @protocol CKDataSourceListener;
 @protocol CKDataSourceStateModifying;

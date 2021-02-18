@@ -14,7 +14,6 @@
 
 @class CKComponentScopeRoot;
 
-@protocol CKComponentProvider;
 @protocol CKComponentSizeRangeProviding;
 
 struct CKComponentLifecycleTestHelperState {

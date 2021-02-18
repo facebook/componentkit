@@ -63,22 +63,14 @@ struct CKDataSourceOptions {
 @interface CKDataSourceConfiguration ()
 
 /**
- @param componentProvider The class that provides the component (@see CKComponentProvider).
- @param context Passed to methods exposed by the protocol CKComponentProvider (@see CKComponentProvider).
+ @param componentProvider A function that generates the root component.
+ @param context Passed to the component provider.
  @param sizeRange Used for the root layout.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
  */
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange
-                                  options:(const CKDataSourceOptions &)options
-                      componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
-
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                       context:(id<NSObject>)context
                                     sizeRange:(const CKSizeRange &)sizeRange
