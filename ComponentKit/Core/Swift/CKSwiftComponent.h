@@ -77,6 +77,10 @@ id _Nullable CKSwiftFetchState(CKComponentScopeHandle *scopeHandle, NSInteger in
 /// @param newValue The new state value.
 void CKSwiftUpdateState(CKComponentScopeHandle *scopeHandle, NSInteger index, id _Nullable newValue);
 
+/// Triggers a state update for a Swift Component.
+/// @param scopeHandle The handle associated with the component.
+void CKSwiftUpdateViewModelState(CKComponentScopeHandle *scopeHandle);
+
 /// Initialises an action.
 /// @param klass The class of the component. Used for runtime assertions.
 /// @param responder The scoped responder for the action.

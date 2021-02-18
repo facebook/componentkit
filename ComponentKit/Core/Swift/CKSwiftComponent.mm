@@ -374,6 +374,15 @@ id CKSwiftFetchState(CKComponentScopeHandle *scopeHandle, NSInteger index) {
   return stateWrapper->_values[index];
 }
 
+void CKSwiftUpdateViewModelState(CKComponentScopeHandle *scopeHandle) {
+  RCCAssert(NSThread.currentThread.isMainThread, @"Updating state out of the main thread not permitted");
+  RCCAssert(CKThreadLocalComponentScope::currentScope() == nullptr, @"Updating state during build not permitted");
+
+  [scopeHandle updateState:^id _Nullable(id state) {
+    return state;
+  } metadata:{} mode:CKUpdateModeAsynchronous];
+}
+
 void CKSwiftUpdateState(CKComponentScopeHandle *scopeHandle, NSInteger index, id _Nullable newValue) {
   RCCAssert(NSThread.currentThread.isMainThread, @"Updating state out of the main thread not permitted");
   RCCAssert(CKThreadLocalComponentScope::currentScope() == nullptr, @"Updating state during build not permitted");

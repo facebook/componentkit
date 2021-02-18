@@ -88,6 +88,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) CKScopedResponder *scopedResponder;
 
+#else
+
+/**
+ A scope handle without state / controller. Merely enough to trigger a state update.
+ */
+- (instancetype)newStatelessHandle;
+
 #endif
 
 @end

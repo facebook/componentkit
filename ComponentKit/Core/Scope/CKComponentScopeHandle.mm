@@ -75,6 +75,17 @@
   return self;
 }
 
+- (instancetype)newStatelessHandle
+{
+  return [[CKComponentScopeHandle alloc] initWithListener:_listener
+                                         globalIdentifier:_globalIdentifier
+                                           rootIdentifier:_rootIdentifier
+                                        componentTypeName:_componentTypeName
+                                                    state:nil
+                                               controller:nil
+                                          scopedResponder:nil];
+}
+
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
   id updatedState = _state;
