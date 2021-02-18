@@ -105,13 +105,25 @@ public class SwiftReusableBaseComponent<View: SwiftReusableComponentView> : Swif
 
 public final class SwiftReusableComponent<View: SwiftReusableComponentView> : SwiftReusableBaseComponent<View> where View.Body == Component {
   override public func clone() -> Self {
-    SwiftReusableComponent(self, body: view.body) as! Self
+    // TODO: Reuse logic
+    view.linkPropertyWrappersWithScopeHandle()
+
+    defer {
+      CKSwiftPopClass()
+    }
+    return SwiftReusableComponent(self, body: view.body) as! Self
   }
 }
 
 public final class SwiftReusableLeafComponent<View: SwiftReusableComponentView> : SwiftReusableBaseComponent<View> where View.Body == Never {
   override public func clone() -> Self {
-    SwiftReusableLeafComponent(self) as! Self
+    // TODO: Reuse logic
+    view.linkPropertyWrappersWithScopeHandle()
+
+    defer {
+      CKSwiftPopClass()
+    }
+    return SwiftReusableLeafComponent(self) as! Self
   }
 }
 

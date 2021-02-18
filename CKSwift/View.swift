@@ -249,7 +249,7 @@ private extension View {
   }
 }
 
-private extension View where Self: ViewIdentifiable {
+extension View where Self: ViewIdentifiable {
   func linkPropertyWrappersWithScopeHandle() {
     link(linkableItems: linkableItems, id: id)
   }
