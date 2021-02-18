@@ -36,7 +36,7 @@ public struct State<Value> : ScopeHandleLinkable {
 
   public var projectedValue: Binding<Value> {
     precondition(scopeHandleLocation.isLinked, "Attempting to get binding before `-body`")
-    return Binding(state: self)
+    return Binding(get: { self.wrappedValue }, set: { self.wrappedValue = $0 })
   }
 
   // MARK: ScopeHandleLinkable

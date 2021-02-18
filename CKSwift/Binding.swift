@@ -16,66 +16,42 @@ import ComponentKit
 @dynamicMemberLookup
 @propertyWrapper
 public struct Binding<Value> {
-	private enum Store {
-		case state(State<Value>)
-		case closures(valueProvider: () -> Value, valueModifier: (Value) -> Void)
-	}
+  private let get: () -> Value
+  private let set: (Value) -> Void
 
-	private let store: Store
+  public init(get: @escaping () -> Value, set: @escaping (Value) -> Void) {
+    self.get = get
+    self.set = set
+  }
 
-	public init(state: State<Value>) {
-		store = .state(state)
-	}
+  public var wrappedValue: Value {
+    get {
+      get()
+    }
+    nonmutating set {
+      set(newValue)
+    }
+  }
 
-	private init(closures: (valueProvider: () -> Value, valueModifier: (Value) -> ())) {
-		store = .closures(valueProvider: closures.valueProvider, valueModifier: closures.valueModifier)
-	}
+  public var projectedValue: Binding<Value> {
+    self
+  }
 
-	public var wrappedValue: Value {
-		get {
-			switch store {
-			case .state(let state):
-				return state.wrappedValue
-			case .closures(let valueProvider, _):
-				return valueProvider()
-			}
-		}
-		nonmutating set {
-			switch store {
-			case .state(let state):
-				state.wrappedValue = newValue
-			case .closures(_, let valueModifier):
-				valueModifier(newValue)
-			}
-		}
-	}
-
-	public var projectedValue: Binding<Value> {
-		self
-	}
-
-	public subscript<T>(dynamicMember keyPath: WritableKeyPath<Value, T>) -> Binding<T> {
-		switch store {
-		case .state(let state):
-			return Binding<T>(closures: ({ state.wrappedValue[keyPath: keyPath] }, { state.wrappedValue[keyPath: keyPath] = $0 }))
-		case .closures(_, _):
-			return Binding<T>(closures: ({ self.wrappedValue[keyPath: keyPath] }, { self.wrappedValue[keyPath: keyPath] = $0 }))
-		}
-	}
+  public subscript<T>(dynamicMember keyPath: WritableKeyPath<Value, T>) -> Binding<T> {
+    Binding<T>(get: {
+      self.wrappedValue[keyPath: keyPath]
+    }, set: {
+      self.wrappedValue[keyPath: keyPath] = $0
+    })
+  }
 }
 
-
 extension Binding : Equatable where Value : Equatable {
-	static public func ==(lhs: Binding, rhs: Binding) -> Bool {
-		switch (lhs.store, rhs.store) {
-		case (.state(let lhsState), .state(let rhsState)):
-			return lhsState == rhsState
-		case (.closures(_, _), .closures(_, _)):
-			return lhs.wrappedValue == rhs.wrappedValue
-		default:
-			return false
-		}
-	}
+  static public func ==(lhs: Binding, rhs: Binding) -> Bool {
+    // That will be enough for now, but should two bindings pointing to different state
+    // of the same values be equal?
+    lhs.wrappedValue == rhs.wrappedValue
+  }
 }
 
 #endif
