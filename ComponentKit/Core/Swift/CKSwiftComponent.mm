@@ -347,20 +347,23 @@ CKComponentScopeHandle *CKSwiftCreateScopeHandle(Class klass, id identifier) {
   return childPair.node.scopeHandle;
 }
 
-void CKSwiftInitializeState(CKComponentScopeHandle *handle,
+BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle,
                             NSInteger index,
                             NS_NOESCAPE id _Nullable (^initialValueProvider)()) {
   const auto pair = CKSwiftGetCurrentPair();
 
   if (pair == nullptr) {
     RCCFailAssert(@"Initialising state but pair is nil");
-    return;
+    return NO;
   }
 
   if (pair->previousNode == nil) {
     RCCAssert([handle.state isKindOfClass:CKSwiftStateWrapper.class], @"Unexpected state: %@", handle.state);
     const auto wrapper = (CKSwiftStateWrapper *)handle.state;
     [wrapper add:initialValueProvider()];
+    return YES;
+  } else {
+    return NO;
   }
 }
 

@@ -63,7 +63,8 @@ CKComponentScopeHandle *CKSwiftCreateScopeHandle(Class klass, id _Nullable ident
 /// Initialises the state for a Swift Component.
 /// @param handle The handle associated with the component previously returned from `CKSwiftCreateScopeHandle`.
 /// @param index The index of the current state.
-void CKSwiftInitializeState(CKComponentScopeHandle *handle, NSInteger index, NS_NOESCAPE id _Nullable (^initialValueProvider)(void));
+/// @return `YES` during first initialization.
+BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle, NSInteger index, NS_NOESCAPE id _Nullable (^initialValueProvider)(void));
 
 /// Fetches the current state value. Must be called on the main thread (or from `-body`).
 /// @param scopeHandle The handle associated with the component.
