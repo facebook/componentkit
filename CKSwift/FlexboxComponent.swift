@@ -11,8 +11,6 @@
 import ComponentKit
 import UIKit
 
-#if swift(>=5.3)
-
 public extension FlexboxComponent.Child {
   convenience init(
     spacingBefore: CGFloat = 0,
@@ -149,5 +147,3 @@ public extension FlexboxComponent {
     )
   }
 }
-
-#endif

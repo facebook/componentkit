@@ -12,8 +12,6 @@ import Foundation
 import UIKit
 import ComponentKit
 
-#if swift(>=5.3)
-
 // MARK: ComponentView
 
 /// `ComponentView` is the `View` based `Component` primitive. Will become a leaf component.
@@ -96,5 +94,3 @@ fileprivate extension ViewAttributeAssignable {
     }
   }
 }
-
-#endif

@@ -14,8 +14,6 @@ import UIKit
 import CKSwift
 import CKTextSwift
 
-#if swift(>=5.3)
-
 extension CAAnimation {
   static let fadeId: CAAnimation = {
     let animation = CABasicAnimation(keyPath: "transform")
@@ -301,5 +299,3 @@ fileprivate struct WarmQuoteView : View {
     }
   }
 }
-
-#endif

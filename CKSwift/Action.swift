@@ -11,8 +11,6 @@
 import Foundation
 import ComponentKit
 
-#if swift(>=5.3)
-
 /// Represents a parameter-less action.
 public struct Action {
   /// The type erased handler representing the action.
@@ -179,5 +177,3 @@ private struct ScopedResponderActionResolver<View: CKSwift.View> {
     return component.view
   }
 }
-
-#endif

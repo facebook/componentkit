@@ -11,8 +11,6 @@
 import Foundation
 import ComponentKit
 
-#if swift(>=5.3)
-
 public struct SwiftComponentModel {
   struct LifecycleCallbacks {
     typealias Callback = @convention(block) () -> Void
@@ -126,5 +124,3 @@ public final class SwiftReusableLeafComponent<View: SwiftReusableComponentView> 
     return SwiftReusableLeafComponent(self) as! Self
   }
 }
-
-#endif

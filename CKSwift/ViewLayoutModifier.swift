@@ -11,8 +11,6 @@
 import Foundation
 import ComponentKit
 
-#if swift(>=5.3)
-
 typealias ViewLayoutCenteringOptions = CenterLayoutComponent.CenteringOptions
 typealias ViewLayoutCenteringSizingOptions = CenterLayoutComponent.SizingOptions
 
@@ -160,5 +158,3 @@ extension ComponentInflatable {
     padding(top: length, left: length, bottom: length, right: length)
   }
 }
-
-#endif

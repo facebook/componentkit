@@ -11,8 +11,6 @@
 import Foundation
 import ComponentKit
 
-#if swift(>=5.3)
-
 @dynamicMemberLookup
 @propertyWrapper
 public struct Binding<Value> {
@@ -53,5 +51,3 @@ extension Binding : Equatable where Value : Equatable {
     lhs.wrappedValue == rhs.wrappedValue
   }
 }
-
-#endif

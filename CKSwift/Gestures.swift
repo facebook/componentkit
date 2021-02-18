@@ -12,8 +12,6 @@ import Foundation
 import UIKit
 import ComponentKit
 
-#if swift(>=5.3)
-
 extension ViewConfiguration.Attribute {
   /// Creates a view configuration attribute linked to tap gesture recognizer.
   /// - Parameter tapAction: Action to invoke when the gesture fires..
@@ -94,5 +92,3 @@ extension ViewAttributeAssignable where Self: ComponentInflatable {
     return copy
   }
 }
-
-#endif

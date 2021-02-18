@@ -11,8 +11,6 @@
 import Foundation
 import ComponentKit
 
-#if swift(>=5.3)
-
 @propertyWrapper
 // TODO: Use read/write reflection mechanism
 public struct State<Value> : ScopeHandleLinkable {
@@ -51,5 +49,3 @@ extension State : Equatable where Value : Equatable {
     return lhs.wrappedValue == rhs.wrappedValue
   }
 }
-
-#endif

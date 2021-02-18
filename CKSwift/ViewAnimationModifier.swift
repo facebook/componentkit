@@ -10,8 +10,6 @@
 
 import ComponentKit
 
-#if swift(>=5.3)
-
 public struct ViewAnimationModifier<Inflatable : ComponentInflatable> : ComponentInflatable {
   enum Directive {
     case initialMount(CAAnimation?)
@@ -50,5 +48,3 @@ extension ComponentInflatable {
     ViewAnimationModifier(inflatable: self, directive: .finalUnmount(animation))
   }
 }
-
-#endif

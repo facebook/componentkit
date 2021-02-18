@@ -11,8 +11,6 @@
 import Foundation
 import ComponentKit
 
-#if swift(>=5.3)
-
 // MARK: ComponentBuilder
 
 @_functionBuilder
@@ -39,5 +37,3 @@ public struct ComponentBuilder {
     component ?? EmptyComponent.shared
   }
 }
-
-#endif

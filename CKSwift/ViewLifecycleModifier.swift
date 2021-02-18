@@ -10,8 +10,6 @@
 
 import ComponentKit
 
-#if swift(>=5.3)
-
 public struct ViewLifecycleModifier<Inflatable : ComponentInflatable> : ComponentInflatable {
   enum Directive {
     case didInit(()  -> Void)
@@ -62,5 +60,3 @@ extension ComponentInflatable {
     ViewLifecycleModifier(inflatable: self, directive: .willDispose(callback))
   }
 }
-
-#endif

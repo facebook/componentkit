@@ -44,8 +44,6 @@ public extension CompositeComponent {
   }
 }
 
-#if swift(>=5.3)
-
 // MARK: Component
 
 extension Component : ComponentInflatable {
@@ -64,5 +62,3 @@ extension Component : ComponentInflatable {
     }
   }
 }
-
-#endif

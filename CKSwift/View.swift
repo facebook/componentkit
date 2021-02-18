@@ -11,8 +11,6 @@
 import Foundation
 import ComponentKit
 
-#if swift(>=5.3)
-
 // MARK: ComponentInflatable
 
 /// Can be inflated to a `Component` given a `SwiftComponentModel`.
@@ -254,5 +252,3 @@ extension View where Self: ViewIdentifiable {
     link(linkableItems: linkableItems, id: id)
   }
 }
-
-#endif

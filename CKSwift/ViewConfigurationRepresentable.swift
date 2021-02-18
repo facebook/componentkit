@@ -12,8 +12,6 @@ import Foundation
 import ComponentKit
 import UIKit
 
-#if swift(>=5.3)
-
 // MARK: ViewConfigurationRepresentable
 
 /// Can be represented with a `ViewConfiguration`.  By contract
@@ -101,5 +99,3 @@ extension ViewAttributeAssignable where Self: ComponentInflatable {
     attribute(\.cornerRadius, value)
   }
 }
-
-#endif

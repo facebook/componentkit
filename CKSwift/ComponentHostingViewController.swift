@@ -23,8 +23,6 @@ public final class ComponentHostingViewController: UIViewController {
   private let hostingView: ComponentHostingView<NSObject, ObjCProviderWrapper>
   private let backgroundColor: UIColor?
 
-  #if swift(>=5.3)
-
   public init(backgroundColor: UIColor? = .white, @ComponentBuilder rootComponentProvider: @escaping () -> Component) {
     self.backgroundColor = backgroundColor
     self.rootComponentProvider = rootComponentProvider
@@ -32,18 +30,6 @@ public final class ComponentHostingViewController: UIViewController {
                                        sizeRangeProviderBlock: { size in SizeRange(minSize: .zero, maxSize: size) })
     super.init(nibName: nil, bundle: nil)
   }
-
-  #else
-
-  public init(backgroundColor: UIColor? = .white, rootComponentProvider: @escaping () -> Component) {
-    self.backgroundColor = backgroundColor
-    self.rootComponentProvider = rootComponentProvider
-    hostingView = ComponentHostingView(componentProvider: { _, wrapper in wrapper!.provider() },
-                                       sizeRangeProviderBlock: { size in SizeRange(minSize: .zero, maxSize: size) })
-    super.init(nibName: nil, bundle: nil)
-  }
-
-  #endif
 
   required init(coder: NSCoder) {
     fatalError()
