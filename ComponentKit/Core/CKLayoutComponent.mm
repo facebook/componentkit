@@ -16,14 +16,6 @@
 
 @implementation CKLayoutComponent
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-            previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
-                    params:(const CKBuildComponentTreeParams &)params
-      parentHasStateUpdate:(BOOL)parentHasStateUpdate
-{
-  CKRender::ComponentTree::Iterable::build(self, parent, previousParent, params, parentHasStateUpdate);
-}
-
 #pragma mark - CKMountable
 
 - (unsigned int)numberOfChildren
