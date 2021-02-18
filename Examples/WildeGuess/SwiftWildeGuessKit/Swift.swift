@@ -103,17 +103,21 @@ fileprivate struct SuccessIndicatorView : View {
 
 struct Something : Hashable {}
 
+final class InteractiveQuoteViewModel {
+  @ViewModelState var revealAnswer = false
+}
+
 struct SwiftInteractiveWrapperQuoteView : View, ViewIdentifiable {
   let quote: Quote
   let context: QuoteContext
 
-  @State var revealAnswer = false
+  @ViewModel var viewModel = InteractiveQuoteViewModel()
 
   var body: Component {
     SwiftInteractiveQuoteView(
       quote: quote,
       context: context,
-      revealAnswer: $revealAnswer
+      revealAnswer: viewModel.$revealAnswer
     )
   }
 
