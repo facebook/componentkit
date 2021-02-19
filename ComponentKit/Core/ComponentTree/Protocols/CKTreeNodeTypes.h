@@ -13,6 +13,7 @@
 
 #import <ComponentKit/RCEqualityHelpers.h>
 #import <ComponentKit/ComponentUtilities.h>
+#import <ComponentKit/CKTreeNodeComponentKey.h>
 
 /** Unique identifier for tree nodes. */
 typedef int32_t CKTreeNodeIdentifier;
@@ -23,15 +24,7 @@ typedef int32_t CKTreeNodeIdentifier;
 #include <unordered_set>
 #include <unordered_map>
 
-/** A key between a tree ndoe to its parent */
-typedef std::tuple<const char*, NSUInteger, id<NSObject>, std::vector<id<NSObject>>> CKTreeNodeComponentKey;
 /** unordered_set of all the "dirty" tree nodes' identifiers; "dirty" means node on a state update branch. */
 typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;
-
-namespace CK {
-  namespace TreeNode {
-    auto areKeysEqual(const CKTreeNodeComponentKey &lhs, const CKTreeNodeComponentKey &rhs) -> bool;
-  }
-}
 
 #endif

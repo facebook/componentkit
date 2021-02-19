@@ -30,7 +30,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   std::vector<id<CKTreeNodeProtocol>> children;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
+    if (childKey.counter % 2 == kTreeNodeParentBaseKey) {
       children.push_back(std::get<1>(child));
     }
   }
@@ -46,7 +46,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
 {
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (CK::TreeNode::areKeysEqual(childKey, key)) {
+    if (childKey == key) {
       return std::get<1>(child);
     }
   }
@@ -61,11 +61,12 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   NSUInteger keyCounter = kTreeNodeParentBaseKey;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<0>(childKey) == componentTypeName && RCObjectIsEqual(std::get<2>(childKey), identifier)) {
+    if (childKey.componentTypeName == componentTypeName && RCObjectIsEqual(childKey.identifier, identifier)) {
       keyCounter += 2;
     }
   }
-  return std::make_tuple(componentTypeName, keyCounter, identifier, keys);
+
+  return CKTreeNodeComponentKey{componentTypeName, keyCounter, identifier, keys};
 }
 
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
@@ -86,7 +87,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
 
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
+    if (childKey.counter % 2 == kTreeNodeParentBaseKey) {
       [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot];
     }
   }
@@ -100,12 +101,12 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   NSUInteger keyCounter = kTreeNodeOwnerBaseKey;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<0>(childKey) == componentTypeName && RCObjectIsEqual(std::get<2>(childKey), identifier)) {
+    if (childKey.componentTypeName == componentTypeName && RCObjectIsEqual(childKey.identifier, identifier)) {
       keyCounter += 2;
     }
   }
   // Update the stateKey with the type name key counter to make sure we don't have collisions.
-  return std::make_tuple(componentTypeName, keyCounter, identifier, keys);
+  return CKTreeNodeComponentKey{componentTypeName, keyCounter, identifier, keys};
 }
 
 - (CKScopeTreeNode *)childScopeForComponentKey:(const CKTreeNodeComponentKey &)key
@@ -199,7 +200,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   for (auto const &child : _children) {
     auto const key = std::get<0>(child);
     auto const childNode = std::get<1>(child);
-    if (std::get<1>(key) % 2 == kTreeNodeParentBaseKey) {
+    if (key.counter % 2 == kTreeNodeParentBaseKey) {
       for (NSString *s in [childNode debugDescriptionNodes]) {
         [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
       }
@@ -215,13 +216,13 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   for (auto const &child : _children) {
     auto const key = std::get<0>(child);
     auto const childNode = std::get<1>(child);
-    if (std::get<1>(key) % 2 == kTreeNodeOwnerBaseKey) {
+    if (key.counter % 2 == kTreeNodeOwnerBaseKey) {
       auto const description = [NSString stringWithFormat:@"- %s%@%@",
-                                std::get<0>(key),
-                                (std::get<2>(key)
-                                 ? [NSString stringWithFormat:@":%@", std::get<2>(key)]
+                                key.componentTypeName,
+                                (key.identifier
+                                 ? [NSString stringWithFormat:@":%@", key.identifier]
                                  : @""),
-                                std::get<3>(key).empty() ? @"" : formatKeys(std::get<3>(key))];
+                                key.keys.empty() ? @"" : formatKeys(key.keys)];
       [childrenDebugDescriptions addObject:description];
       for (NSString *s in [(CKScopeTreeNode *)childNode debugDescriptionComponents]) {
         [childrenDebugDescriptions addObject:[@"  " stringByAppendingString:s]];

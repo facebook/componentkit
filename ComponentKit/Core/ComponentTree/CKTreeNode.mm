@@ -118,8 +118,8 @@ namespace TreeNode {
   // The existing `_componentKey` that was created by the scope, is an owner based key;
   // hence, we extract the `unique identifer` and the `keys` vector from it and recreate a parent based key based on this information.
   auto const componentKey = [parent createParentKeyForComponentTypeName:component.typeName
-                                                             identifier:std::get<2>(_componentKey)
-                                                                   keys:std::get<3>(_componentKey)];
+                                                             identifier:_componentKey.identifier
+                                                                   keys:_componentKey.keys];
   _componentKey = componentKey;
 
   // Set the link between the parent and the child.

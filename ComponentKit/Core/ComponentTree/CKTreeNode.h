@@ -18,6 +18,7 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNodeComponentKey.h>
 
 @protocol CKRenderComponentProtocol;
 

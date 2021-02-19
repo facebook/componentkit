@@ -51,7 +51,7 @@
 
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
+    if (childKey.counter % 2 == kTreeNodeParentBaseKey) {
       [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot];
     }
   }
