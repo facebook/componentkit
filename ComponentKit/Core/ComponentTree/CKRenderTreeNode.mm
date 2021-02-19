@@ -50,9 +50,8 @@
    _children = node->_children;
 
   for (auto const &child : _children) {
-    auto childKey = std::get<0>(child);
-    if (childKey.type() == CKTreeNodeComponentKey::Type::parent) {
-      [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot];
+    if (child.key.type() == CKTreeNodeComponentKey::Type::parent) {
+      [child.node didReuseWithParent:self inScopeRoot:scopeRoot];
     }
   }
 }

@@ -45,6 +45,13 @@ struct CKTreeNodeComponentKey {
   }
 };
 
+@protocol CKTreeNodeProtocol;
+
+struct CKTreeNodeComponentKeyToNode {
+  CKTreeNodeComponentKey key;
+  id<CKTreeNodeProtocol> node;
+};
+
 NS_ASSUME_NONNULL_END
 
 #endif

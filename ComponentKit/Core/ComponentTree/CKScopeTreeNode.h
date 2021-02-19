@@ -30,7 +30,7 @@ struct CKComponentScopePair {
 @interface CKScopeTreeNode : CKTreeNode <CKTreeNodeWithChildrenProtocol>
 {
   @package
-  std::vector<std::tuple<CKTreeNodeComponentKey, id<CKTreeNodeProtocol>>> _children;
+  std::vector<CKTreeNodeComponentKeyToNode> _children;
 }
 
 + (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair

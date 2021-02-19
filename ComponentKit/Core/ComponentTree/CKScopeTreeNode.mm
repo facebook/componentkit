@@ -26,9 +26,8 @@
 {
   std::vector<id<CKTreeNodeProtocol>> children;
   for (auto const &child : _children) {
-    auto childKey = std::get<0>(child);
-    if (childKey.type() == CKTreeNodeComponentKey::Type::parent) {
-      children.push_back(std::get<1>(child));
+    if (child.key.type() == CKTreeNodeComponentKey::Type::parent) {
+      children.push_back(child.node);
     }
   }
   return children;
@@ -42,9 +41,8 @@
 - (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   for (auto const &child : _children) {
-    auto childKey = std::get<0>(child);
-    if (childKey == key) {
-      return std::get<1>(child);
+    if (child.key == key) {
+      return child.node;
     }
   }
   return nil;
@@ -57,8 +55,7 @@
   // Create **parent** based key counter.
   NSUInteger keyCounter = CKTreeNodeComponentKey::kCounterParentOffset;
   for (auto const &child : _children) {
-    auto childKey = std::get<0>(child);
-    if (childKey.componentTypeName == componentTypeName && RCObjectIsEqual(childKey.identifier, identifier)) {
+    if (child.key.componentTypeName == componentTypeName && RCObjectIsEqual(child.key.identifier, identifier)) {
       keyCounter += 2;
     }
   }
@@ -68,7 +65,7 @@
 
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
-  _children.push_back({componentKey, child});
+  _children.push_back(CKTreeNodeComponentKeyToNode{.key = componentKey, .node = child});
 }
 
 - (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
@@ -83,9 +80,8 @@
   [super didReuseWithParent:parent inScopeRoot:scopeRoot];
 
   for (auto const &child : _children) {
-    auto childKey = std::get<0>(child);
-    if (childKey.type() == CKTreeNodeComponentKey::Type::parent) {
-      [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot];
+    if (child.key.type() == CKTreeNodeComponentKey::Type::parent) {
+      [child.node didReuseWithParent:self inScopeRoot:scopeRoot];
     }
   }
 }
@@ -97,8 +93,7 @@
   // Create **owner** based key counter.
   NSUInteger keyCounter = CKTreeNodeComponentKey::kCounterOwnerOffset;
   for (auto const &child : _children) {
-    auto childKey = std::get<0>(child);
-    if (childKey.componentTypeName == componentTypeName && RCObjectIsEqual(childKey.identifier, identifier)) {
+    if (child.key.componentTypeName == componentTypeName && RCObjectIsEqual(child.key.identifier, identifier)) {
       keyCounter += 2;
     }
   }
@@ -113,7 +108,7 @@
 
 - (void)setChildScope:(CKScopeTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
-  _children.push_back({componentKey, child});
+  _children.push_back(CKTreeNodeComponentKeyToNode{.key = componentKey, .node = child});
 }
 
 + (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
@@ -195,10 +190,8 @@
 {
   NSMutableArray<NSString *> *debugDescriptionNodes = [NSMutableArray arrayWithArray:[super debugDescriptionNodes]];
   for (auto const &child : _children) {
-    auto const key = std::get<0>(child);
-    auto const childNode = std::get<1>(child);
-    if (key.type() == CKTreeNodeComponentKey::Type::parent) {
-      for (NSString *s in [childNode debugDescriptionNodes]) {
+    if (child.key.type() == CKTreeNodeComponentKey::Type::parent) {
+      for (NSString *s in [child.node debugDescriptionNodes]) {
         [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
       }
     }
@@ -211,17 +204,15 @@
 {
   NSMutableArray<NSString *> *childrenDebugDescriptions = [NSMutableArray new];
   for (auto const &child : _children) {
-    auto const key = std::get<0>(child);
-    auto const childNode = std::get<1>(child);
-    if (key.type() == CKTreeNodeComponentKey::Type::owner) {
+    if (child.key.type() == CKTreeNodeComponentKey::Type::owner) {
       auto const description = [NSString stringWithFormat:@"- %s%@%@",
-                                key.componentTypeName,
-                                (key.identifier
-                                 ? [NSString stringWithFormat:@":%@", key.identifier]
+                                child.key.componentTypeName,
+                                (child.key.identifier
+                                 ? [NSString stringWithFormat:@":%@", child.key.identifier]
                                  : @""),
-                                key.keys.empty() ? @"" : formatKeys(key.keys)];
+                                child.key.keys.empty() ? @"" : formatKeys(child.key.keys)];
       [childrenDebugDescriptions addObject:description];
-      for (NSString *s in [(CKScopeTreeNode *)childNode debugDescriptionComponents]) {
+      for (NSString *s in [(CKScopeTreeNode *)child.node debugDescriptionComponents]) {
         [childrenDebugDescriptions addObject:[@"  " stringByAppendingString:s]];
       }
     }
