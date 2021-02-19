@@ -18,9 +18,6 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKTreeNodeProtocol.h"
 
-NSUInteger const kTreeNodeParentBaseKey = 0;
-NSUInteger const kTreeNodeOwnerBaseKey = 1;
-
 @implementation CKScopeTreeNode
 
 #pragma mark - CKTreeNodeWithChildrenProtocol
@@ -30,7 +27,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   std::vector<id<CKTreeNodeProtocol>> children;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (childKey.counter % 2 == kTreeNodeParentBaseKey) {
+    if (childKey.type() == CKTreeNodeComponentKey::Type::parent) {
       children.push_back(std::get<1>(child));
     }
   }
@@ -58,7 +55,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                                          keys:(const std::vector<id<NSObject>> &)keys
 {
   // Create **parent** based key counter.
-  NSUInteger keyCounter = kTreeNodeParentBaseKey;
+  NSUInteger keyCounter = CKTreeNodeComponentKey::kCounterParentOffset;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
     if (childKey.componentTypeName == componentTypeName && RCObjectIsEqual(childKey.identifier, identifier)) {
@@ -87,7 +84,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
 
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (childKey.counter % 2 == kTreeNodeParentBaseKey) {
+    if (childKey.type() == CKTreeNodeComponentKey::Type::parent) {
       [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot];
     }
   }
@@ -98,7 +95,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                                    keys:(const std::vector<id<NSObject>> &)keys
 {
   // Create **owner** based key counter.
-  NSUInteger keyCounter = kTreeNodeOwnerBaseKey;
+  NSUInteger keyCounter = CKTreeNodeComponentKey::kCounterOwnerOffset;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
     if (childKey.componentTypeName == componentTypeName && RCObjectIsEqual(childKey.identifier, identifier)) {
@@ -200,7 +197,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   for (auto const &child : _children) {
     auto const key = std::get<0>(child);
     auto const childNode = std::get<1>(child);
-    if (key.counter % 2 == kTreeNodeParentBaseKey) {
+    if (key.type() == CKTreeNodeComponentKey::Type::parent) {
       for (NSString *s in [childNode debugDescriptionNodes]) {
         [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
       }
@@ -216,7 +213,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   for (auto const &child : _children) {
     auto const key = std::get<0>(child);
     auto const childNode = std::get<1>(child);
-    if (key.counter % 2 == kTreeNodeOwnerBaseKey) {
+    if (key.type() == CKTreeNodeComponentKey::Type::owner) {
       auto const description = [NSString stringWithFormat:@"- %s%@%@",
                                 key.componentTypeName,
                                 (key.identifier

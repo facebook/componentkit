@@ -15,9 +15,6 @@
 #import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
-extern NSUInteger const kTreeNodeParentBaseKey;
-extern NSUInteger const kTreeNodeOwnerBaseKey;
-
 @class CKScopeTreeNode;
 
 struct CKComponentScopePair {

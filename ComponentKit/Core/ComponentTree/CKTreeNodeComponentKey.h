@@ -20,6 +20,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 struct CKTreeNodeComponentKey {
+  constexpr static NSUInteger const kCounterParentOffset = 0;
+  constexpr static NSUInteger const kCounterOwnerOffset = 1;
+
+  enum class Type {
+    owner,
+    parent,
+  };
+
   const char *componentTypeName;
   NSUInteger counter;
   _Nullable id identifier;
@@ -30,6 +38,10 @@ struct CKTreeNodeComponentKey {
       counter == other.counter &&
       RCObjectIsEqual(identifier, other.identifier) &&
       RCKeyVectorsEqual(keys, other.keys);
+  }
+
+  auto type() const -> Type {
+    return counter % 2 == kCounterParentOffset ? Type::parent : Type::owner;
   }
 };
 
