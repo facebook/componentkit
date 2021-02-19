@@ -19,10 +19,5 @@ namespace CK {
       RCObjectIsEqual(std::get<2>(lhs), std::get<2>(rhs)) &&
       RCKeyVectorsEqual(std::get<3>(lhs), std::get<3>(rhs));
     }
-    
-    auto isKeyEmpty(const CKTreeNodeComponentKey &key) -> bool
-    {
-      return std::get<0>(key) == NULL;
-    }
   }
 }
