@@ -16,7 +16,7 @@
 
 #import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
-#import <ComponentKit/CKScopeTreeNode.h>
+#import <ComponentKit/CKTreeNode.h>
 
 #import <stack>
 
@@ -24,15 +24,15 @@ class CKRootTreeNode {
 public:
   CKRootTreeNode();
 
-  void registerNode(CKTreeNode * node, CKTreeNode * parent) noexcept;
+  void registerNode(CKTreeNode *node, CKTreeNode *parent) noexcept;
   /** Query the parent node of existing node*/
-  CKTreeNode * parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const;
+  CKTreeNode *parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const;
 
   /** Returns whether the node has children or not */
   bool isEmpty() const;
 
   /** access the internal node */
-  CKScopeTreeNode *node() const;
+  CKTreeNode *node() const;
 
   /** Mark the top render component in the stack as dirty */
   void markTopRenderComponentAsDirtyForPropsUpdates() noexcept;
@@ -48,7 +48,7 @@ public:
 
 private:
   /** the root node of the component tree */
-  CKScopeTreeNode *_node;
+  CKTreeNode *_node;
   /** A map between a tree node identifier to its parent node. */
   std::unordered_map<CKTreeNodeIdentifier, CKTreeNode *> _nodesToParentNodes;
   /**

@@ -375,7 +375,7 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 
 - (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
                                        node:(CKTreeNode *)node
-                                     parent:(CKScopeTreeNode *)parent
+                                     parent:(CKTreeNode *)parent
                                      params:(const CKBuildComponentTreeParams &)params
                        parentHasStateUpdate:(BOOL)parentHasStateUpdate {}
 

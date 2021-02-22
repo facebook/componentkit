@@ -23,7 +23,7 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKRenderTreeNode.h>
-#import <ComponentKit/CKScopeTreeNode.h>
+#import <ComponentKit/CKTreeNode.h>
 
 #import "CKComponentTestCase.h"
 
@@ -100,13 +100,13 @@
   verifyChildToParentConnection(root, singleChildNode, renderComponent);
 
   // Check the next level of the tree
-  if ([singleChildNode isKindOfClass:[CKScopeTreeNode class]]) {
-    auto const parentNode = (CKScopeTreeNode *)singleChildNode;
+  if ([singleChildNode isKindOfClass:[CKTreeNode class]]) {
+    auto const parentNode = (CKTreeNode *)singleChildNode;
     XCTAssertEqual(parentNode.children.size(), 1);
     CKTreeNode *componentNode = parentNode.children[0];
     verifyChildToParentConnection(parentNode, componentNode, c);
   } else {
-    XCTFail(@"singleChildNode has to be a CKScopeTreeNode as it has a child.");
+    XCTFail(@"singleChildNode has to be a CKTreeNode as it has a child.");
   }
 
   // Simulate a second tree creation.
@@ -131,7 +131,7 @@
 {
   CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
   auto const scopeRoot = threadScope.newScopeRoot;
-  auto const root = [CKScopeTreeNode new];
+  auto const root = [CKTreeNode new];
   CKComponent *c10 = [CKComponentTreeTestComponent_Render new];
   CKComponent *c11 = [CKComponentTreeTestComponent_Render new];
   auto renderWithChidlrenComponent = [CKTestLayoutComponent newWithChildren:{c10, c11}];
@@ -198,14 +198,14 @@
 
 #pragma mark - Helpers
 
-static BOOL verifyChildToParentConnection(CKScopeTreeNode * parentNode, CKTreeNode *childNode, CKComponent *c) {
+static BOOL verifyChildToParentConnection(CKTreeNode *parentNode, CKTreeNode *childNode, CKComponent *c) {
   auto const componentKey = [childNode componentKey];
   auto const childComponent = [parentNode childForComponentKey:componentKey].component;
   return [childComponent isEqual:c];
 }
 
 /** Compare the components array to the components in the children nodes of 'parentNode' */
-static BOOL verifyComponentsInNode(CKScopeTreeNode * parentNode, NSArray<CKComponent *> *components) {
+static BOOL verifyComponentsInNode(CKTreeNode *parentNode, NSArray<CKComponent *> *components) {
   // Verify that the root holds two components has its direct children
   NSMutableSet<CKComponent *> *componentsFromTheTree = [NSMutableSet set];
   for (auto node : parentNode.children) {
@@ -216,7 +216,7 @@ static BOOL verifyComponentsInNode(CKScopeTreeNode * parentNode, NSArray<CKCompo
 }
 
 /** Compare the children of the trees recursively; returns true if the two trees are equal */
-static BOOL areTreesEqual(CKScopeTreeNode * lhs, CKScopeTreeNode * rhs) {
+static BOOL areTreesEqual(CKTreeNode *lhs, CKTreeNode *rhs) {
   NSMutableSet<NSString *> *lhsChildrenIdentifiers = [NSMutableSet set];
   treeChildrenIdentifiers(lhs, lhsChildrenIdentifiers, 0);
   NSMutableSet<NSString *> *rhsChildrenIdentifiers = [NSMutableSet set];
@@ -225,7 +225,7 @@ static BOOL areTreesEqual(CKScopeTreeNode * lhs, CKScopeTreeNode * rhs) {
 }
 
 /** Iterate recursively over the tree and add its node identifiers to the set */
-static void treeChildrenIdentifiers(CKScopeTreeNode * node, NSMutableSet<NSString *> *identifiers, int level) {
+static void treeChildrenIdentifiers(CKTreeNode *node, NSMutableSet<NSString *> *identifiers, int level) {
   for (auto childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];

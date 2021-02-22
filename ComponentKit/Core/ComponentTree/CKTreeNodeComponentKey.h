@@ -49,7 +49,7 @@ struct CKTreeNodeComponentKey {
 
 struct CKTreeNodeComponentKeyToNode {
   CKTreeNodeComponentKey key;
-  CKTreeNode * node;
+  CKTreeNode *node;
 };
 
 NS_ASSUME_NONNULL_END

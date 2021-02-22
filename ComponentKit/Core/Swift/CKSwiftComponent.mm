@@ -335,7 +335,7 @@ CKComponentScopeHandle *CKSwiftCreateScopeHandle(Class klass, id identifier) {
     return nil;
   }
 
-  const auto childPair = [CKScopeTreeNode childPairForPair:threadLocalScope->stack.top()
+  const auto childPair = [CKTreeNode childPairForPair:threadLocalScope->stack.top()
                                                    newRoot:threadLocalScope->newScopeRoot
                                          componentTypeName:class_getName(klass)
                                                 identifier:identifier

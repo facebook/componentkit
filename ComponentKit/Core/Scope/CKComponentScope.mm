@@ -14,7 +14,7 @@
 #import "CKComponentScopeHandle.h"
 #import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
-#import "CKScopeTreeNode.h"
+#import "CKTreeNode.h"
 
 #import <ComponentKit/CKRenderHelpers.h>
 #import <ComponentKit/CKCoalescedSpecSupport.h>
@@ -76,7 +76,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
     _parentNode = pair.node;
 
-    const auto childPair = [CKScopeTreeNode childPairForPair:pair
+    const auto childPair = [CKTreeNode childPairForPair:pair
                                                      newRoot:_threadLocalScope->newScopeRoot
                                            componentTypeName:componentTypeName
                                                   identifier:identifier

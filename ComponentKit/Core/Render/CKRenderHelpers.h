@@ -40,8 +40,8 @@ namespace CKRender {
      @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
      */
       auto build(id<CKTreeNodeComponentProtocol> component,
-                 CKScopeTreeNode * parent,
-                 CKScopeTreeNode * previousParent,
+                 CKTreeNode *parent,
+                 CKTreeNode *previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate) -> void;
   }
@@ -60,8 +60,8 @@ namespace CKRender {
        */
       auto build(id<CKRenderWithChildComponentProtocol> component,
                  __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                 CKScopeTreeNode * parent,
-                 CKScopeTreeNode * previousParent,
+                 CKTreeNode *parent,
+                 CKTreeNode *previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate,
                  CKRenderDidReuseComponentBlock didReuseBlock = nil) -> CKTreeNode *;
@@ -88,7 +88,7 @@ namespace CKRender {
        @param stateUpdates The state updates map of this component generation.
        */
       auto create(id<CKRenderComponentProtocol> component,
-                  CKTreeNode * previousNode,
+                  CKTreeNode *previousNode,
                   CKComponentScopeRoot *scopeRoot,
                   const CKComponentStateUpdateMap &stateUpdates) -> CKComponentScopeHandle*;
     }
@@ -104,8 +104,8 @@ namespace CKRender {
   /**
    @return `YES` if the component of the node has a state update, `NO` otherwise.
    */
-  auto nodeHasStateUpdate(__unsafe_unretained CKTreeNode * node,
-                          __unsafe_unretained CKScopeTreeNode * previousParent,
+  auto nodeHasStateUpdate(__unsafe_unretained CKTreeNode *node,
+                          __unsafe_unretained CKTreeNode *previousParent,
                           const CKBuildComponentTreeParams &params) -> BOOL;
 
   /**

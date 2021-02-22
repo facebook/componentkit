@@ -12,7 +12,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <ComponentKit/CKScopeTreeNode.h>
+#import <ComponentKit/CKTreeNode.h>
 
 @protocol CKTreeNodeComponentProtocol;
 
@@ -21,7 +21,7 @@
 
  It represents a node for CKRenderComponent component in the component tree.
  */
-@interface CKRenderTreeNode : CKScopeTreeNode
+@interface CKRenderTreeNode : CKTreeNode
 
 /** Will be called after buildComponentTree: */
 + (void)didBuildComponentTree:(CKTreeNode *)node;

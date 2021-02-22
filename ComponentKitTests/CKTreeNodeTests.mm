@@ -26,14 +26,14 @@
 
 #import "CKComponentTestCase.h"
 
-static BOOL verifyChildToParentConnection(CKScopeTreeNode * parentNode, CKTreeNode *childNode, id<CKRenderComponentProtocol> c) {
+static BOOL verifyChildToParentConnection(CKTreeNode *parentNode, CKTreeNode *childNode, id<CKRenderComponentProtocol> c) {
   auto const componentKey = [childNode componentKey];
   auto const childComponent = [parentNode childForComponentKey:componentKey].component;
   return [childComponent isEqual:c];
 }
 
-static NSMutableArray<CKTreeNode*> *createsNodesForComponentsWithOwner(CKScopeTreeNode * owner,
-                                                                       CKScopeTreeNode * previousParent,
+static NSMutableArray<CKTreeNode*> *createsNodesForComponentsWithOwner(CKTreeNode *owner,
+                                                                       CKTreeNode *previousParent,
                                                                        CKComponentScopeRoot *scopeRoot,
                                                                        NSArray<id<CKRenderComponentProtocol>> *components) {
   NSMutableArray<CKTreeNode*> *nodes = [NSMutableArray array];
@@ -49,7 +49,7 @@ static NSMutableArray<CKTreeNode*> *createsNodesForComponentsWithOwner(CKScopeTr
 }
 
 /** Iterate recursively over the tree and add its node identifiers to the set */
-static void treeChildrenIdentifiers(CKScopeTreeNode * node, NSMutableSet<NSString *> *identifiers, int level) {
+static void treeChildrenIdentifiers(CKTreeNode *node, NSMutableSet<NSString *> *identifiers, int level) {
   for (auto childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
@@ -60,7 +60,7 @@ static void treeChildrenIdentifiers(CKScopeTreeNode * node, NSMutableSet<NSStrin
 }
 
 /** Compare the children of the trees recursively; returns true if the two trees are equal */
-static BOOL areTreesEqual(CKScopeTreeNode * lhs, CKScopeTreeNode * rhs) {
+static BOOL areTreesEqual(CKTreeNode *lhs, CKTreeNode *rhs) {
   NSMutableSet<NSString *> *lhsChildrenIdentifiers = [NSMutableSet set];
   treeChildrenIdentifiers(lhs, lhsChildrenIdentifiers, 0);
   NSMutableSet<NSString *> *rhsChildrenIdentifiers = [NSMutableSet set];
@@ -409,7 +409,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
 @implementation CKRenderTreeNodeTests
 
-- (CKScopeTreeNode *)newTreeNodeWithChild
+- (CKTreeNode *)newTreeNodeWithChild
 {
   return [CKRenderTreeNode new];
 }
@@ -419,7 +419,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 - (void)test_childForComponentKey_onCKTreeNodeWithChild {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKScopeTreeNode * root1 = [self newTreeNodeWithChild];
+  CKTreeNode *root1 = [self newTreeNodeWithChild];
   auto const component1 = [CKTreeNodeTest_RenderComponent_NoInitialState new];
   CKTreeNode *childNode1 = [[CKRenderTreeNode alloc] initWithComponent:component1
                                                                 parent:root1
@@ -428,7 +428,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                                           stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
-  CKScopeTreeNode * root2 = [self newTreeNodeWithChild];
+  CKTreeNode *root2 = [self newTreeNodeWithChild];
   auto const component2 = [CKTreeNodeTest_RenderComponent_NoInitialState new];
   CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
                                                                 parent:root2
@@ -443,7 +443,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 - (void)test_nodeIdentifier_onCKTreeNodeWithChild_betweenGenerations {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKScopeTreeNode * root1 = [self newTreeNodeWithChild];
+  CKTreeNode *root1 = [self newTreeNodeWithChild];
   auto const component1 = [CKTreeNodeTest_RenderComponent_NoInitialState new];
   CKTreeNode *childNode1 = [[CKRenderTreeNode alloc] initWithComponent:component1
                                                                 parent:root1
@@ -452,7 +452,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                                           stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
-  CKScopeTreeNode * root2 = [self newTreeNodeWithChild];
+  CKTreeNode *root2 = [self newTreeNodeWithChild];
   auto const component2 = [CKTreeNodeTest_RenderComponent_NoInitialState new];
   CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
                                                                 parent:root2
@@ -467,7 +467,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKScopeTreeNode * root1 = [self newTreeNodeWithChild];
+  CKTreeNode *root1 = [self newTreeNodeWithChild];
   auto const component1 = [CKTreeNodeTest_RenderComponent_NoInitialState new];
   CKTreeNode *childNode1 = [[CKRenderTreeNode alloc] initWithComponent:component1
                                                                 parent:root1
@@ -476,7 +476,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                                           stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
-  CKScopeTreeNode * root2 = [self newTreeNodeWithChild];
+  CKTreeNode *root2 = [self newTreeNodeWithChild];
   auto const component2 = [CKTreeNodeTest_RenderComponent_NoInitialState new];
   CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
                                                                 parent:root2
@@ -493,7 +493,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKScopeTreeNode * root1 = [self newTreeNodeWithChild];
+  CKTreeNode *root1 = [self newTreeNodeWithChild];
   auto const component1 = [CKTreeNodeTest_RenderComponent_NoInitialState new];
   CKTreeNode *childNode1 = [[CKRenderTreeNode alloc] initWithComponent:component1
                                                                 parent:root1
@@ -502,7 +502,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                                           stateUpdates:{}];
 
   // Simulate a component tree creation with a DIFFRENT child
-  CKScopeTreeNode * root2 = [self newTreeNodeWithChild];
+  CKTreeNode *root2 = [self newTreeNodeWithChild];
   auto const component2 = [CKRenderComponent new];
   CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
                                                                 parent:root2

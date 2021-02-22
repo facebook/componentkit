@@ -62,8 +62,8 @@
   return [super viewForAnimation] ?: [_child viewForAnimation];
 }
 
-- (void)buildComponentTree:(CKScopeTreeNode *)parent
-            previousParent:(CKScopeTreeNode * _Nullable)previousParent
+- (void)buildComponentTree:(CKTreeNode *)parent
+            previousParent:(CKTreeNode *_Nullable)previousParent
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {

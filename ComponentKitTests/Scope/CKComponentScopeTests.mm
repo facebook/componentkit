@@ -100,9 +100,9 @@
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
-  CKScopeTreeNode *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().node;
+  CKTreeNode *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().node;
   CKComponentScope scope([CKCompositeComponent class]);
-  CKScopeTreeNode *currentFrame = CKThreadLocalComponentScope::currentScope()->stack.top().node;
+  CKTreeNode *currentFrame = CKThreadLocalComponentScope::currentScope()->stack.top().node;
   XCTAssertTrue(currentFrame != rootFrame);
 }
 
@@ -130,7 +130,7 @@
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
-  CKScopeTreeNode *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().node;
+  CKTreeNode *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().node;
   {
     CKComponentScope scope([CKCompositeComponent class], @"moose");
     XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().node != rootFrame);

@@ -13,14 +13,14 @@
 #import <RenderCore/RCAssert.h>
 
 #import "CKRenderHelpers.h"
-#import "CKScopeTreeNode.h"
+#import "CKTreeNode.h"
 
-CKRootTreeNode::CKRootTreeNode(): _node([CKScopeTreeNode new]) {};
+CKRootTreeNode::CKRootTreeNode(): _node([CKTreeNode new]) {};
 
 #if CK_ASSERTIONS_ENABLED
 static auto _parentIdentifiers(const std::unordered_map<CKTreeNodeIdentifier,
                                CKTreeNode *>& nodesToParentNodes,
-                               CKTreeNode * node) -> NSString * {
+                               CKTreeNode *node) -> NSString * {
   const auto parents = [NSMutableArray new];
 
   while (node.component != nil) {
@@ -35,8 +35,8 @@ static auto _parentIdentifiers(const std::unordered_map<CKTreeNodeIdentifier,
 static auto _existingAndNewParentIdentifiers(
     const std::unordered_map<CKTreeNodeIdentifier,
     CKTreeNode *>& nodesToParentNodes,
-    CKTreeNode * node,
-    CKTreeNode * parent) -> NSString * {
+    CKTreeNode *node,
+    CKTreeNode *parent) -> NSString * {
   return [NSString stringWithFormat:@"Previous Parents:%@\nNew Parents:%@",
           _parentIdentifiers(nodesToParentNodes, nodesToParentNodes.find(node.nodeIdentifier)->second),
           _parentIdentifiers(nodesToParentNodes, parent)];
@@ -44,7 +44,7 @@ static auto _existingAndNewParentIdentifiers(
 
 #endif
 
-void CKRootTreeNode::registerNode(CKTreeNode * node, CKTreeNode * parent) noexcept {
+void CKRootTreeNode::registerNode(CKTreeNode *node, CKTreeNode *parent) noexcept {
   RCCAssert(parent != nil, @"Cannot register a nil parent node");
   if (node) {
 #if CK_ASSERTIONS_ENABLED
@@ -71,7 +71,7 @@ void CKRootTreeNode::registerNode(CKTreeNode * node, CKTreeNode * parent) noexce
   }
 }
 
-CKTreeNode * CKRootTreeNode::parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const {
+CKTreeNode *CKRootTreeNode::parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const {
   RCCAssert(nodeIdentifier != 0, @"Cannot retrieve parent for an empty node");
   auto const it = _nodesToParentNodes.find(nodeIdentifier);
   if (it != _nodesToParentNodes.end()) {
@@ -84,7 +84,7 @@ bool CKRootTreeNode::isEmpty() const {
   return _node.childrenSize == 0;
 }
 
-CKScopeTreeNode *CKRootTreeNode::node() const {
+CKTreeNode *CKRootTreeNode::node() const {
   return _node;
 }
 

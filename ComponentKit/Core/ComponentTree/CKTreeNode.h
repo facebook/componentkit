@@ -29,9 +29,14 @@ namespace TreeNode {
   node corresponding to the current scope. Otherwise it returns nil.
   This is only meant to be called when constructing a component and as part of the implementation itself.
   */
-  CKTreeNode * nodeForComponent(id<CKComponentProtocol> component);
+  CKTreeNode *nodeForComponent(id<CKComponentProtocol> component);
 }
 }
+
+struct CKComponentScopePair {
+  CKTreeNode *node;
+  CKTreeNode *previousNode;
+};
 
 /**
  This object represents a node in the component tree.
@@ -44,6 +49,7 @@ namespace TreeNode {
 {
   @package
   CKTreeNodeComponentKey _componentKey;
+  std::vector<CKTreeNodeComponentKeyToNode> _children;
 }
 
 /** Base initializer */
@@ -52,8 +58,8 @@ namespace TreeNode {
 
 /** Render initializer */
 - (instancetype)initWithComponent:(id<CKRenderComponentProtocol>)component
-                           parent:(CKScopeTreeNode *)parent
-                   previousParent:(CKScopeTreeNode *)previousParent
+                           parent:(CKTreeNode *)parent
+                   previousParent:(CKTreeNode *)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
@@ -79,15 +85,55 @@ namespace TreeNode {
 
 /** This method should be called on nodes that have been created from CKComponentScope */
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
-             toParent:(CKScopeTreeNode *)parent
-       previousParent:(CKScopeTreeNode *)previousParent
+             toParent:(CKTreeNode *)parent
+       previousParent:(CKTreeNode *)previousParent
                params:(const CKBuildComponentTreeParams &)params;
+
++ (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
+                                 newRoot:(CKComponentScopeRoot *)newRoot
+                       componentTypeName:(const char *)componentTypeName
+                              identifier:(id)identifier
+                                    keys:(const std::vector<id<NSObject>> &)keys
+                     initialStateCreator:(id (^)(void))initialStateCreator
+                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                     requiresScopeHandle:(BOOL)requiresScopeHandle;
+
++ (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
+                                 newRoot:(CKComponentScopeRoot *)newRoot
+                       componentTypeName:(const char *)componentTypeName
+                            componentKey:(const CKTreeNodeComponentKey &)componentKey
+              childScopeFromPreviousNode:(CKTreeNode *)childScopeFromPreviousScope
+                     initialStateCreator:(id (^)(void))initialStateCreator
+                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                     requiresScopeHandle:(BOOL)requiresScopeHandle;
+
+- (CKTreeNodeComponentKey)createKeyForComponentTypeName:(const char *)componentTypeName
+                                             identifier:(id)identifier
+                                                   keys:(const std::vector<id<NSObject>> &)keys;
+
+- (CKTreeNode *)childScopeForComponentKey:(const CKTreeNodeComponentKey &)scopeNodeKey;
+- (void)setChildScope:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
+
+- (std::vector<CKTreeNode *>)children;
+
+- (size_t)childrenSize;
+
+/** Returns a component tree node according to its component key */
+- (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key;
+
+/** Creates a component key for a child node according to its component type name; this method is being called once during the component tree creation */
+- (CKTreeNodeComponentKey)createParentKeyForComponentTypeName:(const char *)componentTypeName
+                                                   identifier:(id<NSObject>)identifier
+                                                         keys:(const std::vector<id<NSObject>> &)keys;
+
+/** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
+- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
 
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */
 @property (nonatomic, copy, readonly) NSString *debugDescription;
 @property (nonatomic, copy, readonly) NSArray<NSString *> *debugDescriptionNodes;
-
+@property (nonatomic, copy, readonly) NSArray<NSString *> *debugDescriptionComponents;
 #endif
 #endif
 

@@ -19,7 +19,7 @@
 #import <ComponentKit/CKRenderHelpers.h>
 
 #import "CKComponentScopeRoot.h"
-#import "CKScopeTreeNode.h"
+#import "CKTreeNode.h"
 
 static pthread_key_t _threadKey() noexcept
 {

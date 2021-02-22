@@ -20,7 +20,7 @@
 #import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKCoalescedSpecSupport.h>
 
-#import "CKScopeTreeNode.h"
+#import "CKTreeNode.h"
 #import "CKRenderTreeNode.h"
 
 namespace CKRenderInternal {
@@ -62,8 +62,8 @@ namespace CKRenderInternal {
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
                                      __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                      CKRenderTreeNode *node,
-                                     CKScopeTreeNode * parent,
-                                     CKScopeTreeNode * previousParent,
+                                     CKTreeNode *parent,
+                                     CKTreeNode *previousParent,
                                      const CKBuildComponentTreeParams &params,
                                      CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
     auto const previousNode = (CKRenderTreeNode *)[previousParent childForComponentKey:node.componentKey];
@@ -78,8 +78,8 @@ namespace CKRenderInternal {
   static auto reusePreviousComponentIfComponentsAreEqual(id<CKRenderComponentProtocol> component,
                                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                                          CKRenderTreeNode *node,
-                                                         CKScopeTreeNode * parent,
-                                                         CKScopeTreeNode * previousParent,
+                                                         CKTreeNode *parent,
+                                                         CKTreeNode *previousParent,
                                                          const CKBuildComponentTreeParams &params,
                                                          CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
     auto const previousNode = (CKRenderTreeNode *)[previousParent childForComponentKey:node.componentKey];
@@ -105,8 +105,8 @@ namespace CKRenderInternal {
   static auto reusePreviousComponentForSingleChild(CKRenderTreeNode *node,
                                                    id<CKRenderWithChildComponentProtocol> component,
                                                    __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                                   CKScopeTreeNode * parent,
-                                                   CKScopeTreeNode * previousParent,
+                                                   CKTreeNode *parent,
+                                                   CKTreeNode *previousParent,
                                                    const CKBuildComponentTreeParams &params,
                                                    BOOL parentHasStateUpdate,
                                                    CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
@@ -148,7 +148,7 @@ namespace CKRenderInternal {
   }
 
 
-static auto didBuildComponentTree(CKTreeNode * node,
+static auto didBuildComponentTree(CKTreeNode *node,
                                   id<CKTreeNodeComponentProtocol> component,
                                   const CKBuildComponentTreeParams &params) -> void {
 
@@ -170,8 +170,8 @@ namespace CKRender {
   namespace ComponentTree {
     namespace Iterable {
     auto build(id<CKTreeNodeComponentProtocol> component,
-               CKScopeTreeNode * parent,
-               CKScopeTreeNode * _Nullable previousParent,
+               CKTreeNode *parent,
+               CKTreeNode *_Nullable previousParent,
                const CKBuildComponentTreeParams &params,
                BOOL parentHasStateUpdate) -> void
     {
@@ -179,7 +179,7 @@ namespace CKRender {
       RCCAssertNotNil(parent, @"parent cannot be nil");
 
       // Check if the component already has a tree node.
-      CKTreeNode * node = component.scopeHandle.treeNode;
+      CKTreeNode *node = component.scopeHandle.treeNode;
 
       if (node) {
         [node linkComponent:component toParent:parent previousParent:previousParent params:params];
@@ -209,8 +209,8 @@ namespace CKRender {
 
       // If there is a node, we update the parents' pointers to the next level in the tree.
       if (node) {
-        parent = (CKScopeTreeNode *)node;
-        previousParent = (CKScopeTreeNode *)[previousParent childForComponentKey:[node componentKey]];
+        parent = (CKTreeNode *)node;
+        previousParent = (CKTreeNode *)[previousParent childForComponentKey:[node componentKey]];
 
         // Report information to `debugAnalyticsListener`.
         if (numberOfChildren == 1 && params.shouldCollectTreeNodeCreationInformation) {
@@ -237,8 +237,8 @@ namespace CKRender {
     namespace Render {
       auto build(id<CKRenderWithChildComponentProtocol> component,
                  __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                 CKScopeTreeNode * parent,
-                 CKScopeTreeNode * _Nullable previousParent,
+                 CKTreeNode *parent,
+                 CKTreeNode *_Nullable previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate,
                  CKRenderDidReuseComponentBlock didReuseBlock) -> CKTreeNode *
@@ -286,7 +286,7 @@ namespace CKRender {
           }
           // Call build component tree on the child component.
           [child buildComponentTree:node
-                     previousParent:(CKScopeTreeNode *)[previousParent childForComponentKey:[node componentKey]]
+                     previousParent:(CKTreeNode *)[previousParent childForComponentKey:[node componentKey]]
                              params:params
                parentHasStateUpdate:parentHasStateUpdate];
         }
@@ -316,7 +316,7 @@ namespace CKRender {
   namespace ScopeHandle {
     namespace Render {
       auto create(id<CKRenderComponentProtocol> component,
-                  CKTreeNode * previousNode,
+                  CKTreeNode *previousNode,
                   CKComponentScopeRoot *scopeRoot,
                   const CKComponentStateUpdateMap &stateUpdates) -> CKComponentScopeHandle*
       {

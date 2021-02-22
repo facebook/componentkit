@@ -23,7 +23,7 @@
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKTreeNode.h>
-#import <ComponentKit/CKScopeTreeNode.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/RCComponentCoalescingMode.h>
 
 @protocol CKSystraceListener;

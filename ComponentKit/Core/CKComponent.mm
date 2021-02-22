@@ -52,7 +52,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 @implementation CKComponent
 {
-  CKTreeNode * _treeNode;
+  CKTreeNode *_treeNode;
   CKComponentViewConfiguration _viewConfiguration;
 
   /** Only non-null while mounted. */
@@ -189,8 +189,8 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 #pragma mark - ComponentTree
 
-- (void)buildComponentTree:(CKScopeTreeNode *)parent
-            previousParent:(CKScopeTreeNode * _Nullable)previousParent
+- (void)buildComponentTree:(CKTreeNode *)parent
+            previousParent:(CKTreeNode *_Nullable)previousParent
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {

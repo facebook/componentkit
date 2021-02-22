@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol CKSystraceListener;
 @protocol CKDebugAnalyticsListener;
 @class CKTreeNode;
-@class CKScopeTreeNode;
+@class CKTreeNode;
 
 #if CK_NOT_SWIFT
 
@@ -86,8 +86,8 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
  This method translates the component render method into a 'CKTreeNode'; a component tree.
  It's being called by the infra during the component tree creation.
  */
-- (void)buildComponentTree:(CKScopeTreeNode *)parent
-            previousParent:(CKScopeTreeNode * _Nullable)previousParent
+- (void)buildComponentTree:(CKTreeNode *)parent
+            previousParent:(CKTreeNode *_Nullable)previousParent
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 
