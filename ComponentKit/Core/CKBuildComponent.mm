@@ -19,7 +19,7 @@
 #import "CKComponentSubclass.h"
 #import "CKRenderHelpers.h"
 #import "CKThreadLocalComponentScope.h"
-#import "CKTreeNodeProtocol.h"
+#import "CKTreeNode.h"
 #import "CKComponentCreationValidation.h"
 
 namespace CKBuildComponentHelpers {

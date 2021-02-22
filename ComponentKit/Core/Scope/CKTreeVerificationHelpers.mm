@@ -83,13 +83,13 @@ void CKDetectDuplicateComponent(const RCLayout &layout) {
 }
 
 #if CK_ASSERTIONS_ENABLED
-static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const RCLayout &layout, id<CKTreeNodeProtocol> parentNode)
+static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const RCLayout &layout, CKTreeNode * parentNode)
 {
   if (layout.component == nil) {
     return;
   }
 
-  id<CKTreeNodeProtocol> treeNode = nil;
+  CKTreeNode * treeNode = nil;
   if ([layout.component isKindOfClass:[CKComponent class]]) {
     auto const c = (CKComponent *)layout.component;
     if (c.treeNode) {

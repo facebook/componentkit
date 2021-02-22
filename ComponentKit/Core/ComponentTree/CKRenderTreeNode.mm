@@ -15,7 +15,7 @@
 @implementation CKRenderTreeNode
 
 // Base initializer
-- (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
+- (instancetype)initWithPreviousNode:(CKTreeNode *)previousNode
                          scopeHandle:(CKComponentScopeHandle *)scopeHandle
 {
   if (self = [super initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
@@ -23,13 +23,13 @@
     if (threadLocalScope != nullptr) {
       RCAssert(previousNode == nil || [previousNode isKindOfClass:[CKScopeTreeNode class]], @"previousNode should be a CKScopeTreeNode, but its class is: %@.", previousNode.class);
       // Push the new pair into the thread local.
-      threadLocalScope->push({.node = self, .previousNode = previousNode});
+      threadLocalScope->push({.node = self, .previousNode = (CKScopeTreeNode *)previousNode});
     }
   }
   return self;
 }
 
-+ (void)didBuildComponentTree:(id<CKTreeNodeProtocol>)node
++ (void)didBuildComponentTree:(CKTreeNode *)node
 {
   auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (threadLocalScope == nullptr) {

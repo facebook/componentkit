@@ -17,7 +17,7 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKMutex.h>
 #import <ComponentKit/CKOptional.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKCoalescedSpecSupport.h>
 
 #import "CKScopeTreeNode.h"
@@ -148,7 +148,7 @@ namespace CKRenderInternal {
   }
 
 
-static auto didBuildComponentTree(id<CKTreeNodeProtocol> node,
+static auto didBuildComponentTree(CKTreeNode * node,
                                   id<CKTreeNodeComponentProtocol> component,
                                   const CKBuildComponentTreeParams &params) -> void {
 
@@ -179,7 +179,7 @@ namespace CKRender {
       RCCAssertNotNil(parent, @"parent cannot be nil");
 
       // Check if the component already has a tree node.
-      id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
+      CKTreeNode * node = component.scopeHandle.treeNode;
 
       if (node) {
         [node linkComponent:component toParent:parent previousParent:previousParent params:params];
@@ -241,7 +241,7 @@ namespace CKRender {
                  CKScopeTreeNode * _Nullable previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate,
-                 CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
+                 CKRenderDidReuseComponentBlock didReuseBlock) -> CKTreeNode *
       {
         RCCAssertNotNil(component, @"component cannot be nil");
         RCCAssertNotNil(parent, @"parent cannot be nil");
@@ -316,7 +316,7 @@ namespace CKRender {
   namespace ScopeHandle {
     namespace Render {
       auto create(id<CKRenderComponentProtocol> component,
-                  id<CKTreeNodeProtocol> previousNode,
+                  CKTreeNode * previousNode,
                   CKComponentScopeRoot *scopeRoot,
                   const CKComponentStateUpdateMap &stateUpdates) -> CKComponentScopeHandle*
       {

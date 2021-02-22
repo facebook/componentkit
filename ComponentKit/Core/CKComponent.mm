@@ -22,7 +22,7 @@
 #import <ComponentKit/CKFatal.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKWeakObjectContainer.h>
 #import <ComponentKit/RCComponentDescriptionHelper.h>
@@ -52,7 +52,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 @implementation CKComponent
 {
-  id<CKTreeNodeProtocol> _treeNode;
+  CKTreeNode * _treeNode;
   CKComponentViewConfiguration _viewConfiguration;
 
   /** Only non-null while mounted. */
@@ -177,12 +177,12 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return _mountInfo ? _mountInfo->viewContext : CKComponentViewContext();
 }
 
-- (void)acquireTreeNode:(id<CKTreeNodeProtocol>)treeNode
+- (void)acquireTreeNode:(CKTreeNode *)treeNode
 {
   _treeNode = treeNode;
 }
 
-- (id<CKTreeNodeProtocol>)treeNode
+- (CKTreeNode *)treeNode
 {
   return _treeNode;
 }

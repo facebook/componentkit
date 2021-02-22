@@ -26,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol CKComponentStateListener;
 @protocol CKComponentProtocol;
-@protocol CKTreeNodeProtocol;
 
 @interface CKComponentScopeHandle : NSObject
 
@@ -81,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier treeNodeIdentifier;
 
 /** The tree node of the acquired component. Setter should only be called *before* resolution. */
-@property (nonatomic, weak, nullable) id<CKTreeNodeProtocol> treeNode;
+@property (nonatomic, weak, nullable) CKTreeNode * treeNode;
 
 /**
  Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.

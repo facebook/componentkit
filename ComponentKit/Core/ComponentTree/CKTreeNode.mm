@@ -25,7 +25,7 @@
 
 namespace CK {
 namespace TreeNode {
-  id<CKTreeNodeProtocol> nodeForComponent(id<CKComponentProtocol> component)
+  CKTreeNode * nodeForComponent(id<CKComponentProtocol> component)
   {
     CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
     if (currentScope == nullptr) {
@@ -62,7 +62,7 @@ namespace TreeNode {
 @implementation CKTreeNode
 
 // Base initializer
-- (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
+- (instancetype)initWithPreviousNode:(CKTreeNode *)previousNode
                          scopeHandle:(CKComponentScopeHandle *)scopeHandle
 {
   static int32_t nextGlobalIdentifier = 0;
@@ -140,7 +140,7 @@ namespace TreeNode {
   return _componentKey;
 }
 
-- (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
+- (void)didReuseWithParent:(CKTreeNode *)parent
                inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
   RCAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");

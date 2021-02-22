@@ -15,7 +15,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKRenderHelpers.h>

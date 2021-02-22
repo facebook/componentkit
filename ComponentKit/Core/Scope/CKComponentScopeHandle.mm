@@ -172,7 +172,7 @@
   _acquiredComponent = component;
 }
 
-- (void)setTreeNode:(id<CKTreeNodeProtocol>)treeNode
+- (void)setTreeNode:(CKTreeNode *)treeNode
 {
   RCAssertWithCategory(_treeNodeIdentifier == 0,
                        NSStringFromClass([_acquiredComponent class]),

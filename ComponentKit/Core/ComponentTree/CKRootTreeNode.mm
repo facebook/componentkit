@@ -19,8 +19,8 @@ CKRootTreeNode::CKRootTreeNode(): _node([CKScopeTreeNode new]) {};
 
 #if CK_ASSERTIONS_ENABLED
 static auto _parentIdentifiers(const std::unordered_map<CKTreeNodeIdentifier,
-                               id<CKTreeNodeProtocol>>& nodesToParentNodes,
-                               id<CKTreeNodeProtocol> node) -> NSString * {
+                               CKTreeNode *>& nodesToParentNodes,
+                               CKTreeNode * node) -> NSString * {
   const auto parents = [NSMutableArray new];
 
   while (node.component != nil) {
@@ -34,9 +34,9 @@ static auto _parentIdentifiers(const std::unordered_map<CKTreeNodeIdentifier,
 
 static auto _existingAndNewParentIdentifiers(
     const std::unordered_map<CKTreeNodeIdentifier,
-    id<CKTreeNodeProtocol>>& nodesToParentNodes,
-    id<CKTreeNodeProtocol> node,
-    id<CKTreeNodeProtocol> parent) -> NSString * {
+    CKTreeNode *>& nodesToParentNodes,
+    CKTreeNode * node,
+    CKTreeNode * parent) -> NSString * {
   return [NSString stringWithFormat:@"Previous Parents:%@\nNew Parents:%@",
           _parentIdentifiers(nodesToParentNodes, nodesToParentNodes.find(node.nodeIdentifier)->second),
           _parentIdentifiers(nodesToParentNodes, parent)];
@@ -44,7 +44,7 @@ static auto _existingAndNewParentIdentifiers(
 
 #endif
 
-void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent) noexcept {
+void CKRootTreeNode::registerNode(CKTreeNode * node, CKTreeNode * parent) noexcept {
   RCCAssert(parent != nil, @"Cannot register a nil parent node");
   if (node) {
 #if CK_ASSERTIONS_ENABLED
@@ -71,7 +71,7 @@ void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProt
   }
 }
 
-id<CKTreeNodeProtocol> CKRootTreeNode::parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const {
+CKTreeNode * CKRootTreeNode::parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const {
   RCCAssert(nodeIdentifier != 0, @"Cannot retrieve parent for an empty node");
   auto const it = _nodesToParentNodes.find(nodeIdentifier);
   if (it != _nodesToParentNodes.end()) {
@@ -100,7 +100,7 @@ void CKRootTreeNode::markTopRenderComponentAsDirtyForPropsUpdates() noexcept {
   }
 }
 
-void CKRootTreeNode::willBuildComponentTree(id<CKTreeNodeProtocol>node) noexcept {
+void CKRootTreeNode::willBuildComponentTree(CKTreeNode *node) noexcept {
   _stack.push(node.nodeIdentifier);
 }
 

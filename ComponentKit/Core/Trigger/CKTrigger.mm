@@ -2,7 +2,7 @@
 
 #import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKTrigger.h>
 
 static auto _scopedResponderAndKey(id<CKTreeNodeComponentProtocol> component, NSString *context) -> CKTriggerScopedResponderAndKey {

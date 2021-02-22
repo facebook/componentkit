@@ -64,7 +64,7 @@ namespace CKRender {
                  CKScopeTreeNode * previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate,
-                 CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
+                 CKRenderDidReuseComponentBlock didReuseBlock = nil) -> CKTreeNode *;
     }
 
     namespace Root {
@@ -88,7 +88,7 @@ namespace CKRender {
        @param stateUpdates The state updates map of this component generation.
        */
       auto create(id<CKRenderComponentProtocol> component,
-                  id<CKTreeNodeProtocol> previousNode,
+                  CKTreeNode * previousNode,
                   CKComponentScopeRoot *scopeRoot,
                   const CKComponentStateUpdateMap &stateUpdates) -> CKComponentScopeHandle*;
     }
@@ -104,7 +104,7 @@ namespace CKRender {
   /**
    @return `YES` if the component of the node has a state update, `NO` otherwise.
    */
-  auto nodeHasStateUpdate(__unsafe_unretained id<CKTreeNodeProtocol> node,
+  auto nodeHasStateUpdate(__unsafe_unretained CKTreeNode * node,
                           __unsafe_unretained CKScopeTreeNode * previousParent,
                           const CKBuildComponentTreeParams &params) -> BOOL;
 

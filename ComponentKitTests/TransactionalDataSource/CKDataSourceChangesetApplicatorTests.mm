@@ -354,7 +354,7 @@ inComponentTreeWithRootComponent:(id<CKMountable>)component
 
 }
 
-- (void)didReuseNode:(id<CKTreeNodeProtocol>)node
+- (void)didReuseNode:(CKTreeNode *)node
          inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
@@ -374,7 +374,7 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 - (BOOL)shouldCollectTreeNodeCreationInformation:(CKComponentScopeRoot *)scopeRoot { return NO; }
 
 - (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
-                                       node:(id<CKTreeNodeProtocol>)node
+                                       node:(CKTreeNode *)node
                                      parent:(CKScopeTreeNode *)parent
                                      params:(const CKBuildComponentTreeParams &)params
                        parentHasStateUpdate:(BOOL)parentHasStateUpdate {}

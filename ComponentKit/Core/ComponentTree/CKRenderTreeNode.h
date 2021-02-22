@@ -24,7 +24,7 @@
 @interface CKRenderTreeNode : CKScopeTreeNode
 
 /** Will be called after buildComponentTree: */
-+ (void)didBuildComponentTree:(id<CKTreeNodeProtocol>)node;
++ (void)didBuildComponentTree:(CKTreeNode *)node;
 
 /** Will be called after component reuse */
 - (void)didReuseRenderNode:(CKRenderTreeNode *)node

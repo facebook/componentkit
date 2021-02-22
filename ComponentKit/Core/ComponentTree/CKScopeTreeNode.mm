@@ -20,9 +20,9 @@
 
 @implementation CKScopeTreeNode
 
-- (std::vector<id<CKTreeNodeProtocol>>)children
+- (std::vector<CKTreeNode *>)children
 {
-  std::vector<id<CKTreeNodeProtocol>> children;
+  std::vector<CKTreeNode *> children;
   for (auto const &child : _children) {
     if (child.key.type() == CKTreeNodeComponentKey::Type::parent) {
       children.push_back(child.node);
@@ -36,7 +36,7 @@
   return _children.size();
 }
 
-- (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key
+- (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   for (auto const &child : _children) {
     if (child.key == key) {
@@ -61,12 +61,12 @@
   return CKTreeNodeComponentKey{componentTypeName, keyCounter, identifier, keys};
 }
 
-- (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
+- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
   _children.push_back(CKTreeNodeComponentKeyToNode{.key = componentKey, .node = child});
 }
 
-- (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
+- (void)didReuseWithParent:(CKTreeNode *)parent
                inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
   // In case that CKComponentScope was created, but not acquired from the component (for example: early nil return) ,

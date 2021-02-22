@@ -17,11 +17,10 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/ComponentMountContext.h>
 #import <ComponentKit/CKOptional.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKSystraceListener.h>
 
 @protocol CKMountable;
-@protocol CKTreeNodeProtocol;
 
 @class CKComponent;
 @class CKComponentScopeRoot;
@@ -130,7 +129,7 @@ inComponentTreeWithRootComponent:(id<CKMountable>)component
  @param previousScopeRoot The previous scope root of the component tree
  @warning A node is only reused if conforming to the render protocol.
  */
-- (void)didReuseNode:(id<CKTreeNodeProtocol>)node
+- (void)didReuseNode:(CKTreeNode *)node
          inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
@@ -148,7 +147,7 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
  Will be called for every component with pre-computed child (CKCompositeComponent for example) during the component tree creation.
  */
 - (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
-                                       node:(id<CKTreeNodeProtocol>)node
+                                       node:(CKTreeNode *)node
                                      parent:(CKScopeTreeNode *)parent
                                      params:(const CKBuildComponentTreeParams &)params
                        parentHasStateUpdate:(BOOL)parentHasStateUpdate;

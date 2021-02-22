@@ -109,14 +109,14 @@ inComponentTreeWithRootComponent:(id<CKMountable>)component
 - (BOOL)shouldCollectTreeNodeCreationInformation:(CKComponentScopeRoot *)scopeRoot { return NO; }
 
 - (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
-                                       node:(id<CKTreeNodeProtocol>)node
+                                       node:(CKTreeNode *)node
                                      parent:(CKScopeTreeNode *)parent
                                      params:(const CKBuildComponentTreeParams &)params
                        parentHasStateUpdate:(BOOL)parentHasStateUpdate {}
 
 - (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component { return YES; }
 
-- (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
+- (void)didReuseNode:(CKTreeNode *)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
 
 - (void)didReceiveStateUpdateFromScopeHandle:(CKComponentScopeHandle *)handle rootIdentifier:(CKComponentScopeRootIdentifier)rootID {
   dispatch_sync(_propertyAccessQueue, ^{

@@ -162,7 +162,7 @@
 #import <ComponentKit/CKSystraceListener.h>
 #import <ComponentKit/CKTransitions.h>
 #import <ComponentKit/CKTreeNode.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
 #import <ComponentKit/CKUpdateMode.h>
 #import <ComponentKit/CKVariant.h>

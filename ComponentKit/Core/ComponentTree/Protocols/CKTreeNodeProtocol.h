@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol CKSystraceListener;
 @protocol CKDebugAnalyticsListener;
+@class CKTreeNode;
 @class CKScopeTreeNode;
 
 #if CK_NOT_SWIFT
@@ -69,8 +70,6 @@ struct CKBuildComponentTreeParams {
 
 #endif
 
-@protocol CKTreeNodeProtocol;
-
 /**
  The component that is hosted by a `CKTreeNodeProtocol`.
  It represents the component holding the the scope handle, capable of building a component tree (CKTreeNode).
@@ -95,55 +94,13 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 #endif
 
 /** Ask the component to acquire a tree node. */
-- (void)acquireTreeNode:(id<CKTreeNodeProtocol>)treeNode;
+- (void)acquireTreeNode:(CKTreeNode *)treeNode;
 
 /** Reference to the component's tree node. */
-@property (nonatomic, strong, readonly, nullable) id<CKTreeNodeProtocol> treeNode;
+@property (nonatomic, strong, readonly, nullable) CKTreeNode *treeNode;
 
 /** Get child at index; can be nil */
 - (id<CKTreeNodeComponentProtocol> _Nullable)childAtIndex:(unsigned int)index;
-
-@end
-
-/**
- This protocol represents a node in the component tree.
- Each component has a corresponding CKTreeNodeProtocol; this node holds the state of the component.
- */
-@protocol CKTreeNodeProtocol <NSObject>
-
-#if CK_NOT_SWIFT
-
-@property (nonatomic, weak, readonly) id<CKTreeNodeComponentProtocol> component;
-
-@property (nonatomic, strong, readonly, nullable) CKComponentScopeHandle *scopeHandle;
-
-@property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
-
-/** Returns the component's state */
-@property (nonatomic, strong, readonly, nullable) id state;
-
-
-/** Returns the componeny key according to its current owner */
-@property (nonatomic, assign, readonly) const CKTreeNodeComponentKey &componentKey;
-
-
-/** This method should be called after a node has been reused */
-- (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
-               inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
-
-/** This method should be called on nodes that have been created from CKComponentScope */
-- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
-             toParent:(CKScopeTreeNode *)parent
-       previousParent:(CKScopeTreeNode * _Nullable)previousParent
-               params:(const CKBuildComponentTreeParams &)params;
-
-#if DEBUG
-/** Returns a multi-line string describing this node and its children nodes */
-@property (nonatomic, copy, readonly) NSString *debugDescription;
-@property (nonatomic, copy, readonly) NSArray<NSString *> *debugDescriptionNodes;
-
-#endif
-#endif
 
 @end
 

@@ -22,7 +22,7 @@
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKNonNull.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKScopeTreeNode.h>
 #import <ComponentKit/RCComponentCoalescingMode.h>
 

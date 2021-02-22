@@ -29,7 +29,7 @@ namespace TreeNode {
   node corresponding to the current scope. Otherwise it returns nil.
   This is only meant to be called when constructing a component and as part of the implementation itself.
   */
-  id<CKTreeNodeProtocol> nodeForComponent(id<CKComponentProtocol> component);
+  CKTreeNode * nodeForComponent(id<CKComponentProtocol> component);
 }
 }
 
@@ -40,14 +40,14 @@ namespace TreeNode {
 
  CKTreeNode is the base class of a tree node. It will be attached non-render components (CKComponent & CKCompositeComponent).
  */
-@interface CKTreeNode : NSObject <CKTreeNodeProtocol>
+@interface CKTreeNode : NSObject
 {
   @package
   CKTreeNodeComponentKey _componentKey;
 }
 
 /** Base initializer */
-- (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
+- (instancetype)initWithPreviousNode:(CKTreeNode *)previousNode
                          scopeHandle:(CKComponentScopeHandle *)scopeHandle;
 
 /** Render initializer */
@@ -58,6 +58,38 @@ namespace TreeNode {
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
+
+#if CK_NOT_SWIFT
+
+@property (nonatomic, weak, readonly) id<CKTreeNodeComponentProtocol> component;
+
+@property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
+
+/** Returns the component's state */
+@property (nonatomic, strong, readonly) id state;
+
+
+/** Returns the componeny key according to its current owner */
+@property (nonatomic, assign, readonly) const CKTreeNodeComponentKey &componentKey;
+
+
+/** This method should be called after a node has been reused */
+- (void)didReuseWithParent:(CKTreeNode *)parent
+               inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
+
+/** This method should be called on nodes that have been created from CKComponentScope */
+- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
+             toParent:(CKScopeTreeNode *)parent
+       previousParent:(CKScopeTreeNode *)previousParent
+               params:(const CKBuildComponentTreeParams &)params;
+
+#if DEBUG
+/** Returns a multi-line string describing this node and its children nodes */
+@property (nonatomic, copy, readonly) NSString *debugDescription;
+@property (nonatomic, copy, readonly) NSArray<NSString *> *debugDescriptionNodes;
+
+#endif
+#endif
 
 @end
 

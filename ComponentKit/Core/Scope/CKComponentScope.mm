@@ -15,7 +15,6 @@
 #import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKScopeTreeNode.h"
-#import "CKTreeNodeProtocol.h"
 
 #import <ComponentKit/CKRenderHelpers.h>
 #import <ComponentKit/CKCoalescedSpecSupport.h>
