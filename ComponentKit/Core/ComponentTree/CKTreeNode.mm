@@ -75,8 +75,8 @@ namespace TreeNode {
 
 // Render initializer
 - (instancetype)initWithComponent:(id<CKRenderComponentProtocol>)component
-                           parent:(id<CKTreeNodeWithChildrenProtocol>)parent
-                   previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                           parent:(CKScopeTreeNode *)parent
+                   previousParent:(CKScopeTreeNode *)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
@@ -111,8 +111,8 @@ namespace TreeNode {
 }
 
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
-             toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-       previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
+             toParent:(CKScopeTreeNode *)parent
+       previousParent:(CKScopeTreeNode * _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params
 {
   // The existing `_componentKey` that was created by the scope, is an owner based key;

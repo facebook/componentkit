@@ -27,7 +27,7 @@ struct CKComponentScopePair {
 
  It represents a node with children in the component tree.
  */
-@interface CKScopeTreeNode : CKTreeNode <CKTreeNodeWithChildrenProtocol>
+@interface CKScopeTreeNode : CKTreeNode
 {
   @package
   std::vector<CKTreeNodeComponentKeyToNode> _children;
@@ -58,11 +58,24 @@ struct CKComponentScopePair {
 - (CKScopeTreeNode *)childScopeForComponentKey:(const CKTreeNodeComponentKey &)scopeNodeKey;
 - (void)setChildScope:(CKScopeTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
 
+- (std::vector<id<CKTreeNodeProtocol>>)children;
+
+- (size_t)childrenSize;
+
+/** Returns a component tree node according to its component key */
+- (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key;
+
+/** Creates a component key for a child node according to its component type name; this method is being called once during the component tree creation */
+- (CKTreeNodeComponentKey)createParentKeyForComponentTypeName:(const char *)componentTypeName
+                                                   identifier:(id<NSObject>)identifier
+                                                         keys:(const std::vector<id<NSObject>> &)keys;
+
+/** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
+- (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
+
 #if DEBUG
 - (NSArray<NSString *> *)debugDescriptionComponents;
 #endif
-
-- (size_t)childrenSize;
 
 @end
 

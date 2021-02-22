@@ -23,7 +23,7 @@
     if (threadLocalScope != nullptr) {
       RCAssert(previousNode == nil || [previousNode isKindOfClass:[CKScopeTreeNode class]], @"previousNode should be a CKScopeTreeNode, but its class is: %@.", previousNode.class);
       // Push the new pair into the thread local.
-      threadLocalScope->push({.node = self, .previousNode = (CKScopeTreeNode *)previousNode});
+      threadLocalScope->push({.node = self, .previousNode = previousNode});
     }
   }
   return self;

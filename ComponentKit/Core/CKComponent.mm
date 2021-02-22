@@ -189,8 +189,8 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 #pragma mark - ComponentTree
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-            previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
+- (void)buildComponentTree:(CKScopeTreeNode *)parent
+            previousParent:(CKScopeTreeNode * _Nullable)previousParent
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {

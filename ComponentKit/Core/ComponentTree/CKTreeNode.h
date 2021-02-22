@@ -52,8 +52,8 @@ namespace TreeNode {
 
 /** Render initializer */
 - (instancetype)initWithComponent:(id<CKRenderComponentProtocol>)component
-                           parent:(id<CKTreeNodeWithChildrenProtocol>)parent
-                   previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                           parent:(CKScopeTreeNode *)parent
+                   previousParent:(CKScopeTreeNode *)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 

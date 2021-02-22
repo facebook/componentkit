@@ -20,8 +20,6 @@
 
 @implementation CKScopeTreeNode
 
-#pragma mark - CKTreeNodeWithChildrenProtocol
-
 - (std::vector<id<CKTreeNodeProtocol>>)children
 {
   std::vector<id<CKTreeNodeProtocol>> children;

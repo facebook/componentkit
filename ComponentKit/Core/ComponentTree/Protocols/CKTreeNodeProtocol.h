@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol CKSystraceListener;
 @protocol CKDebugAnalyticsListener;
+@class CKScopeTreeNode;
 
 #if CK_NOT_SWIFT
 
@@ -69,7 +70,6 @@ struct CKBuildComponentTreeParams {
 #endif
 
 @protocol CKTreeNodeProtocol;
-@protocol CKTreeNodeWithChildrenProtocol;
 
 /**
  The component that is hosted by a `CKTreeNodeProtocol`.
@@ -87,8 +87,8 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
  This method translates the component render method into a 'CKTreeNode'; a component tree.
  It's being called by the infra during the component tree creation.
  */
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-            previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
+- (void)buildComponentTree:(CKScopeTreeNode *)parent
+            previousParent:(CKScopeTreeNode * _Nullable)previousParent
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 
@@ -133,8 +133,8 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 
 /** This method should be called on nodes that have been created from CKComponentScope */
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
-             toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-       previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
+             toParent:(CKScopeTreeNode *)parent
+       previousParent:(CKScopeTreeNode * _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params;
 
 #if DEBUG
@@ -148,30 +148,6 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 @end
 
 #if CK_NOT_SWIFT
-
-/**
- This protocol represents a node with multiple children in the component tree.
-
- Each component that is an owner component will have a corresponding CKTreeNodeWithChildrenProtocol.
- */
-@protocol CKTreeNodeWithChildrenProtocol <CKTreeNodeProtocol>
-
-- (std::vector<id<CKTreeNodeProtocol>>)children;
-
-- (size_t)childrenSize;
-
-/** Returns a component tree node according to its component key */
-- (id<CKTreeNodeProtocol> _Nullable)childForComponentKey:(const CKTreeNodeComponentKey &)key;
-
-/** Creates a component key for a child node according to its component type name; this method is being called once during the component tree creation */
-- (CKTreeNodeComponentKey)createParentKeyForComponentTypeName:(const char *)componentTypeName
-                                                   identifier:(id<NSObject> _Nullable)identifier
-                                                         keys:(const std::vector<id<NSObject>> &)keys;
-
-/** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
-- (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
-
-@end
 
 /**
  A marker used as a performance optimization by CKRenderComponentProtocol components.

@@ -62,8 +62,8 @@ namespace CKRenderInternal {
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
                                      __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                      CKRenderTreeNode *node,
-                                     id<CKTreeNodeWithChildrenProtocol> parent,
-                                     id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                     CKScopeTreeNode * parent,
+                                     CKScopeTreeNode * previousParent,
                                      const CKBuildComponentTreeParams &params,
                                      CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
     auto const previousNode = (CKRenderTreeNode *)[previousParent childForComponentKey:node.componentKey];
@@ -78,8 +78,8 @@ namespace CKRenderInternal {
   static auto reusePreviousComponentIfComponentsAreEqual(id<CKRenderComponentProtocol> component,
                                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                                          CKRenderTreeNode *node,
-                                                         id<CKTreeNodeWithChildrenProtocol> parent,
-                                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                         CKScopeTreeNode * parent,
+                                                         CKScopeTreeNode * previousParent,
                                                          const CKBuildComponentTreeParams &params,
                                                          CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
     auto const previousNode = (CKRenderTreeNode *)[previousParent childForComponentKey:node.componentKey];
@@ -105,8 +105,8 @@ namespace CKRenderInternal {
   static auto reusePreviousComponentForSingleChild(CKRenderTreeNode *node,
                                                    id<CKRenderWithChildComponentProtocol> component,
                                                    __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                                   id<CKTreeNodeWithChildrenProtocol> parent,
-                                                   id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                   CKScopeTreeNode * parent,
+                                                   CKScopeTreeNode * previousParent,
                                                    const CKBuildComponentTreeParams &params,
                                                    BOOL parentHasStateUpdate,
                                                    CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
@@ -170,8 +170,8 @@ namespace CKRender {
   namespace ComponentTree {
     namespace Iterable {
     auto build(id<CKTreeNodeComponentProtocol> component,
-               id<CKTreeNodeWithChildrenProtocol> parent,
-               id<CKTreeNodeWithChildrenProtocol> _Nullable previousParent,
+               CKScopeTreeNode * parent,
+               CKScopeTreeNode * _Nullable previousParent,
                const CKBuildComponentTreeParams &params,
                BOOL parentHasStateUpdate) -> void
     {
@@ -209,8 +209,8 @@ namespace CKRender {
 
       // If there is a node, we update the parents' pointers to the next level in the tree.
       if (node) {
-        parent = (id<CKTreeNodeWithChildrenProtocol>)node;
-        previousParent = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+        parent = (CKScopeTreeNode *)node;
+        previousParent = (CKScopeTreeNode *)[previousParent childForComponentKey:[node componentKey]];
 
         // Report information to `debugAnalyticsListener`.
         if (numberOfChildren == 1 && params.shouldCollectTreeNodeCreationInformation) {
@@ -237,8 +237,8 @@ namespace CKRender {
     namespace Render {
       auto build(id<CKRenderWithChildComponentProtocol> component,
                  __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                 id<CKTreeNodeWithChildrenProtocol> parent,
-                 id<CKTreeNodeWithChildrenProtocol> _Nullable previousParent,
+                 CKScopeTreeNode * parent,
+                 CKScopeTreeNode * _Nullable previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate,
                  CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
@@ -286,7 +286,7 @@ namespace CKRender {
           }
           // Call build component tree on the child component.
           [child buildComponentTree:node
-                     previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                     previousParent:(CKScopeTreeNode *)[previousParent childForComponentKey:[node componentKey]]
                              params:params
                parentHasStateUpdate:parentHasStateUpdate];
         }

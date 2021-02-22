@@ -40,8 +40,8 @@ namespace CKRender {
      @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
      */
       auto build(id<CKTreeNodeComponentProtocol> component,
-                 id<CKTreeNodeWithChildrenProtocol> parent,
-                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                 CKScopeTreeNode * parent,
+                 CKScopeTreeNode * previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate) -> void;
   }
@@ -60,8 +60,8 @@ namespace CKRender {
        */
       auto build(id<CKRenderWithChildComponentProtocol> component,
                  __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                 id<CKTreeNodeWithChildrenProtocol> parent,
-                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                 CKScopeTreeNode * parent,
+                 CKScopeTreeNode * previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate,
                  CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
@@ -105,7 +105,7 @@ namespace CKRender {
    @return `YES` if the component of the node has a state update, `NO` otherwise.
    */
   auto nodeHasStateUpdate(__unsafe_unretained id<CKTreeNodeProtocol> node,
-                          __unsafe_unretained id<CKTreeNodeWithChildrenProtocol> previousParent,
+                          __unsafe_unretained CKScopeTreeNode * previousParent,
                           const CKBuildComponentTreeParams &params) -> BOOL;
 
   /**

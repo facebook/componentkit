@@ -100,13 +100,13 @@
   verifyChildToParentConnection(root, singleChildNode, renderComponent);
 
   // Check the next level of the tree
-  if ([singleChildNode conformsToProtocol:@protocol(CKTreeNodeWithChildrenProtocol)]) {
-    auto const parentNode = (id<CKTreeNodeWithChildrenProtocol>)singleChildNode;
+  if ([singleChildNode isKindOfClass:[CKScopeTreeNode class]]) {
+    auto const parentNode = (CKScopeTreeNode *)singleChildNode;
     XCTAssertEqual(parentNode.children.size(), 1);
     CKTreeNode *componentNode = parentNode.children[0];
     verifyChildToParentConnection(parentNode, componentNode, c);
   } else {
-    XCTFail(@"singleChildNode has to conform to CKTreeNodeWithChildrenProtocol as it has a child.");
+    XCTFail(@"singleChildNode has to be a CKScopeTreeNode as it has a child.");
   }
 
   // Simulate a second tree creation.
@@ -198,14 +198,14 @@
 
 #pragma mark - Helpers
 
-static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> parentNode, CKTreeNode *childNode, CKComponent *c) {
+static BOOL verifyChildToParentConnection(CKScopeTreeNode * parentNode, CKTreeNode *childNode, CKComponent *c) {
   auto const componentKey = [childNode componentKey];
   auto const childComponent = [parentNode childForComponentKey:componentKey].component;
   return [childComponent isEqual:c];
 }
 
 /** Compare the components array to the components in the children nodes of 'parentNode' */
-static BOOL verifyComponentsInNode(id<CKTreeNodeWithChildrenProtocol> parentNode, NSArray<CKComponent *> *components) {
+static BOOL verifyComponentsInNode(CKScopeTreeNode * parentNode, NSArray<CKComponent *> *components) {
   // Verify that the root holds two components has its direct children
   NSMutableSet<CKComponent *> *componentsFromTheTree = [NSMutableSet set];
   for (auto node : parentNode.children) {
@@ -216,7 +216,7 @@ static BOOL verifyComponentsInNode(id<CKTreeNodeWithChildrenProtocol> parentNode
 }
 
 /** Compare the children of the trees recursively; returns true if the two trees are equal */
-static BOOL areTreesEqual(id<CKTreeNodeWithChildrenProtocol> lhs, id<CKTreeNodeWithChildrenProtocol> rhs) {
+static BOOL areTreesEqual(CKScopeTreeNode * lhs, CKScopeTreeNode * rhs) {
   NSMutableSet<NSString *> *lhsChildrenIdentifiers = [NSMutableSet set];
   treeChildrenIdentifiers(lhs, lhsChildrenIdentifiers, 0);
   NSMutableSet<NSString *> *rhsChildrenIdentifiers = [NSMutableSet set];
@@ -225,7 +225,7 @@ static BOOL areTreesEqual(id<CKTreeNodeWithChildrenProtocol> lhs, id<CKTreeNodeW
 }
 
 /** Iterate recursively over the tree and add its node identifiers to the set */
-static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSMutableSet<NSString *> *identifiers, int level) {
+static void treeChildrenIdentifiers(CKScopeTreeNode * node, NSMutableSet<NSString *> *identifiers, int level) {
   for (auto childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
