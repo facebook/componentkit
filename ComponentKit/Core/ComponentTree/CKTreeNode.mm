@@ -110,6 +110,33 @@ namespace TreeNode {
   return self;
 }
 
+// Scope init
+- (instancetype)initWithOwner:(CKTreeNode *)owner
+                 previousNode:(CKTreeNode *)previousNode
+                    scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                 componentKey:(const CKTreeNodeComponentKey&)componentKey
+          initialStateCreator:(id (^)(void))initialStateCreator
+                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+          requiresScopeHandle:(BOOL)requiresScopeHandle
+{
+  RCAssertNotNil(owner, @"Must have an owner");
+
+  CKComponentScopeHandle *scopeHandle = _createScopeHandle(scopeRoot,
+                                                           previousNode,
+                                                           componentKey.componentTypeName,
+                                                           initialStateCreator,
+                                                           stateUpdates,
+                                                           requiresScopeHandle);
+
+  if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
+    _componentKey = componentKey;
+    scopeHandle.treeNode = self;
+    [owner setChild:self forComponentKey:componentKey];
+  }
+
+  return self;
+}
+
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(CKTreeNode *)parent
        previousParent:(CKTreeNode *_Nullable)previousParent
@@ -262,55 +289,20 @@ static CKComponentScopeHandle *_createScopeHandle(CKComponentScopeRoot *scopeRoo
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                      requiresScopeHandle:(BOOL)requiresScopeHandle
 {
-  RCAssertNotNil(pair.node, @"Must have a node");
-  RCAssertNotNil(initialStateCreator, @"Must has an initial state creator");
-
-  // Generate key inside the new parent
   CKTreeNodeComponentKey componentKey = [pair.node createKeyForComponentTypeName:componentTypeName
                                                                       identifier:identifier
                                                                             keys:keys];
-  // Get the child from the previous equivalent scope.
-  CKTreeNode *childScopeFromPreviousScope = [pair.previousNode childForComponentKey:componentKey];
 
-  return [self childPairForPair:pair
-                        newRoot:newRoot
-              componentTypeName:componentTypeName
-                   componentKey:componentKey
-    childScopeFromPreviousNode:childScopeFromPreviousScope
-            initialStateCreator:initialStateCreator
-                   stateUpdates:stateUpdates
-            requiresScopeHandle:requiresScopeHandle];
-}
+  const auto previousNode = [pair.previousNode childForComponentKey:componentKey];
+  const auto node = [[CKTreeNode alloc] initWithOwner:pair.node
+                                         previousNode:previousNode
+                                            scopeRoot:newRoot
+                                         componentKey:componentKey
+                                  initialStateCreator:initialStateCreator
+                                         stateUpdates:stateUpdates
+                                  requiresScopeHandle:requiresScopeHandle];
 
-+ (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
-                                 newRoot:(CKComponentScopeRoot *)newRoot
-                       componentTypeName:(const char *)componentTypeName
-                            componentKey:(const CKTreeNodeComponentKey &)componentKey
-              childScopeFromPreviousNode:(CKTreeNode *)childScopeFromPreviousScope
-                     initialStateCreator:(id (^)(void))initialStateCreator
-                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                     requiresScopeHandle:(BOOL)requiresScopeHandle
-{
-  RCAssertNotNil(pair.node, @"Must have a node");
-  RCAssertNotNil(initialStateCreator, @"Must has an initial state creator");
-
-  // Create new handle.
-  CKComponentScopeHandle *newHandle = _createScopeHandle(newRoot, childScopeFromPreviousScope, componentTypeName, initialStateCreator, stateUpdates, requiresScopeHandle);
-
-  // Create new node.
-  CKTreeNode *newChild = [[CKTreeNode alloc]
-                               initWithPreviousNode:childScopeFromPreviousScope
-                               scopeHandle:newHandle];
-
-  // Link the tree node to the scope handle.
-  [newHandle setTreeNode:newChild];
-
-  // Insert the new node to its parent map.
-  [pair.node setChild:newChild forComponentKey:componentKey];
-
-  // Update the component key on the new child.
-  newChild->_componentKey = componentKey;
-  return {.node = newChild, .previousNode = childScopeFromPreviousScope};
+  return CKComponentScopePair{.node = node, .previousNode = previousNode};
 }
 
 #pragma mark - Helpers

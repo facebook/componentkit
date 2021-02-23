@@ -73,17 +73,15 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     [_threadLocalScope->systraceListener willBuildComponent:componentTypeName];
 
     const auto& pair = _threadLocalScope->stack.top();
-
-    _parentNode = pair.node;
-
     const auto childPair = [CKTreeNode childPairForPair:pair
-                                                     newRoot:_threadLocalScope->newScopeRoot
-                                           componentTypeName:componentTypeName
-                                                  identifier:identifier
-                                                        keys:_threadLocalScope->keys.top()
+                                                newRoot:_threadLocalScope->newScopeRoot
+                                      componentTypeName:componentTypeName
+                                             identifier:identifier
+                                                   keys:_threadLocalScope->keys.top()
                                          initialStateCreator:toInitialStateCreator(initialStateCreator, componentClass)
                                                 stateUpdates:_threadLocalScope->stateUpdates
                                          requiresScopeHandle:YES];
+    _parentNode = pair.node;
     _scopeHandle = childPair.node.scopeHandle;
 
     const auto ancestorHasStateUpdate =

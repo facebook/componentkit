@@ -56,6 +56,15 @@ struct CKComponentScopePair {
 - (instancetype)initWithPreviousNode:(CKTreeNode *)previousNode
                          scopeHandle:(CKComponentScopeHandle *)scopeHandle;
 
+/** Scope initializer */
+- (instancetype)initWithOwner:(CKTreeNode *)owner
+                 previousNode:(CKTreeNode *)previousNode
+                    scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                 componentKey:(const CKTreeNodeComponentKey&)componentKey
+          initialStateCreator:(id (^)(void))initialStateCreator
+                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+          requiresScopeHandle:(BOOL)requiresScopeHandle;
+
 /** Render initializer */
 - (instancetype)initWithComponent:(id<CKRenderComponentProtocol>)component
                            parent:(CKTreeNode *)parent
@@ -94,15 +103,6 @@ struct CKComponentScopePair {
                        componentTypeName:(const char *)componentTypeName
                               identifier:(id)identifier
                                     keys:(const std::vector<id<NSObject>> &)keys
-                     initialStateCreator:(id (^)(void))initialStateCreator
-                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                     requiresScopeHandle:(BOOL)requiresScopeHandle;
-
-+ (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
-                                 newRoot:(CKComponentScopeRoot *)newRoot
-                       componentTypeName:(const char *)componentTypeName
-                            componentKey:(const CKTreeNodeComponentKey &)componentKey
-              childScopeFromPreviousNode:(CKTreeNode *)childScopeFromPreviousScope
                      initialStateCreator:(id (^)(void))initialStateCreator
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                      requiresScopeHandle:(BOOL)requiresScopeHandle;
