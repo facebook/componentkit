@@ -229,16 +229,6 @@ namespace TreeNode {
   return CKTreeNodeComponentKey{componentTypeName, keyCounter, identifier, keys};
 }
 
-- (CKTreeNode *)childScopeForComponentKey:(const CKTreeNodeComponentKey &)key
-{
-  return (CKTreeNode *)[self childForComponentKey:key];
-}
-
-- (void)setChildScope:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
-{
-  _children.push_back(CKTreeNodeComponentKeyToNode{.key = componentKey, .node = child});
-}
-
 + (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
                                  newRoot:(CKComponentScopeRoot *)newRoot
                        componentTypeName:(const char *)componentTypeName
@@ -256,7 +246,7 @@ namespace TreeNode {
                                                                       identifier:identifier
                                                                             keys:keys];
   // Get the child from the previous equivalent scope.
-  CKTreeNode *childScopeFromPreviousScope = [pair.previousNode childScopeForComponentKey:componentKey];
+  CKTreeNode *childScopeFromPreviousScope = [pair.previousNode childForComponentKey:componentKey];
 
   return [self childPairForPair:pair
                         newRoot:newRoot
@@ -303,7 +293,7 @@ namespace TreeNode {
   [newHandle setTreeNode:newChild];
 
   // Insert the new node to its parent map.
-  [pair.node setChildScope:newChild forComponentKey:componentKey];
+  [pair.node setChild:newChild forComponentKey:componentKey];
 
   // Update the component key on the new child.
   newChild->_componentKey = componentKey;

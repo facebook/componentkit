@@ -111,9 +111,6 @@ struct CKComponentScopePair {
                                              identifier:(id)identifier
                                                    keys:(const std::vector<id<NSObject>> &)keys;
 
-- (CKTreeNode *)childScopeForComponentKey:(const CKTreeNodeComponentKey &)scopeNodeKey;
-- (void)setChildScope:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
-
 - (std::vector<CKTreeNode *>)children;
 
 - (size_t)childrenSize;
