@@ -93,12 +93,7 @@ namespace TreeNode {
   }
 
   if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
-    _component = component;
-    _componentKey = componentKey;
-    // Set the link between the parent and the child.
-    [parent setChild:self forComponentKey:_componentKey];
-    // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
-    scopeRoot.rootNode.registerNode(self, parent);
+    [self linkComponent:component withKey:componentKey toParent:parent inScopeRoot:scopeRoot];
     // Set the link between the tree node and the scope handle.
     [scopeHandle setTreeNode:self];
     // Update the treeNode on the component
@@ -138,6 +133,19 @@ namespace TreeNode {
 }
 
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
+              withKey:(const CKTreeNodeComponentKey&)componentKey
+             toParent:(CKTreeNode *)parent
+          inScopeRoot:(CKComponentScopeRoot *)scopeRoot
+{
+  _component = component;
+  _componentKey = componentKey;
+
+  [parent setChild:self forComponentKey:componentKey];
+
+  scopeRoot.rootNode.registerNode(self, parent);
+}
+
+- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(CKTreeNode *)parent
        previousParent:(CKTreeNode *_Nullable)previousParent
           inScopeRoot:(CKComponentScopeRoot *)scopeRoot
@@ -147,14 +155,8 @@ namespace TreeNode {
   auto const componentKey = [parent createParentKeyForComponentTypeName:component.typeName
                                                              identifier:_componentKey.identifier
                                                                    keys:_componentKey.keys];
-  _componentKey = componentKey;
 
-  // Set the link between the parent and the child.
-  [parent setChild:self forComponentKey:_componentKey];
-
-  _component = component;
-  // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
-  scopeRoot.rootNode.registerNode(self, parent);
+  [self linkComponent:component withKey:componentKey toParent:parent inScopeRoot:scopeRoot];
 }
 
 - (id)state
