@@ -229,6 +229,30 @@ namespace TreeNode {
   return CKTreeNodeComponentKey{componentTypeName, keyCounter, identifier, keys};
 }
 
+static CKComponentScopeHandle *_createScopeHandle(CKComponentScopeRoot *scopeRoot,
+                                                  CKTreeNode *previousNode,
+                                                  const char *componentTypeName,
+                                                  id (^initialStateCreator)(void),
+                                                  const CKComponentStateUpdateMap &stateUpdates,
+                                                  BOOL requiresScopeHandle) {
+  RCCAssertNotNil(initialStateCreator, @"Must have an initial state creator");
+
+  if (requiresScopeHandle == NO) {
+    RCCAssertNil(previousNode.scopeHandle, @"requiresScopeHandle is false but previous node has scope handle");
+    return nil;
+  }
+
+  if (previousNode != nil) {
+    RCCAssertNotNil(previousNode.scopeHandle, @"requiresScopeHandle is true but no scopeHandle on previous node");
+    return [previousNode.scopeHandle newHandleWithStateUpdates:stateUpdates];
+  } else {
+    return [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
+                                             rootIdentifier:scopeRoot.globalIdentifier
+                                          componentTypeName:componentTypeName
+                                               initialState:(initialStateCreator ? initialStateCreator() : nil)];
+  }
+}
+
 + (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
                                  newRoot:(CKComponentScopeRoot *)newRoot
                        componentTypeName:(const char *)componentTypeName
@@ -271,18 +295,7 @@ namespace TreeNode {
   RCAssertNotNil(initialStateCreator, @"Must has an initial state creator");
 
   // Create new handle.
-  CKComponentScopeHandle *newHandle;
-
-  if (childScopeFromPreviousScope != nil) {
-    newHandle = [childScopeFromPreviousScope.scopeHandle newHandleWithStateUpdates:stateUpdates];
-  } else if (requiresScopeHandle) {
-    newHandle = [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
-                                                  rootIdentifier:newRoot.globalIdentifier
-                                               componentTypeName:componentTypeName
-                                                    initialState:(initialStateCreator ? initialStateCreator() : nil)];
-  }
-
-  RCAssert((newHandle != nil) == requiresScopeHandle, @"Expecting scopeHandle (%@) to be [un]set for requiresScopeHandleValue", newHandle);
+  CKComponentScopeHandle *newHandle = _createScopeHandle(newRoot, childScopeFromPreviousScope, componentTypeName, initialStateCreator, stateUpdates, requiresScopeHandle);
 
   // Create new node.
   CKTreeNode *newChild = [[CKTreeNode alloc]
