@@ -69,6 +69,7 @@ namespace TreeNode {
   if (self = [super init]) {
     _scopeHandle = scopeHandle;
     _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : OSAtomicIncrement32(&nextGlobalIdentifier);
+    _scopeHandle.treeNode = self;
   }
   return self;
 }
@@ -94,8 +95,6 @@ namespace TreeNode {
 
   if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
     [self linkComponent:component withKey:componentKey toParent:parent inScopeRoot:scopeRoot];
-    // Set the link between the tree node and the scope handle.
-    [scopeHandle setTreeNode:self];
     // Update the treeNode on the component
     [component acquireTreeNode:self];
     // Finalize the node/scope registration.
@@ -125,7 +124,6 @@ namespace TreeNode {
 
   if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
     _componentKey = componentKey;
-    scopeHandle.treeNode = self;
     [owner setChild:self forComponentKey:componentKey];
   }
 
