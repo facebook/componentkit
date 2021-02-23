@@ -96,7 +96,7 @@ struct CKComponentScopePair {
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(CKTreeNode *)parent
        previousParent:(CKTreeNode *)previousParent
-               params:(const CKBuildComponentTreeParams &)params;
+          inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 + (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
                                  newRoot:(CKComponentScopeRoot *)newRoot

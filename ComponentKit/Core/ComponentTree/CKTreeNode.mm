@@ -140,7 +140,7 @@ namespace TreeNode {
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(CKTreeNode *)parent
        previousParent:(CKTreeNode *_Nullable)previousParent
-               params:(const CKBuildComponentTreeParams &)params
+          inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
   // The existing `_componentKey` that was created by the scope, is an owner based key;
   // hence, we extract the `unique identifer` and the `keys` vector from it and recreate a parent based key based on this information.
@@ -154,7 +154,7 @@ namespace TreeNode {
 
   _component = component;
   // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
-  params.scopeRoot.rootNode.registerNode(self, parent);
+  scopeRoot.rootNode.registerNode(self, parent);
 }
 
 - (id)state
