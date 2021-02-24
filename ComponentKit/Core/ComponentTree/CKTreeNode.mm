@@ -145,7 +145,6 @@ namespace TreeNode {
 
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(CKTreeNode *)parent
-       previousParent:(CKTreeNode *_Nullable)previousParent
           inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
   // The existing `_componentKey` that was created by the scope, is an owner based key;

@@ -95,7 +95,6 @@ struct CKComponentScopePair {
 /** This method should be called on nodes that have been created from CKComponentScope */
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(CKTreeNode *)parent
-       previousParent:(CKTreeNode *)previousParent
           inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 + (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair

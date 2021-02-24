@@ -181,7 +181,7 @@ namespace CKRender {
       // Check if the component already has a tree node.
       CKTreeNode *node = component.scopeHandle.treeNode;
 
-      [node linkComponent:component toParent:parent previousParent:previousParent inScopeRoot:params.scopeRoot];
+      [node linkComponent:component toParent:parent inScopeRoot:params.scopeRoot];
 
       unsigned int numberOfChildren = [component numberOfChildren];
       if (numberOfChildren == 0) {
