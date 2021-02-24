@@ -41,18 +41,4 @@
   threadLocalScope->pop();
 }
 
-- (void)didReuseRenderNode:(CKRenderTreeNode *)node
-                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
-         previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
-{
-  // Transfer the children vector from the reused node.
-   _children = node->_children;
-
-  for (auto const &child : _children) {
-    if (child.key.type() == CKTreeNodeComponentKey::Type::parent) {
-      [child.node didReuseWithParent:self inScopeRoot:scopeRoot];
-    }
-  }
-}
-
 @end

@@ -89,6 +89,7 @@ struct CKComponentScopePair {
 /** Returns the componeny key according to its current owner */
 @property (nonatomic, assign, readonly) const CKTreeNodeComponentKey &componentKey;
 
+- (void)reusePreviousNode:(CKTreeNode *)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 /** This method should be called after a node has been reused */
 - (void)didReuseWithParent:(CKTreeNode *)parent

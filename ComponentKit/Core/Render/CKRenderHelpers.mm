@@ -37,10 +37,9 @@ namespace CKRenderInternal {
 
     // Update the previous component.
     prevChildComponent = [(id<CKRenderWithChildComponentProtocol>)previousNode.component child];
+
     // Update the render node of the component reuse.
-    [node didReuseRenderNode:previousNode
-                   scopeRoot:params.scopeRoot
-           previousScopeRoot:params.previousScopeRoot];
+    [node reusePreviousNode:previousNode inScopeRoot:params.scopeRoot];
 
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.

@@ -26,11 +26,6 @@
 /** Will be called after buildComponentTree: */
 + (void)didBuildComponentTree:(CKTreeNode *)node;
 
-/** Will be called after component reuse */
-- (void)didReuseRenderNode:(CKRenderTreeNode *)node
-                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
-         previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
-
 @end
 
 #endif
