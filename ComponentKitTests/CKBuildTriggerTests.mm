@@ -20,7 +20,12 @@
 
 @implementation CKBuildTriggerTests
 
-static auto makeScopeRoot(BOOL empty = NO) -> CK::NonNull<CKComponentScopeRoot *> {
+struct ScopeRootAndStateUpdates {
+  CK::NonNull<CKComponentScopeRoot *> scopeRoot;
+  CKComponentStateUpdateMap stateUpdates;
+};
+
+static auto makeScopeRoot(BOOL empty) -> CK::NonNull<CKComponentScopeRoot *> {
   const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   if (empty) {
     return scopeRoot;
@@ -29,51 +34,70 @@ static auto makeScopeRoot(BOOL empty = NO) -> CK::NonNull<CKComponentScopeRoot *
   }
 }
 
-static auto nonEmptyStateUpdates() -> CKComponentStateUpdateMap {
-  CKComponentStateUpdateMap map;
-  map[[CKComponentScopeHandle new]] = {};
-  return map;
+
+static auto makeScopeRootAndStateUpdates(BOOL empty, BOOL withStateUpdate) -> ScopeRootAndStateUpdates {
+  const auto scopeRoot = makeScopeRoot(empty);
+  CKComponentStateUpdateMap stateUpdates;
+
+  if (withStateUpdate) {
+    const auto scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:nil
+                                                               rootIdentifier:4242
+                                                            componentTypeName:"test"
+                                                                 initialState:nil];
+
+    [scopeHandle resolveInScopeRoot:*scopeRoot];
+    stateUpdates[scopeHandle] = {};
+  }
+
+  return {scopeRoot, stateUpdates};
 }
 
 - (void)testBuildTriggerNoneWhenEmptyScopeRoot
 {
-  const auto trigger = CKBuildComponentTrigger(makeScopeRoot(YES), nonEmptyStateUpdates(), YES, YES);
+  const auto scopeRootAndStateUpdate = makeScopeRootAndStateUpdates(YES, NO);
+  const auto trigger = CKBuildComponentTrigger(scopeRootAndStateUpdate.scopeRoot, scopeRootAndStateUpdate.stateUpdates, YES, YES);
   XCTAssertEqual(trigger, CKBuildTriggerNone);
 }
 
 - (void)testBuildTriggerStateUpdate
 {
-  const auto trigger = CKBuildComponentTrigger(makeScopeRoot(), nonEmptyStateUpdates(), NO, NO);
+  const auto scopeRootAndStateUpdate = makeScopeRootAndStateUpdates(NO, YES);
+  const auto trigger = CKBuildComponentTrigger(scopeRootAndStateUpdate.scopeRoot, scopeRootAndStateUpdate.stateUpdates, NO, NO);
   XCTAssertEqual(trigger, CKBuildTriggerStateUpdate);
 }
 
 - (void)testBuildTriggerForcePropsUpdate
 {
-  const auto trigger = CKBuildComponentTrigger(makeScopeRoot(), {}, NO, YES);
+  const auto scopeRootAndStateUpdate = makeScopeRootAndStateUpdates(NO, NO);
+  const auto trigger = CKBuildComponentTrigger(scopeRootAndStateUpdate.scopeRoot, scopeRootAndStateUpdate.stateUpdates, NO, YES);
   XCTAssertEqual(trigger, CKBuildTriggerPropsUpdate);
 }
 
 - (void)testBuildTriggerMustBePropsUpdate
 {
-  const auto trigger = CKBuildComponentTrigger(makeScopeRoot(), {}, NO, NO);
+  const auto scopeRootAndStateUpdate = makeScopeRootAndStateUpdates(NO, NO);
+  const auto trigger = CKBuildComponentTrigger(scopeRootAndStateUpdate.scopeRoot, scopeRootAndStateUpdate.stateUpdates, NO, NO);
   XCTAssertEqual(trigger, CKBuildTriggerPropsUpdate);
 }
 
 - (void)testBuildTriggerStatePropsUpdate
 {
-  const auto trigger = CKBuildComponentTrigger(makeScopeRoot(), nonEmptyStateUpdates(), NO, YES);
+  const auto scopeRootAndStateUpdate = makeScopeRootAndStateUpdates(NO, YES);
+  const auto trigger = CKBuildComponentTrigger(scopeRootAndStateUpdate.scopeRoot, scopeRootAndStateUpdate.stateUpdates, NO, YES);
   XCTAssertEqual(trigger, CKBuildTriggerStateUpdate | CKBuildTriggerPropsUpdate);
 }
 
 - (void)testBuildTriggerEnvironmentUpdate
 {
-  const auto trigger = CKBuildComponentTrigger(makeScopeRoot(), {}, YES, NO);
+  const auto scopeRootAndStateUpdate = makeScopeRootAndStateUpdates(NO, NO);
+  const auto trigger = CKBuildComponentTrigger(scopeRootAndStateUpdate.scopeRoot, scopeRootAndStateUpdate.stateUpdates, YES, NO);
   XCTAssertEqual(trigger, CKBuildTriggerEnvironmentUpdate);
 }
 
 - (void)testBuildTriggerAll
 {
-  const auto trigger = CKBuildComponentTrigger(makeScopeRoot(), nonEmptyStateUpdates(), YES, YES);
+  const auto scopeRootAndStateUpdate = makeScopeRootAndStateUpdates(NO, YES);
+  const auto trigger = CKBuildComponentTrigger(scopeRootAndStateUpdate.scopeRoot, scopeRootAndStateUpdate.stateUpdates, YES, YES);
   XCTAssertEqual(trigger, CKBuildTriggerPropsUpdate | CKBuildTriggerStateUpdate | CKBuildTriggerEnvironmentUpdate);
 }
 

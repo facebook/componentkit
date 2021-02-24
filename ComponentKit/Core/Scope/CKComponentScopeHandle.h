@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #if CK_NOT_SWIFT
 
+- (instancetype)init NS_UNAVAILABLE;
+
 /** Creates a conceptually brand new scope handle */
 - (instancetype)initWithListener:(id<CKComponentStateListener> _Nullable)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
