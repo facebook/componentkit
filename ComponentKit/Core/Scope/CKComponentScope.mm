@@ -81,7 +81,6 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                          initialStateCreator:toInitialStateCreator(initialStateCreator, componentClass)
                                                 stateUpdates:_threadLocalScope->stateUpdates
                                          requiresScopeHandle:YES];
-    _parentNode = pair.node;
     _scopeHandle = childPair.node.scopeHandle;
 
     const auto ancestorHasStateUpdate =

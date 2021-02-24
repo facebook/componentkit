@@ -106,7 +106,6 @@ private:
   CKComponentScope &operator=(const CKComponentScope&) = delete;
   CKThreadLocalComponentScope *_threadLocalScope;
   CKComponentScopeHandle *_scopeHandle;
-  __unsafe_unretained CKTreeNode *_parentNode;
 };
 
 #endif
