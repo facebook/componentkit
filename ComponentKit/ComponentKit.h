@@ -181,4 +181,4 @@
 #import <ComponentKit/CKSwiftComponent.h>
 #import <ComponentKit/CKSwiftComponent.h>
 #import <ComponentKit/CKComponentBasedAccessibilityMode.h>
-
+#import <ComponentKit/CKBuildComponentTreeParams.h>

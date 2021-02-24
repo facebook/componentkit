@@ -723,6 +723,8 @@
 		D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
 		D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
+		D407201225E675A600FE9BC7 /* CKBuildComponentTreeParams.h in Headers */ = {isa = PBXBuildFile; fileRef = D407200725E675A600FE9BC7 /* CKBuildComponentTreeParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D407201325E675A600FE9BC7 /* CKBuildComponentTreeParams.h in Headers */ = {isa = PBXBuildFile; fileRef = D407200725E675A600FE9BC7 /* CKBuildComponentTreeParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4144B5725E51E3900AA8328 /* CKComponentSizeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4144B5225E51E3900AA8328 /* CKComponentSizeTests.mm */; };
 		D4144B5825E51E3900AA8328 /* CKDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4144B5325E51E3900AA8328 /* CKDimensionTests.mm */; };
 		D4144B5925E51E3900AA8328 /* CKSizeRangeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4144B5425E51E3900AA8328 /* CKSizeRangeTests.mm */; };
@@ -2010,6 +2012,7 @@
 		D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D0B47D971CBDA97400BB33CE /* CKComponentSnapshotTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSnapshotTestCase.h; sourceTree = "<group>"; };
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		D407200725E675A600FE9BC7 /* CKBuildComponentTreeParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKBuildComponentTreeParams.h; sourceTree = "<group>"; };
 		D4144B5225E51E3900AA8328 /* CKComponentSizeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentSizeTests.mm; sourceTree = "<group>"; };
 		D4144B5325E51E3900AA8328 /* CKDimensionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDimensionTests.mm; sourceTree = "<group>"; };
 		D4144B5425E51E3900AA8328 /* CKSizeRangeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSizeRangeTests.mm; sourceTree = "<group>"; };
@@ -2429,6 +2432,7 @@
 				23FEC590203B30DA0068E09D /* CKTreeNode.h */,
 				D4144B6925E51F7D00AA8328 /* CKTreeNodeComponentKey.h */,
 				23FEC592203B30DA0068E09D /* CKTreeNode.mm */,
+				D407200725E675A600FE9BC7 /* CKBuildComponentTreeParams.h */,
 				239F2CFA21E8F26F00580F93 /* CKRootTreeNode.h */,
 				239F2CFB21E8F26F00580F93 /* CKRootTreeNode.mm */,
 				23770A2C22EB46EB00858140 /* CKRenderTreeNode.h */,
@@ -3720,6 +3724,7 @@
 				D6EF79FC23ECC6E600230005 /* RCDimension_SwiftBridge.h in Headers */,
 				03B8B5361D2A346F00EDFF59 /* CKComponentScopeTypes.h in Headers */,
 				03B8B53A1D2A346F00EDFF59 /* CKComponentRootViewInternal.h in Headers */,
+				D407201325E675A600FE9BC7 /* CKBuildComponentTreeParams.h in Headers */,
 				2322A20B224504AE006BFCD2 /* CKCollectionViewDataSourceListener.h in Headers */,
 				72647CAE2368D0300072F330 /* CKComponentAction.h in Headers */,
 				7268B54F2241A7E400F68A37 /* CKComponentHostingContainerViewProvider.h in Headers */,
@@ -3809,6 +3814,7 @@
 				D6F9A4AC23477F4200D4FC0A /* FlexboxComponentBuilder.h in Headers */,
 				A2A89C3B2011C0FC009D0377 /* CKInspectableView.h in Headers */,
 				400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */,
+				D407201225E675A600FE9BC7 /* CKBuildComponentTreeParams.h in Headers */,
 				400B0E611F71C63C006BDFEE /* CKDataSourceChangeset.h in Headers */,
 				D65FBC5C23B548BA00F7FD7F /* CenterLayoutComponentBuilder.h in Headers */,
 				D6EF79FB23ECC6E600230005 /* RCDimension_SwiftBridge.h in Headers */,

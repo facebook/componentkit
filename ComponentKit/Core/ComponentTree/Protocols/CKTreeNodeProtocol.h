@@ -16,6 +16,7 @@
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/RCIterable.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
+#import <ComponentKit/CKBuildComponentTreeParams.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,36 +38,6 @@ struct CKTreeNodeReuseInfo {
 };
 
 typedef std::unordered_map<CKTreeNodeIdentifier, CKTreeNodeReuseInfo> CKTreeNodeReuseMap;
-
-/**
- Params struct for the `buildComponentTree:` method.
- **/
-struct CKBuildComponentTreeParams {
-  // Weak reference to the scope root of the new generation.
-  __weak CKComponentScopeRoot *scopeRoot;
-
-  // Weak reference to the scope root of the previous generation.
-  __weak CKComponentScopeRoot *previousScopeRoot;
-
-  // A map of state updates
-  const CKComponentStateUpdateMap &stateUpdates;
-
-  // Colleciton of nodes that are marked as dirty.
-  // @discussion "Dirty nodes" are used to implement optimizations as faster state updates and faster props updates.
-  const CKTreeNodeDirtyIds &treeNodeDirtyIds;
-
-  // The trigger for initiating a new generation
-  CKBuildTrigger buildTrigger;
-
-  // The current systrace listener. Can be nil if systrace is not enabled.
-  id<CKSystraceListener> _Nullable systraceListener;
-
-  // Collect tree node information for logging.
-  BOOL shouldCollectTreeNodeCreationInformation;
-
-  // The current coalescing mode.
-  RCComponentCoalescingMode coalescingMode = RCComponentCoalescingModeRender;
-};
 
 #endif
 
