@@ -101,28 +101,35 @@ fileprivate struct SuccessIndicatorView : View {
   }
 }
 
-struct Something : Hashable {}
-
 final class InteractiveQuoteViewModel {
   @ViewModelState var revealAnswer = false
 }
 
-struct SwiftInteractiveWrapperQuoteView : View, ViewIdentifiable {
+public struct SwiftInteractiveWrapperQuoteView : View, ViewIdentifiable, Equatable {
   let quote: Quote
   let context: QuoteContext
 
   @ViewModel var viewModel = InteractiveQuoteViewModel()
 
-  var body: Component {
+  public init(quote: Quote, context: QuoteContext) {
+    self.quote = quote
+    self.context = context
+  }
+
+  public var body: Component {
     SwiftInteractiveQuoteView(
       quote: quote,
       context: context,
       revealAnswer: viewModel.$revealAnswer
     )
   }
+  
+  public var id: UUID {
+    quote.id
+  }
 
-  var id: Something {
-    Something()
+  public static func ==(lhs: SwiftInteractiveWrapperQuoteView, rhs: SwiftInteractiveWrapperQuoteView) -> Bool {
+    return lhs.quote == rhs.quote
   }
 }
 

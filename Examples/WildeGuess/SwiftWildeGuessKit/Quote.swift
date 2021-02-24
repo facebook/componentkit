@@ -16,7 +16,7 @@ import CKTextSwift
 
 #if swift(>=5.2)
 
-public struct Quote {
+public struct Quote : Equatable {
   public enum Style : Int, CaseIterable {
     case frosted
     case monochrome
@@ -41,32 +41,35 @@ public struct Quote {
     }
   }
 
-  public init(text: String, author: String, style: Style) {
+  public init(id: UUID, text: String, author: String, style: Style) {
+    self.id = id
     self.text = text
     self.author = author
     self.style = style
   }
 
-  public init(text: String, author: String, styleValue: Int) {
+  public init(id: UUID, text: String, author: String, styleValue: Int) {
+    self.id = id
     self.text = text
     self.author = author
     self.style = Style(value: styleValue)
   }
-
+  
+  public let id: UUID
   public let text: String
   public let author: String
   public let style: Style
 }
 
-class QuoteStore {
-  private let quotes: [Quote]
-  static let shared = QuoteStore()
+public class QuoteStore {
+  public let quotes: [Quote]
+  public static let shared = QuoteStore()
 
   init() {
     self.quotes = QuoteStore.data
       .enumerated()
       .map {
-        Quote(text: $0.element["text"]!, author: $0.element["author"]!, style: Quote.Style(value: $0.offset))
+        Quote(id: UUID(), text: $0.element["text"]!, author: $0.element["author"]!, style: Quote.Style(value: $0.offset))
       }
   }
 
@@ -142,7 +145,7 @@ class QuoteStore {
   ]
 }
 
-struct QuoteContext {
+public struct QuoteContext {
   private let images: [String: UIImage]
 
   init() {
@@ -160,7 +163,7 @@ struct QuoteContext {
     images[name]!
   }
 
-  static let shared = QuoteContext()
+  public static let shared = QuoteContext()
 }
 
 #endif

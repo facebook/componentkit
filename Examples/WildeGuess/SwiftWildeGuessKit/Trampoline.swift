@@ -19,6 +19,6 @@ import CKTextSwift
 
 @objc public class Trampoline : NSObject {
   @objc public class func component(text: String, author: String, style: Int) -> Component {
-    SwiftQuoteComponent(from: Quote(text: text, author: author, style: Quote.Style(value: style)))
+    SwiftQuoteComponent(from: Quote(id: UUID(), text: text, author: author, style: Quote.Style(value: style)))
   }
 }
