@@ -52,6 +52,8 @@ struct CKComponentScopePair {
   std::vector<CKTreeNodeComponentKeyToNode> _children;
 }
 
+- (instancetype)init NS_UNAVAILABLE;
+
 /** Base initializer */
 - (instancetype)initWithPreviousNode:(CKTreeNode *)previousNode
                          scopeHandle:(CKComponentScopeHandle *)scopeHandle;
@@ -96,6 +98,8 @@ struct CKComponentScopePair {
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(CKTreeNode *)parent
           inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
+
++ (instancetype)rootNode;
 
 + (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
                                  newRoot:(CKComponentScopeRoot *)newRoot

@@ -130,6 +130,11 @@ namespace TreeNode {
   return self;
 }
 
++ (instancetype)rootNode
+{
+  return [super new];
+}
+
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
               withKey:(const CKTreeNodeComponentKey&)componentKey
              toParent:(CKTreeNode *)parent

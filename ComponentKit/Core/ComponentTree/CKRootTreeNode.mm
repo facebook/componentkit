@@ -15,7 +15,7 @@
 #import "CKRenderHelpers.h"
 #import "CKTreeNode.h"
 
-CKRootTreeNode::CKRootTreeNode(): _node([CKTreeNode new]) {};
+CKRootTreeNode::CKRootTreeNode(): _node([CKTreeNode rootNode]) {};
 
 #if CK_ASSERTIONS_ENABLED
 static auto _parentIdentifiers(const std::unordered_map<CKTreeNodeIdentifier,

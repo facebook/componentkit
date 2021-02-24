@@ -131,7 +131,7 @@
 {
   CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
   auto const scopeRoot = threadScope.newScopeRoot;
-  auto const root = [CKTreeNode new];
+  auto const root = [CKTreeNode rootNode];
   CKComponent *c10 = [CKComponentTreeTestComponent_Render new];
   CKComponent *c11 = [CKComponentTreeTestComponent_Render new];
   auto renderWithChidlrenComponent = [CKTestLayoutComponent newWithChildren:{c10, c11}];
