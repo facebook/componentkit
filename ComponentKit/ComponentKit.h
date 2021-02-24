@@ -23,7 +23,6 @@
 #import <ComponentKit/CKAnimationComponent.h>
 #import <ComponentKit/CKAnimationComponent+Internal.h>
 #import <ComponentKit/RCArgumentPrecondition.h>
-#import <RenderCore/RCAssert.h>
 #import <ComponentKit/RCAssociatedObject.h>
 #import <ComponentKit/CKAutoSizedImageComponent.h>
 #import <ComponentKit/CKBackgroundLayoutComponent.h>
@@ -112,7 +111,6 @@
 #import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKDelayedNonNull.h>
 #import <ComponentKit/CKDictionary.h>
-#import <RenderCore/RCDimension.h>
 #import <ComponentKit/RCDimension_SwiftBridge.h>
 #import <ComponentKit/RCDimension_SwiftBridge+Internal.h>
 #import <ComponentKit/RCDispatch.h>
@@ -148,7 +146,6 @@
 #import <ComponentKit/CKRenderTreeNode.h>
 #import <ComponentKit/CKRequired.h>
 #import <ComponentKit/CKRootTreeNode.h>
-#import <ComponentKit/CKScopeTreeNode.h>
 #import <ComponentKit/CKSizeRange.h>
 #import <ComponentKit/CKSizeRange_SwiftBridge.h>
 #import <ComponentKit/CKSizeRange_SwiftBridge+Internal.h>
@@ -182,4 +179,6 @@
 #import <ComponentKit/RatioLayoutComponentBuilder.h>
 #import <ComponentKit/AutoSizedImageComponentBuilder.h>
 #import <ComponentKit/CKSwiftComponent.h>
-#import <RenderCore/RCAvailability.h>
+#import <ComponentKit/CKSwiftComponent.h>
+#import <ComponentKit/CKComponentBasedAccessibilityMode.h>
+

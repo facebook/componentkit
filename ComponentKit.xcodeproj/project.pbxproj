@@ -144,11 +144,9 @@
 		03F1ABDF1D2B2A9B00867584 /* CKStateExposingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */; };
 		03F1ABE01D2B2A9B00867584 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */; };
 		03F1ABE11D2B2A9B00867584 /* CKDataSourceAppliedChangesTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8B01CB36FA200CDD03F /* CKDataSourceAppliedChangesTests.mm */; };
-		03F1ABE21D2B2A9B00867584 /* RCComponentSizeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5C1AC23EA900ACAC53 /* RCComponentSizeTests.mm */; };
 		03F1ABE31D2B2A9B00867584 /* CKComponentContextTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */; };
 		03F1ABE41D2B2A9B00867584 /* CKComponentViewContextTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */; };
 		03F1ABE51D2B2A9B00867584 /* CKDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A279EA9D1AF087A70046B5AA /* CKDataSourceTests.mm */; };
-		03F1ABE61D2B2A9B00867584 /* RCDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC611AC23EA900ACAC53 /* RCDimensionTests.mm */; };
 		03F1ABE71D2B2A9B00867584 /* CKTestStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */; };
 		03F1ABE91D2B2A9B00867584 /* CKComponentControllerLifecycleMethodTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */; };
 		03F1ABEA1D2B2A9B00867584 /* CKDataSourceChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8AD1CB36BF700CDD03F /* CKDataSourceChangesetTests.mm */; };
@@ -187,8 +185,6 @@
 		23309AA92045C61000833BDB /* CKTreeNodeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23452D0F22735D910008ACB1 /* CKAnalyticsListenerHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 23824A5222720FEC00B559F3 /* CKAnalyticsListenerHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23452D1A22735D990008ACB1 /* CKAnalyticsListenerHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23824A5D22720FEC00B559F3 /* CKAnalyticsListenerHelpers.mm */; };
-		2361E8E32330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2361E8D82330F7AC00F8890D /* CKTreeNodeTypes.mm */; };
-		2361E8E42330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2361E8D82330F7AC00F8890D /* CKTreeNodeTypes.mm */; };
 		23629B4A203C2D66007F765D /* CKBuildComponentTreeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23629B3F203C2D65007F765D /* CKBuildComponentTreeTests.mm */; };
 		23770A1122EB205E00858140 /* CKSystraceScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23770A0522EB205E00858140 /* CKSystraceScope.mm */; };
 		23770A1222EB205E00858140 /* CKSystraceScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23770A0522EB205E00858140 /* CKSystraceScope.mm */; };
@@ -222,10 +218,6 @@
 		23B65ACA213FF9300049FFAC /* CKRenderComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 23B65ABC213FF9300049FFAC /* CKRenderComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23B65ACD213FF9300049FFAC /* CKRenderComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23B65ABE213FF9300049FFAC /* CKRenderComponent.mm */; };
 		23B65ACE213FF9300049FFAC /* CKRenderComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23B65ABE213FF9300049FFAC /* CKRenderComponent.mm */; };
-		23D1B14122D638F600453EC7 /* CKScopeTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D1B13F22D638F600453EC7 /* CKScopeTreeNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		23D1B14222D638F600453EC7 /* CKScopeTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D1B13F22D638F600453EC7 /* CKScopeTreeNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		23D1B14322D638F600453EC7 /* CKScopeTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D1B14022D638F600453EC7 /* CKScopeTreeNode.mm */; };
-		23D1B14422D638F600453EC7 /* CKScopeTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D1B14022D638F600453EC7 /* CKScopeTreeNode.mm */; };
 		23D26A4822440C5B0087350C /* CKCollectionViewDataSourceListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D26A4722440C5B0087350C /* CKCollectionViewDataSourceListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23D26A5522440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D26A5322440E7C0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm */; };
 		23D26A5622440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D26A5422440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h */; };
@@ -268,8 +260,7 @@
 		400B0E5F1F71C63B006BDFEE /* CKDataSourceChangeset.mm in Sources */ = {isa = PBXBuildFile; fileRef = 400B0E5C1F71C63B006BDFEE /* CKDataSourceChangeset.mm */; };
 		400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5D1F71C63B006BDFEE /* CKDataSourceChangesetInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		400B0E611F71C63C006BDFEE /* CKDataSourceChangeset.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5E1F71C63B006BDFEE /* CKDataSourceChangeset.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		405230321F7EE79C005D227B /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4052302D1F7EE79C005D227B /* OCMock.framework */; };
-		405230351F7EE8E8005D227B /* OCMock.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4052302D1F7EE79C005D227B /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		405230321F7EE79C005D227B /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4052302D1F7EE79C005D227B /* OCMock.framework */; platformFilter = ios; };
 		40AB33C81FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		40AB33C91FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		497824751BC570E000F29081 /* CKCollectionViewDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewDataSourceTests.mm */; };
@@ -573,11 +564,9 @@
 		B342DC751AC23EA900ACAC53 /* CKComponentHostingViewTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */; };
 		B342DC771AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */; };
 		B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */; };
-		B342DC7B1AC23EA900ACAC53 /* RCComponentSizeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5C1AC23EA900ACAC53 /* RCComponentSizeTests.mm */; };
 		B342DC7C1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */; };
 		B342DC7D1AC23EA900ACAC53 /* CKComponentViewContextTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */; };
 		B342DC7F1AC23EA900ACAC53 /* CKComponentViewReuseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */; };
-		B342DC801AC23EA900ACAC53 /* RCDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC611AC23EA900ACAC53 /* RCDimensionTests.mm */; };
 		B342DC811AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */; };
 		B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC681AC23EA900ACAC53 /* CKComponentScopeTests.mm */; };
 		B342DC861AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC691AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm */; };
@@ -734,6 +723,20 @@
 		D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
 		D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
+		D4144B5725E51E3900AA8328 /* CKComponentSizeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4144B5225E51E3900AA8328 /* CKComponentSizeTests.mm */; };
+		D4144B5825E51E3900AA8328 /* CKDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4144B5325E51E3900AA8328 /* CKDimensionTests.mm */; };
+		D4144B5925E51E3900AA8328 /* CKSizeRangeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4144B5425E51E3900AA8328 /* CKSizeRangeTests.mm */; };
+		D4144B5A25E51E3900AA8328 /* CKBuildTriggerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4144B5525E51E3900AA8328 /* CKBuildTriggerTests.mm */; };
+		D4144B5B25E51E3900AA8328 /* CKDictionaryTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4144B5625E51E3900AA8328 /* CKDictionaryTests.mm */; };
+		D4144B5D25E51E8C00AA8328 /* RCAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = D4144B5C25E51E8C00AA8328 /* RCAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4144B5E25E51F2300AA8328 /* RCAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = D4144B5C25E51E8C00AA8328 /* RCAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4144B6A25E51F7D00AA8328 /* CKTreeNodeComponentKey.h in Headers */ = {isa = PBXBuildFile; fileRef = D4144B6925E51F7D00AA8328 /* CKTreeNodeComponentKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4144B6B25E51F7D00AA8328 /* CKTreeNodeComponentKey.h in Headers */ = {isa = PBXBuildFile; fileRef = D4144B6925E51F7D00AA8328 /* CKTreeNodeComponentKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4144B6D25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4144B6C25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4144B6E25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4144B6C25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4144B9B25E5200B00AA8328 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4144B8625E5200B00AA8328 /* ViewModel.swift */; };
+		D4144B9C25E5200B00AA8328 /* ViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4144B9125E5200B00AA8328 /* ViewModelState.swift */; };
+		D4144B9D25E5200B00AA8328 /* ScopeHandleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4144B9A25E5200B00AA8328 /* ScopeHandleLocation.swift */; };
 		D4171B52252DBD660082CF96 /* Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4171B51252DBD660082CF96 /* Gestures.swift */; };
 		D4171BA5252DCA0D0082CF96 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4171BA4252DCA0D0082CF96 /* Action.swift */; };
 		D4171BBB252DCA700082CF96 /* CKAction_SwiftBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -817,7 +820,6 @@
 		D431883223E205F00024AA12 /* CKVariant.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DD238E9B21005B570A /* CKVariant.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883323E205F00024AA12 /* CKDelayedNonNull.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DE238E9B21005B570A /* CKDelayedNonNull.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883423E205F00024AA12 /* CKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DF238E9B21005B570A /* CKMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D431883523E205F00024AA12 /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E0238E9B21005B570A /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883623E205F00024AA12 /* CKPropBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E1238E9B21005B570A /* CKPropBitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883823E205F00024AA12 /* CKDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E4238E9B21005B570A /* CKDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883923E205F00024AA12 /* CKRequired.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E5238E9B21005B570A /* CKRequired.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -827,7 +829,7 @@
 		D431883D23E205F00024AA12 /* CKGlobalConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 722E00A1238FEF700047BA1C /* CKGlobalConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883E23E205F00024AA12 /* RCComponentSize.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958D4238E9B21005B570A /* RCComponentSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883F23E205F00024AA12 /* RCDimension.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958D8238E9B21005B570A /* RCDimension.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D431884023E205F00024AA12 /* RCGeometryHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958D5238E9B21005B570A /* CKGeometryHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D431884023E205F00024AA12 /* RCGeometryHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958D5238E9B21005B570A /* RCGeometryHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431884123E205F00024AA12 /* CKSizeRange.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DA238E9B21005B570A /* CKSizeRange.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431884223E205F00024AA12 /* CKCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958C3238E9B21005B570A /* CKCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431884323E205F00024AA12 /* RCContainerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958BB238E9B21005B570A /* RCContainerWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -855,7 +857,6 @@
 		D431885A23E205F40024AA12 /* CKVariant.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DD238E9B21005B570A /* CKVariant.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431885B23E205F40024AA12 /* CKDelayedNonNull.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DE238E9B21005B570A /* CKDelayedNonNull.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431885C23E205F40024AA12 /* CKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DF238E9B21005B570A /* CKMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D431885D23E205F40024AA12 /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E0238E9B21005B570A /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431885E23E205F40024AA12 /* CKPropBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E1238E9B21005B570A /* CKPropBitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431886023E205F40024AA12 /* CKDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E4238E9B21005B570A /* CKDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431886123E205F40024AA12 /* CKRequired.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E5238E9B21005B570A /* CKRequired.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -865,7 +866,7 @@
 		D431886523E205F40024AA12 /* CKGlobalConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 722E00A1238FEF700047BA1C /* CKGlobalConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431886623E205F40024AA12 /* RCComponentSize.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958D4238E9B21005B570A /* RCComponentSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431886723E205F40024AA12 /* RCDimension.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958D8238E9B21005B570A /* RCDimension.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D431886823E205F40024AA12 /* RCGeometryHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958D5238E9B21005B570A /* CKGeometryHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D431886823E205F40024AA12 /* RCGeometryHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958D5238E9B21005B570A /* RCGeometryHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431886923E205F40024AA12 /* CKSizeRange.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DA238E9B21005B570A /* CKSizeRange.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431886A23E205F40024AA12 /* CKCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958C3238E9B21005B570A /* CKCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431886B23E205F40024AA12 /* RCContainerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958BB238E9B21005B570A /* RCContainerWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -978,8 +979,6 @@
 		D4B29B9D251A442E006EFEBA /* CKSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC578223E37A1B0075D688 /* CKSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC571E23E3765C0075D688 /* RCComponentSize.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56EC23E3765B0075D688 /* RCComponentSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC571F23E3765C0075D688 /* RCComponentSize.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56EC23E3765B0075D688 /* RCComponentSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4BC572023E3765C0075D688 /* RCGeometryHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56ED23E3765B0075D688 /* RCGeometryHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4BC572123E3765C0075D688 /* RCGeometryHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56ED23E3765B0075D688 /* RCGeometryHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC572223E3765C0075D688 /* CKNonNull.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56EE23E3765B0075D688 /* CKNonNull.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC572323E3765C0075D688 /* CKNonNull.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56EE23E3765B0075D688 /* CKNonNull.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC572423E3765C0075D688 /* CKVariant.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56EF23E3765B0075D688 /* CKVariant.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1012,20 +1011,14 @@
 		D4BC573F23E3765C0075D688 /* CKMountedObjectForView.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56FC23E3765B0075D688 /* CKMountedObjectForView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574023E3765C0075D688 /* RCIterable.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56FD23E3765B0075D688 /* RCIterable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574123E3765C0075D688 /* RCIterable.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56FD23E3765B0075D688 /* RCIterable.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4BC574223E3765C0075D688 /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56FE23E3765B0075D688 /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4BC574323E3765C0075D688 /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56FE23E3765B0075D688 /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574423E3765C0075D688 /* CKMountable.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56FF23E3765B0075D688 /* CKMountable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574523E3765C0075D688 /* CKMountable.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC56FF23E3765B0075D688 /* CKMountable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574623E3765C0075D688 /* CKFunctionalHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570023E3765B0075D688 /* CKFunctionalHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574723E3765C0075D688 /* CKFunctionalHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570023E3765B0075D688 /* CKFunctionalHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574823E3765C0075D688 /* CKPropBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570123E3765B0075D688 /* CKPropBitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574923E3765C0075D688 /* CKPropBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570123E3765B0075D688 /* CKPropBitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4BC574A23E3765C0075D688 /* RCDimension.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570223E3765B0075D688 /* RCDimension.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4BC574B23E3765C0075D688 /* RCDimension.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570223E3765B0075D688 /* RCDimension.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574C23E3765C0075D688 /* CKViewConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570323E3765B0075D688 /* CKViewConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC574D23E3765C0075D688 /* CKViewConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570323E3765B0075D688 /* CKViewConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4BC575023E3765C0075D688 /* RCAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570523E3765B0075D688 /* RCAssert.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4BC575123E3765C0075D688 /* RCAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570523E3765B0075D688 /* RCAssert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC575223E3765C0075D688 /* CKMountableHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570623E3765B0075D688 /* CKMountableHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC575323E3765C0075D688 /* CKMountableHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570623E3765B0075D688 /* CKMountableHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4BC575423E3765C0075D688 /* CKDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = D4BC570723E3765B0075D688 /* CKDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1466,7 +1459,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				405230351F7EE8E8005D227B /* OCMock.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1537,7 +1529,6 @@
 		2327614622EB069F007FF24A /* CKSystraceListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKSystraceListener.h; sourceTree = "<group>"; };
 		23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentProtocol.h; sourceTree = "<group>"; };
 		23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeNodeProtocol.h; sourceTree = "<group>"; };
-		2361E8D82330F7AC00F8890D /* CKTreeNodeTypes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTreeNodeTypes.mm; sourceTree = "<group>"; };
 		23629B3F203C2D65007F765D /* CKBuildComponentTreeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKBuildComponentTreeTests.mm; sourceTree = "<group>"; };
 		23770A0522EB205E00858140 /* CKSystraceScope.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSystraceScope.mm; sourceTree = "<group>"; };
 		23770A1022EB205E00858140 /* CKSystraceScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKSystraceScope.h; sourceTree = "<group>"; };
@@ -1556,8 +1547,6 @@
 		239F2CFB21E8F26F00580F93 /* CKRootTreeNode.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRootTreeNode.mm; sourceTree = "<group>"; };
 		23B65ABC213FF9300049FFAC /* CKRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponent.h; sourceTree = "<group>"; };
 		23B65ABE213FF9300049FFAC /* CKRenderComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderComponent.mm; sourceTree = "<group>"; };
-		23D1B13F22D638F600453EC7 /* CKScopeTreeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKScopeTreeNode.h; sourceTree = "<group>"; };
-		23D1B14022D638F600453EC7 /* CKScopeTreeNode.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKScopeTreeNode.mm; sourceTree = "<group>"; };
 		23D26A4722440C5B0087350C /* CKCollectionViewDataSourceListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceListener.h; sourceTree = "<group>"; };
 		23D26A5322440E7C0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewDataSourceListenerAnnouncer.mm; sourceTree = "<group>"; };
 		23D26A5422440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceListenerAnnouncer.h; sourceTree = "<group>"; };
@@ -1679,7 +1668,6 @@
 		723958DD238E9B21005B570A /* CKVariant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKVariant.h; sourceTree = "<group>"; };
 		723958DE238E9B21005B570A /* CKDelayedNonNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDelayedNonNull.h; sourceTree = "<group>"; };
 		723958DF238E9B21005B570A /* CKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMacros.h; sourceTree = "<group>"; };
-		723958E0238E9B21005B570A /* CKAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAvailability.h; sourceTree = "<group>"; };
 		723958E1238E9B21005B570A /* CKPropBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPropBitmap.h; sourceTree = "<group>"; };
 		723958E3238E9B21005B570A /* RCAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCAssert.h; sourceTree = "<group>"; };
 		723958E4238E9B21005B570A /* CKDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDictionary.h; sourceTree = "<group>"; };
@@ -1818,11 +1806,9 @@
 		B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingViewTests.mm; sourceTree = "<group>"; };
 		B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentMountContextLayoutGuideTests.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMountTests.mm; sourceTree = "<group>"; };
-		B342DC5C1AC23EA900ACAC53 /* RCComponentSizeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RCComponentSizeTests.mm; sourceTree = "<group>"; };
 		B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewAttributeTests.mm; sourceTree = "<group>"; };
 		B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewContextTests.mm; sourceTree = "<group>"; };
 		B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewReuseTests.mm; sourceTree = "<group>"; };
-		B342DC611AC23EA900ACAC53 /* RCDimensionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RCDimensionTests.mm; sourceTree = "<group>"; };
 		B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOptimisticViewMutationsTests.mm; sourceTree = "<group>"; };
 		B342DC661AC23EA900ACAC53 /* ComponentKitTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ComponentKitTests-Info.plist"; sourceTree = "<group>"; };
 		B342DC681AC23EA900ACAC53 /* CKComponentScopeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentScopeTests.mm; sourceTree = "<group>"; };
@@ -2024,6 +2010,17 @@
 		D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D0B47D971CBDA97400BB33CE /* CKComponentSnapshotTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSnapshotTestCase.h; sourceTree = "<group>"; };
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		D4144B5225E51E3900AA8328 /* CKComponentSizeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentSizeTests.mm; sourceTree = "<group>"; };
+		D4144B5325E51E3900AA8328 /* CKDimensionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDimensionTests.mm; sourceTree = "<group>"; };
+		D4144B5425E51E3900AA8328 /* CKSizeRangeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSizeRangeTests.mm; sourceTree = "<group>"; };
+		D4144B5525E51E3900AA8328 /* CKBuildTriggerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKBuildTriggerTests.mm; sourceTree = "<group>"; };
+		D4144B5625E51E3900AA8328 /* CKDictionaryTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDictionaryTests.mm; sourceTree = "<group>"; };
+		D4144B5C25E51E8C00AA8328 /* RCAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCAvailability.h; sourceTree = "<group>"; };
+		D4144B6925E51F7D00AA8328 /* CKTreeNodeComponentKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeNodeComponentKey.h; sourceTree = "<group>"; };
+		D4144B6C25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentBasedAccessibilityMode.h; sourceTree = "<group>"; };
+		D4144B8625E5200B00AA8328 /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		D4144B9125E5200B00AA8328 /* ViewModelState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelState.swift; sourceTree = "<group>"; };
+		D4144B9A25E5200B00AA8328 /* ScopeHandleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScopeHandleLocation.swift; sourceTree = "<group>"; };
 		D4171B51252DBD660082CF96 /* Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gestures.swift; sourceTree = "<group>"; };
 		D4171BA4252DCA0D0082CF96 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAction_SwiftBridge.h; sourceTree = "<group>"; };
@@ -2071,7 +2068,6 @@
 		D4B20D6C25506A1300763BB1 /* FlexboxComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexboxComponentTests.swift; sourceTree = "<group>"; };
 		D4B29A10251A1AE1006EFEBA /* Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		D4BC56EC23E3765B0075D688 /* RCComponentSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCComponentSize.h; sourceTree = "<group>"; };
-		D4BC56ED23E3765B0075D688 /* RCGeometryHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCGeometryHelpers.h; sourceTree = "<group>"; };
 		D4BC56EE23E3765B0075D688 /* CKNonNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKNonNull.h; sourceTree = "<group>"; };
 		D4BC56EF23E3765B0075D688 /* CKVariant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKVariant.h; sourceTree = "<group>"; };
 		D4BC56F023E3765B0075D688 /* RCLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLayout.h; sourceTree = "<group>"; };
@@ -2088,13 +2084,10 @@
 		D4BC56FB23E3765B0075D688 /* RCComponentDescriptionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCComponentDescriptionHelper.h; sourceTree = "<group>"; };
 		D4BC56FC23E3765B0075D688 /* CKMountedObjectForView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMountedObjectForView.h; sourceTree = "<group>"; };
 		D4BC56FD23E3765B0075D688 /* RCIterable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCIterable.h; sourceTree = "<group>"; };
-		D4BC56FE23E3765B0075D688 /* CKAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAvailability.h; sourceTree = "<group>"; };
 		D4BC56FF23E3765B0075D688 /* CKMountable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMountable.h; sourceTree = "<group>"; };
 		D4BC570023E3765B0075D688 /* CKFunctionalHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFunctionalHelpers.h; sourceTree = "<group>"; };
 		D4BC570123E3765B0075D688 /* CKPropBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPropBitmap.h; sourceTree = "<group>"; };
-		D4BC570223E3765B0075D688 /* RCDimension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCDimension.h; sourceTree = "<group>"; };
 		D4BC570323E3765B0075D688 /* CKViewConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKViewConfiguration.h; sourceTree = "<group>"; };
-		D4BC570523E3765B0075D688 /* RCAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCAssert.h; sourceTree = "<group>"; };
 		D4BC570623E3765B0075D688 /* CKMountableHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMountableHelpers.h; sourceTree = "<group>"; };
 		D4BC570723E3765B0075D688 /* CKDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDefines.h; sourceTree = "<group>"; };
 		D4BC570823E3765B0075D688 /* CKDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDictionary.h; sourceTree = "<group>"; };
@@ -2414,7 +2407,6 @@
 				23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */,
 				23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */,
 				23EA313921A2E57400FEC59C /* CKTreeNodeTypes.h */,
-				2361E8D82330F7AC00F8890D /* CKTreeNodeTypes.mm */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -2435,11 +2427,10 @@
 			children = (
 				23309AA12045C5F300833BDB /* Protocols */,
 				23FEC590203B30DA0068E09D /* CKTreeNode.h */,
+				D4144B6925E51F7D00AA8328 /* CKTreeNodeComponentKey.h */,
 				23FEC592203B30DA0068E09D /* CKTreeNode.mm */,
 				239F2CFA21E8F26F00580F93 /* CKRootTreeNode.h */,
 				239F2CFB21E8F26F00580F93 /* CKRootTreeNode.mm */,
-				23D1B13F22D638F600453EC7 /* CKScopeTreeNode.h */,
-				23D1B14022D638F600453EC7 /* CKScopeTreeNode.mm */,
 				23770A2C22EB46EB00858140 /* CKRenderTreeNode.h */,
 				23770A2B22EB46EB00858140 /* CKRenderTreeNode.mm */,
 			);
@@ -2541,8 +2532,8 @@
 			children = (
 				723958E7238E9B21005B570A /* RCArgumentPrecondition.h */,
 				723958E3238E9B21005B570A /* RCAssert.h */,
-				723958E0238E9B21005B570A /* CKAvailability.h */,
 				723958E8238E9B21005B570A /* CKCasting.h */,
+				D4144B5C25E51E8C00AA8328 /* RCAvailability.h */,
 				D431BCC223DAFCFF002144E7 /* CKDefines.h */,
 				C58C31BE2473048F0009B8E7 /* CKDelayedInitialisationWrapper.h */,
 				723958DE238E9B21005B570A /* CKDelayedNonNull.h */,
@@ -2721,6 +2712,11 @@
 		B342DC411AC23E8200ACAC53 /* ComponentKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				D4144B5525E51E3900AA8328 /* CKBuildTriggerTests.mm */,
+				D4144B5225E51E3900AA8328 /* CKComponentSizeTests.mm */,
+				D4144B5625E51E3900AA8328 /* CKDictionaryTests.mm */,
+				D4144B5325E51E3900AA8328 /* CKDimensionTests.mm */,
+				D4144B5425E51E3900AA8328 /* CKSizeRangeTests.mm */,
 				A241C6A41AFCFFDB00D4F661 /* CKActionTests.mm */,
 				D64CC1A720DE667100DBE8D3 /* CKAnimationApplicatorTests.mm */,
 				D6A0CF9522844811000CC4D0 /* CKAnimationTests.mm */,
@@ -2745,7 +2741,6 @@
 				B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */,
 				B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */,
 				B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */,
-				B342DC5C1AC23EA900ACAC53 /* RCComponentSizeTests.mm */,
 				D6CD290520DFE723000881EF /* CKComponentAnimationsEquality.h */,
 				D64F4A7920DFEC3A00A0B169 /* CKComponentAnimationsEquality.mm */,
 				D6C3B06C20B71FFD0089F06A /* CKComponentAnimationsTests.mm */,
@@ -2754,7 +2749,6 @@
 				B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */,
 				B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */,
 				B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */,
-				B342DC611AC23EA900ACAC53 /* RCDimensionTests.mm */,
 				7F80A4E61F63128B00242503 /* CKFlexboxComponentTests.mm */,
 				D6B0ADF320AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm */,
 				B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */,
@@ -3420,10 +3414,9 @@
 		D4BC56EB23E3765B0075D688 /* RenderCoreHeaders */ = {
 			isa = PBXGroup;
 			children = (
+				D4144B6C25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h */,
 				D4BC570E23E3765B0075D688 /* RCArgumentPrecondition.h */,
-				D4BC570523E3765B0075D688 /* RCAssert.h */,
 				728D25D123E8853A0016D672 /* RCAssociatedObject.h */,
-				D4BC56FE23E3765B0075D688 /* CKAvailability.h */,
 				D4BC571023E3765B0075D688 /* CKCasting.h */,
 				D4BC570F23E3765B0075D688 /* CKCollection.h */,
 				D48F3233245C0C3000A097A1 /* RCComponentCoalescingMode.h */,
@@ -3436,11 +3429,9 @@
 				C58C31BB2473046B0009B8E7 /* CKDelayedInitialisationWrapper.h */,
 				D4BC56F623E3765B0075D688 /* CKDelayedNonNull.h */,
 				D4BC570823E3765B0075D688 /* CKDictionary.h */,
-				D4BC570223E3765B0075D688 /* RCDimension.h */,
 				D4BC56F223E3765B0075D688 /* RCDispatch.h */,
 				D4BC56F923E3765B0075D688 /* RCEqualityHelpers.h */,
 				D4BC570023E3765B0075D688 /* CKFunctionalHelpers.h */,
-				D4BC56ED23E3765B0075D688 /* RCGeometryHelpers.h */,
 				D4BC56F523E3765B0075D688 /* CKGlobalConfig.h */,
 				D4BC571323E3765B0075D688 /* CKInternalHelpers.h */,
 				D4BC56FD23E3765B0075D688 /* RCIterable.h */,
@@ -3487,6 +3478,9 @@
 				D42AF5892519041F00F0BBA8 /* ComponentView.swift */,
 				D42AF57D251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift */,
 				D4EAA5542513A09400F32DC1 /* State.swift */,
+				D4144B9A25E5200B00AA8328 /* ScopeHandleLocation.swift */,
+				D4144B8625E5200B00AA8328 /* ViewModel.swift */,
+				D4144B9125E5200B00AA8328 /* ViewModelState.swift */,
 				D4EAA55A2513A23B00F32DC1 /* Binding.swift */,
 				D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */,
 				D4BC57C423E387510075D688 /* CKSwift.xcconfig */,
@@ -3613,6 +3607,7 @@
 				6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */,
 				D6B7DA44240B067C007E2BEA /* CKComponentViewConfiguration_SwiftBridge.h in Headers */,
 				03B8B4EF1D2A346F00EDFF59 /* CKStatefulViewReusePool.h in Headers */,
+				D4144B6B25E51F7D00AA8328 /* CKTreeNodeComponentKey.h in Headers */,
 				03B8B4F01D2A346F00EDFF59 /* CKComponentScopeRootFactory.h in Headers */,
 				03B8B4F21D2A346F00EDFF59 /* CKDataSourceConfiguration.h in Headers */,
 				B1E3067C1E8B0EAA004864CF /* CKBuildComponent.h in Headers */,
@@ -3633,7 +3628,6 @@
 				03B8B4F71D2A346F00EDFF59 /* CKDataSourceStateModifying.h in Headers */,
 				D4BC572D23E3765C0075D688 /* CKComponentViewAttribute.h in Headers */,
 				D48F3235245C0C3000A097A1 /* RCComponentCoalescingMode.h in Headers */,
-				D4BC574323E3765C0075D688 /* CKAvailability.h in Headers */,
 				72E3B011244C9D21006BEEF0 /* AutoSizedImageComponentBuilder.h in Headers */,
 				D4BC573323E3765C0075D688 /* CKDelayedNonNull.h in Headers */,
 				D69FDBAB23E32385002046EC /* ButtonComponentBuilder.h in Headers */,
@@ -3668,11 +3662,9 @@
 				72647CA32368CEB90072F330 /* CKBaseSpecContext.h in Headers */,
 				72E9B98422329686004E3B90 /* CKCollectionViewDataSourceInternal.h in Headers */,
 				60D7B3B820FC90500011AB3B /* YGNodePrint.h in Headers */,
-				D4BC572123E3765C0075D688 /* RCGeometryHelpers.h in Headers */,
 				03B8B5141D2A346F00EDFF59 /* CKBackgroundLayoutComponent.h in Headers */,
 				72C410682241659F0025D6B5 /* CKComponentAttachControllerInternal.h in Headers */,
 				D4BC576323E3765C0075D688 /* RCArgumentPrecondition.h in Headers */,
-				D4BC574B23E3765C0075D688 /* RCDimension.h in Headers */,
 				03B8B5151D2A346F00EDFF59 /* CKDataSourceChangesetModification.h in Headers */,
 				728D25D323E8853A0016D672 /* RCAssociatedObject.h in Headers */,
 				03B8B5181D2A346F00EDFF59 /* CKDataSourceItemInternal.h in Headers */,
@@ -3693,6 +3685,7 @@
 				03B8B5201D2A346F00EDFF59 /* CKComponentBoundsAnimation+UICollectionView.h in Headers */,
 				03B8B5221D2A346F00EDFF59 /* CKStatefulViewComponent.h in Headers */,
 				239F2CFD21E8F26F00580F93 /* CKRootTreeNode.h in Headers */,
+				D4144B6E25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h in Headers */,
 				03B8B5241D2A346F00EDFF59 /* CKRatioLayoutComponent.h in Headers */,
 				23309AA82045C60B00833BDB /* CKRenderComponentProtocol.h in Headers */,
 				03B8B5251D2A346F00EDFF59 /* CKNetworkImageComponent.h in Headers */,
@@ -3704,7 +3697,6 @@
 				2D03A6611D3869C700E4F890 /* CKTreeVerificationHelpers.h in Headers */,
 				72647CE92368D35F0072F330 /* CKOptimisticViewMutations.h in Headers */,
 				D4BC576723E3765C0075D688 /* CKCasting.h in Headers */,
-				23D1B14222D638F600453EC7 /* CKScopeTreeNode.h in Headers */,
 				60D7B3CA20FC90500011AB3B /* Yoga.h in Headers */,
 				72D30B7C236B41DE0023DB1F /* CKComponentViewConfiguration.h in Headers */,
 				03B8B52B1D2A346F00EDFF59 /* CKComponentBoundsAnimation.h in Headers */,
@@ -3750,7 +3742,6 @@
 				7FE8F8EA2006798E00BEE8D1 /* CKAnalyticsListener.h in Headers */,
 				D4BC575523E3765C0075D688 /* CKDefines.h in Headers */,
 				D4BC576D23E3765C0075D688 /* CKInternalHelpers.h in Headers */,
-				D4BC575123E3765C0075D688 /* RCAssert.h in Headers */,
 				03B8B5491D2A346F00EDFF59 /* CKComponent+UIView.h in Headers */,
 				72647CCF2368D15D0072F330 /* CKComponentGestureActionsInternal.h in Headers */,
 				72647CBC2368D0BA0072F330 /* CKComponentContext.h in Headers */,
@@ -3841,14 +3832,12 @@
 				D0B47D4F1CBD948E00BB33CE /* CKDataSourceUpdateStateModification.h in Headers */,
 				D63270F223A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */,
 				D0B47D271CBD948E00BB33CE /* CKComponentProvider.h in Headers */,
-				23D1B14122D638F600453EC7 /* CKScopeTreeNode.h in Headers */,
 				D0B47D161CBD948E00BB33CE /* CKComponentAnnouncerBase.h in Headers */,
 				723E448B2345058000A4806C /* CKBuildTrigger.h in Headers */,
 				51557C802541C91800E47E6B /* CKAccessibilityAwareComponent.h in Headers */,
 				D4BC572823E3765C0075D688 /* CKComponentViewClass.h in Headers */,
 				72C74F61236B643B00E4D533 /* CKComponentAccessibilityContext.h in Headers */,
 				D4BC573423E3765C0075D688 /* CKWeakObjectContainer.h in Headers */,
-				D4BC574223E3765C0075D688 /* CKAvailability.h in Headers */,
 				C58C31C9247D81EC0009B8E7 /* CKFatal.h in Headers */,
 				D0B47D3F1CBD948E00BB33CE /* CKDataSourceAppliedChanges.h in Headers */,
 				72C410672241659F0025D6B5 /* CKComponentAttachControllerInternal.h in Headers */,
@@ -3879,7 +3868,6 @@
 				D0B47D151CBD948E00BB33CE /* CKSupplementaryViewDataSource.h in Headers */,
 				D0B47D291CBD948E00BB33CE /* CKComponentHierarchyDebugHelper.h in Headers */,
 				D4BC576823E3765C0075D688 /* CKSizeRange.h in Headers */,
-				D4BC572023E3765C0075D688 /* RCGeometryHelpers.h in Headers */,
 				72647CCA2368D15D0072F330 /* CKComponentGestureActions.h in Headers */,
 				D4BC572E23E3765C0075D688 /* RCContainerWrapper.h in Headers */,
 				D6C713F9224CCA5800BADCC6 /* CKAnimationComponent.h in Headers */,
@@ -3888,6 +3876,7 @@
 				72647CB92368D0BA0072F330 /* CKComponentContextHelper.h in Headers */,
 				7FF44A501FF685EC00E83E30 /* CKAnalyticsListener.h in Headers */,
 				D0B47D421CBD948E00BB33CE /* CKDataSourceConfiguration.h in Headers */,
+				D4144B6D25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h in Headers */,
 				ACFAD6B22245759200D6E051 /* YGValue.h in Headers */,
 				72647CAD2368D0300072F330 /* CKComponentAction.h in Headers */,
 				D0B47D2C1CBD948E00BB33CE /* CKComponentHostingViewDelegate.h in Headers */,
@@ -3913,7 +3902,6 @@
 				D657401221051C6F00FD8AAB /* CKIndexTransform.h in Headers */,
 				23309AA52045C5F300833BDB /* CKTreeNodeProtocol.h in Headers */,
 				D4BC572423E3765C0075D688 /* CKVariant.h in Headers */,
-				D4BC575023E3765C0075D688 /* RCAssert.h in Headers */,
 				D0B47D441CBD948E00BB33CE /* CKDataSourceItem.h in Headers */,
 				60D7B3AD20FC90500011AB3B /* YGLayout.h in Headers */,
 				D4BC571E23E3765C0075D688 /* RCComponentSize.h in Headers */,
@@ -3980,8 +3968,8 @@
 				D643289820C008E6000C2400 /* CKComponentAnimationData.h in Headers */,
 				D0B47D351CBD948E00BB33CE /* CKRatioLayoutComponent.h in Headers */,
 				D0B47CED1CBD948E00BB33CE /* CKNetworkImageComponent.h in Headers */,
-				D4BC574A23E3765C0075D688 /* RCDimension.h in Headers */,
 				D0B47CEC1CBD948E00BB33CE /* CKImageComponent.h in Headers */,
+				D4144B6A25E51F7D00AA8328 /* CKTreeNodeComponentKey.h in Headers */,
 				60D7B3C920FC90500011AB3B /* Yoga.h in Headers */,
 				D616A2BF20BED2D100695472 /* CKComponentTreeDiff.h in Headers */,
 				D0B47D3A1CBD948E00BB33CE /* CKStaticLayoutComponent.h in Headers */,
@@ -4126,6 +4114,7 @@
 				D431886723E205F40024AA12 /* RCDimension.h in Headers */,
 				D431886C23E205F40024AA12 /* RCDispatch.h in Headers */,
 				D431887B23E205F40024AA12 /* RCLayout.h in Headers */,
+				D4144B5E25E51F2300AA8328 /* RCAvailability.h in Headers */,
 				D431886623E205F40024AA12 /* RCComponentSize.h in Headers */,
 				D431885B23E205F40024AA12 /* CKDelayedNonNull.h in Headers */,
 				D431887323E205F40024AA12 /* ComponentViewManager.h in Headers */,
@@ -4141,7 +4130,6 @@
 				D431887423E205F40024AA12 /* CKComponentViewClass.h in Headers */,
 				D431887C23E205F40024AA12 /* CKMountable.h in Headers */,
 				D431887123E205F40024AA12 /* CKInternalHelpers.h in Headers */,
-				D431885D23E205F40024AA12 /* CKAvailability.h in Headers */,
 				D431887723E205F40024AA12 /* CKViewConfiguration.h in Headers */,
 				D431887623E205F40024AA12 /* CKMountedObjectForView.h in Headers */,
 				C58C31C4247305370009B8E7 /* CKDelayedInitialisationWrapper.h in Headers */,
@@ -4193,7 +4181,6 @@
 				D431884C23E205F00024AA12 /* CKComponentViewClass.h in Headers */,
 				D431885423E205F00024AA12 /* CKMountable.h in Headers */,
 				D431884923E205F00024AA12 /* CKInternalHelpers.h in Headers */,
-				D431883523E205F00024AA12 /* CKAvailability.h in Headers */,
 				D431884F23E205F00024AA12 /* CKViewConfiguration.h in Headers */,
 				51557C8A2541CABD00E47E6B /* RCComponentBasedAccessibilityMode.h in Headers */,
 				D431884E23E205F00024AA12 /* CKMountedObjectForView.h in Headers */,
@@ -4209,6 +4196,7 @@
 				D431885023E205F00024AA12 /* RCComponentDescriptionHelper.h in Headers */,
 				D48F3238245C0C4900A097A1 /* RCComponentCoalescingMode.h in Headers */,
 				D431883B23E205F00024AA12 /* RCArgumentPrecondition.h in Headers */,
+				D4144B5D25E51E8C00AA8328 /* RCAvailability.h in Headers */,
 				D431883A23E205F00024AA12 /* CKOptional.h in Headers */,
 				D431884523E205F00024AA12 /* RCEqualityHelpers.h in Headers */,
 				D431882F23E205F00024AA12 /* CKDefines.h in Headers */,
@@ -4866,7 +4854,6 @@
 				72647CD72368D15D0072F330 /* CKComponentDelegateForwarder.mm in Sources */,
 				23452D1A22735D990008ACB1 /* CKAnalyticsListenerHelpers.mm in Sources */,
 				60D7B3D020FC90500011AB3B /* YGNodePrint.cpp in Sources */,
-				23D1B14422D638F600453EC7 /* CKScopeTreeNode.mm in Sources */,
 				516C3CA92555C94200FE3D3E /* CKAccessibilityAggregation.mm in Sources */,
 				D6BA03CE2415CCB700D13A21 /* CKComponentViewAttribute_SwiftBridge.mm in Sources */,
 				7268B5512241A7E400F68A37 /* CKComponentHostingContainerViewProvider.mm in Sources */,
@@ -4940,7 +4927,6 @@
 				D485F741255EBB7100F65C37 /* CKEmptyComponent.mm in Sources */,
 				723E446023414FFB00A4806C /* CKComponentGenerator.mm in Sources */,
 				03B8B4AA1D2A346F00EDFF59 /* CKDataSourceChange.mm in Sources */,
-				2361E8E42330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */,
 				03B8B4AB1D2A346F00EDFF59 /* CKDataSourceChangesetModification.mm in Sources */,
 				03B8B4AC1D2A346F00EDFF59 /* CKDataSourceReloadModification.mm in Sources */,
 				03B8B4AD1D2A346F00EDFF59 /* CKDataSourceUpdateConfigurationModification.mm in Sources */,
@@ -4998,12 +4984,10 @@
 				D6A0CF9722844811000CC4D0 /* CKAnimationTests.mm in Sources */,
 				03F1ABE01D2B2A9B00867584 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */,
 				03F1ABE11D2B2A9B00867584 /* CKDataSourceAppliedChangesTests.mm in Sources */,
-				03F1ABE21D2B2A9B00867584 /* RCComponentSizeTests.mm in Sources */,
 				03F1ABE31D2B2A9B00867584 /* CKComponentContextTests.mm in Sources */,
 				03F1ABE41D2B2A9B00867584 /* CKComponentViewContextTests.mm in Sources */,
 				03F1ABE51D2B2A9B00867584 /* CKDataSourceTests.mm in Sources */,
 				237FB73520D42C2E0048C544 /* CKComponentScopeIntegrationTests.mm in Sources */,
-				03F1ABE61D2B2A9B00867584 /* RCDimensionTests.mm in Sources */,
 				03F1ABE71D2B2A9B00867584 /* CKTestStatefulViewComponent.mm in Sources */,
 				03F1ABE91D2B2A9B00867584 /* CKComponentControllerLifecycleMethodTests.mm in Sources */,
 				03F1ABEA1D2B2A9B00867584 /* CKDataSourceChangesetTests.mm in Sources */,
@@ -5067,12 +5051,15 @@
 				A241C6A51AFCFFDB00D4F661 /* CKActionTests.mm in Sources */,
 				B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */,
 				D608DF9E232E2E9B00CD90D9 /* CKVariantTests.mm in Sources */,
+				D4144B5925E51E3900AA8328 /* CKSizeRangeTests.mm in Sources */,
+				D4144B5B25E51E3900AA8328 /* CKDictionaryTests.mm in Sources */,
 				A2E5BDD31EB94E1900444CD9 /* CKComponentKeyTests.mm in Sources */,
 				B761C8AB1CB36AAE00CDD03F /* CKDataSourceConfigurationTests.mm in Sources */,
 				B342DC6F1AC23EA900ACAC53 /* CKComponentControllerTests.mm in Sources */,
 				72B93ED5234374B600F10364 /* CKComponentGeneratorTests.mm in Sources */,
 				D023D12E1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm in Sources */,
 				B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */,
+				D4144B5825E51E3900AA8328 /* CKDimensionTests.mm in Sources */,
 				6017286F238FEF65000D5CD6 /* CKDelayedInitialisationWrapperTests.mm in Sources */,
 				A2CD66321AF2F0C70083A839 /* CKDataSourceStateTests.mm in Sources */,
 				728D25E523E98A6D0016D672 /* RCAssociatedObjectTests.mm in Sources */,
@@ -5093,13 +5080,12 @@
 				B342DC721AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */,
 				729D49A3246C741900C1ABBD /* CKComponentTestCase.mm in Sources */,
 				B761C8B11CB36FA200CDD03F /* CKDataSourceAppliedChangesTests.mm in Sources */,
-				B342DC7B1AC23EA900ACAC53 /* RCComponentSizeTests.mm in Sources */,
 				824416C21E44E34600904340 /* CKDetectDuplicateComponentTests.mm in Sources */,
 				B342DC6D1AC23EA900ACAC53 /* CKComponentContextTests.mm in Sources */,
+				D4144B5A25E51E3900AA8328 /* CKBuildTriggerTests.mm in Sources */,
 				B342DC7D1AC23EA900ACAC53 /* CKComponentViewContextTests.mm in Sources */,
 				D60C2DA922B98355001F502B /* CKNonNullTests.mm in Sources */,
 				A279EA9E1AF087A70046B5AA /* CKDataSourceTests.mm in Sources */,
-				B342DC801AC23EA900ACAC53 /* RCDimensionTests.mm in Sources */,
 				18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */,
 				72CF432E233D088500A82419 /* CKDataSourceChangesetApplicatorTests.mm in Sources */,
 				B342DC6E1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm in Sources */,
@@ -5117,6 +5103,7 @@
 				B342DC7F1AC23EA900ACAC53 /* CKComponentViewReuseTests.mm in Sources */,
 				D64CC1A820DE667100DBE8D3 /* CKAnimationApplicatorTests.mm in Sources */,
 				A27436F71AE94FE300832359 /* CKDataSourceReloadModificationTests.mm in Sources */,
+				D4144B5725E51E3900AA8328 /* CKComponentSizeTests.mm in Sources */,
 				B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */,
 				49FA174E1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm in Sources */,
 				23629B4A203C2D66007F765D /* CKBuildComponentTreeTests.mm in Sources */,
@@ -5259,7 +5246,6 @@
 				72647CD42368D15D0072F330 /* CKComponentGestureActionHelper.mm in Sources */,
 				D0B47CBF1CBD943400BB33CE /* CKDataSourceItem.mm in Sources */,
 				D0B47CC01CBD943400BB33CE /* CKDataSourceListenerAnnouncer.mm in Sources */,
-				23D1B14322D638F600453EC7 /* CKScopeTreeNode.mm in Sources */,
 				D0B47CC11CBD943400BB33CE /* CKDataSourceState.mm in Sources */,
 				D63F21D820C20559007604F4 /* CKComponentAnimationsController.mm in Sources */,
 				D0B47CC21CBD943400BB33CE /* CKDataSourceChange.mm in Sources */,
@@ -5299,7 +5285,6 @@
 				7221BA562172B07200969D41 /* CKDataSourceQOSHelper.mm in Sources */,
 				722EFE99243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm in Sources */,
 				6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */,
-				2361E8E32330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */,
 				D6E07816243618A100541390 /* FlexboxComponentBuilder.mm in Sources */,
 				D0B47D7B1CBD94EC00BB33CE /* CKComponentDebugController.mm in Sources */,
 				D48D24E524B88B6600E3BFC4 /* CKWritingDirection.mm in Sources */,
@@ -5412,12 +5397,15 @@
 				D4F543EC25079578008F17A8 /* View.swift in Sources */,
 				D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */,
 				D4EAA5572513A0BE00F32DC1 /* ScopeHandleLinkable.swift in Sources */,
+				D4144B9B25E5200B00AA8328 /* ViewModel.swift in Sources */,
 				D4EAA5552513A09400F32DC1 /* State.swift in Sources */,
 				D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */,
 				D4B29A11251A1AE1006EFEBA /* Animation.swift in Sources */,
 				D42B76162516361600DAC4D5 /* ViewAnimationModifier.swift in Sources */,
+				D4144B9D25E5200B00AA8328 /* ScopeHandleLocation.swift in Sources */,
 				D42B76142516233200DAC4D5 /* ViewLayoutModifier.swift in Sources */,
 				D4B299182519F404006EFEBA /* SwiftComponent.swift in Sources */,
+				D4144B9C25E5200B00AA8328 /* ViewModelState.swift in Sources */,
 				D42AF57E251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
