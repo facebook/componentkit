@@ -28,10 +28,10 @@ static auto toInitialStateCreator(id (^initialStateCreator)(void), Class compone
 CKComponentScope::~CKComponentScope()
 {
   if (_threadLocalScope != nullptr) {
-    [_scopeHandle resolveAndRegisterInScopeRoot:_threadLocalScope->newScopeRoot];
+    [_node.scopeHandle resolveAndRegisterInScopeRoot:_threadLocalScope->newScopeRoot];
 
     if (_threadLocalScope->systraceListener) {
-      auto const componentTypeName = _scopeHandle.componentTypeName ?: "UnkownTypeName";
+      auto const componentTypeName = _node.scopeHandle.componentTypeName ?: "UnkownTypeName";
       RCCAssertWithCategory(objc_getClass(componentTypeName) != nil,
                             [NSString stringWithUTF8String:componentTypeName],
                             @"Creating an action from a scope should always yield a class");
@@ -81,14 +81,14 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                          initialStateCreator:toInitialStateCreator(initialStateCreator, componentClass)
                                                 stateUpdates:_threadLocalScope->stateUpdates
                                          requiresScopeHandle:YES];
-    _scopeHandle = childPair.node.scopeHandle;
+    _node = childPair.node;
 
     const auto ancestorHasStateUpdate =
         _threadLocalScope->coalescingMode == RCComponentCoalescingModeComposite &&
          _threadLocalScope->buildTrigger == CKBuildTriggerStateUpdate &&
         (_threadLocalScope->ancestorHasStateUpdate.top() ||
            CKRender::componentHasStateUpdate(
-               childPair.node.scopeHandle,
+               _node.scopeHandle,
                pair.previousNode,
                _threadLocalScope->buildTrigger,
              _threadLocalScope->stateUpdates));
@@ -102,31 +102,31 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
 id CKComponentScope::state(void) const noexcept
 {
-  return _scopeHandle.state;
+  return _node.state;
 }
 
-CKComponentScopeHandleIdentifier CKComponentScope::identifier(void) const noexcept
+CKTreeNodeIdentifier CKComponentScope::identifier(void) const noexcept
 {
-  return _scopeHandle.globalIdentifier;
+  return _node.nodeIdentifier;
 }
 
 void CKComponentScope::replaceState(const CKComponentScope &scope, id state) noexcept
 {
-  [scope._scopeHandle replaceState:state];
+  [scope._node.scopeHandle replaceState:state];
 }
 
 CKComponentStateUpdater CKComponentScope::stateUpdater(void) const noexcept
 {
-  // We must capture _scopeHandle in a local, since this may be destroyed by the time the block executes.
-  CKComponentScopeHandle *const scopeHandle = _scopeHandle;
+  // We must capture `node` in a local, since `this` may be destroyed by the time the block executes.
+  CKTreeNode *const node = _node;
   return ^(id (^stateUpdate)(id), NSDictionary<NSString *, id> *userInfo, CKUpdateMode mode) {
-    [scopeHandle updateState:stateUpdate
-                    metadata:{.userInfo = userInfo}
-                        mode:mode];
+    [node.scopeHandle updateState:stateUpdate
+                         metadata:{.userInfo = userInfo}
+                             mode:mode];
   };
 }
 
-CKComponentScopeHandle *CKComponentScope::scopeHandle(void) const noexcept
+CKTreeNode *CKComponentScope::node(void) const noexcept
 {
-  return _scopeHandle;
+  return _node;
 }

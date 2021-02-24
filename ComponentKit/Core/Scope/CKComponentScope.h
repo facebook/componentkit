@@ -15,14 +15,12 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentContext.h>
-#import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKUpdateMode.h>
 
 #include <memory>
 
 class CKThreadLocalComponentScope;
-@class CKComponentScopeHandle;
-@class CKTreeNode;
 
 typedef void (^CKComponentStateUpdater)(id (^updateBlock)(id),
                                         NSDictionary<NSString *, id> * userInfo,
@@ -67,8 +65,8 @@ public:
   /** @return The current state for the component being built. */
   id state(void) const noexcept;
 
-  /** @return The scope identifer for the component being built. */
-  CKComponentScopeHandleIdentifier identifier(void) const noexcept;
+  /** @return The tree node identifer for the component being built. */
+  CKTreeNodeIdentifier identifier(void) const noexcept;
 
   /**
    @return A block that schedules a state update when invoked.
@@ -80,11 +78,11 @@ public:
   CKComponentStateUpdater stateUpdater(void) const noexcept;
 
   /**
-   @return The scope handle associated with this scope.
+   @return The tree node associated with this scope.
    @discussion This is exposed for use by the framework. You should almost certainly never call this for any reason
                in your components.
    */
-  CKComponentScopeHandle *scopeHandle(void) const noexcept;
+  CKTreeNode *node(void) const noexcept;
 
   /**
    Replaces the state for a scope *without* scheduling a state update and triggering another render pass.
@@ -105,7 +103,7 @@ private:
   CKComponentScope(const CKComponentScope&) = delete;
   CKComponentScope &operator=(const CKComponentScope&) = delete;
   CKThreadLocalComponentScope *_threadLocalScope;
-  CKComponentScopeHandle *_scopeHandle;
+  CKTreeNode *_node;
 };
 
 #endif

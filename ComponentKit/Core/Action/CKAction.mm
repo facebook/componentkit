@@ -79,7 +79,7 @@ CKActionBase::CKActionBase(id target, SEL selector) noexcept
     _selector(selector) {}
 
 CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept
-  : CKActionBase(selector, scope.scopeHandle()) { }
+  : CKActionBase(selector, scope.node().scopeHandle) { }
 
 CKActionBase::CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcept
   : _target(nil),
@@ -421,7 +421,7 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
 #if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
-  _CKTypedComponentDebugCheckComponentScopeHandle(scope.scopeHandle(), selector, typeEncodings);
+  _CKTypedComponentDebugCheckComponentScopeHandle(scope.node().scopeHandle, selector, typeEncodings);
 }
 
 void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *handle, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
