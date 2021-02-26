@@ -13,25 +13,19 @@ import ComponentKit
 
 @propertyWrapper
 public class ViewModelState<Value> : ScopeHandleAssignable {
-  private var value: Value
   private var handle: CKComponentScopeHandle?
 
   public init(wrappedValue valueProvider: @escaping @autoclosure () -> Value) {
-    self.value = valueProvider()
+    self.wrappedValue = valueProvider()
   }
 
   /// Should only be called during component build or on the main thread thereafter
   public var wrappedValue: Value {
-    get {
-      value
-    }
-    set {
-      guard let handle = handle else {
-        preconditionFailure("Attempting to update the value before view model state is linked")
-      }
-
-      value = newValue
-      CKSwiftUpdateViewModelState(handle)
+    didSet {
+      // Permit changing the view model state's value before it is linked.
+      // which would be the case if the view model state is re-assigned before
+      // its owning view has rendered (and thus read the values).
+      handle.flatMap(CKSwiftUpdateViewModelState)
     }
   }
 
