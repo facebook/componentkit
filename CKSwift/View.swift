@@ -38,6 +38,8 @@ public protocol ViewIdentifiable : ScopeHandleProvider {
   var id: ID { get }
 }
 
+public typealias ReusableView = View & ViewIdentifiable & Equatable
+
 // MARK: Non-leaf component
 
 extension View where Self.Body == Component {

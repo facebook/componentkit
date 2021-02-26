@@ -77,9 +77,7 @@ class SwiftComponent<View: CKSwift.View> : CKSwiftComponent {
   }
 }
 
-public typealias SwiftReusableComponentView = CKSwift.View & ViewIdentifiable & Equatable
-
-class SwiftReusableBaseComponent<View: SwiftReusableComponentView> : SwiftComponent<View>, ReusableComponentProtocol {
+class SwiftReusableBaseComponent<View: ReusableView> : SwiftComponent<View>, ReusableComponentProtocol {
   var componentIdentifier: Any? {
     view.id
   }
@@ -101,7 +99,7 @@ class SwiftReusableBaseComponent<View: SwiftReusableComponentView> : SwiftCompon
   }
 }
 
-final class SwiftReusableComponent<View: SwiftReusableComponentView> : SwiftReusableBaseComponent<View> where View.Body == Component {
+final class SwiftReusableComponent<View: ReusableView> : SwiftReusableBaseComponent<View> where View.Body == Component {
   override func clone() -> Self {
     // TODO: Reuse logic
     view.linkPropertyWrappersWithScopeHandle()
@@ -113,7 +111,7 @@ final class SwiftReusableComponent<View: SwiftReusableComponentView> : SwiftReus
   }
 }
 
-final class SwiftReusableLeafComponent<View: SwiftReusableComponentView> : SwiftReusableBaseComponent<View> where View.Body == Never {
+final class SwiftReusableLeafComponent<View: ReusableView> : SwiftReusableBaseComponent<View> where View.Body == Never {
   override func clone() -> Self {
     // TODO: Reuse logic
     view.linkPropertyWrappersWithScopeHandle()
