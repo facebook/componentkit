@@ -89,6 +89,13 @@ extension View where Self: ViewIdentifiable, Self.Body == Component {
 
 extension View where Self: ViewIdentifiable & Equatable, Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
+    guard CKShouldCreateShellComponent() == false else {
+      return SwiftReusableComponent(
+        self,
+        model: model
+      )
+    }
+
     // TODO: Reuse logic
     linkPropertyWrappersWithScopeHandle(componentClass: SwiftReusableComponent<Self>.self)
 
@@ -98,7 +105,7 @@ extension View where Self: ViewIdentifiable & Equatable, Self.Body == Component 
 
     return SwiftReusableComponent(
       self,
-      body: CKShouldCreateShellComponent() ? nil : body,
+      body: body,
       model: model
     )
   }
