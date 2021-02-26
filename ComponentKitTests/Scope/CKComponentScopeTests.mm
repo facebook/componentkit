@@ -256,15 +256,15 @@
 
 #pragma mark - Test Component Scope Identifier
 
-- (void)testComponentScopeIdentifierIsSameAsScopeHandleGlobalIdentifier
+- (void)testComponentScopeIdentifierIsSameAsNodeIdentifier
 {
   CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   {
     CKThreadLocalComponentScope threadScope(root1, {});
     {
       CKComponentScope scope([CKCompositeComponent class], @"macaque");
-      int32_t globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().node.scopeHandle.globalIdentifier;
-      XCTAssertEqual(globalIdentifier, scope.identifier());
+      const auto identifier = CKThreadLocalComponentScope::currentScope()->stack.top().node.nodeIdentifier;
+      XCTAssertEqual(identifier, scope.identifier());
     }
   }
 }
