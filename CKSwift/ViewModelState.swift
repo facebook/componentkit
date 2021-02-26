@@ -30,7 +30,7 @@ public class ViewModelState<Value> : ScopeHandleAssignable {
   }
 
   public var projectedValue: Binding<Value> {
-    return Binding(get: { self.wrappedValue }, set: { self.wrappedValue = $0 })
+    Binding(get: { self.wrappedValue }, set: { self.wrappedValue = $0 })
   }
 
   // MARK: ScopeHandleAssignable
@@ -46,6 +46,6 @@ public class ViewModelState<Value> : ScopeHandleAssignable {
 
 extension ViewModelState : Equatable where Value : Equatable {
   static public func ==(lhs: ViewModelState, rhs: ViewModelState) -> Bool {
-    return lhs.wrappedValue == rhs.wrappedValue
+    lhs.wrappedValue == rhs.wrappedValue
   }
 }
