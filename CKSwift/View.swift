@@ -47,6 +47,7 @@ extension View where Self.Body == Component {
     // TODO: Reuse logic
 
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
+      componentClass: SwiftComponent<Self>.self,
       forceRequireNode: model?.isEmpty == false)
 
     if hasScopeHandle == false {
@@ -72,7 +73,7 @@ extension View where Self.Body == Component {
 extension View where Self: ViewIdentifiable, Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    linkPropertyWrappersWithScopeHandle()
+    linkPropertyWrappersWithScopeHandle(componentClass: SwiftComponent<Self>.self)
 
     defer {
       CKSwiftPopClass()
@@ -89,7 +90,7 @@ extension View where Self: ViewIdentifiable, Self.Body == Component {
 extension View where Self: ViewIdentifiable & Equatable, Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    linkPropertyWrappersWithScopeHandle()
+    linkPropertyWrappersWithScopeHandle(componentClass: SwiftReusableComponent<Self>.self)
 
     defer {
       CKSwiftPopClass()
@@ -108,6 +109,7 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Componen
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
+      componentClass: SwiftComponent<Self>.self,
       forceRequireNode: model?.isEmpty == false
     )
 
@@ -128,7 +130,7 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Componen
 extension View where Self: ViewIdentifiable & ViewConfigurationRepresentable, Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    linkPropertyWrappersWithScopeHandle()
+    linkPropertyWrappersWithScopeHandle(componentClass: SwiftComponent<Self>.self)
 
     defer {
       CKSwiftPopClass()
@@ -146,7 +148,7 @@ extension View where Self: ViewIdentifiable & ViewConfigurationRepresentable, Se
 extension View where Self: ViewIdentifiable & ViewConfigurationRepresentable & Equatable, Self.Body == Component {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    linkPropertyWrappersWithScopeHandle()
+    linkPropertyWrappersWithScopeHandle(componentClass: SwiftReusableComponent<Self>.self)
 
     defer {
       CKSwiftPopClass()
@@ -167,6 +169,7 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Never {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
     let hasScopeHandle = linkPropertyWrappersWithScopeHandle(
+      componentClass: SwiftComponent<Self>.self,
       forceRequireNode: model?.isEmpty == false)
 
     defer {
@@ -186,7 +189,7 @@ extension View where Self: ViewConfigurationRepresentable, Self.Body == Never {
 extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable, Self.Body == Never {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    linkPropertyWrappersWithScopeHandle()
+    linkPropertyWrappersWithScopeHandle(componentClass: SwiftComponent<Self>.self)
 
     defer {
       CKSwiftPopClass()
@@ -203,7 +206,7 @@ extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable, Se
 extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable & Equatable, Self.Body == Never {
   public func inflateComponent(with model: SwiftComponentModel?) -> Component {
     // TODO: Reuse logic
-    linkPropertyWrappersWithScopeHandle()
+    linkPropertyWrappersWithScopeHandle(componentClass: SwiftReusableLeafComponent<Self>.self)
 
     defer {
       CKSwiftPopClass()
@@ -229,8 +232,8 @@ private extension View {
       }
   }
 
-  private func link(linkableItems: [ScopeHandleLinkable], id: Any?) {
-    let scopeHandle = CKSwiftCreateScopeHandle(SwiftComponent<Self>.self, id)
+  private func link(componentClass: AnyClass, linkableItems: [ScopeHandleLinkable], id: Any?) {
+    let scopeHandle = CKSwiftCreateScopeHandle(componentClass, id)
     linkableItems
       .enumerated()
       .forEach { index, item in
@@ -238,19 +241,19 @@ private extension View {
       }
   }
 
-  func linkPropertyWrappersWithScopeHandle(forceRequireNode: Bool) -> Bool {
+  func linkPropertyWrappersWithScopeHandle(componentClass: AnyClass, forceRequireNode: Bool) -> Bool {
     let linkableItems = self.linkableItems
     guard linkableItems.isEmpty == false || forceRequireNode || self is ScopeHandleProvider else {
       return false
     }
 
-    link(linkableItems: linkableItems, id: nil)
+    link(componentClass: componentClass, linkableItems: linkableItems, id: nil)
     return true
   }
 }
 
 extension View where Self: ViewIdentifiable {
-  func linkPropertyWrappersWithScopeHandle() {
-    link(linkableItems: linkableItems, id: id)
+  func linkPropertyWrappersWithScopeHandle(componentClass: AnyClass) {
+    link(componentClass: componentClass, linkableItems: linkableItems, id: id)
   }
 }
