@@ -56,7 +56,7 @@ public struct SwiftComponentModel {
   }
 }
 
-public class SwiftComponent<View: CKSwift.View> : CKSwiftComponent {
+class SwiftComponent<View: CKSwift.View> : CKSwiftComponent {
   let view: View
 
   init(_ view: View, body: Component? = nil, viewConfiguration: ViewConfiguration? = nil, size: ComponentSize? = nil, model: SwiftComponentModel?) {
@@ -79,16 +79,16 @@ public class SwiftComponent<View: CKSwift.View> : CKSwiftComponent {
 
 public typealias SwiftReusableComponentView = CKSwift.View & ViewIdentifiable & Equatable
 
-public class SwiftReusableBaseComponent<View: SwiftReusableComponentView> : SwiftComponent<View>, ReusableComponentProtocol {
-  public var componentIdentifier: Any? {
+class SwiftReusableBaseComponent<View: SwiftReusableComponentView> : SwiftComponent<View>, ReusableComponentProtocol {
+  var componentIdentifier: Any? {
     view.id
   }
 
-  public func didReuseComponent(_ component: ReusableComponentProtocol) {
+  func didReuseComponent(_ component: ReusableComponentProtocol) {
     fatalError("Should never be called")
   }
 
-  public func shouldComponentUpdate(_ untypedComponent: ReusableComponentProtocol) -> Bool {
+  func shouldComponentUpdate(_ untypedComponent: ReusableComponentProtocol) -> Bool {
     guard let component = untypedComponent as? SwiftReusableBaseComponent<View> else {
       fatalError("Attempting to reuse a component of a different type: \(type(of: untypedComponent))")
     }
@@ -96,13 +96,13 @@ public class SwiftReusableBaseComponent<View: SwiftReusableComponentView> : Swif
     return view != component.view
   }
 
-  public func clone() -> Self {
+  func clone() -> Self {
     fatalError("-clone should never be called on `SwiftReusableBaseComponent`.")
   }
 }
 
-public final class SwiftReusableComponent<View: SwiftReusableComponentView> : SwiftReusableBaseComponent<View> where View.Body == Component {
-  override public func clone() -> Self {
+final class SwiftReusableComponent<View: SwiftReusableComponentView> : SwiftReusableBaseComponent<View> where View.Body == Component {
+  override func clone() -> Self {
     // TODO: Reuse logic
     view.linkPropertyWrappersWithScopeHandle()
 
@@ -113,8 +113,8 @@ public final class SwiftReusableComponent<View: SwiftReusableComponentView> : Sw
   }
 }
 
-public final class SwiftReusableLeafComponent<View: SwiftReusableComponentView> : SwiftReusableBaseComponent<View> where View.Body == Never {
-  override public func clone() -> Self {
+final class SwiftReusableLeafComponent<View: SwiftReusableComponentView> : SwiftReusableBaseComponent<View> where View.Body == Never {
+  override func clone() -> Self {
     // TODO: Reuse logic
     view.linkPropertyWrappersWithScopeHandle()
 
