@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger, CKComponentSizeRangeFlexibility) {
   CKComponentSizeRangeFlexibleWidth,           /** {w, h} -> {{0, h}, {inf, h}} */
   CKComponentSizeRangeFlexibleHeight,          /** {w, h} -> {{w, 0}, {w, inf}} */
   CKComponentSizeRangeFlexibleWidthAndHeight,  /** {w, h} -> {{0, 0}, {inf, inf}} */
+  CKComponentSizeRangeFitContent               /** {w, h} -> {{0, 0}, {w, h}} */,
 };
 
 /**
