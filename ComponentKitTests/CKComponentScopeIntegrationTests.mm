@@ -99,10 +99,10 @@
                                               state1:(id)state1
                                               state2:(id)state2
 {
-  XCTAssertNotEqual(component1.scopeHandle.globalIdentifier, component2.scopeHandle.globalIdentifier);
+  XCTAssertNotEqual(component1.treeNode.scopeHandle.globalIdentifier, component2.treeNode.scopeHandle.globalIdentifier);
   XCTAssertNotEqual(component1.controller, component2.controller);
-  XCTAssertEqual(component1.scopeHandle.state, state1);
-  XCTAssertEqual(component2.scopeHandle.state, state2);
+  XCTAssertEqual(component1.treeNode.scopeHandle.state, state1);
+  XCTAssertEqual(component2.treeNode.scopeHandle.state, state2);
 }
 
 @end

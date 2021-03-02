@@ -136,7 +136,7 @@ dispatch_block_t CKActionBase::block() const noexcept {
 
 CKComponentScopeHandle *CKActionBase::scopeHandleFromContext(const CK::BaseSpecContext &context) noexcept {
   // Requires CKComponentInternal.h which shouldn't be imported publicly.
-  return componentFromContext(context).scopeHandle;
+  return componentFromContext(context).treeNode.scopeHandle;
 }
 
 CKComponent *CKActionBase::componentFromContext(const CK::BaseSpecContext &context) noexcept {

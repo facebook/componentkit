@@ -109,7 +109,7 @@
   // 1. parentHasStateUpdate = YES
   // 2. treeNodeDirtyIds with a fake parent id.
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[root.scopeHandle].push_back(^(id){
+  stateUpdates[root.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
@@ -144,7 +144,7 @@
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[_c.scopeHandle] = {^id(id s) { return s; }};
+  stateUpdates[_c.treeNode.scopeHandle] = {^id(id s) { return s; }};
 
   auto const c2 = [CKTestRenderComponent new];
   CKRender::ComponentTree::Root::build(c2, {
@@ -152,7 +152,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = stateUpdates,
     .treeNodeDirtyIds = {
-      _c.scopeHandle.treeNodeIdentifier
+      _c.treeNode.nodeIdentifier
     },
     .buildTrigger = CKBuildTriggerStateUpdate,
   });
@@ -175,7 +175,7 @@
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[_c.scopeHandle] = {^id(id s) { return s; }};
+  stateUpdates[_c.treeNode.scopeHandle] = {^id(id s) { return s; }};
 
   auto const c2 = [CKTestRenderComponent new];
 
@@ -184,7 +184,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = stateUpdates,
     .treeNodeDirtyIds = {
-      _c.scopeHandle.treeNodeIdentifier
+      _c.treeNode.nodeIdentifier,
     },
     .buildTrigger = CKBuildTriggerStateUpdate,
   });
@@ -268,7 +268,7 @@
   // 1. parentHasStateUpdate = YES
   // 2. treeNodeDirtyIds with a fake parent id.
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[root.scopeHandle].push_back(^(id){
+  stateUpdates[root.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
@@ -369,7 +369,7 @@
   // 3. forcePropsUpdates = YES
   // 4. Props (componentIdentifier) are equal = reuse
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[root.scopeHandle].push_back(^(id){
+  stateUpdates[root.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
@@ -414,7 +414,7 @@
   // 3. forcePropsUpdates = YES
   // 4. Props (componentIdentifier) are different = no reuse
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[root.scopeHandle].push_back(^(id){
+  stateUpdates[root.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
@@ -462,7 +462,7 @@
 
   // Simulate a state update on the root.
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[rootComponent.scopeHandle].push_back(^(id){
+  stateUpdates[rootComponent.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
@@ -506,7 +506,7 @@
 
   // Simulate a state update on c2.
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[c2.scopeHandle].push_back(^(id){
+  stateUpdates[c2.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
@@ -550,7 +550,7 @@
 
   // Simulate a state update on c1.
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[c1.scopeHandle].push_back(^(id){
+  stateUpdates[c1.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
@@ -587,7 +587,7 @@
 
   // Simulate a state update on c2.
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[c2.scopeHandle].push_back(^(id){
+  stateUpdates[c2.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
@@ -718,11 +718,11 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   // Simulate state update on c1.childComponent
   NSNumber *newState1 = @10;
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[c1.childComponent.scopeHandle].push_back(^(id){ return newState1; });
+  stateUpdates[c1.childComponent.treeNode.scopeHandle].push_back(^(id){ return newState1; });
   auto const buildTrigger2 = CKBuildComponentTrigger(buildResults.scopeRoot, stateUpdates, NO, NO);
   auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, buildTrigger2, CKReflowTriggerNone);
   // Verify `c2.childComponent` gets the correct new state
-  XCTAssertEqual(newState1, c1.childComponent.scopeHandle.state);
+  XCTAssertEqual(newState1, c1.childComponent.state);
   // Verify c2 was reused
   XCTAssertTrue(c2.didReuseComponent);
   // Verify c1 wasn't reused
@@ -731,34 +731,34 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   // Simulate state update on c2.childComponent
   NSNumber *newState2 = @20;
   CKComponentStateUpdateMap stateUpdates2;
-  stateUpdates2[c2.childComponent.scopeHandle].push_back(^(id){ return newState2;});
+  stateUpdates2[c2.childComponent.treeNode.scopeHandle].push_back(^(id){ return newState2;});
 
   auto const buildTrigger3 = CKBuildComponentTrigger(buildResults2.scopeRoot, stateUpdates2, NO, NO);
   auto const buildResults3 = CKBuildComponent(buildResults2.scopeRoot, stateUpdates2, componentFactory, buildTrigger3, CKReflowTriggerNone);
   // Verify `c2.childComponent` gets the correct new state
-  XCTAssertEqual(newState2, c2.childComponent.scopeHandle.state);
+  XCTAssertEqual(newState2, c2.childComponent.state);
   // Verify c1 was reused
   XCTAssertTrue(c1.didReuseComponent);
   // Verify c2 wasn't reused
   XCTAssertFalse(c2.didReuseComponent);
   // Verify `c1.childComponent` preserves its state during component reuse
-  XCTAssertEqual(newState1, c1.childComponent.scopeHandle.state);
+  XCTAssertEqual(newState1, c1.childComponent.state);
 
   // Simulate state update on c1.childComponent
   NSNumber *newState3 = @30;
   CKComponentStateUpdateMap stateUpdates3;
-  stateUpdates3[c1.childComponent.scopeHandle].push_back(^(id){ return newState3;});
+  stateUpdates3[c1.childComponent.treeNode.scopeHandle].push_back(^(id){ return newState3;});
 
   auto const buildTrigger4 = CKBuildComponentTrigger(buildResults3.scopeRoot, stateUpdates3, NO, NO);
   auto const buildResults4 = CKBuildComponent(buildResults3.scopeRoot, stateUpdates3, componentFactory, buildTrigger4, CKReflowTriggerNone);
   // Verify `c1.childComponent` gets the correct new state
-  XCTAssertEqual(newState3, c1.childComponent.scopeHandle.state);
+  XCTAssertEqual(newState3, c1.childComponent.state);
   // Verify c2 was reused
   XCTAssertTrue(c2.didReuseComponent);
   // Verify c1 wasn't reused
   XCTAssertFalse(c1.didReuseComponent);
   // Verify `c2.childComponent` preserves its state during component reuse
-  XCTAssertEqual(newState2, c2.childComponent.scopeHandle.state);
+  XCTAssertEqual(newState2, c2.childComponent.state);
 }
 
 - (void)test_renderComponentPreserveStateDuringComponentReuse
@@ -781,12 +781,12 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   // Simulate state update on c1
   NSNumber *newState1 = @10;
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[c1.scopeHandle].push_back(^(id){ return newState1; });
+  stateUpdates[c1.treeNode.scopeHandle].push_back(^(id){ return newState1; });
 
   auto const buildTrigger2 = CKBuildComponentTrigger(buildResults.scopeRoot, stateUpdates, NO, NO);
   auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, buildTrigger2, CKReflowTriggerNone);
   // Verify `c2.childComponent` gets the correct new state
-  XCTAssertEqual(newState1, c1.scopeHandle.state);
+  XCTAssertEqual(newState1, c1.state);
   // Verify c2 was reused
   XCTAssertTrue(c2.didReuseComponent);
   // Verify c1 wasn't reused
@@ -795,34 +795,34 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   // Simulate state update on c2
   NSNumber *newState2 = @20;
   CKComponentStateUpdateMap stateUpdates2;
-  stateUpdates2[c2.scopeHandle].push_back(^(id){ return newState2;});
+  stateUpdates2[c2.treeNode.scopeHandle].push_back(^(id){ return newState2;});
 
   auto const buildTrigger3 = CKBuildComponentTrigger(buildResults2.scopeRoot, stateUpdates2, NO, NO);
   auto const buildResults3 = CKBuildComponent(buildResults2.scopeRoot, stateUpdates2, componentFactory, buildTrigger3, CKReflowTriggerNone);
   // Verify `c2.childComponent` gets the correct new state
-  XCTAssertEqual(newState2, c2.scopeHandle.state);
+  XCTAssertEqual(newState2, c2.state);
   // Verify c1 was reused
   XCTAssertTrue(c1.didReuseComponent);
   // Verify c2 wasn't reused
   XCTAssertFalse(c2.didReuseComponent);
   // Verify `c1.childComponent` preserves its state during component reuse
-  XCTAssertEqual(newState1, c1.scopeHandle.state);
+  XCTAssertEqual(newState1, c1.state);
 
   // Simulate state update on c1
   NSNumber *newState3 = @30;
   CKComponentStateUpdateMap stateUpdates3;
-  stateUpdates3[c1.scopeHandle].push_back(^(id){ return newState3;});
+  stateUpdates3[c1.treeNode.scopeHandle].push_back(^(id){ return newState3;});
 
   auto const buildTrigger4 = CKBuildComponentTrigger(buildResults3.scopeRoot, stateUpdates3, NO, NO);
   auto const buildResults4 = CKBuildComponent(buildResults3.scopeRoot, stateUpdates3, componentFactory, buildTrigger4, CKReflowTriggerNone);
   // Verify `c1.childComponent` gets the correct new state
-  XCTAssertEqual(newState3, c1.scopeHandle.state);
+  XCTAssertEqual(newState3, c1.state);
   // Verify c2 was reused
   XCTAssertTrue(c2.didReuseComponent);
   // Verify c1 wasn't reused
   XCTAssertFalse(c1.didReuseComponent);
   // Verify `c2.childComponent` preserves its state during component reuse
-  XCTAssertEqual(newState2, c2.scopeHandle.state);
+  XCTAssertEqual(newState2, c2.state);
 }
 
 - (void)test_nodeToParentLinksAfterReuse
@@ -847,12 +847,12 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   // Simulate state update on c1
   NSNumber *newState1 = @10;
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[c1.scopeHandle].push_back(^(id){ return newState1; });
+  stateUpdates[c1.treeNode.scopeHandle].push_back(^(id){ return newState1; });
 
   auto const buildTrigger2 = CKBuildComponentTrigger(buildResults.scopeRoot, stateUpdates, NO, NO);
   auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, buildTrigger2, CKReflowTriggerNone);
   // Verify `c2.childComponent` gets the correct new state
-  XCTAssertEqual(newState1, c1.scopeHandle.state);
+  XCTAssertEqual(newState1, c1.state);
   // Verify c2 was reused
   XCTAssertTrue(c2.didReuseComponent);
   // Verify c1 wasn't reused
@@ -865,7 +865,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   id<CKComponentProtocol> component = c1.childComponent;
   while (component) {
     [componentsFromParentNodeMap addObject:component];
-    auto const parent = [buildResults2.scopeRoot rootNode].parentForNodeIdentifier(component.scopeHandle.treeNode.nodeIdentifier);
+    auto const parent = [buildResults2.scopeRoot rootNode].parentForNodeIdentifier(component.treeNode.nodeIdentifier);
     component = parent.component;
   }
 
@@ -873,7 +873,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   id<CKComponentProtocol> component2 = c2.childComponent;
   while (component2) {
     [componentsFromParentNodeMap addObject:component2];
-    auto const parent = [buildResults2.scopeRoot rootNode].parentForNodeIdentifier(component2.scopeHandle.treeNode.nodeIdentifier);
+    auto const parent = [buildResults2.scopeRoot rootNode].parentForNodeIdentifier(component2.treeNode.nodeIdentifier);
     component2 = parent.component;
   }
 
@@ -922,7 +922,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   NSNumber *newState1 = @10;
   CKComponentStateUpdateMap stateUpdates;
   auto c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.childComponent;
-  stateUpdates[c1Child.childComponent.scopeHandle].push_back(^(id){ return newState1; });
+  stateUpdates[c1Child.childComponent.treeNode.scopeHandle].push_back(^(id){ return newState1; });
 
   auto const buildTrigger2 = CKBuildComponentTrigger(buildResults.scopeRoot, stateUpdates, NO, NO);
   auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, buildTrigger2, CKReflowTriggerNone);
@@ -932,7 +932,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   auto c2Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c2.childComponent;
 
   // Verify `c2.child.childComponent` gets the correct new state
-  XCTAssertEqual(newState1, c1Child.childComponent.scopeHandle.state);
+  XCTAssertEqual(newState1, c1Child.childComponent.state);
   // Verify c2.child was reused
   XCTAssertTrue(c2Child.didReuseComponent);
   // Verify c1.child wasn't reused

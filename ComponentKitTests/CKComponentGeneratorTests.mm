@@ -140,7 +140,7 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
 
   const auto event = analyticsListenerSpy.events.front();
   event.match([&](CK::AnalyticsListenerSpy::DidReceiveStateUpdate drsu){
-    XCTAssertEqual(drsu.handle, result1.component.scopeHandle);
+    XCTAssertEqual(drsu.handle, result1.component.treeNode.scopeHandle);
     XCTAssertEqual(drsu.rootID, [result1.scopeRoot globalIdentifier]);
   });
 }

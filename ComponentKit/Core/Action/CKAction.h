@@ -157,7 +157,7 @@ public:
    Construct an action from a Render component.
    */
   static CKAction<T...> actionForRenderComponent(id<CKRenderComponentProtocol> component, SEL selector) {
-    return CKAction<T...>(selector, component.scopeHandle);
+    return CKAction<T...>(selector, component.treeNode.scopeHandle);
   }
 
   /**
@@ -200,7 +200,7 @@ public:
       action.send(sender, argsT...);
     });
   }
-  
+
   /**
    Combines two actions into one, the actions will be executed in the specified order.
    */

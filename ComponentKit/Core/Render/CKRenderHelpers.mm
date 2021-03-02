@@ -175,7 +175,7 @@ namespace CKRender {
       RCCAssertNotNil(parent, @"parent cannot be nil");
 
       // Check if the component already has a tree node.
-      CKTreeNode *node = component.scopeHandle.treeNode;
+      CKTreeNode *node = component.treeNode;
 
       [node linkComponent:component toParent:parent inScopeRoot:params.scopeRoot];
 
@@ -196,7 +196,7 @@ namespace CKRender {
       // TODO: Share this value with the value precomputed in the scope
       parentHasStateUpdate = parentHasStateUpdate ||
       (params.buildTrigger == CKBuildTriggerStateUpdate &&
-       CKRender::componentHasStateUpdate(component.scopeHandle,
+       CKRender::componentHasStateUpdate(node.scopeHandle,
                                          previousParentOrComponent,
                                          params.buildTrigger,
                                          params.stateUpdates));

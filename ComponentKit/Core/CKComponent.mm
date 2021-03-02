@@ -166,11 +166,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   _viewConfiguration = viewConfiguration;
 }
 
-- (CKComponentScopeHandle *)scopeHandle
-{
-  return _treeNode.scopeHandle;
-}
-
 - (CKComponentViewContext)viewContext
 {
   RCAssertMainThread();

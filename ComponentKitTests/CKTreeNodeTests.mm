@@ -344,8 +344,8 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   });
 
   // Make sure each component retreive its correct state even after reorder.
-  XCTAssertEqual(c1.scopeHandle.state, c1SecondGen.scopeHandle.state);
-  XCTAssertEqual(c2.scopeHandle.state, c2SecondGen.scopeHandle.state);
+  XCTAssertEqual(c1.treeNode.scopeHandle.state, c1SecondGen.treeNode.scopeHandle.state);
+  XCTAssertEqual(c2.treeNode.scopeHandle.state, c2SecondGen.treeNode.scopeHandle.state);
 }
 
 - (void)test_componentIdentifierOnCKTreeNodeWithChildren_withRemovingComponents {
@@ -379,27 +379,27 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   });
 
   // Make sure each component retreive its correct state even after reorder.
-  XCTAssertEqual(c1.scopeHandle.state, c1SecondGen.scopeHandle.state);
-  XCTAssertEqual(c3.scopeHandle.state, c3SecondGen.scopeHandle.state);
+  XCTAssertEqual(c1.treeNode.scopeHandle.state, c1SecondGen.treeNode.scopeHandle.state);
+  XCTAssertEqual(c3.treeNode.scopeHandle.state, c3SecondGen.treeNode.scopeHandle.state);
 }
 
 #pragma mark - Helpers
 
 - (void)_test_emptyInitialState_withComponent:(CKComponent *)c
 {
-  XCTAssertNil(c.scopeHandle.state);
+  XCTAssertNil(c.treeNode.scopeHandle.state);
 }
 
 - (void)_test_nonNil_initialState_withComponent:(CKComponent *)c
 {
-  XCTAssertEqual([[c class] initialState], c.scopeHandle.state);
-  XCTAssertNotNil(c.scopeHandle);
+  XCTAssertEqual([[c class] initialState], c.treeNode.scopeHandle.state);
+  XCTAssertNotNil(c.treeNode.scopeHandle);
 }
 
 - (void)_test_initialState_withComponent:(CKComponent *)c initialState:(id)initialState
 {
-  XCTAssertEqual(initialState, c.scopeHandle.state);
-  XCTAssertNotNil(c.scopeHandle);
+  XCTAssertEqual(initialState, c.treeNode.scopeHandle.state);
+  XCTAssertNotNil(c.treeNode.scopeHandle);
 }
 
 @end

@@ -21,7 +21,7 @@
 
 namespace CK {
   static auto getScopeHandle(id<CKMountable> const c) {
-    const auto scopeHandle = objCForceCast<CKComponent>(c).scopeHandle;
+    const auto scopeHandle = objCForceCast<CKComponent>(c).treeNode.scopeHandle;
     RCCAssertNotNil(scopeHandle, @"Scope must be provided for component animation");
     return scopeHandle;
   }

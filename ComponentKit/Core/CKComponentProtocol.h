@@ -35,9 +35,6 @@ NS_SWIFT_NAME(ComponentProtocol)
  */
 - (id<CKComponentControllerProtocol>)buildController;
 
-/** Reference to the component's scope handle. */
-@property (nonatomic, strong, readonly, nullable) CKComponentScopeHandle *scopeHandle;
-
 #if CK_NOT_SWIFT
 
 /**

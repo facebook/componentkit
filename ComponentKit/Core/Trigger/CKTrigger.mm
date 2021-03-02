@@ -7,7 +7,7 @@
 
 static auto _scopedResponderAndKey(id<CKComponentProtocol> component, NSString *context) -> CKTriggerScopedResponderAndKey {
 
-  auto const handle = [component scopeHandle];
+  auto const handle = component.treeNode.scopeHandle;
   auto const scopedResponder = handle.scopedResponder;
   auto const responderKey = [scopedResponder keyForHandle:handle];
 

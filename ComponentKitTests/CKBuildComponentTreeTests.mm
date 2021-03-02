@@ -187,12 +187,12 @@
 
   // Simulate a state update on the root.
   CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[rootComponent.scopeHandle].push_back(^(id){
+  stateUpdates[rootComponent.treeNode.scopeHandle].push_back(^(id){
     return @2;
   });
 
   CKTreeNodeDirtyIds dirtyNodeIds = CKRender::treeNodeDirtyIdsFor(buildResults.scopeRoot, stateUpdates, CKBuildTriggerStateUpdate);
-  CKTreeNodeDirtyIds expectedDirtyNodeIds = {rootComponent.scopeHandle.treeNodeIdentifier};
+  CKTreeNodeDirtyIds expectedDirtyNodeIds = {rootComponent.treeNode.scopeHandle.treeNodeIdentifier};
   XCTAssertEqual(dirtyNodeIds, expectedDirtyNodeIds);
 }
 
