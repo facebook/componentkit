@@ -77,13 +77,16 @@
 
 - (instancetype)newStatelessHandle
 {
-  return [[CKComponentScopeHandle alloc] initWithListener:_listener
-                                         globalIdentifier:_globalIdentifier
-                                           rootIdentifier:_rootIdentifier
-                                        componentTypeName:_componentTypeName
-                                                    state:nil
-                                               controller:nil
-                                          scopedResponder:nil];
+  const auto handle = [[CKComponentScopeHandle alloc] initWithListener:_listener
+                                                      globalIdentifier:_globalIdentifier
+                                                        rootIdentifier:_rootIdentifier
+                                                     componentTypeName:_componentTypeName
+                                                                 state:nil
+                                                            controller:nil
+                                                       scopedResponder:nil];
+  // This handle isn't meant to be resolved, marking as `YES`.
+  handle->_resolved = YES;
+  return handle;
 }
 
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
