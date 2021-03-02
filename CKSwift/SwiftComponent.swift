@@ -75,6 +75,15 @@ class SwiftComponent<View: CKSwift.View> : CKSwiftComponent {
       child: body
     )
   }
+
+  override var typeName: UnsafePointer<Int8> {
+    // Swift components can either be a `SwiftComponent<View>`, `SwiftReusableComponent<View>` or
+    // `SwiftReusableLeafComponent<View>` based on the capabilities of `View`.
+    // Always use `SwiftComponent<View>` as the `typeName` so that CKSwift's infra doesn't have
+    // to know which concrete subclass is being used. Really what's important is the `View` part
+    // which suffices to identify the component.
+    class_getName(SwiftComponent<View>.self)
+  }
 }
 
 class SwiftReusableBaseComponent<View: ReusableView> : SwiftComponent<View>, ReusableComponentProtocol {
