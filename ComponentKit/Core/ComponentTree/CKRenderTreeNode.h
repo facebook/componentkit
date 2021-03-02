@@ -14,8 +14,6 @@
 
 #import <ComponentKit/CKTreeNode.h>
 
-@protocol CKTreeNodeComponentProtocol;
-
 /**
  This object is a bridge between CKComponentScope and CKTreeNode.
 

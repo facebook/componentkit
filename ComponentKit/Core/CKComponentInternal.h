@@ -23,7 +23,7 @@
 
 @protocol CKSystraceListener;
 
-@interface CKComponent () <CKTreeNodeComponentProtocol>
+@interface CKComponent () <CKComponentProtocol>
 
 /**
  Mounts the component in the given context:

@@ -146,7 +146,7 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 /**
  Will be called for every component with pre-computed child (CKCompositeComponent for example) during the component tree creation.
  */
-- (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
+- (void)didBuildTreeNodeForPrecomputedChild:(id<CKComponentProtocol>)component
                                        node:(CKTreeNode *)node
                                      parent:(CKTreeNode *)parent
                                      params:(const CKBuildComponentTreeParams &)params

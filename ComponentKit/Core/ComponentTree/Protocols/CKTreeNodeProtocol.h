@@ -41,40 +41,6 @@ typedef std::unordered_map<CKTreeNodeIdentifier, CKTreeNodeReuseInfo> CKTreeNode
 
 #endif
 
-/**
- The component that is hosted by a `CKTreeNodeProtocol`.
- It represents the component holding the the scope handle, capable of building a component tree (CKTreeNode).
- */
-NS_SWIFT_NAME(TreeNodeComponentProtocol)
-@protocol CKTreeNodeComponentProtocol<CKComponentProtocol, RCIterable>
-
-#if CK_NOT_SWIFT
-
-/** Reference to the component's scope handle. */
-@property (nonatomic, strong, readonly, nullable) CKComponentScopeHandle *scopeHandle;
-
-/**
- This method translates the component render method into a 'CKTreeNode'; a component tree.
- It's being called by the infra during the component tree creation.
- */
-- (void)buildComponentTree:(CKTreeNode *)parent
-            previousParent:(CKTreeNode *_Nullable)previousParent
-                    params:(const CKBuildComponentTreeParams &)params
-      parentHasStateUpdate:(BOOL)parentHasStateUpdate;
-
-#endif
-
-/** Ask the component to acquire a tree node. */
-- (void)acquireTreeNode:(CKTreeNode *)treeNode;
-
-/** Reference to the component's tree node. */
-@property (nonatomic, strong, readonly, nullable) CKTreeNode *treeNode;
-
-/** Get child at index; can be nil */
-- (id<CKTreeNodeComponentProtocol> _Nullable)childAtIndex:(unsigned int)index;
-
-@end
-
 #if CK_NOT_SWIFT
 
 /**

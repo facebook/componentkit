@@ -373,7 +373,7 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 
 - (BOOL)shouldCollectTreeNodeCreationInformation:(CKComponentScopeRoot *)scopeRoot { return NO; }
 
-- (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
+- (void)didBuildTreeNodeForPrecomputedChild:(id<CKComponentProtocol>)component
                                        node:(CKTreeNode *)node
                                      parent:(CKTreeNode *)parent
                                      params:(const CKBuildComponentTreeParams &)params

@@ -5,7 +5,7 @@
 #import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKTrigger.h>
 
-static auto _scopedResponderAndKey(id<CKTreeNodeComponentProtocol> component, NSString *context) -> CKTriggerScopedResponderAndKey {
+static auto _scopedResponderAndKey(id<CKComponentProtocol> component, NSString *context) -> CKTriggerScopedResponderAndKey {
 
   auto const handle = [component scopeHandle];
   auto const scopedResponder = handle.scopedResponder;
@@ -24,4 +24,4 @@ static auto _scopedResponderAndKey(id<CKTreeNodeComponentProtocol> component, NS
 
 CKTriggerScopedResponderAndKey::CKTriggerScopedResponderAndKey(CKScopedResponder *responder, CKScopedResponderKey key) : responder(responder), key(key) {}
 
-CKTriggerScopedResponderAndKey::CKTriggerScopedResponderAndKey(id<CKTreeNodeComponentProtocol> component, NSString *context) : CKTriggerScopedResponderAndKey(_scopedResponderAndKey(component, context)) {}
+CKTriggerScopedResponderAndKey::CKTriggerScopedResponderAndKey(id<CKComponentProtocol> component, NSString *context) : CKTriggerScopedResponderAndKey(_scopedResponderAndKey(component, context)) {}

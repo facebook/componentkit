@@ -54,7 +54,7 @@ namespace TreeNode {
 
 
 @interface CKTreeNode ()
-@property (nonatomic, weak, readwrite) id<CKTreeNodeComponentProtocol> component;
+@property (nonatomic, weak, readwrite) id<CKComponentProtocol> component;
 @property (nonatomic, strong, readwrite) CKComponentScopeHandle *scopeHandle;
 @property (nonatomic, assign, readwrite) CKTreeNodeIdentifier nodeIdentifier;
 @end
@@ -135,7 +135,7 @@ namespace TreeNode {
   return [super new];
 }
 
-- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
+- (void)linkComponent:(id<CKComponentProtocol>)component
               withKey:(const CKTreeNodeComponentKey&)componentKey
              toParent:(CKTreeNode *)parent
           inScopeRoot:(CKComponentScopeRoot *)scopeRoot
@@ -148,7 +148,7 @@ namespace TreeNode {
   scopeRoot.rootNode.registerNode(self, parent);
 }
 
-- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
+- (void)linkComponent:(id<CKComponentProtocol>)component
              toParent:(CKTreeNode *)parent
           inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {

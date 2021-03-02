@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  your component should subclass either from `CKRenderComponent`.
  */
 NS_SWIFT_NAME(RenderComponentProtocol)
-@protocol CKRenderComponentProtocol <CKTreeNodeComponentProtocol, CKReusableComponentProtocol>
+@protocol CKRenderComponentProtocol <CKComponentProtocol, CKReusableComponentProtocol>
 
 /*
  Override this method in order to provide an initialState which depends on the component's props.
@@ -45,12 +45,12 @@ NS_SWIFT_NAME(RenderWithChildComponentProtocol)
 
  @param state The current state of the component.
  */
-- (id<CKTreeNodeComponentProtocol> _Nullable)render:(id _Nullable)state;
+- (id<CKComponentProtocol> _Nullable)render:(id _Nullable)state;
 
 /**
  Returns the computed child component, if there is one.
  */
-@property (nonatomic, strong, readonly, nullable) id<CKTreeNodeComponentProtocol> child;
+@property (nonatomic, strong, readonly, nullable) id<CKComponentProtocol> child;
 
 @end
 

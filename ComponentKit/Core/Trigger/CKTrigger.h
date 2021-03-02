@@ -19,14 +19,12 @@
 #import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 
-@protocol CKTreeNodeComponentProtocol;
-
 struct CKTriggerScopedResponderAndKey {
   CKScopedResponder *responder;
   CKScopedResponderKey key;
 
   CKTriggerScopedResponderAndKey(CKScopedResponder *responder, CKScopedResponderKey key);
-  CKTriggerScopedResponderAndKey(id<CKTreeNodeComponentProtocol> component, NSString *context = @"");
+  CKTriggerScopedResponderAndKey(id<CKComponentProtocol> component, NSString *context = @"");
 
   auto operator== (const CKTriggerScopedResponderAndKey& rhs) const {
     return responder.uniqueIdentifier == rhs.responder.uniqueIdentifier;

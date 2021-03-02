@@ -143,7 +143,6 @@ CKComponent *CKActionBase::componentFromContext(const CK::BaseSpecContext &conte
   const auto component = context._component;
 #if DEBUG
     RCCAssertNotNil(component, @"BaseSpecContext contains nil component");
-    RCCAssert([component conformsToProtocol:@protocol(CKTreeNodeComponentProtocol)], @"RenderContext contains non tree node component");
 #endif
   return ((CKComponent *)component);
 }

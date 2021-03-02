@@ -78,7 +78,7 @@ struct CKComponentScopePair {
 
 #if CK_NOT_SWIFT
 
-@property (nonatomic, weak, readonly) id<CKTreeNodeComponentProtocol> component;
+@property (nonatomic, weak, readonly) id<CKComponentProtocol> component;
 
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
 
@@ -96,7 +96,7 @@ struct CKComponentScopePair {
                inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 /** This method should be called on nodes that have been created from CKComponentScope */
-- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
+- (void)linkComponent:(id<CKComponentProtocol>)component
              toParent:(CKTreeNode *)parent
           inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 

@@ -108,7 +108,7 @@ inComponentTreeWithRootComponent:(id<CKMountable>)component
 - (id<CKSystraceListener>)systraceListener { return nil; }
 - (BOOL)shouldCollectTreeNodeCreationInformation:(CKComponentScopeRoot *)scopeRoot { return NO; }
 
-- (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
+- (void)didBuildTreeNodeForPrecomputedChild:(id<CKComponentProtocol>)component
                                        node:(CKTreeNode *)node
                                      parent:(CKTreeNode *)parent
                                      params:(const CKBuildComponentTreeParams &)params

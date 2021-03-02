@@ -43,6 +43,12 @@
 { return ""; }
 + (RCComponentCoalescingMode)coalescingMode
 { return RCComponentCoalescingModeNone; }
+- (CKComponentScopeHandle *)scopeHandle { return nil; }
+- (void)buildComponentTree:(CKTreeNode *)parent previousParent:(CKTreeNode *)previousParent params:(const CKBuildComponentTreeParams &)params parentHasStateUpdate:(BOOL)parentHasStateUpdate { }
+- (unsigned int)numberOfChildren { return 0; }
+- (id<CKComponentProtocol>)childAtIndex:(unsigned int)index { return nil; }
+- (CKTreeNode *)treeNode { return nil; }
+- (void)acquireTreeNode:(CKTreeNode *)treeNode { }
 @end
 
 @interface TestComponentWithoutScopedProtocol : NSObject <CKComponentProtocol>
@@ -59,6 +65,13 @@
 { return ""; }
 + (RCComponentCoalescingMode)coalescingMode
 { return RCComponentCoalescingModeNone; }
+- (CKComponentScopeHandle *)scopeHandle { return nil; }
+- (void)buildComponentTree:(CKTreeNode *)parent previousParent:(CKTreeNode *)previousParent params:(const CKBuildComponentTreeParams &)params parentHasStateUpdate:(BOOL)parentHasStateUpdate { }
+- (id<CKComponentProtocol>)childAtIndex:(unsigned int)index { return nil; }
+- (CKTreeNode *)treeNode { return nil; }
+- (void)acquireTreeNode:(CKTreeNode *)treeNode { }
+- (unsigned int)numberOfChildren { return 0; }
+
 @end
 
 @interface TestComponentControllerWithScopedProtocol : NSObject <CKComponentControllerProtocol, TestScopedProtocol>

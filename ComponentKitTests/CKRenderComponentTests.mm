@@ -862,7 +862,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   NSMutableSet *componentsFromParentNodeMap = [NSMutableSet set];
 
   // Add all the components from c1.childComponent to the root
-  id<CKTreeNodeComponentProtocol> component = c1.childComponent;
+  id<CKComponentProtocol> component = c1.childComponent;
   while (component) {
     [componentsFromParentNodeMap addObject:component];
     auto const parent = [buildResults2.scopeRoot rootNode].parentForNodeIdentifier(component.scopeHandle.treeNode.nodeIdentifier);
@@ -870,7 +870,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   }
 
   // Add all the components from c2.childComponent to the root
-  id<CKTreeNodeComponentProtocol> component2 = c2.childComponent;
+  id<CKComponentProtocol> component2 = c2.childComponent;
   while (component2) {
     [componentsFromParentNodeMap addObject:component2];
     auto const parent = [buildResults2.scopeRoot rootNode].parentForNodeIdentifier(component2.scopeHandle.treeNode.nodeIdentifier);
