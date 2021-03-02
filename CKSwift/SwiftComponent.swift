@@ -102,7 +102,7 @@ class SwiftReusableBaseComponent<View: ReusableView> : SwiftComponent<View>, Reu
 final class SwiftReusableComponent<View: ReusableView> : SwiftReusableBaseComponent<View> where View.Body == Component {
   override func clone() -> Self {
     // TODO: Reuse logic
-    view.linkPropertyWrappersWithScopeHandle(componentClass: Self.self)
+    view.linkPropertyWrappersWithScopeHandle()
 
     defer {
       CKSwiftPopClass()
@@ -114,7 +114,7 @@ final class SwiftReusableComponent<View: ReusableView> : SwiftReusableBaseCompon
 final class SwiftReusableLeafComponent<View: ReusableView> : SwiftReusableBaseComponent<View> where View.Body == Never {
   override func clone() -> Self {
     // TODO: Reuse logic
-    view.linkPropertyWrappersWithScopeHandle(componentClass: Self.self)
+    view.linkPropertyWrappersWithScopeHandle()
 
     defer {
       CKSwiftPopClass()
