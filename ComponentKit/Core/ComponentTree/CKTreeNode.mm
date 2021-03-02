@@ -87,12 +87,7 @@ namespace TreeNode {
 
   auto const previousNode = [previousParent childForComponentKey:componentKey];
 
-  // For Render Layout components, the component might have a scope handle already.
-  CKComponentScopeHandle *scopeHandle = component.scopeHandle;
-  if (scopeHandle == nil) {
-    scopeHandle = CKRender::ScopeHandle::Render::create(component, previousNode, scopeRoot, stateUpdates);
-  }
-
+  CKComponentScopeHandle *scopeHandle = CKRender::ScopeHandle::Render::create(component, previousNode, scopeRoot, stateUpdates);
   if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
     [self linkComponent:component withKey:componentKey toParent:parent inScopeRoot:scopeRoot];
     // Update the treeNode on the component
