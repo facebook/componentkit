@@ -21,4 +21,6 @@ enum class CKWritingDirection {
 
 CKWritingDirection CKGetWritingDirection();
 
+void CKOverrideWritingDirection(CKWritingDirection writingDirection);
+
 #endif

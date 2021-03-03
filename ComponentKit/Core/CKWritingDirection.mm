@@ -10,21 +10,26 @@
 
 #import "CKWritingDirection.h"
 
+static CKWritingDirection sWritingDirection;
+
 CKWritingDirection CKGetWritingDirection() {
-  static CKWritingDirection WritingDirection;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     switch ([NSParagraphStyle defaultWritingDirectionForLanguage:nil]) {
       case NSWritingDirectionRightToLeft:
-        WritingDirection = CKWritingDirection::RightToLeft;
+        sWritingDirection = CKWritingDirection::RightToLeft;
         break;
       case NSWritingDirectionLeftToRight:
-        WritingDirection = CKWritingDirection::LeftToRight;
+        sWritingDirection = CKWritingDirection::LeftToRight;
         break;
       case NSWritingDirectionNatural:
-        WritingDirection = CKWritingDirection::Natural;
+        sWritingDirection = CKWritingDirection::Natural;
         break;
     }
   });
-  return WritingDirection;
+  return sWritingDirection;
+}
+
+void CKOverrideWritingDirection(CKWritingDirection writingDirection) {
+  sWritingDirection = writingDirection;
 }
