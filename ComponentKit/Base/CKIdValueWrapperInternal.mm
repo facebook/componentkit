@@ -30,9 +30,7 @@
     _data = _dataPointerValue(self, dataAlignment);
     _comparator = comparator;
     _releaser = releaser;
-    if (assigner != nil) {
-      assigner(_data, value);
-    }
+    assigner(_data, value);
   }
 
   return self;

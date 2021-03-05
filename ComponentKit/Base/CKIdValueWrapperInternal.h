@@ -32,8 +32,8 @@ using CKIdValueWrapperComparatorType = BOOL (*)(const void * lhs, const void * r
 + (instancetype)allocWithZone:(struct _NSZone *)zone NS_UNAVAILABLE;
 
 /// Shouldn't be used directly, see CKIdValueWrapperCreate()
-- (instancetype)initWithValue:(void *const _Nullable )value
-                     assigner:(CKIdValueWrapperAssignerType _Nullable)assigner
+- (instancetype)initWithValue:(void *const)value
+                     assigner:(CKIdValueWrapperAssignerType)assigner
                      releaser:(CKIdValueWrapperReleaserType)releaser
                    comparator:(CKIdValueWrapperComparatorType _Nullable)comparator
                 dataAlignment:(NSUInteger)dataAlignment NS_DESIGNATED_INITIALIZER;
