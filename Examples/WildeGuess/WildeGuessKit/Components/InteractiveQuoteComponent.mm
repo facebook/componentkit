@@ -43,27 +43,21 @@ static NSString *const oscarWilde = @"Oscar Wilde";
 
   InteractiveQuoteComponent *c =
   [super newWithComponent:
-   [CKFlexboxComponent
-    newWithView:{
-      [UIView class],
-      {CKComponentTapGestureAttribute(@selector(didTap))}
-    }
-    size:{}
-    style:{
-      .alignItems = CKFlexboxAlignItemsStretch
-    }
-    children:{
-      {CK::OverlayLayoutComponentBuilder()
+   CK::FlexboxComponentBuilder()
+       .viewClass([UIView class])
+       .onTap(@selector(didTap))
+       .alignItems(CKFlexboxAlignItemsStretch)
+       .child(CK::OverlayLayoutComponentBuilder()
            .component([QuoteComponent newWithQuote:quote context:context])
            .overlay(overlay)
-           .build()},
-      {[CKComponent
+           .build())
+       .child([CKComponent
         newWithView:{
           [UIView class],
           {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
         }
-        size:{.height = 1 / [UIScreen mainScreen].scale}]}
-    }]];
+        size:{.height = 1 / [UIScreen mainScreen].scale}])
+       .build()];
   if (c) {
     c->_overlay = overlay;
   }

@@ -44,14 +44,9 @@
                  .insetsLeft(20)
                  .insetsBottom(40)
                  .insetsRight(20)
-                 .component([CKFlexboxComponent
-               newWithView:{}
-               size:{}
-               style:{
-                 .alignItems = CKFlexboxAlignItemsCenter
-               }
-               children:{
-                 {[CKLabelComponent
+                 .component(CK::FlexboxComponentBuilder()
+                                .alignItems(CKFlexboxAlignItemsCenter)
+                                .child([CKLabelComponent
                     newWithLabelAttributes:{
                       .string = (indicatesSuccess ? @"Yes" : @"No"),
                       .color = [UIColor whiteColor],
@@ -62,9 +57,8 @@
                       {@selector(setBackgroundColor:), [UIColor clearColor]},
                       {@selector(setUserInteractionEnabled:), @NO},
                     }
-                    size:{ }]
-                 },
-                 {[CKLabelComponent
+                    size:{ }])
+                                .child([CKLabelComponent
                    newWithLabelAttributes:{
                      .string = (indicatesSuccess ? successText : failureText),
                      .color = [UIColor whiteColor],
@@ -75,10 +69,9 @@
                      {@selector(setBackgroundColor:), [UIColor clearColor]},
                      {@selector(setUserInteractionEnabled:), @NO},
                    }
-                   size:{ }],
-                   .spacingBefore = 20
-                 }
-               }])
+                   size:{ }])
+                                    .spacingBefore(20)
+                                .build())
                  .build())
                 .background([CKComponent
               newWithView:{

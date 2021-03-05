@@ -42,31 +42,20 @@
       .build();
 
   CKComponent *quoteTextWithBookmarkComponent =
-  [CKFlexboxComponent
-   newWithView:{}
-   size:{}
-   style:{
-     .alignItems = CKFlexboxAlignItemsStart,
-     .direction = CKFlexboxDirectionRow
-   }
-   children:{
-     {
-       // Small dark gray rectangle as a bookmark.
-       .component =
-       [CKComponent
+  CK::FlexboxComponentBuilder()
+      .alignItems(CKFlexboxAlignItemsStart)
+      .direction(CKFlexboxDirectionRow)
+      .child([CKComponent
         newWithView:{
           [UIView class],
           {{@selector(setBackgroundColor:), [UIColor darkGrayColor]}}
         }
-        size:{20, 40}],
-       .spacingBefore = 10
-     },
-     {
-       .component = quoteTextComponent,
-       .flexShrink = 1,
-       .flexBasis = RCRelativeDimension::Percent(1.0)
-     }
-   }];
+        size:{20, 40}])
+          .spacingBefore(10)
+      .child(quoteTextComponent)
+          .flexShrink(1)
+          .flexBasis(RCRelativeDimension::Percent(1.0))
+      .build();
 
   return [super newWithComponent:
           [QuoteWithBackgroundComponent

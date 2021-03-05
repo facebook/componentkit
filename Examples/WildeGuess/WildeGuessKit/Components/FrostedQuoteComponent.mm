@@ -31,43 +31,35 @@
                .insetsBottom(25)
                .insetsLeft(20)
                .insetsRight(20)
-               .component([CKFlexboxComponent
-             newWithView:{}
-             size:{}
-             style:{.alignItems = CKFlexboxAlignItemsStart}
-             children:{
-               {
-                 [CKLabelComponent
-                  newWithLabelAttributes:{
-                    .string = text,
-                    .font = [UIFont fontWithName:@"Baskerville" size:30]
-                  }
-                  viewAttributes:{
-                    {@selector(setBackgroundColor:), [UIColor clearColor]},
-                    {@selector(setUserInteractionEnabled:), @NO},
-                  }
-                  size:{ }],
-                 .alignSelf = CKFlexboxAlignSelfCenter
-               },
-               {
-                 // A semi-transparent end quote (") symbol placed below the quote.
-                 CK::InsetComponentBuilder()
+               .component(CK::FlexboxComponentBuilder()
+                 .alignItems(CKFlexboxAlignItemsStart)
+                 .child([CKLabelComponent
+                    newWithLabelAttributes:{
+                      .string = text,
+                      .font = [UIFont fontWithName:@"Baskerville" size:30]
+                    }
+                    viewAttributes:{
+                      {@selector(setBackgroundColor:), [UIColor clearColor]},
+                      {@selector(setUserInteractionEnabled:), @NO},
+                    }
+                    size:{ }])
+                  .alignSelf(CKFlexboxAlignSelfCenter)
+                  .child(CK::InsetComponentBuilder()
                      .insetsRight(5)
                      .component([CKLabelComponent
-                   newWithLabelAttributes:{
-                     .string = @"\u201D",
-                     .color = [UIColor colorWithWhite:1 alpha:0.5],
-                     .font = [UIFont fontWithName:@"Baskerville" size:140]
-                   }
-                   viewAttributes:{
-                     {@selector(setBackgroundColor:), [UIColor clearColor]},
-                     {@selector(setUserInteractionEnabled:), @NO},
-                   }
-                   size:{ }])
-                     .build(),
-                 .alignSelf = CKFlexboxAlignSelfEnd, // Right aligned
-               }
-             }])
+                       newWithLabelAttributes:{
+                         .string = @"\u201D",
+                         .color = [UIColor colorWithWhite:1 alpha:0.5],
+                         .font = [UIFont fontWithName:@"Baskerville" size:140]
+                       }
+                       viewAttributes:{
+                         {@selector(setBackgroundColor:), [UIColor clearColor]},
+                         {@selector(setUserInteractionEnabled:), @NO},
+                       }
+                       size:{ }])
+                     .build())
+                  .alignSelf(CKFlexboxAlignSelfEnd)
+                  .build())
                .build()]];
 }
 

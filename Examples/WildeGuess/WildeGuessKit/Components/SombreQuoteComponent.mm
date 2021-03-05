@@ -30,16 +30,11 @@
                .insetsLeft(30)
                .insetsBottom(40)
                .insetsRight(30)
-               .component([CKFlexboxComponent
-             newWithView:{}
-             size:{}
-             style:{
-               .alignItems = CKFlexboxAlignItemsStart,
-               .spacing = 50
-             }
-             children:{
-               {lineComponent()},
-               {[CKLabelComponent
+               .component(CK::FlexboxComponentBuilder()
+                              .alignItems(CKFlexboxAlignItemsStart)
+                              .spacing(50)
+                              .child(lineComponent())
+                              .child([CKLabelComponent
                  newWithLabelAttributes:{
                    .string = [text uppercaseString],
                    .color = [UIColor whiteColor],
@@ -49,9 +44,9 @@
                    {@selector(setBackgroundColor:), [UIColor clearColor]},
                    {@selector(setUserInteractionEnabled:), @NO},
                  }
-                 size:{ }]},
-               {lineComponent()},
-             }])
+                 size:{ }])
+                              .child(lineComponent())
+                              .build())
                .build()]];;
 }
 
