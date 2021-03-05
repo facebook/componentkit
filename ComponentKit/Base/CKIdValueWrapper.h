@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  * The returned reference will be valid for as long as object lives.
  */
 template <typename T>
-T& CKIdValueWrapperGet(__unsafe_unretained CKIdValueWrapper *object) {
+T& CKIdValueWrapperGet(CKIdValueWrapper *object) {
   return *reinterpret_cast<T *>(object.data);
 }
 
