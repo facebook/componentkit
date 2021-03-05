@@ -423,7 +423,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
                         size:(const RCComponentSize &)size
                        style:(const CKFlexboxComponentStyle &)style
-                    children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children NS_DESIGNATED_INITIALIZER;
+                    children:(std::vector<CKFlexboxComponentChild>)children NS_DESIGNATED_INITIALIZER;
 
 #else
 

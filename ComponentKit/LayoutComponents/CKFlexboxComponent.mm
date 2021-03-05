@@ -190,12 +190,12 @@ template class std::vector<CKFlexboxComponentChild>;
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
                         size:(const RCComponentSize &)size
                        style:(const CKFlexboxComponentStyle &)style
-                    children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+                    children:(std::vector<CKFlexboxComponentChild>)children
 {
   CKComponentPerfScope perfScope(self.class);
   if (self = [super initWithView:view size:size]) {
     _style = style;
-    _children = children.take();
+    _children = std::move(children);
 #if CK_ASSERTIONS_ENABLED
     for (const auto &child : _children) {
       if (child.component) {
@@ -227,7 +227,7 @@ template class std::vector<CKFlexboxComponentChild>;
                       style:(const CKFlexboxComponentStyle &)style
                    children:(RCContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
-  return [[self alloc] initWithView:view size:size style:style children:std::move(children)];
+  return [[self alloc] initWithView:view size:size style:style children:children.take()];
 }
 
 static bool setPercentOnChildNode(const CKFlexboxComponentStyle &style) {
