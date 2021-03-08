@@ -28,10 +28,25 @@ struct RCLayoutCacheKey {
 
 namespace std {
   template <>
+  struct hash<CGSize> {
+    size_t operator ()(const CGSize &size) noexcept {
+      const auto hashes = {
+        std::hash<CGFloat>()(size.width),
+        std::hash<CGFloat>()(size.height),
+      };
+      return RCIntegerArrayHash(hashes.begin(), hashes.size());
+    }
+  };
+
+  template <>
   struct hash<RCLayoutCacheKey> {
     size_t operator()(const RCLayoutCacheKey &key) const noexcept
     {
-      return key.constrainingSize.hash();
+      const auto hashes = {
+        key.constrainingSize.hash(),
+        std::hash<CGSize>()(key.parentSize)
+      };
+      return RCIntegerArrayHash(hashes.begin(), hashes.size());
     }
   };
 }
