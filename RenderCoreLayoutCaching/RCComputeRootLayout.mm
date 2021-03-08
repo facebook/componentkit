@@ -4,10 +4,17 @@
 
 #import <unordered_map>
 
+#import <RenderCore/CKInternalHelpers.h>
 #import <RenderCore/CKMountable.h>
 #import <RenderCore/CKSizeRange.h>
 #import <RenderCore/RCLayout.h>
 
+// Considers NaNs equal to each other (unlike CGSizeEqualToSize). This is important for the layout cache
+// keys as identical keys that contain NaNs will be otherwise treated as different.
+static bool sizesAreEqual(const CGSize &lhs, const CGSize &rhs)
+{
+  return CKFloatsEqual(lhs.width, rhs.width) && CKFloatsEqual(lhs.height, rhs.height);
+}
 
 struct RCLayoutCacheKey {
   CKSizeRange constrainingSize;
@@ -15,8 +22,7 @@ struct RCLayoutCacheKey {
 
   bool operator==(const RCLayoutCacheKey &other) const
   {
-    return constrainingSize == other.constrainingSize \
-    && CGSizeEqualToSize(parentSize, other.parentSize);
+    return constrainingSize == other.constrainingSize && sizesAreEqual(parentSize, other.parentSize);
   }
 };
 
@@ -114,7 +120,7 @@ RCLayoutResult RCComputeRootLayout(id<CKMountable> model,
   if (cache) {
     // We expect the writeCache to have about as many elements as the readCache.
     // Reserve the appropriate number of buckets now to avoid rehashing later.
-    writeCache->map.reserve(cache->map.size()); 
+    writeCache->map.reserve(cache->map.size());
   }
 
   // We don't expect nested root layouts, so the thread-local caches should generally be null.
