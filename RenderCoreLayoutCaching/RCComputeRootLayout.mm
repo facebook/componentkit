@@ -35,7 +35,7 @@ struct RCLayoutCache {
   std::unordered_map<id<CKMountable>, std::unordered_map<RCLayoutCacheKey, RCLayout>, RC::hash<id>> map;
 };
 
-thread_local RCLayoutCache *currentLayoutReadCache;
+thread_local const RCLayoutCache *currentLayoutReadCache;
 thread_local RCLayoutCache *currentLayoutWriteCache;
 
 /**
@@ -44,7 +44,7 @@ thread_local RCLayoutCache *currentLayoutWriteCache;
  of all component layouts, even when we get a cache hit.
  */
 static void copyFromReadCacheToWriteCache(const RCLayout &layout,
-                                          RCLayoutCache *readCache,
+                                          const RCLayoutCache *readCache,
                                           RCLayoutCache *writeCache)
 {
   const auto &matches = readCache->map.find(layout.component);
@@ -114,12 +114,12 @@ RCLayoutResult RCComputeRootLayout(id<CKMountable> model,
   if (cache) {
     // We expect the writeCache to have about as many elements as the readCache.
     // Reserve the appropriate number of buckets now to avoid rehashing later.
-    writeCache->map.reserve(cache->map.size());
+    writeCache->map.reserve(cache->map.size()); 
   }
 
   // We don't expect nested root layouts, so the thread-local caches should generally be null.
   // But if a nested root layout *does* happen, we restore the previous caches before returning.
-  RCLayoutCache *const previousReadCache = currentLayoutReadCache;
+  const RCLayoutCache *const previousReadCache = currentLayoutReadCache;
   RCLayoutCache *const previousWriteCache = currentLayoutWriteCache;
   currentLayoutReadCache = cache.get();
   currentLayoutWriteCache = writeCache.get();
