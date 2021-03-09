@@ -30,6 +30,7 @@
 #import <ComponentKit/RCComponentSize_SwiftBridge+Internal.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge+Internal.h>
 
+#import "CKComponent+LayoutLifecycle.h"
 #import "CKComponent+UIView.h"
 #import "CKComponentAccessibility.h"
 #import "CKAccessibilityAggregation.h"
@@ -329,28 +330,39 @@ static void unblockAnimation()
 
 #endif
 
+__attribute__((objc_externally_retained)) // parameters are retained by the caller
+void CKComponentWillLayout(CKComponent *component, CKSizeRange constrainedSize, CGSize parentSize, id<CKSystraceListener> systraceListener)
+{
+  CKAssertSizeRange(constrainedSize);
+  [systraceListener willLayoutComponent:component];
+}
+
 - (RCLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
 {
 #if CK_ASSERTIONS_ENABLED
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
 #endif
-
-  CKAssertSizeRange(constrainedSize);
+  
   CK::Component::LayoutContext context(self, constrainedSize);
   auto const systraceListener = context.systraceListener;
-  [systraceListener willLayoutComponent:self];
-
+  CKComponentWillLayout(self, constrainedSize, parentSize, systraceListener);
+  
   RCLayout layout = [self computeLayoutThatFits:constrainedSize
-                                        restrictedToSize:_size
-                                    relativeToParentSize:parentSize];
-
-#if CK_ASSERTIONS_ENABLED
-  [self _validate_layoutThatFits:constrainedSize layout:layout parentSize:parentSize];
-#endif
-
-  [systraceListener didLayoutComponent:self];
-
+                               restrictedToSize:_size
+                           relativeToParentSize:parentSize];
+  
+  CKComponentDidLayout(self, layout, constrainedSize, parentSize, systraceListener);
+  
   return layout;
+}
+
+__attribute__((objc_externally_retained)) // parameters are retained by the caller
+void CKComponentDidLayout(CKComponent *component, const RCLayout &layout, CKSizeRange constrainedSize, CGSize parentSize, id<CKSystraceListener> systraceListener)
+{
+#if CK_ASSERTIONS_ENABLED
+  [component _validate_layoutThatFits:constrainedSize layout:layout parentSize:parentSize];
+#endif
+  [systraceListener didLayoutComponent:component];
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
