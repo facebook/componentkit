@@ -192,7 +192,7 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 
-  /**
+  /** 
   The amount of space to inset on the right.
   */
   auto &insetsRight(CGFloat i)
