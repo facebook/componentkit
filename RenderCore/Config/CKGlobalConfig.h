@@ -57,6 +57,10 @@ struct CKGlobalConfig {
    Force mounting views for component with accessibilityContext set even when VoiceOver is not enabled
    */
   BOOL alwaysMountViewForAccessibityContextComponent = NO;
+  /**
+   Enables caching of the layout for reused components.
+   */
+  BOOL enableLayoutCaching = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

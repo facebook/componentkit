@@ -12,14 +12,17 @@
 
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMutex.h>
+#import <RenderCoreLayoutCaching/RCComputeRootLayout.h>
 
 #import "CKComponentInternal.h"
 #import "CKComponentCreationValidation.h"
 #import "CKComponentSubclass.h"
+#import "CKComponent+LayoutLifecycle.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKIterableHelpers.h"
 #import "CKRenderHelpers.h"
 #import "CKTreeNode.h"
+#import "ComponentLayoutContext.h"
 
 @implementation CKRenderComponent
 {
@@ -76,18 +79,36 @@
 }
 
 - (RCLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const RCComponentSize &)size
-                      relativeToParentSize:(CGSize)parentSize
+                 restrictedToSize:(const RCComponentSize &)size
+             relativeToParentSize:(CGSize)parentSize
 {
   RCAssert(size == RCComponentSize(),
            @"CKRenderComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _child);
-
+  
   if (_child) {
-    RCLayout l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
+    RCLayout l;
+    if (CKReadGlobalConfig().enableLayoutCaching) {
+#if CK_ASSERTIONS_ENABLED
+      const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
+#endif
+      CK::Component::LayoutContext context(self, constrainedSize);
+      auto const systraceListener = context.systraceListener;
+      CKComponentWillLayout(_child, constrainedSize, parentSize, systraceListener);
+      l = RCFetchOrComputeLayout(_child, constrainedSize, parentSize, &computeLayoutForModel);
+      CKComponentDidLayout(_child, l, constrainedSize, parentSize, systraceListener);
+    } else {
+      l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
+    }
     return {self, l.size, {{{0,0}, l}}};
   }
   return [super computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
+}
+
+static RCLayout computeLayoutForModel(id<CKMountable> model, const CKSizeRange &constrainedSize, CGSize parentSize)
+{
+  const auto component = (CKComponent *)model;
+  return [component computeLayoutThatFits:constrainedSize restrictedToSize:component.size relativeToParentSize:parentSize];
 }
 
 - (CKComponent *)child
@@ -139,20 +160,20 @@
   if ([self.class controllerClass] != nil) {
     return YES;
   }
-
+  
   const Class componentClass = self.class;
-
+  
   static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
   CK::StaticMutexLocker l(mutex);
-
+  
   static std::unordered_map<Class, BOOL> *cache = new std::unordered_map<Class, BOOL>();
   auto it = cache->find(componentClass);
   if (it == cache->end()) {
     const BOOL requiresScopeHandle =
-      CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(buildController)) ||
-      CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
-      CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnInitialMount)) ||
-      CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnFinalUnmount));
+    CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(buildController)) ||
+    CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
+    CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnInitialMount)) ||
+    CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnFinalUnmount));
     it = cache->insert({componentClass, requiresScopeHandle}).first;
   }
   const BOOL requiresScopeHandle = it->second;
