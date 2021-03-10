@@ -16,9 +16,15 @@
 #import <ComponentKit/RCLayout.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <RenderCoreLayoutCaching/RCComputeRootLayout.h>
 
 @protocol CKAnalyticsListener;
 @class CKComponentScopeRoot;
+
+struct RCLayoutResult;
+struct RCLayoutCache;
+
+using CKTreeLayoutCache = std::unordered_map<id<NSObject>, std::shared_ptr<RCLayoutCache>, RC::hash<id>>;
 
 /**
  Recursively mounts the layout in the view, returning a set of the mounted components.
@@ -44,9 +50,9 @@ struct CKComponentRootLayout { // This is pending renaming
 
   CKComponentRootLayout() {}
   explicit CKComponentRootLayout(RCLayout layout)
-  : CKComponentRootLayout(layout, {}, {}) {}
-  explicit CKComponentRootLayout(RCLayout layout, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
-  : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)), _componentsByPredicate(std::move(componentsByPredicate)) {}
+  : CKComponentRootLayout({layout, nil}, {}, {}) {}
+  explicit CKComponentRootLayout(RCLayoutResult layoutResult, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
+  : _layoutResult(std::move(layoutResult)), _layoutCache(std::move(layoutCache)), _componentsByPredicate(std::move(componentsByPredicate)) {}
 
   /**
    This method returns a RCLayout from the cache for the component if it has a controller.
@@ -66,12 +72,13 @@ struct CKComponentRootLayout { // This is pending renaming
 
   void enumerateCachedLayout(void(^block)(const RCLayout &layout)) const;
 
-  const auto &layout() const { return _layout; }
-  auto component() const { return _layout.component; }
-  auto size() const { return _layout.size; }
+  const auto &layout() const { return _layoutResult.layout; }
+  const auto &cache() const { return _layoutResult.cache; }
+  auto component() const { return _layoutResult.layout.component; }
+  auto size() const { return _layoutResult.layout.size; }
 
 private:
-  RCLayout _layout;
+  RCLayoutResult _layoutResult;
   ComponentLayoutCache _layoutCache;
   ComponentsByPredicateMap _componentsByPredicate;
 };
@@ -83,12 +90,15 @@ private:
  @param analyticsListener analytics listener used to log layout time.
  @param buildTrigger Indicates the source that triggers this layout computation.
  @param scopeRoot The scope root of the current tree.
+ @param layoutCache An optional layout cache for the current tree.
+
  */
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
                                                    CK::Optional<CKBuildTrigger> buildTrigger = CK::none,
-                                                   CKComponentScopeRoot *scopeRoot = nil);
+                                                   CKComponentScopeRoot *scopeRoot = nil,
+                                                   std::shared_ptr<RCLayoutCache> layoutCache = nullptr);
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

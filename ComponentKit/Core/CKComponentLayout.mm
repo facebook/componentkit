@@ -71,22 +71,29 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
                                                    CK::Optional<CKBuildTrigger> buildTrigger,
-                                                   CKComponentScopeRoot *scopeRoot)
+                                                   CKComponentScopeRoot *scopeRoot,
+                                                   std::shared_ptr<RCLayoutCache> layoutCache)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   CK::Component::LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
 
-  RCLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
-  auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
-  layout.enumerateLayouts([&](const auto &l){
+  RCLayoutResult layoutResult;
+  if (layoutCache) {
+    layoutResult = RCComputeRootLayout(rootComponent, sizeRange, layoutCache);
+  } else {
+    layoutResult = {CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max), nil};
+  }
+
+  auto layoutLookup = CKComponentRootLayout::ComponentLayoutCache {};
+  layoutResult.layout.enumerateLayouts([&](const auto &l){
     if ([l.component isKindOfClass:[CKComponent class]] && ((CKComponent *)l.component).controller) {
-      layoutCache[l.component] = l;
+      layoutLookup[l.component] = l;
     }
   });
-  const auto componentsByPredicate = buildComponentsByPredicateMap(layout, CKComponentAnimationPredicates());
+  const auto componentsByPredicate = buildComponentsByPredicateMap(layoutResult.layout, CKComponentAnimationPredicates());
   const auto rootLayout = CKComponentRootLayout {
-    layout,
-    layoutCache,
+    layoutResult,
+    layoutLookup,
     componentsByPredicate,
   };
 
