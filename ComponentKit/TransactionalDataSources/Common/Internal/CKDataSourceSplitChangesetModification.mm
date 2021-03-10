@@ -41,6 +41,7 @@ using namespace CKComponentControllerHelper;
   NSDictionary *_userInfo;
   CKDataSourceViewport _viewport;
   CKDataSourceQOS _qos;
+  std::shared_ptr<CKTreeLayoutCache> _treeLayoutCache;
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
@@ -49,12 +50,23 @@ using namespace CKComponentControllerHelper;
                          viewport:(CKDataSourceViewport)viewport
                               qos:(CKDataSourceQOS)qos
 {
+  return [self initWithChangeset:changeset stateListener:stateListener userInfo:userInfo viewport:viewport qos:qos treeLayoutCache:nullptr];
+}
+
+- (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
+                    stateListener:(id<CKComponentStateListener>)stateListener
+                         userInfo:(NSDictionary *)userInfo
+                         viewport:(CKDataSourceViewport)viewport
+                              qos:(CKDataSourceQOS)qos
+                  treeLayoutCache:(std::shared_ptr<CKTreeLayoutCache>)treeLayoutCache
+{
   if (self = [super init]) {
     _changeset = changeset;
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
     _viewport = viewport;
     _qos = qos;
+    _treeLayoutCache = std::move(treeLayoutCache);
   }
   return self;
 }
@@ -127,7 +139,8 @@ using namespace CKComponentControllerHelper;
                              oldState);
       }
       CKDataSourceItem *const oldItem = section[indexPath.item];
-      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
+      const auto layoutCache = _treeLayoutCache ? _treeLayoutCache->find([oldItem.scopeRoot globalIdentifier]) : nullptr;
+      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context, layoutCache);
       [section replaceObjectAtIndex:indexPath.item withObject:item];
       for (auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
                                                                                                    oldItem.scopeRoot,

@@ -28,6 +28,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> prev
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
+                                        std::shared_ptr<RCLayoutCache> treeLayoutCache = nullptr,
                                         CKReflowTrigger reflowTrigger = CKReflowTriggerNone);
 
 #endif

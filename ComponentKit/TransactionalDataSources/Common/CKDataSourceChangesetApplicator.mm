@@ -48,6 +48,8 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
   CKDataSourceState *_dataSourceState;
   dispatch_queue_t _queue;
   NSNumber *_changesetApplicatorId;
+  
+  std::shared_ptr<CKTreeLayoutCache> _treeLayoutCache;
 
   std::vector<CKDataSourceChangesetApplicatorPipelineItem> _pipeline;
   NSUInteger _pipelineId;
@@ -68,6 +70,10 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
     _queue = queue;
     _changesetApplicatorId = @(OSAtomicIncrement32(&globalChangesetApplicatorId));
     [_dataSource addListener:self];
+    
+    if (CKReadGlobalConfig().enableLayoutCaching) {
+      _treeLayoutCache = std::make_shared<CKTreeLayoutCache>();
+    }
 
     RCAssertNotNil(_queue, @"A dispatch queue must be specified for changeset applicator.");
     RCAssert(dispatch_queue_get_specific(_queue, kQueueKey) == NULL,
@@ -123,12 +129,15 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
   __block CKDataSourceChange *change = nil;
   {
     id<CKDataSourceStateModifying> modification = nil;
+    auto treeLayoutCacheCopy = _treeLayoutCache ? std::make_unique<CKTreeLayoutCache>(*_treeLayoutCache) : nullptr;
     if (!shouldSplitChangeset) {
       const auto m =
       [[CKDataSourceChangesetModification alloc]
        initWithChangeset:changeset
        stateListener:_dataSource
-       userInfo:userInfo qos:qos];
+       userInfo:userInfo
+       qos:qos
+       treeLayoutCache:std::move(treeLayoutCacheCopy)];
       [m setItemGenerator:self];
       modification = m;
     } else {
@@ -138,7 +147,8 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
        stateListener:_dataSource
        userInfo:userInfo
        viewport:_viewport
-       qos:qos];
+       qos:qos
+       treeLayoutCache:std::move(treeLayoutCacheCopy)];
     }
     CKPerformWithCurrentTraitCollection(_traitCollection, ^{
       @autoreleasepool {
@@ -179,6 +189,22 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
     const auto isValid = [dataSource verifyChange:change];
     const auto newState = dataSource.state;
     auto const willApplyChange = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ChangeSetApplicatorWillApplyChange);
+    
+    if (CKReadGlobalConfig().enableLayoutCaching) {
+      for (NSIndexPath *insertedIndex in [change.appliedChanges insertedIndexPaths]) {
+        if ([newState numberOfSections] > insertedIndex.section && [newState numberOfObjectsInSection:insertedIndex.section] > insertedIndex.row) {
+          CKDataSourceItem *insertedItem = [newState objectAtIndexPath:insertedIndex];
+          _treeLayoutCache->update([[insertedItem scopeRoot] globalIdentifier], insertedItem.rootLayout.cache());
+        }
+      }
+      for (NSIndexPath *updatedIndex in [change.appliedChanges finalUpdatedIndexPaths]) {
+        if ([newState numberOfSections] > updatedIndex.section && [newState numberOfObjectsInSection:updatedIndex.section] > updatedIndex.row) {
+          CKDataSourceItem *updatedItem = [newState objectAtIndexPath:updatedIndex];
+          _treeLayoutCache->update([[updatedItem scopeRoot] globalIdentifier], updatedItem.rootLayout.cache());
+        }
+      }
+    }
+    
     dispatch_async(self->_queue, blockUsingDataSourceQOS(^{
       CKSystraceScope willApplyChangeScope(willApplyChange);
       if (self->_pipelineId != pipelineId) {

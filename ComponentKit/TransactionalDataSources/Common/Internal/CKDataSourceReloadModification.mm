@@ -29,12 +29,14 @@ using namespace CKComponentControllerHelper;
 @implementation CKDataSourceReloadModification
 {
   NSDictionary *_userInfo;
+  std::shared_ptr<CKTreeLayoutCache> _treeLayoutCache;
 }
 
-- (instancetype)initWithUserInfo:(NSDictionary *)userInfo
+- (instancetype)initWithUserInfo:(NSDictionary *)userInfo treeLayoutCache:(std::shared_ptr<CKTreeLayoutCache>)treeLayoutCache
 {
   if (self = [super init]) {
     _userInfo = [userInfo copy];
+    _treeLayoutCache = std::move(treeLayoutCache);
   }
   return self;
 }
@@ -54,7 +56,8 @@ using namespace CKComponentControllerHelper;
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
       // On reload, we would like avoid component reuse - by passing `enableComponentReuseOptimizations = NO`, we make sure that all the components will be recreated.
-      CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, [item model], context, CKReflowTriggerReload);
+      const auto layoutCache = _treeLayoutCache ? _treeLayoutCache->find([item.scopeRoot globalIdentifier]) : nullptr;
+      CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, [item model], context, layoutCache, CKReflowTriggerReload);
       [newItems addObject:newItem];
       for (auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
                                                                                                    item.scopeRoot,

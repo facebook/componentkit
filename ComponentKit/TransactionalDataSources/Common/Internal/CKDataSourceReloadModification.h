@@ -14,10 +14,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKDataSourceStateModifying.h>
 
 @interface CKDataSourceReloadModification : NSObject <CKDataSourceStateModifying>
-- (instancetype)initWithUserInfo:(NSDictionary *)userInfo;
+- (instancetype)initWithUserInfo:(NSDictionary *)userInfo treeLayoutCache:(std::shared_ptr<CKTreeLayoutCache>)treeLayoutCache;
 @end
 
 #endif

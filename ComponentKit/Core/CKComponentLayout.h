@@ -12,6 +12,7 @@
 
 #if CK_NOT_SWIFT
 
+#import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKBuildTrigger.h>
 #import <ComponentKit/RCLayout.h>
 #import <ComponentKit/CKOptional.h>
@@ -24,7 +25,24 @@
 struct RCLayoutResult;
 struct RCLayoutCache;
 
-using CKTreeLayoutCache = std::unordered_map<id<NSObject>, std::shared_ptr<RCLayoutCache>, RC::hash<id>>;
+struct CKTreeLayoutCache {
+  std::shared_ptr<RCLayoutCache> find(CKComponentScopeRootIdentifier key) const
+  {
+    auto match = map.find(key);
+    if (match != map.end()) {
+      return match->second;
+    }
+    return nullptr;
+  }
+
+  void update(CKComponentScopeRootIdentifier key, std::shared_ptr<RCLayoutCache> layoutCache)
+  {
+    map.emplace(std::make_pair(key, std::move(layoutCache)));
+  }
+  
+private:
+  std::unordered_map<CKComponentScopeRootIdentifier, std::shared_ptr<RCLayoutCache>, RC::hash<CKComponentScopeRootIdentifier>> map;
+};
 
 /**
  Recursively mounts the layout in the view, returning a set of the mounted components.

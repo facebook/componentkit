@@ -30,12 +30,14 @@ using namespace CKComponentControllerHelper;
 @implementation CKDataSourceUpdateStateModification
 {
   CKComponentStateUpdatesMap _stateUpdates;
+  std::shared_ptr<CKTreeLayoutCache> _treeLayoutCache;
 }
 
-- (instancetype)initWithStateUpdates:(const CKComponentStateUpdatesMap &)stateUpdates
+- (instancetype)initWithStateUpdates:(const CKComponentStateUpdatesMap &)stateUpdates treeLayoutCache:(std::shared_ptr<CKTreeLayoutCache>)treeLayoutCache
 {
   if (self = [super init]) {
     _stateUpdates = stateUpdates;
+    _treeLayoutCache = std::move(treeLayoutCache);
   }
   return self;
 }
@@ -54,7 +56,8 @@ using namespace CKComponentControllerHelper;
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
-      const auto stateUpdatesForItem = _stateUpdates.find([[item scopeRoot] globalIdentifier]);
+      const auto scopeRootGlobalIdentifier = [[item scopeRoot] globalIdentifier];
+      const auto stateUpdatesForItem = _stateUpdates.find(scopeRootGlobalIdentifier);
       if (stateUpdatesForItem == _stateUpdates.end()) {
         [newItems addObject:item];
       } else {
@@ -64,7 +67,8 @@ using namespace CKComponentControllerHelper;
           globalIdentifier = stateUpdate->first.globalIdentifier;
         }
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
-        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], stateUpdatesForItem->second, sizeRange, configuration, [item model], context);
+        const auto layoutCache = _treeLayoutCache ? _treeLayoutCache->find(scopeRootGlobalIdentifier) : nullptr;
+        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], stateUpdatesForItem->second, sizeRange, configuration, [item model], context, layoutCache);
         [newItems addObject:newItem];
         for (auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
                                                                                                      item.scopeRoot,

@@ -168,6 +168,8 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
   BOOL _shouldPauseStateUpdates;
   BOOL _isBackgroundMode;
   CKDispatchQueueSerial *_workQueue;
+  
+  std::shared_ptr<CKTreeLayoutCache> _treeLayoutCache;
 
   CKDataSourceViewport _viewport;
   BOOL _changesetSplittingEnabled;
@@ -196,6 +198,10 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
     _pendingAsynchronousModifications = [NSMutableArray array];
     _changesetSplittingEnabled = configuration.options.splitChangesetOptions.enabled;
     [CKComponentDebugController registerReflowListener:self];
+    
+    if (CKReadGlobalConfig().enableLayoutCaching) {
+      _treeLayoutCache = std::make_shared<CKTreeLayoutCache>();
+    }
   }
   return self;
 }
@@ -286,8 +292,9 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
               userInfo:(NSDictionary *)userInfo
 {
   RCAssertMainThread();
+  auto treeLayoutCacheCopy = _treeLayoutCache ? std::make_unique<CKTreeLayoutCache>(*_treeLayoutCache) : nullptr;
   id<CKDataSourceStateModifying> modification =
-  [[CKDataSourceReloadModification alloc] initWithUserInfo:userInfo];
+  [[CKDataSourceReloadModification alloc] initWithUserInfo:userInfo treeLayoutCache:std::move(treeLayoutCacheCopy)];
   switch (mode) {
     case CKUpdateModeAsynchronous:
       [self _enqueueModification:modification];
@@ -493,14 +500,24 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
   CKDataSourceState *const previousState = _state;
   CKDataSourceState *const newState = [change state];
   _state = newState;
-
+  
   // Announce 'didInit'.
   for (CKComponentController *componentController in change.addedComponentControllers) {
     [componentController didInit];
   }
   for (NSIndexPath *insertedIndex in [appliedChanges insertedIndexPaths]) {
     CKDataSourceItem *insertedItem = [newState objectAtIndexPath:insertedIndex];
-    CKComponentScopeRootAnnounceControllerInitialization([insertedItem scopeRoot]);
+    const auto scopeRoot = [insertedItem scopeRoot];
+    CKComponentScopeRootAnnounceControllerInitialization(scopeRoot);
+    if (CKReadGlobalConfig().enableLayoutCaching) {
+      _treeLayoutCache->update([scopeRoot globalIdentifier], insertedItem.rootLayout.cache());
+    }
+  }
+  if (CKReadGlobalConfig().enableLayoutCaching) {
+    for (NSIndexPath *updatedIndex in [appliedChanges finalUpdatedIndexPaths]) {
+      CKDataSourceItem *updatedItem = [newState objectAtIndexPath:updatedIndex];
+      _treeLayoutCache->update([[updatedItem scopeRoot] globalIdentifier], updatedItem.rootLayout.cache());
+    }
   }
 
   // Announce 'invalidateController'.
@@ -574,9 +591,10 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
   if (_pendingSynchronousStateUpdates.empty()) {
     return nil;
   }
-
+    
+  auto treeLayoutCacheCopy = _treeLayoutCache ? std::make_unique<CKTreeLayoutCache>(*_treeLayoutCache) : nullptr;
   CKDataSourceUpdateStateModification *const modification =
-  [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingSynchronousStateUpdates];
+  [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingSynchronousStateUpdates treeLayoutCache:std::move(treeLayoutCacheCopy)];
   _pendingSynchronousStateUpdates.clear();
   return modification;
 }
@@ -587,9 +605,10 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
   if (_pendingAsynchronousStateUpdates.empty()) {
     return nil;
   }
-
+  
+  auto treeLayoutCacheCopy = _treeLayoutCache ? std::make_unique<CKTreeLayoutCache>(*_treeLayoutCache) : nullptr;
   CKDataSourceUpdateStateModification *const modification =
-  [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingAsynchronousStateUpdates];
+  [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingAsynchronousStateUpdates treeLayoutCache:std::move(treeLayoutCacheCopy)];
   _pendingAsynchronousStateUpdates.clear();
   return modification;
 }
@@ -623,19 +642,22 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
                                                                          qos:(CKDataSourceQOS)qos
                                                          isDeferredChangeset:(BOOL)isDeferredChangeset
 {
+  auto treeLayoutCacheCopy = _treeLayoutCache ? std::make_unique<CKTreeLayoutCache>(*_treeLayoutCache) : nullptr;
   if (!isDeferredChangeset && _changesetSplittingEnabled) {
     return
     [[CKDataSourceSplitChangesetModification alloc] initWithChangeset:changeset
                                                         stateListener:self
                                                              userInfo:userInfo
                                                              viewport:_viewport
-                                                                  qos:qos];
+                                                                  qos:qos
+                                                      treeLayoutCache:std::move(treeLayoutCacheCopy)];
   } else {
     return
     [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
                                                    stateListener:self
                                                         userInfo:userInfo
-                                                             qos:qos];
+                                                             qos:qos
+                                                 treeLayoutCache:std::move(treeLayoutCacheCopy)];
   }
 }
 

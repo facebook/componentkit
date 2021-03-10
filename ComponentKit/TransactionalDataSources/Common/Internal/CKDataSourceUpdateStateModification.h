@@ -15,12 +15,13 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKDataSourceStateModifying.h>
+#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 
 typedef std::unordered_map<CKComponentScopeRootIdentifier, CKComponentStateUpdateMap> CKComponentStateUpdatesMap;
 
 @interface CKDataSourceUpdateStateModification : NSObject <CKDataSourceStateModifying>
-- (instancetype)initWithStateUpdates:(const CKComponentStateUpdatesMap &)stateUpdates;
+- (instancetype)initWithStateUpdates:(const CKComponentStateUpdatesMap &)stateUpdates treeLayoutCache:(std::shared_ptr<CKTreeLayoutCache>)treeLayoutCache;
 @end
 
 #endif

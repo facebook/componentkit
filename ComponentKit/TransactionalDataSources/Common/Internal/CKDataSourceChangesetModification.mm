@@ -42,6 +42,7 @@ using namespace CKComponentControllerHelper;
   NSDictionary *_userInfo;
   CKDataSourceQOS _qos;
   __weak id<CKDataSourceChangesetModificationItemGenerator> _itemGenerator;
+  std::shared_ptr<CKTreeLayoutCache> _treeLayoutCache;
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
@@ -49,11 +50,21 @@ using namespace CKComponentControllerHelper;
                          userInfo:(NSDictionary *)userInfo
                               qos:(CKDataSourceQOS)qos
 {
+  return [self initWithChangeset:changeset stateListener:stateListener userInfo:userInfo qos:qos treeLayoutCache:nullptr];
+}
+
+- (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
+                    stateListener:(id<CKComponentStateListener>)stateListener
+                         userInfo:(NSDictionary *)userInfo
+                              qos:(CKDataSourceQOS)qos
+                  treeLayoutCache:(std::shared_ptr<CKTreeLayoutCache>)treeLayoutCache
+{
   if (self = [super init]) {
     _changeset = changeset;
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
     _qos = qos;
+    _treeLayoutCache = std::move(treeLayoutCache);
   }
   return self;
 }
@@ -135,6 +146,7 @@ using namespace CKComponentControllerHelper;
                                                                configuration:configuration
                                                                        model:model
                                                                      context:context
+                                                                 layoutCache:_treeLayoutCache ? _treeLayoutCache->find([[oldItem scopeRoot] globalIdentifier]) : nullptr
                                                                     itemType:CKDataSourceChangesetModificationItemTypeUpdate];
     [section replaceObjectAtIndex:indexPath.item withObject:item];
     for (auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
@@ -236,15 +248,17 @@ using namespace CKComponentControllerHelper;
 
   // Insert items
   const auto buildItem = ^CKDataSourceItem *(id model) {
-    return [self _buildDataSourceItemForPreviousRoot:CKComponentScopeRootWithPredicates(_stateListener,
-                                                                                        configuration.analyticsListener,
-                                                                                        configuration.componentPredicates,
-                                                                                        configuration.componentControllerPredicates)
+    const auto scopeRoot = CKComponentScopeRootWithPredicates(_stateListener,
+                                                              configuration.analyticsListener,
+                                                              configuration.componentPredicates,
+                                                              configuration.componentControllerPredicates);
+    return [self _buildDataSourceItemForPreviousRoot:scopeRoot
                                         stateUpdates:{}
                                            sizeRange:sizeRange
                                        configuration:configuration
                                                model:model
                                              context:context
+                                         layoutCache:_treeLayoutCache ? _treeLayoutCache->find([scopeRoot globalIdentifier]) : nullptr
                                             itemType:CKDataSourceChangesetModificationItemTypeInsert];
   };
 
@@ -310,6 +324,7 @@ using namespace CKComponentControllerHelper;
                                             configuration:(CKDataSourceConfiguration *)configuration
                                                     model:(id)model
                                                   context:(id)context
+                                              layoutCache:(std::shared_ptr<RCLayoutCache>)layoutCache
                                                  itemType:(CKDataSourceChangesetModificationItemType)itemType
 {
   if (_itemGenerator) {
@@ -321,7 +336,7 @@ using namespace CKComponentControllerHelper;
                                                       context:context
                                                      itemType:itemType];
   } else {
-    return CKBuildDataSourceItem(previousRoot, stateUpdates, sizeRange, configuration, model, context);
+    return CKBuildDataSourceItem(previousRoot, stateUpdates, sizeRange, configuration, model, context, layoutCache);
   }
 }
 

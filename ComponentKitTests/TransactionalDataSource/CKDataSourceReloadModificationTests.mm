@@ -67,7 +67,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 5, 5);
 
   CKDataSourceReloadModification *reloadModification =
-  [[CKDataSourceReloadModification alloc] initWithUserInfo:nil];
+  [[CKDataSourceReloadModification alloc] initWithUserInfo:nil treeLayoutCache:nullptr];
 
   CKDataSourceChange *change = [reloadModification changeFromState:originalState];
 
@@ -88,7 +88,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   NSDictionary *userInfo = @{@"foo": @"bar"};
   CKDataSourceReloadModification *reloadModification =
-  [[CKDataSourceReloadModification alloc] initWithUserInfo:userInfo];
+  [[CKDataSourceReloadModification alloc] initWithUserInfo:userInfo treeLayoutCache:nullptr];
   CKDataSourceChange *change = [reloadModification changeFromState:originalState];
   XCTAssertEqualObjects([[change appliedChanges] userInfo], userInfo);
 }
@@ -97,7 +97,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 {
   CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   CKDataSourceReloadModification *reloadModification =
-  [[CKDataSourceReloadModification alloc] initWithUserInfo:nil];
+  [[CKDataSourceReloadModification alloc] initWithUserInfo:nil treeLayoutCache:nullptr];
 
   u_int32_t newGlobalState = arc4random();
   globalState = newGlobalState;
@@ -117,7 +117,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   const auto componentController = ((CKTestGlobalStateComponent *)[item rootLayout].component()).lifecycleComponent.controller;
 
   globalState = 0;
-  const auto reloadModification = [[CKDataSourceReloadModification alloc] initWithUserInfo:nil];
+  const auto reloadModification = [[CKDataSourceReloadModification alloc] initWithUserInfo:nil treeLayoutCache:nullptr];
   const auto change = [reloadModification changeFromState:originalState];
 
   XCTAssertEqual(change.invalidComponentControllers.firstObject, componentController,
