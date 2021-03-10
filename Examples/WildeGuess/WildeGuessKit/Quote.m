@@ -18,6 +18,7 @@
                        style:(QuoteDisplayStyle)style
 {
   if (self = [super init]) {
+    _uuid = [NSUUID UUID];
     _text = [text copy];
     _author = [author copy];
     _style = style;

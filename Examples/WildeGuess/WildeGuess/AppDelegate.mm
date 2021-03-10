@@ -40,7 +40,7 @@
 }
 
 static CKComponent *swiftComponentGenerator(Quote *quote, QuoteContext *quoteContext) {
-  return [Trampoline componentWithText:quote.text author:quote.author style:(NSInteger)quote.style];
+  return [Trampoline componentWithUuid:quote.uuid text:quote.text author:quote.author style:(NSInteger)quote.style];
 }
 
 - (UIViewController *)makeSwiftViewController

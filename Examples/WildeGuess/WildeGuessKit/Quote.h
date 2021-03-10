@@ -15,6 +15,7 @@
 
 @interface Quote : NSObject
 
+@property (nonatomic, readonly) NSUUID *uuid;
 @property (nonatomic, readonly, copy) NSString *text;
 @property (nonatomic, readonly, copy) NSString *author;
 @property (nonatomic, readonly) QuoteDisplayStyle style;
