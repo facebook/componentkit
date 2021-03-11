@@ -59,7 +59,7 @@ public struct ViewConfiguration {
   }
 
   /// The Objective-C bridgeable type.
-  let viewConfiguration: ComponentViewConfigurationSwiftBridge
+  public let viewConfiguration: ComponentViewConfigurationSwiftBridge
 
   /// Creates a new configuration.
   /// - Parameters:
