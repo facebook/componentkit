@@ -108,7 +108,7 @@
 		03B8B5361D2A346F00EDFF59 /* CKComponentScopeTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0B1CBD926700BB33CE /* CKComponentScopeTypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B53A1D2A346F00EDFF59 /* CKComponentRootViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B431CBD926700BB33CE /* CKComponentRootViewInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B53C1D2A346F00EDFF59 /* CKComponentAnimationHooks.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AD91CBD926700BB33CE /* CKComponentAnimationHooks.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B5401D2A346F00EDFF59 /* CKComponentScopeRoot.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B081CBD926700BB33CE /* CKComponentScopeRoot.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		03B8B5401D2A346F00EDFF59 /* CKComponentScopeRoot.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B081CBD926700BB33CE /* CKComponentScopeRoot.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5431D2A346F00EDFF59 /* CKThreadLocalComponentScope.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5491D2A346F00EDFF59 /* CKComponent+UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF01CBD926700BB33CE /* CKComponent+UIView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5501D2A346F00EDFF59 /* CKComponentScopeHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B061CBD926700BB33CE /* CKComponentScopeHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -231,7 +231,7 @@
 		23FE1F092020A7160036F727 /* CKComponentViewManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FE1F072020A7160036F727 /* CKComponentViewManagerTests.mm */; };
 		23FE1F0A2020A7160036F727 /* CKComponentLayoutTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FE1F082020A7160036F727 /* CKComponentLayoutTests.mm */; };
 		23FEC59F203B30DA0068E09D /* CKTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23FEC590203B30DA0068E09D /* CKTreeNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		23FEC5A0203B30DA0068E09D /* CKTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23FEC590203B30DA0068E09D /* CKTreeNode.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		23FEC5A0203B30DA0068E09D /* CKTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23FEC590203B30DA0068E09D /* CKTreeNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23FEC5A3203B30DA0068E09D /* CKTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FEC592203B30DA0068E09D /* CKTreeNode.mm */; };
 		23FEC5A4203B30DA0068E09D /* CKTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FEC592203B30DA0068E09D /* CKTreeNode.mm */; };
 		23FEC5AA203B31230068E09D /* CKTreeNodeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FEC5A9203B31230068E09D /* CKTreeNodeTests.mm */; };
@@ -664,7 +664,7 @@
 		D0B47D071CBD948E00BB33CE /* ComponentUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AFC1CBD926700BB33CE /* ComponentUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D0A1CBD948E00BB33CE /* CKComponentScope.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B021CBD926700BB33CE /* CKComponentScope.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D0C1CBD948E00BB33CE /* CKComponentScopeHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B061CBD926700BB33CE /* CKComponentScopeHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D0D1CBD948E00BB33CE /* CKComponentScopeRoot.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B081CBD926700BB33CE /* CKComponentScopeRoot.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D0B47D0D1CBD948E00BB33CE /* CKComponentScopeRoot.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B081CBD926700BB33CE /* CKComponentScopeRoot.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D0E1CBD948E00BB33CE /* CKComponentScopeRootFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0A1CBD926700BB33CE /* CKComponentScopeRootFactory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D0F1CBD948E00BB33CE /* CKComponentScopeTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0B1CBD926700BB33CE /* CKComponentScopeTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D101CBD948E00BB33CE /* CKThreadLocalComponentScope.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */; settings = {ATTRIBUTES = (Private, ); }; };

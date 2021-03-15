@@ -10,8 +10,6 @@
 
 #import <ComponentKit/CKDefines.h>
 
-#if CK_NOT_SWIFT
-
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
@@ -21,6 +19,8 @@
 #import <ComponentKit/CKTreeNodeComponentKey.h>
 
 @protocol CKRenderComponentProtocol;
+
+#if CK_NOT_SWIFT
 
 namespace CK {
 namespace TreeNode {
@@ -38,6 +38,8 @@ struct CKComponentScopePair {
   CKTreeNode *previousNode;
 };
 
+#endif
+
 /**
  This object represents a node in the component tree.
 
@@ -46,6 +48,7 @@ struct CKComponentScopePair {
  CKTreeNode is the base class of a tree node. It will be attached non-render components (CKComponent & CKCompositeComponent).
  */
 @interface CKTreeNode : NSObject
+#if CK_NOT_SWIFT
 {
   @package
   CKTreeNodeComponentKey _componentKey;
@@ -74,6 +77,8 @@ struct CKComponentScopePair {
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
+#endif
+
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 
 #if CK_NOT_SWIFT
@@ -84,7 +89,6 @@ struct CKComponentScopePair {
 
 /** Returns the component's state */
 @property (nonatomic, strong, readonly) id state;
-
 
 /** Returns the componeny key according to its current owner */
 @property (nonatomic, assign, readonly) const CKTreeNodeComponentKey &componentKey;
@@ -114,11 +118,9 @@ struct CKComponentScopePair {
 - (CKTreeNodeComponentKey)createKeyForComponentTypeName:(const char *)componentTypeName
                                              identifier:(id)identifier
                                                    keys:(const std::vector<id<NSObject>> &)keys;
-
 - (std::vector<CKTreeNode *>)children;
 
 - (size_t)childrenSize;
-
 /** Returns a component tree node according to its component key */
 - (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key;
 
@@ -130,14 +132,13 @@ struct CKComponentScopePair {
 /** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
 - (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
 
+#endif
+
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */
 @property (nonatomic, copy, readonly) NSString *debugDescription;
 @property (nonatomic, copy, readonly) NSArray<NSString *> *debugDescriptionNodes;
 @property (nonatomic, copy, readonly) NSArray<NSString *> *debugDescriptionComponents;
 #endif
-#endif
 
 @end
-
-#endif
