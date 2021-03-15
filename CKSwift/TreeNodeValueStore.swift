@@ -11,11 +11,11 @@
 import Foundation
 import ComponentKit
 
-final class ScopeHandleLocation {
-  private let valueProvider: () -> Any
+final class TreeNodeValueStore<Value> {
+  private let valueProvider: () -> Value
   private var link: (handle: CKComponentScopeHandle, index: Int)?
 
-  init(valueProvider: @escaping () -> Any) {
+  init(valueProvider: @escaping () -> Value) {
     self.valueProvider = valueProvider
   }
 
@@ -25,18 +25,18 @@ final class ScopeHandleLocation {
     return CKSwiftInitializeState(handle, index, valueProvider)
   }
 
-  func get<T>() -> T {
+  func get() -> Value {
     guard let link = link else {
       preconditionFailure("Attempting to read state before scope handle location linked.")
     }
     let untypedValue = CKSwiftFetchState(link.handle, link.index)
-    guard let value = untypedValue as? T else {
+    guard let value = untypedValue as? Value else {
       preconditionFailure("Unexpected value \(String(describing: untypedValue))")
     }
     return value
   }
 
-  func set<T>(_ value: T) {
+  func set(_ value: Value) {
     guard let link = link else {
       preconditionFailure("Attempting to write state before `-body`.")
     }

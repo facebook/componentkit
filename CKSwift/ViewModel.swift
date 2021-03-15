@@ -17,21 +17,21 @@ protocol ScopeHandleAssignable : class {
 
 @propertyWrapper
 public struct ViewModel<Value: AnyObject> : ScopeHandleLinkable {
-  private let scopeHandleLocation: ScopeHandleLocation
+  private let store: TreeNodeValueStore<Value>
 
   public init(wrappedValue valueProvider: @escaping @autoclosure () -> Value) {
-    self.scopeHandleLocation = ScopeHandleLocation(valueProvider: valueProvider)
+    self.store = TreeNodeValueStore(valueProvider: valueProvider)
   }
 
   /// Should only be called during component build or on the main thread thereafter
   public var wrappedValue: Value {
-    scopeHandleLocation.get()
+    store.get()
   }
 
   // MARK: ScopeHandleLinkable
 
   func link(with handle: CKComponentScopeHandle, at index: Int) {
-    if scopeHandleLocation.link(with: handle, at: index) {
+    if store.link(with: handle, at: index) {
       Mirror(reflecting: wrappedValue)
         .children
         .compactMap {

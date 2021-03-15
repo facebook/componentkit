@@ -14,21 +14,21 @@ import ComponentKit
 @propertyWrapper
 // TODO: Use read/write reflection mechanism
 public struct State<Value> : ScopeHandleLinkable {
-  private let scopeHandleLocation: ScopeHandleLocation
+  private let store: TreeNodeValueStore<Value>
 
   public init(wrappedValue valueProvider: @escaping @autoclosure () -> Value) {
-    self.scopeHandleLocation = ScopeHandleLocation(valueProvider: valueProvider)
+    self.store = TreeNodeValueStore(valueProvider: valueProvider)
   }
 
   /// Should only be called during component build or on the main thread thereafter
   public var wrappedValue: Value {
     get {
-      scopeHandleLocation.get()
+      store.get()
     }
 
     /// Should only be called on the main thread
     nonmutating set {
-      scopeHandleLocation.set(newValue)
+      store.set(newValue)
     }
   }
 
@@ -39,7 +39,7 @@ public struct State<Value> : ScopeHandleLinkable {
   // MARK: ScopeHandleLinkable
 
   func link(with handle: CKComponentScopeHandle, at index: Int) {
-    scopeHandleLocation.link(with: handle, at: index)
+    store.link(with: handle, at: index)
   }
 }
 
