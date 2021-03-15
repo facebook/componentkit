@@ -13,7 +13,7 @@ import ComponentKit
 
 @propertyWrapper
 // TODO: Use read/write reflection mechanism
-public struct State<Value> : ScopeHandleLinkable {
+public struct State<Value> : TreeNodeLinkable {
   private let store: TreeNodeValueStore<Value>
 
   public init(wrappedValue valueProvider: @escaping @autoclosure () -> Value) {
@@ -36,10 +36,10 @@ public struct State<Value> : ScopeHandleLinkable {
     return Binding(get: { self.wrappedValue }, set: { self.wrappedValue = $0 })
   }
 
-  // MARK: ScopeHandleLinkable
+  // MARK: TreeNodeLinkable
 
-  func link(with handle: CKComponentScopeHandle, at index: Int) {
-    store.link(with: handle, at: index)
+  func link(with node: CKTreeNode, at index: Int) {
+    store.link(with: node, at: index)
   }
 }
 

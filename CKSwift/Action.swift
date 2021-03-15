@@ -123,7 +123,7 @@ public struct ActionWith<Param> {
 }
 
 /// Marker protocol to indicate that a view can supply actions.
-public protocol Actionable : ScopeHandleProvider { }
+public protocol Actionable : TreeNodeLinkableView { }
 
 extension View where Self: Actionable {
   public func onAction<Param>(_ handler: @escaping (Self, Param) -> Void) -> ActionWith<Param> {

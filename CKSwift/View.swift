@@ -33,7 +33,7 @@ extension View where Self.Body == Never {
   }
 }
 
-public protocol ViewIdentifiable : ScopeHandleProvider {
+public protocol ViewIdentifiable : TreeNodeLinkableView {
   associatedtype ID: Hashable
   var id: ID { get }
 }
@@ -228,26 +228,26 @@ extension View where Self: ViewConfigurationRepresentable & ViewIdentifiable & E
 
 private extension View {
 
-  private var linkableItems: [ScopeHandleLinkable] {
+  private var linkableItems: [TreeNodeLinkable] {
     Mirror(reflecting: self)
       .children
       .compactMap {
-        $0.value as? ScopeHandleLinkable
+        $0.value as? TreeNodeLinkable
       }
   }
 
-  private func link(linkableItems: [ScopeHandleLinkable], id: Any?) {
+  private func link(linkableItems: [TreeNodeLinkable], id: Any?) {
     let node = CKSwiftCreateNode(SwiftComponent<Self>.self, id)
     linkableItems
       .enumerated()
       .forEach { index, item in
-        item.link(with: node.scopeHandle, at: index)
+        item.link(with: node, at: index)
       }
   }
 
   func linkPropertyWrappersWithScopeHandle(forceRequireNode: Bool) -> Bool {
     let linkableItems = self.linkableItems
-    guard linkableItems.isEmpty == false || forceRequireNode || self is ScopeHandleProvider else {
+    guard linkableItems.isEmpty == false || forceRequireNode || self is TreeNodeLinkableView else {
       return false
     }
 

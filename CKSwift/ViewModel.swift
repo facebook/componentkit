@@ -16,7 +16,7 @@ protocol ScopeHandleAssignable : class {
 }
 
 @propertyWrapper
-public struct ViewModel<Value: AnyObject> : ScopeHandleLinkable {
+public struct ViewModel<Value: AnyObject> : TreeNodeLinkable {
   private let store: TreeNodeValueStore<Value>
 
   public init(wrappedValue valueProvider: @escaping @autoclosure () -> Value) {
@@ -30,15 +30,15 @@ public struct ViewModel<Value: AnyObject> : ScopeHandleLinkable {
 
   // MARK: ScopeHandleLinkable
 
-  func link(with handle: CKComponentScopeHandle, at index: Int) {
-    if store.link(with: handle, at: index) {
+  func link(with node: CKTreeNode, at index: Int) {
+    if store.link(with: node, at: index) {
       Mirror(reflecting: wrappedValue)
         .children
         .compactMap {
           $0.value as? ScopeHandleAssignable
         }
         .forEach {
-          $0.assign(handle: handle)
+          $0.assign(handle: node.scopeHandle)
         }
     }
   }

@@ -11,9 +11,9 @@
 import Foundation
 import ComponentKit
 
-/// Marker protocol for views indicating that a scope handle is necessary.
-public protocol ScopeHandleProvider { }
+/// Marker protocol for views indicating that a backing tree node is necessary.
+public protocol TreeNodeLinkableView { }
 
-protocol ScopeHandleLinkable {
-  func link(with scopeHandle: CKComponentScopeHandle, at index: Int)
+protocol TreeNodeLinkable {
+  func link(with node: CKTreeNode, at index: Int)
 }
