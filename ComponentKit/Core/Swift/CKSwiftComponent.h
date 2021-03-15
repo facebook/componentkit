@@ -9,6 +9,7 @@
  */
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentViewConfiguration_SwiftBridge.h>
@@ -54,11 +55,11 @@ CK_COMPONENT_INIT_UNAVAILABLE
 
 CK_EXTERN_C_BEGIN
 
-/// Clears the current node from the TLS. To be called only if `CKSwiftCreateScopeHandle` was called.
+/// Clears the current node from the TLS. To be called only if `CKSwiftCreateNode` was called.
 void CKSwiftPopClass(void);
 
 /// Creates a scope handle associated with the class / identifier.
-CKComponentScopeHandle *CKSwiftCreateScopeHandle(Class klass, id _Nullable identifier);
+CKTreeNode *CKSwiftCreateNode(Class klass, id _Nullable identifier);
 
 /// Initialises the state for a Swift Component.
 /// @param handle The handle associated with the component previously returned from `CKSwiftCreateScopeHandle`.

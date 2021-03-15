@@ -237,11 +237,11 @@ private extension View {
   }
 
   private func link(linkableItems: [ScopeHandleLinkable], id: Any?) {
-    let scopeHandle = CKSwiftCreateScopeHandle(SwiftComponent<Self>.self, id)
+    let node = CKSwiftCreateNode(SwiftComponent<Self>.self, id)
     linkableItems
       .enumerated()
       .forEach { index, item in
-        item.link(with: scopeHandle, at: index)
+        item.link(with: node.scopeHandle, at: index)
       }
   }
 

@@ -328,7 +328,7 @@ void CKSwiftPopClass() {
   threadLocalScope->pop(YES, YES);
 }
 
-CKComponentScopeHandle *CKSwiftCreateScopeHandle(Class klass, id identifier) {
+CKTreeNode *CKSwiftCreateNode(Class klass, id identifier) {
   const auto threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (threadLocalScope == nullptr) {
     RCCFailAssert(@"Create scope handle but no TLS");
@@ -344,7 +344,7 @@ CKComponentScopeHandle *CKSwiftCreateScopeHandle(Class klass, id identifier) {
                                               stateUpdates:threadLocalScope->stateUpdates
                                        requiresScopeHandle:YES];
   threadLocalScope->push(childPair, YES, /* ancestor has state update */YES);
-  return childPair.node.scopeHandle;
+  return childPair.node;
 }
 
 BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle,
