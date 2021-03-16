@@ -339,7 +339,7 @@ static CKComponentScopeHandle *_createScopeHandle(CKComponentScopeRoot *scopeRoo
                                  : @""),
                                 child.key.keys.empty() ? @"" : formatKeys(child.key.keys)];
       [childrenDebugDescriptions addObject:description];
-      for (NSString *s in [(CKTreeNode *)child.node debugDescriptionComponents]) {
+      for (NSString *s in [child.node debugDescriptionComponents]) {
         [childrenDebugDescriptions addObject:[@"  " stringByAppendingString:s]];
       }
     }

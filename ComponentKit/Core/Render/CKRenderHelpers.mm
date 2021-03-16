@@ -28,8 +28,8 @@ namespace CKRenderInternal {
   // Reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
                                      __strong id<CKComponentProtocol> *childComponent,
-                                     CKRenderTreeNode *node,
-                                     CKRenderTreeNode *previousNode,
+                                     CKTreeNode *node,
+                                     CKTreeNode *previousNode,
                                      const CKBuildComponentTreeParams &params,
                                      CKRenderDidReuseComponentBlock didReuseBlock) -> void {
 
@@ -57,12 +57,12 @@ namespace CKRenderInternal {
   // Reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
                                      __strong id<CKComponentProtocol> *childComponent,
-                                     CKRenderTreeNode *node,
+                                     CKTreeNode *node,
                                      CKTreeNode *parent,
                                      CKTreeNode *previousParent,
                                      const CKBuildComponentTreeParams &params,
                                      CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
-    auto const previousNode = (CKRenderTreeNode *)[previousParent childForComponentKey:node.componentKey];
+    auto const previousNode = [previousParent childForComponentKey:node.componentKey];
     if (previousNode) {
       CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params, didReuseBlock);
       return YES;
@@ -73,12 +73,12 @@ namespace CKRenderInternal {
   // Check if shouldComponentUpdate returns `NO`; if it does, reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponentIfComponentsAreEqual(id<CKRenderComponentProtocol> component,
                                                          __strong id<CKComponentProtocol> *childComponent,
-                                                         CKRenderTreeNode *node,
+                                                         CKTreeNode *node,
                                                          CKTreeNode *parent,
                                                          CKTreeNode *previousParent,
                                                          const CKBuildComponentTreeParams &params,
                                                          CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
-    auto const previousNode = (CKRenderTreeNode *)[previousParent childForComponentKey:node.componentKey];
+    auto const previousNode = [previousParent childForComponentKey:node.componentKey];
     auto const previousComponent = (id<CKRenderComponentProtocol>)previousNode.component;
     // If there is no previous compononet, there is nothing to reuse.
     if (previousComponent) {
@@ -203,8 +203,8 @@ namespace CKRender {
 
       // If there is a node, we update the parents' pointers to the next level in the tree.
       if (node) {
-        parent = (CKTreeNode *)node;
-        previousParent = (CKTreeNode *)[previousParent childForComponentKey:[node componentKey]];
+        parent = node;
+        previousParent = [previousParent childForComponentKey:[node componentKey]];
 
         // Report information to `debugAnalyticsListener`.
         if (numberOfChildren == 1 && params.shouldCollectTreeNodeCreationInformation) {
@@ -280,7 +280,7 @@ namespace CKRender {
           }
           // Call build component tree on the child component.
           [child buildComponentTree:node
-                     previousParent:(CKTreeNode *)[previousParent childForComponentKey:[node componentKey]]
+                     previousParent:[previousParent childForComponentKey:[node componentKey]]
                              params:params
                parentHasStateUpdate:parentHasStateUpdate];
         }

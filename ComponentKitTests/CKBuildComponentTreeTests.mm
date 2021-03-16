@@ -100,14 +100,9 @@
   verifyChildToParentConnection(root, singleChildNode, renderComponent);
 
   // Check the next level of the tree
-  if ([singleChildNode isKindOfClass:[CKTreeNode class]]) {
-    auto const parentNode = (CKTreeNode *)singleChildNode;
-    XCTAssertEqual(parentNode.children.size(), 1);
-    CKTreeNode *componentNode = parentNode.children[0];
-    verifyChildToParentConnection(parentNode, componentNode, c);
-  } else {
-    XCTFail(@"singleChildNode has to be a CKTreeNode as it has a child.");
-  }
+  XCTAssertEqual(singleChildNode.children.size(), 1);
+  CKTreeNode *componentNode = singleChildNode.children[0];
+  verifyChildToParentConnection(singleChildNode, componentNode, c);
 
   // Simulate a second tree creation.
   auto const scopeRoot2 = [scopeRoot.asNullable() newRoot];
