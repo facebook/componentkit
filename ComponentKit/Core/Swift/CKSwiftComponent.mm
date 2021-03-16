@@ -354,7 +354,7 @@ CKTreeNode *CKSwiftCreateNode(Class klass, id identifier) {
   return childPair.node;
 }
 
-BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle,
+BOOL CKSwiftInitializeState(CKTreeNode *node,
                             NSInteger index,
                             NS_NOESCAPE id _Nullable (^initialValueProvider)()) {
   const auto pair = CKSwiftGetCurrentPair();
@@ -365,6 +365,7 @@ BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle,
   }
 
   if (pair->previousNode == nil) {
+    const auto handle = node.scopeHandle;
     RCCAssert([handle.state isKindOfClass:CKSwiftStateWrapper.class], @"Unexpected state: %@", handle.state);
     const auto wrapper = (CKSwiftStateWrapper *)handle.state;
     [wrapper add:initialValueProvider()];

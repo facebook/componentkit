@@ -62,10 +62,10 @@ void CKSwiftPopClass(void);
 CKTreeNode *CKSwiftCreateNode(Class klass, id _Nullable identifier);
 
 /// Initialises the state for a Swift Component.
-/// @param handle The handle associated with the component previously returned from `CKSwiftCreateScopeHandle`.
+/// @param node The node associated with the component previously returned from `CKSwiftCreateNode`.
 /// @param index The index of the current state.
 /// @return `YES` during first initialization.
-BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle, NSInteger index, NS_NOESCAPE id _Nullable (^initialValueProvider)(void));
+BOOL CKSwiftInitializeState(CKTreeNode *node, NSInteger index, NS_NOESCAPE id _Nullable (^initialValueProvider)(void));
 
 /// Fetches the current state value. Must be called on the main thread (or from `-body`).
 /// @param node The node associated with the component.
