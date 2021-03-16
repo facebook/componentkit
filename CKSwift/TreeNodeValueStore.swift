@@ -13,7 +13,7 @@ import ComponentKit
 
 final class TreeNodeValueStore<Value> {
   private let valueProvider: () -> Value
-  private var link: (node: CKTreeNode, index: Int)?
+  private var link: (node: CKTreeNode, index: Int, value: Value)?
 
   init(valueProvider: @escaping () -> Value) {
     self.valueProvider = valueProvider
@@ -21,27 +21,30 @@ final class TreeNodeValueStore<Value> {
 
   @discardableResult
   func link(with node: CKTreeNode, at index: Int) -> Bool {
-    link = (node, index)
-    return CKSwiftInitializeState(node.scopeHandle, index, valueProvider)
+    let wasFirstInit = CKSwiftInitializeState(node.scopeHandle, index, valueProvider)
+    let untypedValue = CKSwiftFetchState(node.scopeHandle, index)
+    guard let value = untypedValue as? Value else {
+      preconditionFailure("Unexpected value \(String(describing: untypedValue))")
+    }
+
+    link = (node, index, value)
+    return wasFirstInit
   }
 
   func get() -> Value {
     guard let link = link else {
       preconditionFailure("Attempting to read state before scope handle location linked.")
     }
-    let untypedValue = CKSwiftFetchState(link.node.scopeHandle, link.index)
-    guard let value = untypedValue as? Value else {
-      preconditionFailure("Unexpected value \(String(describing: untypedValue))")
-    }
-    return value
+    return link.value
   }
 
   func set(_ value: Value) {
-    guard let link = link else {
+    guard let nonNilLink = link else {
       preconditionFailure("Attempting to write state before `-body`.")
     }
 
-    CKSwiftUpdateState(link.node.scopeHandle, link.index, value)
+    link!.value = value
+    CKSwiftUpdateState(nonNilLink.node.scopeHandle, nonNilLink.index, value)
   }
 
   var isLinked: Bool {

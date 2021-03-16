@@ -303,6 +303,13 @@ static CKComponentViewConfiguration _viewConfigurationWithViewIfAnimated(
   _values.push_back(value);
 }
 
+- (instancetype)newStateWrapperWithUpdatedValue:(id)updatedValue atIndex:(NSInteger)index
+{
+  CKSwiftStateWrapper *const copy = [[self.class alloc] initWithValues:_values];
+  copy->_values[index] = updatedValue;
+  return copy;
+}
+
 @end
 
 static CKComponentScopePair *CKSwiftGetCurrentPair() {
@@ -387,14 +394,8 @@ void CKSwiftUpdateState(CKComponentScopeHandle *scopeHandle, NSInteger index, id
   RCCAssert(NSThread.currentThread.isMainThread, @"Updating state out of the main thread not permitted");
   RCCAssert(CKThreadLocalComponentScope::currentScope() == nullptr, @"Updating state during build not permitted");
 
-  const auto stateWrapper = (CKSwiftStateWrapper *)scopeHandle.state;
-  stateWrapper->_values[index] = newValue;
-
-  // Copy current main thread values to avoid a race while building on the background.
-  const auto values = stateWrapper->_values;
-
-  [scopeHandle updateState:^id _Nullable(id state) {
-    return [[CKSwiftStateWrapper alloc] initWithValues:values];
+  [scopeHandle updateState:^id _Nullable(CKSwiftStateWrapper *state) {
+    return [state newStateWrapperWithUpdatedValue:newValue atIndex:index];
   } metadata:{} mode:CKUpdateModeAsynchronous];
 }
 
