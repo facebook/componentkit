@@ -45,6 +45,6 @@ public struct State<Value> : TreeNodeLinkable {
 
 extension State : Equatable where Value : Equatable {
   static public func ==(lhs: State, rhs: State) -> Bool {
-    return lhs.wrappedValue == rhs.wrappedValue
+    lhs.wrappedValue == rhs.wrappedValue
   }
 }

@@ -46,6 +46,6 @@ public struct ViewModel<Value: AnyObject> : TreeNodeLinkable {
 
 extension ViewModel : Equatable {
   static public func ==(lhs: ViewModel, rhs: ViewModel) -> Bool {
-    return lhs.wrappedValue === rhs.wrappedValue
+    lhs.wrappedValue === rhs.wrappedValue
   }
 }
