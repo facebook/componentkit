@@ -122,15 +122,11 @@ struct std::equal_to<CKComponentScopeHandle *>
 
 #endif
 
-typedef int32_t CKScopedResponderUniqueIdentifier;
-
 NS_SWIFT_NAME(ScopedResponderKey)
 typedef int CKScopedResponderKey;
 
 NS_SWIFT_NAME(ScopedResponder)
 @interface CKScopedResponder : NSObject
-
-@property (nonatomic, readonly, assign) CKScopedResponderUniqueIdentifier uniqueIdentifier;
 
 /**
  Returns the key needed to access the responder at a later time.

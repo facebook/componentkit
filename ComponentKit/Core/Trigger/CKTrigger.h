@@ -27,7 +27,7 @@ struct CKTriggerScopedResponderAndKey {
   CKTriggerScopedResponderAndKey(id<CKComponentProtocol> component, NSString *context = @"");
 
   auto operator== (const CKTriggerScopedResponderAndKey& rhs) const {
-    return responder.uniqueIdentifier == rhs.responder.uniqueIdentifier;
+    return responder == rhs.responder;
   }
 };
 

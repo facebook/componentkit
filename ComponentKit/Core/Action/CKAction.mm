@@ -35,7 +35,7 @@ bool CKActionBase::operator==(const CKActionBase& rhs) const
           && RCObjectIsEqual(_target, rhs._target)
           // If we are using a scoped action, we are only concerned that the selector and the
           // responder unique identifier matches.
-          && _scopedResponderAndKey.responder.uniqueIdentifier == rhs._scopedResponderAndKey.responder.uniqueIdentifier
+          && _scopedResponderAndKey.responder == rhs._scopedResponderAndKey.responder
           && _selector == rhs._selector
           && _block == rhs._block);
 }
@@ -124,7 +124,7 @@ std::string CKActionBase::identifier() const noexcept
     case CKActionVariant::TargetSelector:
       return std::string(sel_getName(_selector)) + "-TargetSelector-" + std::to_string((long)_target);
     case CKActionVariant::Responder:
-      return std::string(sel_getName(_selector)) + "-Responder-" + std::to_string(_scopedResponderAndKey.responder.uniqueIdentifier);
+      return std::string(sel_getName(_selector)) + "-Responder-" + std::to_string((long)_scopedResponderAndKey.responder);
     case CKActionVariant::Block:
       return std::string(sel_getName(_selector)) + "-Block-" + std::to_string((long)_block);
   }
