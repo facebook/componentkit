@@ -22,7 +22,6 @@
 #import <ComponentKit/CKButtonComponent.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
-#import <ComponentKit/CKRenderTreeNode.h>
 #import <ComponentKit/CKTreeNode.h>
 
 #import "CKComponentTestCase.h"
@@ -224,9 +223,7 @@ static void treeChildrenIdentifiers(CKTreeNode *node, NSMutableSet<NSString *> *
   for (auto childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
-    if ([childNode isKindOfClass:[CKRenderTreeNode class]]) {
-      treeChildrenIdentifiers((CKRenderTreeNode *)childNode, identifiers, level+1);
-    }
+    treeChildrenIdentifiers(childNode, identifiers, level+1);
   }
 }
 

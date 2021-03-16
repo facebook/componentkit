@@ -143,7 +143,6 @@
 #import <ComponentKit/CKRenderComponent.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 #import <ComponentKit/CKRenderHelpers.h>
-#import <ComponentKit/CKRenderTreeNode.h>
 #import <ComponentKit/CKRequired.h>
 #import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKSizeRange.h>

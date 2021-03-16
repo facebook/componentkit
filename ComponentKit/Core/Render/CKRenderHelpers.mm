@@ -18,10 +18,10 @@
 #import <ComponentKit/CKMutex.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKTreeNode.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKCoalescedSpecSupport.h>
 
 #import "CKTreeNode.h"
-#import "CKRenderTreeNode.h"
 
 namespace CKRenderInternal {
 
@@ -148,8 +148,6 @@ static auto didBuildComponentTree(CKTreeNode *node,
                                   id<CKComponentProtocol> component,
                                   const CKBuildComponentTreeParams &params) -> void {
 
-    [CKRenderTreeNode didBuildComponentTree:node];
-
     // Context support
     CKComponentContextHelper::didBuildComponentTree(component);
 
@@ -229,6 +227,32 @@ namespace CKRender {
   }
 
     namespace Render {
+
+      struct ThreadLocalStorageSupport {
+        ThreadLocalStorageSupport(const CKComponentScopePair& pair) : _pair(pair), _threadLocalScope(CKThreadLocalComponentScope::currentScope()) {
+          if (auto const threadLocalScope = _threadLocalScope) {
+            // Push the new pair into the thread local.
+            threadLocalScope->push(pair);
+          } else {
+            RCCFailAssert(@"No TLS while building a render component!?");
+          }
+        }
+        ~ThreadLocalStorageSupport() {
+          if (auto const threadLocalScope = _threadLocalScope) {
+            RCCAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().node == _pair.node, @"top.node (%@) is not equal to node (%@)", threadLocalScope->stack.top().node, _pair.node);
+
+            // Pop the top element of the stack.
+            threadLocalScope->pop();
+          }
+        }
+
+        ThreadLocalStorageSupport(const ThreadLocalStorageSupport&) = delete;
+
+       private:
+        const CKComponentScopePair& _pair;
+        CKThreadLocalComponentScope *_threadLocalScope;
+      };
+
       auto build(id<CKRenderWithChildComponentProtocol> component,
                  __strong id<CKComponentProtocol> *childComponent,
                  CKTreeNode *parent,
@@ -248,6 +272,8 @@ namespace CKRender {
                                              previousParent:previousParent
                                                   scopeRoot:params.scopeRoot
                                                stateUpdates:params.stateUpdates];
+
+        ThreadLocalStorageSupport tlsSupport(pair);
 
         auto const node = pair.node;
 

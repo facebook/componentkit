@@ -17,7 +17,6 @@
 #import <ComponentKit/CKRenderComponentProtocol.h>
 #import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKMutex.h>
-#import "CKRenderTreeNode.h"
 
 #include <tuple>
 
@@ -311,12 +310,12 @@ static CKComponentScopeHandle *_createScopeHandle(CKComponentScopeRoot *scopeRoo
                                                              keys:{}
                                                              type:CKTreeNodeComponentKey::Type::parent];
   auto const previousNode = [previousParent childForComponentKey:componentKey];
-  const auto node = [[CKRenderTreeNode alloc] initWithComponent:component
-                                                         parent:parent
-                                                   previousNode:previousNode
-                                                      scopeRoot:scopeRoot
-                                                   componentKey:componentKey
-                                                   stateUpdates:stateUpdates];
+  const auto node = [[CKTreeNode alloc] initWithComponent:component
+                                                   parent:parent
+                                             previousNode:previousNode
+                                               scopeRoot:scopeRoot
+                                             componentKey:componentKey
+                                             stateUpdates:stateUpdates];
   return CKComponentScopePair{.node = node, .previousNode = previousNode};
 }
 

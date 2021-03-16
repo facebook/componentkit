@@ -22,7 +22,6 @@
 #import <ComponentKit/CKButtonComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKRenderTreeNode.h>
 
 #import "CKComponentTestCase.h"
 
@@ -54,9 +53,7 @@ static void treeChildrenIdentifiers(CKTreeNode *node, NSMutableSet<NSString *> *
   for (auto childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
-    if ([childNode isKindOfClass:[CKRenderTreeNode class]]) {
-      treeChildrenIdentifiers((CKRenderTreeNode *)childNode, identifiers, level+1);
-    }
+    treeChildrenIdentifiers(childNode, identifiers, level+1);
   }
 }
 
@@ -238,7 +235,6 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                              previousParent:nil
                                                   scopeRoot:threadScope.newScopeRoot
                                                stateUpdates:{}].node;
-  [CKRenderTreeNode didBuildComponentTree:childNode];
 
   // Verify that the initial state is correct.
   XCTAssertTrue([childNode.state isEqualToNumber:[[component1 class] initialState]]);
@@ -259,8 +255,6 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                               previousParent:root1
                                                    scopeRoot:[threadScope.newScopeRoot newRoot]
                                                 stateUpdates:stateUpdates].node;
-
-  [CKRenderTreeNode didBuildComponentTree:childNode2];
 
   XCTAssertTrue([childNode2.state isEqualToNumber:newState]);
 }
