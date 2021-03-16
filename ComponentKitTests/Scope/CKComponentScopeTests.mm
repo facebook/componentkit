@@ -14,7 +14,6 @@
 
 #import <ComponentKit/CKCollection.h>
 #import <ComponentKit/CKComponentScope.h>
-#import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentProtocol.h>
@@ -43,7 +42,6 @@
 { return ""; }
 + (RCComponentCoalescingMode)coalescingMode
 { return RCComponentCoalescingModeNone; }
-- (CKComponentScopeHandle *)scopeHandle { return nil; }
 - (void)buildComponentTree:(CKTreeNode *)parent previousParent:(CKTreeNode *)previousParent params:(const CKBuildComponentTreeParams &)params parentHasStateUpdate:(BOOL)parentHasStateUpdate { }
 - (unsigned int)numberOfChildren { return 0; }
 - (id<CKComponentProtocol>)childAtIndex:(unsigned int)index { return nil; }
@@ -65,7 +63,6 @@
 { return ""; }
 + (RCComponentCoalescingMode)coalescingMode
 { return RCComponentCoalescingModeNone; }
-- (CKComponentScopeHandle *)scopeHandle { return nil; }
 - (void)buildComponentTree:(CKTreeNode *)parent previousParent:(CKTreeNode *)previousParent params:(const CKBuildComponentTreeParams &)params parentHasStateUpdate:(BOOL)parentHasStateUpdate { }
 - (id<CKComponentProtocol>)childAtIndex:(unsigned int)index { return nil; }
 - (CKTreeNode *)treeNode { return nil; }

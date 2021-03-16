@@ -19,7 +19,6 @@
 
 #import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKTreeNode.h>
