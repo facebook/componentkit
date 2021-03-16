@@ -94,7 +94,7 @@ namespace CKRender {
   /**
    @return `YES` if the component of the node has a state update, `NO` otherwise.
    */
-  auto componentHasStateUpdate(__unsafe_unretained CKComponentScopeHandle *scopeHandle,
+  auto componentHasStateUpdate(__unsafe_unretained CKTreeNode *node,
                                __unsafe_unretained id previousParent,
                                CKBuildTrigger buildTrigger,
                                const CKComponentStateUpdateMap& stateUpdates) -> BOOL;

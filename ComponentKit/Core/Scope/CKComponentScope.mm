@@ -88,7 +88,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
          _threadLocalScope->buildTrigger == CKBuildTriggerStateUpdate &&
         (_threadLocalScope->ancestorHasStateUpdate.top() ||
            CKRender::componentHasStateUpdate(
-               _node.scopeHandle,
+               _node,
                pair.previousNode,
                _threadLocalScope->buildTrigger,
              _threadLocalScope->stateUpdates));

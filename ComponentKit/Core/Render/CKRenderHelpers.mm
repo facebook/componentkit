@@ -194,7 +194,7 @@ namespace CKRender {
       // TODO: Share this value with the value precomputed in the scope
       parentHasStateUpdate = parentHasStateUpdate ||
       (params.buildTrigger == CKBuildTriggerStateUpdate &&
-       CKRender::componentHasStateUpdate(node.scopeHandle,
+       CKRender::componentHasStateUpdate(node,
                                          previousParentOrComponent,
                                          params.buildTrigger,
                                          params.stateUpdates));
@@ -292,7 +292,7 @@ namespace CKRender {
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
         parentHasStateUpdate = parentHasStateUpdate ||
         (params.buildTrigger == CKBuildTriggerStateUpdate &&
-         CKRender::componentHasStateUpdate(node.scopeHandle,
+         CKRender::componentHasStateUpdate(node,
                                            previousParent,
                                            params.buildTrigger,
                                            params.stateUpdates));
@@ -361,10 +361,11 @@ namespace CKRender {
     }
   }
 
-  auto componentHasStateUpdate(__unsafe_unretained CKComponentScopeHandle *scopeHandle,
+  auto componentHasStateUpdate(__unsafe_unretained CKTreeNode *node,
                                __unsafe_unretained id previousParent,
                                CKBuildTrigger buildTrigger,
                                const CKComponentStateUpdateMap& stateUpdates) -> BOOL {
+    const auto scopeHandle = node.scopeHandle;
     if (scopeHandle != nil && previousParent != nil && buildTrigger == CKBuildTriggerStateUpdate) {
       return stateUpdates.find(scopeHandle) != stateUpdates.end();
     }
