@@ -152,6 +152,10 @@ extension ComponentInflatable {
     )
   }
 
+  public func padding(_ insets: UIEdgeInsets) -> ViewLayoutModifier<Self> {
+    self.padding(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
+  }
+
   // TODO: Padding with Edge set API
 
   public func padding(_ length: Dimension? = nil) -> ViewLayoutModifier<Self> {
