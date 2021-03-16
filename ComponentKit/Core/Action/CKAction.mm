@@ -79,17 +79,17 @@ CKActionBase::CKActionBase(id target, SEL selector) noexcept
     _selector(selector) {}
 
 CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept
-  : CKActionBase(selector, scope.node().scopeHandle) { }
+  : CKActionBase(selector, scope.node()) { }
 
-CKActionBase::CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcept
+CKActionBase::CKActionBase(SEL selector, CKTreeNode *node) noexcept
   : _target(nil),
-    _scopedResponderAndKey{ .responder = handle.scopedResponder, .key = [handle.scopedResponder keyForHandle:handle] },
+    _scopedResponderAndKey{ .responder = node.scopeHandle.scopedResponder, .key = [node.scopeHandle.scopedResponder keyForHandle:node.scopeHandle] },
     _block(NULL),
 
     _variant(CKActionVariant::Responder),
     _selector(selector)
 {
-  RCCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
+  RCCAssertNotNil(node.scopeHandle, @"You are creating an action that will not fire because you have an invalid scope handle.");
 }
 
 CKActionBase::CKActionBase(SEL selector) noexcept
@@ -134,9 +134,9 @@ dispatch_block_t CKActionBase::block() const noexcept {
   return _block;
 }
 
-CKComponentScopeHandle *CKActionBase::scopeHandleFromContext(const CK::BaseSpecContext &context) noexcept {
+CKTreeNode *CKActionBase::nodeFromContext(const CK::BaseSpecContext &context) noexcept {
   // Requires CKComponentInternal.h which shouldn't be imported publicly.
-  return componentFromContext(context).treeNode.scopeHandle;
+  return componentFromContext(context).treeNode;
 }
 
 CKComponent *CKActionBase::componentFromContext(const CK::BaseSpecContext &context) noexcept {
@@ -420,11 +420,12 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
 #if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
-  _CKTypedComponentDebugCheckComponentScopeHandle(scope.node().scopeHandle, selector, typeEncodings);
+  _CKTypedComponentDebugCheckComponentNode(scope.node(), selector, typeEncodings);
 }
 
-void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *handle, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
+void _CKTypedComponentDebugCheckComponentNode(CKTreeNode *node, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
+  const auto handle = node.scopeHandle;
   if (handle == nil) {
     return;
   }

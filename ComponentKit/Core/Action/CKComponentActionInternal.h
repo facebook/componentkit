@@ -18,12 +18,13 @@
 
 #import <RenderCore/RCAssert.h>
 #import <ComponentKit/CKComponentScope.h>
-#import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKTreeNode.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
 #import <type_traits>
 
 @class CKComponent;
+@class CKTreeNode;
 
 typedef NS_ENUM(NSInteger, CKActionSendBehavior) {
   /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
@@ -61,7 +62,7 @@ protected:
   CKActionBase(id target, SEL selector) noexcept;
 
   CKActionBase(const CKComponentScope &scope, SEL selector) noexcept;
-  CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcept;
+  CKActionBase(SEL selector, CKTreeNode *node) noexcept;
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKActionBase(SEL selector) noexcept;
@@ -85,7 +86,7 @@ protected:
   SEL _selector;
 
   static CKComponent *componentFromContext(const CK::BaseSpecContext &context) noexcept;
-  static CKComponentScopeHandle *scopeHandleFromContext(const CK::BaseSpecContext &context) noexcept;
+  static CKTreeNode *nodeFromContext(const CK::BaseSpecContext &context) noexcept;
 
 public:
   explicit operator bool() const noexcept;
@@ -156,7 +157,7 @@ public:
 
 #if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
-void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *handle, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
+void _CKTypedComponentDebugCheckComponentNode(CKTreeNode *node, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 void _CKTypedComponentDebugCheckComponent(Class<CKComponentProtocol> componentClass, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 #endif

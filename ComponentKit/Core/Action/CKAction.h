@@ -133,12 +133,12 @@ public:
   }
 
   // Changing the order of the params here, as otherwise it confuses this constructor with the target one.
-  CKAction<T...>(SEL selector, CKComponentScopeHandle *handle) noexcept : CKActionBase(selector, handle)
+  CKAction<T...>(SEL selector, CKTreeNode *node) noexcept : CKActionBase(selector, node)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
     CKActionTypeVectorBuild(typeEncodings, CKActionTypelist<T...>{});
-    _CKTypedComponentDebugCheckComponentScopeHandle(handle, selector, typeEncodings);
+    _CKTypedComponentDebugCheckComponentNode(node, selector, typeEncodings);
 #endif
   }
 
@@ -157,14 +157,14 @@ public:
    Construct an action from a Render component.
    */
   static CKAction<T...> actionForRenderComponent(id<CKRenderComponentProtocol> component, SEL selector) {
-    return CKAction<T...>(selector, component.treeNode.scopeHandle);
+    return CKAction<T...>(selector, component.treeNode);
   }
 
   /**
   Constructs an action for a controller from a render context.
   */
   static CKAction<T...> unsafeActionForController(const CK::BaseSpecContext &context, SEL selector) {
-    return CKAction<T...>{selector, scopeHandleFromContext(context)};
+    return CKAction<T...>{selector, nodeFromContext(context)};
   }
 
   /** Like actionFromBlock, but allows passing a block that doesn't take a sender component. */
