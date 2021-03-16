@@ -22,7 +22,7 @@ final class TreeNodeValueStore<Value> {
   @discardableResult
   func link(with node: CKTreeNode, at index: Int) -> Bool {
     let wasFirstInit = CKSwiftInitializeState(node.scopeHandle, index, valueProvider)
-    let untypedValue = CKSwiftFetchState(node.scopeHandle, index)
+    let untypedValue = CKSwiftFetchState(node, index)
     guard let value = untypedValue as? Value else {
       preconditionFailure("Unexpected value \(String(describing: untypedValue))")
     }

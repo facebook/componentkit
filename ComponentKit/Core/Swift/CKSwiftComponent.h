@@ -68,9 +68,9 @@ CKTreeNode *CKSwiftCreateNode(Class klass, id _Nullable identifier);
 BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle, NSInteger index, NS_NOESCAPE id _Nullable (^initialValueProvider)(void));
 
 /// Fetches the current state value. Must be called on the main thread (or from `-body`).
-/// @param scopeHandle The handle associated with the component.
+/// @param node The node associated with the component.
 /// @param index The index of the current state.
-id _Nullable CKSwiftFetchState(CKComponentScopeHandle *scopeHandle, NSInteger index);
+id _Nullable CKSwiftFetchState(CKTreeNode *node, NSInteger index);
 
 /// Updates the state for a Swift Component.
 /// @param scopeHandle The handle associated with the component.

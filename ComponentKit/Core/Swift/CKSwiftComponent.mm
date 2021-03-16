@@ -374,10 +374,10 @@ BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle,
   }
 }
 
-id CKSwiftFetchState(CKComponentScopeHandle *scopeHandle, NSInteger index) {
+id CKSwiftFetchState(CKTreeNode *node, NSInteger index) {
   RCCAssert(CKThreadLocalComponentScope::currentScope() != nullptr ||
             NSThread.currentThread.isMainThread, @"Fetching state out of the main thread (or body) non permitted");
-  const auto stateWrapper = (CKSwiftStateWrapper *)scopeHandle.state;
+  const auto stateWrapper = (CKSwiftStateWrapper *)node.scopeHandle.state;
   return stateWrapper->_values[index];
 }
 
