@@ -98,12 +98,6 @@ namespace CKRender {
                                __unsafe_unretained id previousParent,
                                CKBuildTrigger buildTrigger,
                                const CKComponentStateUpdateMap& stateUpdates) -> BOOL;
-  /**
-   @return `YES` if the component of the node has a state update, `NO` otherwise.
-   */
-  auto nodeHasStateUpdate(__unsafe_unretained CKTreeNode *node,
-                          __unsafe_unretained CKTreeNode *previousParent,
-                          const CKBuildComponentTreeParams &params) -> BOOL;
 
   /**
    Mark all the dirty nodes, on a path from an existing node up to the root node in the passed CKTreeNodeDirtyIds set.
