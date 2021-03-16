@@ -115,19 +115,17 @@ struct CKComponentScopePair {
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                      requiresScopeHandle:(BOOL)requiresScopeHandle;
 
-- (CKTreeNodeComponentKey)createKeyForComponentTypeName:(const char *)componentTypeName
-                                             identifier:(id)identifier
-                                                   keys:(const std::vector<id<NSObject>> &)keys;
+
 - (std::vector<CKTreeNode *>)children;
 
 - (size_t)childrenSize;
 /** Returns a component tree node according to its component key */
 - (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key;
 
-/** Creates a component key for a child node according to its component type name; this method is being called once during the component tree creation */
-- (CKTreeNodeComponentKey)createParentKeyForComponentTypeName:(const char *)componentTypeName
-                                                   identifier:(id<NSObject>)identifier
-                                                         keys:(const std::vector<id<NSObject>> &)keys;
+- (CKTreeNodeComponentKey)createKeyForComponentTypeName:(const char *)componentTypeName
+                                             identifier:(id<NSObject>)identifier
+                                                   keys:(const std::vector<id<NSObject>> &)keys
+                                                   type:(CKTreeNodeComponentKey::Type)type;
 
 /** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
 - (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;

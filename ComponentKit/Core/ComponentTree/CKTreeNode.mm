@@ -81,9 +81,10 @@ namespace TreeNode {
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  auto const componentKey = [parent createParentKeyForComponentTypeName:component.typeName
-                                                             identifier:[component componentIdentifier]
-                                                                   keys:{}];
+  auto const componentKey = [parent createKeyForComponentTypeName:component.typeName
+                                                       identifier:[component componentIdentifier]
+                                                             keys:{}
+                                                             type:CKTreeNodeComponentKey::Type::parent];
 
   auto const previousNode = [previousParent childForComponentKey:componentKey];
 
@@ -149,9 +150,10 @@ namespace TreeNode {
 {
   // The existing `_componentKey` that was created by the scope, is an owner based key;
   // hence, we extract the `unique identifer` and the `keys` vector from it and recreate a parent based key based on this information.
-  auto const componentKey = [parent createParentKeyForComponentTypeName:component.typeName
-                                                             identifier:_componentKey.identifier
-                                                                   keys:_componentKey.keys];
+  auto const componentKey = [parent createKeyForComponentTypeName:component.typeName
+                                                       identifier:_componentKey.identifier
+                                                             keys:_componentKey.keys
+                                                             type:CKTreeNodeComponentKey::Type::parent];
 
   [self linkComponent:component withKey:componentKey toParent:parent inScopeRoot:scopeRoot];
 }
@@ -233,12 +235,12 @@ namespace TreeNode {
   return nil;
 }
 
-- (CKTreeNodeComponentKey)createParentKeyForComponentTypeName:(const char *)componentTypeName
-                                                   identifier:(id<NSObject>)identifier
-                                                         keys:(const std::vector<id<NSObject>> &)keys
+- (CKTreeNodeComponentKey)createKeyForComponentTypeName:(const char *)componentTypeName
+                                             identifier:(id<NSObject>)identifier
+                                                   keys:(const std::vector<id<NSObject>> &)keys
+                                                   type:(CKTreeNodeComponentKey::Type)type
 {
-  // Create **parent** based key counter.
-  NSUInteger keyCounter = CKTreeNodeComponentKey::kCounterParentOffset;
+  NSUInteger keyCounter = CKTreeNodeComponentKey::startOffsetForType(type);
   for (auto const &child : _children) {
     if (child.key.componentTypeName == componentTypeName && RCObjectIsEqual(child.key.identifier, identifier)) {
       keyCounter += 2;
@@ -251,21 +253,6 @@ namespace TreeNode {
 - (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
   _children.push_back(CKTreeNodeComponentKeyToNode{.key = componentKey, .node = child});
-}
-
-- (CKTreeNodeComponentKey)createKeyForComponentTypeName:(const char *)componentTypeName
-                                             identifier:(id)identifier
-                                                   keys:(const std::vector<id<NSObject>> &)keys
-{
-  // Create **owner** based key counter.
-  NSUInteger keyCounter = CKTreeNodeComponentKey::kCounterOwnerOffset;
-  for (auto const &child : _children) {
-    if (child.key.componentTypeName == componentTypeName && RCObjectIsEqual(child.key.identifier, identifier)) {
-      keyCounter += 2;
-    }
-  }
-  // Update the stateKey with the type name key counter to make sure we don't have collisions.
-  return CKTreeNodeComponentKey{componentTypeName, keyCounter, identifier, keys};
 }
 
 static CKComponentScopeHandle *_createScopeHandle(CKComponentScopeRoot *scopeRoot,
@@ -303,7 +290,8 @@ static CKComponentScopeHandle *_createScopeHandle(CKComponentScopeRoot *scopeRoo
 {
   CKTreeNodeComponentKey componentKey = [pair.node createKeyForComponentTypeName:componentTypeName
                                                                       identifier:identifier
-                                                                            keys:keys];
+                                                                            keys:keys
+                                                                            type:CKTreeNodeComponentKey::Type::owner];
 
   const auto previousNode = [pair.previousNode childForComponentKey:componentKey];
   const auto node = [[CKTreeNode alloc] initWithOwner:pair.node

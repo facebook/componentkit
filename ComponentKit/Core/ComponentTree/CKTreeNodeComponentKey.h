@@ -43,6 +43,15 @@ struct CKTreeNodeComponentKey {
   auto type() const -> Type {
     return counter % 2 == kCounterParentOffset ? Type::parent : Type::owner;
   }
+
+  static auto startOffsetForType(Type type) -> NSUInteger {
+    switch (type) {
+      case Type::owner:
+        return kCounterOwnerOffset;
+      case Type::parent:
+        return kCounterParentOffset;
+    }
+  }
 };
 
 @class CKTreeNode;
