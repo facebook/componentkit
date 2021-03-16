@@ -390,11 +390,11 @@ void CKSwiftUpdateViewModelState(CKComponentScopeHandle *scopeHandle) {
   } metadata:{} mode:CKUpdateModeAsynchronous];
 }
 
-void CKSwiftUpdateState(CKComponentScopeHandle *scopeHandle, NSInteger index, id _Nullable newValue) {
+void CKSwiftUpdateState(CKTreeNode *node, NSInteger index, id _Nullable newValue) {
   RCCAssert(NSThread.currentThread.isMainThread, @"Updating state out of the main thread not permitted");
   RCCAssert(CKThreadLocalComponentScope::currentScope() == nullptr, @"Updating state during build not permitted");
 
-  [scopeHandle updateState:^id _Nullable(CKSwiftStateWrapper *state) {
+  [node.scopeHandle updateState:^id _Nullable(CKSwiftStateWrapper *state) {
     return [state newStateWrapperWithUpdatedValue:newValue atIndex:index];
   } metadata:{} mode:CKUpdateModeAsynchronous];
 }

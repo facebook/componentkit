@@ -44,7 +44,7 @@ final class TreeNodeValueStore<Value> {
     }
 
     link!.value = value
-    CKSwiftUpdateState(nonNilLink.node.scopeHandle, nonNilLink.index, value)
+    CKSwiftUpdateState(nonNilLink.node, nonNilLink.index, value)
   }
 
   var isLinked: Bool {

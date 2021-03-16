@@ -73,10 +73,10 @@ BOOL CKSwiftInitializeState(CKComponentScopeHandle *handle, NSInteger index, NS_
 id _Nullable CKSwiftFetchState(CKTreeNode *node, NSInteger index);
 
 /// Updates the state for a Swift Component.
-/// @param scopeHandle The handle associated with the component.
+/// @param node The node associated with the component.
 /// @param index The index of the current state.
 /// @param newValue The new state value.
-void CKSwiftUpdateState(CKComponentScopeHandle *scopeHandle, NSInteger index, id _Nullable newValue);
+void CKSwiftUpdateState(CKTreeNode *node, NSInteger index, id _Nullable newValue);
 
 /// Triggers a state update for a Swift Component.
 /// @param scopeHandle The handle associated with the component.
