@@ -73,8 +73,9 @@ struct CKComponentScopePair {
 /** Render initializer */
 - (instancetype)initWithComponent:(id<CKRenderComponentProtocol>)component
                            parent:(CKTreeNode *)parent
-                   previousParent:(CKTreeNode *)previousParent
+                     previousNode:(CKTreeNode *)previousNode
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                     componentKey:(const CKTreeNodeComponentKey&)componentKey
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 #endif
@@ -115,6 +116,11 @@ struct CKComponentScopePair {
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                      requiresScopeHandle:(BOOL)requiresScopeHandle;
 
++ (CKComponentScopePair)childPairForComponent:(id<CKRenderComponentProtocol>)component
+                                       parent:(CKTreeNode *)parent
+                               previousParent:(CKTreeNode *)previousParent
+                                     scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 - (std::vector<CKTreeNode *>)children;
 

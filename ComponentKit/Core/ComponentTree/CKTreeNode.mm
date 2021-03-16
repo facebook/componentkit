@@ -17,6 +17,7 @@
 #import <ComponentKit/CKRenderComponentProtocol.h>
 #import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKMutex.h>
+#import "CKRenderTreeNode.h"
 
 #include <tuple>
 
@@ -77,17 +78,11 @@ namespace TreeNode {
 // Render initializer
 - (instancetype)initWithComponent:(id<CKRenderComponentProtocol>)component
                            parent:(CKTreeNode *)parent
-                   previousParent:(CKTreeNode *)previousParent
+                     previousNode:(CKTreeNode *)previousNode
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                     componentKey:(const CKTreeNodeComponentKey&)componentKey
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  auto const componentKey = [parent createKeyForComponentTypeName:component.typeName
-                                                       identifier:[component componentIdentifier]
-                                                             keys:{}
-                                                             type:CKTreeNodeComponentKey::Type::parent];
-
-  auto const previousNode = [previousParent childForComponentKey:componentKey];
-
   CKComponentScopeHandle *scopeHandle = CKRender::ScopeHandle::Render::create(component, previousNode, scopeRoot, stateUpdates);
   if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
     [self linkComponent:component withKey:componentKey toParent:parent inScopeRoot:scopeRoot];
@@ -302,6 +297,26 @@ static CKComponentScopeHandle *_createScopeHandle(CKComponentScopeRoot *scopeRoo
                                          stateUpdates:stateUpdates
                                   requiresScopeHandle:requiresScopeHandle];
 
+  return CKComponentScopePair{.node = node, .previousNode = previousNode};
+}
+
++ (CKComponentScopePair)childPairForComponent:(id<CKRenderComponentProtocol>)component
+                                       parent:(CKTreeNode *)parent
+                               previousParent:(CKTreeNode *)previousParent
+                                     scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+{
+  auto const componentKey = [parent createKeyForComponentTypeName:component.typeName
+                                                       identifier:component.componentIdentifier
+                                                             keys:{}
+                                                             type:CKTreeNodeComponentKey::Type::parent];
+  auto const previousNode = [previousParent childForComponentKey:componentKey];
+  const auto node = [[CKRenderTreeNode alloc] initWithComponent:component
+                                                         parent:parent
+                                                   previousNode:previousNode
+                                                      scopeRoot:scopeRoot
+                                                   componentKey:componentKey
+                                                   stateUpdates:stateUpdates];
   return CKComponentScopePair{.node = node, .previousNode = previousNode};
 }
 

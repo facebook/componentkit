@@ -98,7 +98,7 @@ namespace CKRenderInternal {
     return NO;
   }
 
-  static auto reusePreviousComponentForSingleChild(CKRenderTreeNode *node,
+  static auto reusePreviousComponentForSingleChild(CKTreeNode *node,
                                                    id<CKRenderWithChildComponentProtocol> component,
                                                    __strong id<CKComponentProtocol> *childComponent,
                                                    CKTreeNode *parent,
@@ -243,12 +243,13 @@ namespace CKRender {
         // Context support
         CKComponentContextHelper::willBuildComponentTree(component);
 
-        auto const node = [[CKRenderTreeNode alloc]
-                           initWithComponent:component
-                           parent:parent
-                           previousParent:previousParent
-                           scopeRoot:params.scopeRoot
-                           stateUpdates:params.stateUpdates];
+        const auto pair = [CKTreeNode childPairForComponent:component
+                                                     parent:parent
+                                             previousParent:previousParent
+                                                  scopeRoot:params.scopeRoot
+                                               stateUpdates:params.stateUpdates];
+
+        auto const node = pair.node;
 
         // Faster Props updates and context support
         params.scopeRoot.rootNode.willBuildComponentTree(node);
