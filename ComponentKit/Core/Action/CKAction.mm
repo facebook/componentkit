@@ -18,6 +18,7 @@
 #import <RenderCore/RCAssert.h>
 #import <ComponentKit/RCAssociatedObject.h>
 #import <ComponentKit/CKCollection.h>
+#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMutex.h>
 
 #import "CKComponent+UIView.h"
@@ -36,8 +37,10 @@ bool CKActionBase::operator==(const CKActionBase& rhs) const
           // If we are using a scoped action, we are only concerned that the selector and the
           // responder unique identifier matches.
           && _scopedResponderAndKey.responder == rhs._scopedResponderAndKey.responder
-          && _selector == rhs._selector
-          && _block == rhs._block);
+          && _selectorOrIdentifier == rhs._selectorOrIdentifier
+          && ((CKReadGlobalConfig().actionShouldCompareCustomIdentifier
+               && _variant == CKActionVariant::BlockWithIdentifier)
+              || _block == rhs._block));
 }
 
 CKActionSendBehavior CKActionBase::defaultBehavior() const
@@ -59,6 +62,9 @@ id CKActionBase::initialTarget(CKComponent *sender) const
     case CKActionVariant::Block:
       RCCFailAssert(@"Should not be asking for target for block action.");
       return nil;
+    case CKActionVariant::BlockWithIdentifier:
+      RCCFailAssert(@"Should not be asking for target for block action.");
+      return nil;
   }
 }
 
@@ -67,7 +73,7 @@ CKActionBase::CKActionBase() noexcept
     _scopedResponderAndKey({}),
     _block(NULL),
     _variant(CKActionVariant::RawSelector),
-    _selector(nullptr) {}
+    _selectorOrIdentifier(nullptr) {}
 
 CKActionBase::CKActionBase(const CKActionBase&) = default;
 
@@ -76,7 +82,7 @@ CKActionBase::CKActionBase(id target, SEL selector) noexcept
     _scopedResponderAndKey({}),
     _block(NULL),
     _variant(CKActionVariant::TargetSelector),
-    _selector(selector) {}
+    _selectorOrIdentifier(selector) {}
 
 CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept
   : CKActionBase(selector, scope.node()) { }
@@ -87,7 +93,7 @@ CKActionBase::CKActionBase(SEL selector, CKTreeNode *node) noexcept
     _block(NULL),
 
     _variant(CKActionVariant::Responder),
-    _selector(selector)
+    _selectorOrIdentifier(selector)
 {
   RCCAssertNotNil(node.scopeHandle, @"You are creating an action that will not fire because you have an invalid scope handle.");
 }
@@ -97,36 +103,54 @@ CKActionBase::CKActionBase(SEL selector) noexcept
     _scopedResponderAndKey({}),
     _block(NULL),
     _variant(CKActionVariant::RawSelector),
-    _selector(selector) {}
+    _selectorOrIdentifier(selector) {}
 
 CKActionBase::CKActionBase(dispatch_block_t block) noexcept
   : _target(nil),
     _scopedResponderAndKey({}),
     _block(block),
     _variant(CKActionVariant::Block),
-    _selector(NULL) {}
+    _selectorOrIdentifier(NULL) {}
+
+CKActionBase::CKActionBase(dispatch_block_t block, void *functionPointer, CKScopedResponder *responder, CKScopedResponderKey key) noexcept
+  : _target(nil),
+    _scopedResponderAndKey(CKActionBase::ScopedResponderAndKey{responder, key}),
+    _block(block),
+    _variant(CKActionVariant::BlockWithIdentifier),
+    _selectorOrIdentifier(functionPointer) {};
 
 CKActionBase::operator bool() const noexcept {
-  return _selector != NULL || _block != NULL || _scopedResponderAndKey.responder != nil;
+  return _block != NULL || _selectorOrIdentifier != NULL ||  _scopedResponderAndKey.responder != nil;
 }
 
 CKActionBase::~CKActionBase() {}
 
 SEL CKActionBase::selector() const noexcept {
-  return _selector;
+  if (_variant == CKActionVariant::BlockWithIdentifier || _variant == CKActionVariant::Block) {
+    return nil;
+  }
+  return (SEL)_selectorOrIdentifier;
 }
 
 std::string CKActionBase::identifier() const noexcept
 {
   switch (_variant) {
     case CKActionVariant::RawSelector:
-      return std::string(sel_getName(_selector)) + "-Selector";
+      return std::string(sel_getName((SEL)_selectorOrIdentifier)) + "-Selector";
     case CKActionVariant::TargetSelector:
-      return std::string(sel_getName(_selector)) + "-TargetSelector-" + std::to_string((long)_target);
+      return std::string(sel_getName((SEL)_selectorOrIdentifier)) + "-TargetSelector-" + std::to_string((long)_target);
     case CKActionVariant::Responder:
-      return std::string(sel_getName(_selector)) + "-Responder-" + std::to_string((long)_scopedResponderAndKey.responder);
+      return std::string(sel_getName((SEL)_selectorOrIdentifier)) + "-Responder-" + std::to_string((long)_scopedResponderAndKey.responder);
     case CKActionVariant::Block:
-      return std::string(sel_getName(_selector)) + "-Block-" + std::to_string((long)_block);
+      return "Block-" + std::to_string((long)_block);
+    case CKActionVariant::BlockWithIdentifier:
+      if (CKReadGlobalConfig().actionShouldUseCustomIdentifierInIdentifierString) {
+        return std::string("BlockWithIdentifier-") + std::to_string((long)_scopedResponderAndKey.responder) +
+            "-" + std::to_string((long)_selectorOrIdentifier);
+      } else {
+        return std::string("BlockWithIdentifier-") + std::to_string((long)_scopedResponderAndKey.responder) +
+            "-" + std::to_string((long)_block);
+      }
   }
 }
 

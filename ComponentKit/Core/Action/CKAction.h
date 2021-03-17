@@ -111,6 +111,9 @@ template<typename... T>
 class CKAction : public CKActionBase {
   /** This constructor is private to forbid direct usage. Use actionFromBlock. */
   CKAction<T...>(void(^block)(CKComponent *, T...)) noexcept : CKActionBase((dispatch_block_t)block) {};
+  
+  CKAction<T...>(void(^block)(CKComponent *, T...), void *functionPointer, CKScopedResponder *responder, CKScopedResponderKey key) noexcept
+  : CKActionBase((dispatch_block_t)block, functionPointer, responder, key) {};
 
 public:
   CKAction<T...>() noexcept : CKActionBase() {};
@@ -165,6 +168,10 @@ public:
   */
   static CKAction<T...> unsafeActionForController(const CK::BaseSpecContext &context, SEL selector) {
     return CKAction<T...>{selector, nodeFromContext(context)};
+  }
+  
+  static CKAction<T...> unsafeActionWithIdentifier(void(^block)(CKComponent *, T...), void *functionPointer, CKScopedResponder *responder, CKScopedResponderKey key) {
+    return CKAction<T...>(block, functionPointer, responder, key);
   }
 
   /** Like actionFromBlock, but allows passing a block that doesn't take a sender component. */
@@ -253,7 +260,7 @@ public:
 
   void send(CKComponent *sender, CKActionSendBehavior behavior, T... args) const
   {
-    if (_variant == CKActionVariant::Block) {
+    if (_variant == CKActionVariant::Block || _variant == CKActionVariant::BlockWithIdentifier) {
       void (^block)(CKComponent *sender, T... args) = (void (^)(CKComponent *sender, T... args))_block;
       block(sender, args...);
       return;

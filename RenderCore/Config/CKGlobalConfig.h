@@ -61,6 +61,18 @@ struct CKGlobalConfig {
    Enables caching of the layout for reused components.
    */
   BOOL enableLayoutCaching = NO;
+  /**
+   In Specs we provide a custom identifier, which is a function pointer to the
+   handler function. This bool enables using this identifier in == operator
+   instead of comparing blocks.
+   */
+  BOOL actionShouldCompareCustomIdentifier = NO;
+
+  /**
+   Flag to use the custom identifer provided by the spec instead of block pointer
+   when generating an identifier string for an action
+   */
+  BOOL actionShouldUseCustomIdentifierInIdentifierString = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

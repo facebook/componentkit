@@ -54,7 +54,8 @@ protected:
     RawSelector,
     TargetSelector,
     Responder,
-    Block
+    Block,
+    BlockWithIdentifier
   };
 
   CKActionBase() noexcept;
@@ -68,6 +69,7 @@ protected:
   CKActionBase(SEL selector) noexcept;
 
   CKActionBase(dispatch_block_t block) noexcept;
+  CKActionBase(dispatch_block_t block, void *functionPointer, CKScopedResponder *responder, CKScopedResponderKey key) noexcept;
 
   ~CKActionBase();
 
@@ -83,7 +85,7 @@ protected:
   ScopedResponderAndKey _scopedResponderAndKey;
   dispatch_block_t _block;
   CKActionVariant _variant;
-  SEL _selector;
+  void *_selectorOrIdentifier;
 
   static CKComponent *componentFromContext(const CK::BaseSpecContext &context) noexcept;
   static CKTreeNode *nodeFromContext(const CK::BaseSpecContext &context) noexcept;
