@@ -9,6 +9,7 @@
  */
 
 #import "CKComponentScopeHandle.h"
+#include <atomic>
 
 #include <mutex>
 
@@ -43,9 +44,9 @@
                componentTypeName:(const char *)componentTypeName
                     initialState:(id)initialState
 {
-  static int32_t nextGlobalIdentifier = 0;
+  static std::atomic_int32_t nextGlobalIdentifier = 0;
   return [self initWithListener:listener
-               globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
+               globalIdentifier:++nextGlobalIdentifier
                  rootIdentifier:rootIdentifier
               componentTypeName:componentTypeName
                           state:initialState

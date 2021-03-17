@@ -10,7 +10,7 @@
 
 #import "CKDataSourceChangesetApplicator.h"
 
-#import <libkern/OSAtomic.h>
+#import <atomic>
 #import <vector>
 
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
@@ -29,7 +29,6 @@
 
 static void *kQueueKey = &kQueueKey;
 static NSString *const kChangesetApplicatorIdUserInfoKey = @"CKDataSourceChangesetApplicator.Id";
-static int32_t globalChangesetApplicatorId = 0;
 
 struct CKDataSourceChangesetApplicatorPipelineItem {
   CKDataSourceChangeset *changeset;
@@ -48,7 +47,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
   CKDataSourceState *_dataSourceState;
   dispatch_queue_t _queue;
   NSNumber *_changesetApplicatorId;
-  
+
   std::shared_ptr<CKTreeLayoutCache> _treeLayoutCache;
 
   std::vector<CKDataSourceChangesetApplicatorPipelineItem> _pipeline;
@@ -64,13 +63,15 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
 - (instancetype)initWithDataSource:(CKDataSource *)dataSource
                              queue:(dispatch_queue_t)queue
 {
+  static std::atomic_int32_t globalChangesetApplicatorId = 0;
+
   if (self = [super init]) {
     _dataSource = dataSource;
     _dataSourceState = dataSource.state;
     _queue = queue;
-    _changesetApplicatorId = @(OSAtomicIncrement32(&globalChangesetApplicatorId));
+    _changesetApplicatorId = @(++globalChangesetApplicatorId);
     [_dataSource addListener:self];
-    
+
     if (CKReadGlobalConfig().enableLayoutCaching) {
       _treeLayoutCache = std::make_shared<CKTreeLayoutCache>();
     }
@@ -189,7 +190,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
     const auto isValid = [dataSource verifyChange:change];
     const auto newState = dataSource.state;
     auto const willApplyChange = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ChangeSetApplicatorWillApplyChange);
-    
+
     if (CKReadGlobalConfig().enableLayoutCaching) {
       for (NSIndexPath *insertedIndex in [change.appliedChanges insertedIndexPaths]) {
         if ([newState numberOfSections] > insertedIndex.section && [newState numberOfObjectsInSection:insertedIndex.section] > insertedIndex.row) {
@@ -204,7 +205,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
         }
       }
     }
-    
+
     dispatch_async(self->_queue, blockUsingDataSourceQOS(^{
       CKSystraceScope willApplyChangeScope(willApplyChange);
       if (self->_pipelineId != pipelineId) {

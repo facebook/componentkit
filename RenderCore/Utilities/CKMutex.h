@@ -15,8 +15,6 @@
 #import <stdlib.h>
 #import <pthread.h>
 
-#import <libkern/OSAtomic.h>
-
 #import <RenderCore/RCAssert.h>
 
 #if defined (__GNUC__)

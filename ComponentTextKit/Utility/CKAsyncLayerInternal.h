@@ -12,6 +12,8 @@
 
 #if CK_NOT_SWIFT
 
+#include <atomic>
+
 #import <ComponentTextKit/CKAsyncLayer.h>
 #import <ComponentTextKit/CKAsyncTransaction.h>
 
@@ -23,7 +25,7 @@
 
 @interface CKAsyncLayer ()
 {
-  int32_t _displaySentinel;
+  std::atomic_int32_t _displaySentinel;
 }
 
 /**
@@ -37,7 +39,7 @@
                                                         contentsScale:(CGFloat)contentsScale
                                                                opaque:(BOOL)opaque
                                                       backgroundColor:(CGColorRef)backgroundColor
-                                                      displaySentinel:(int32_t *)displaySentinel
+                                                      displaySentinel:(std::atomic_int32_t *)displaySentinel
                                          expectedDisplaySentinelValue:(int32_t)expectedDisplaySentinelValue
                                                       drawingDelegate:(id<CKAsyncLayerDrawingDelegate>)drawingDelegate
                                                        drawParameters:(NSObject *)drawParameters;

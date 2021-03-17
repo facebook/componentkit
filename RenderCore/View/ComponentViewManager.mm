@@ -81,7 +81,7 @@ int32_t PersistentAttributeShape::computeIdentifier(const CKViewComponentAttribu
   static int32_t nextIdentifier = 0;
   const auto it = identifierMap->find(key);
   if (it == identifierMap->end()) {
-    // We don't need fancy OSAtomicIncrement64 here because we're already under the StaticMutex (for identifierMap).
+    // We don't need fancy atomic here because we're already under the StaticMutex (for identifierMap).
     int32_t identifier = nextIdentifier++;
     identifierMap->emplace(std::move(key), identifier);
     return identifier;

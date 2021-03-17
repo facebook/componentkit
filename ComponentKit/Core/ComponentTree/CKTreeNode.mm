@@ -19,6 +19,7 @@
 #import <ComponentKit/CKMutex.h>
 
 #include <tuple>
+#include <atomic>
 
 #import "CKThreadLocalComponentScope.h"
 #import "CKRenderHelpers.h"
@@ -65,10 +66,10 @@ namespace TreeNode {
 - (instancetype)initWithPreviousNode:(CKTreeNode *)previousNode
                          scopeHandle:(CKComponentScopeHandle *)scopeHandle
 {
-  static int32_t nextGlobalIdentifier = 0;
+  static std::atomic_int32_t nextGlobalIdentifier = 0;
   if (self = [super init]) {
     _scopeHandle = scopeHandle;
-    _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : OSAtomicIncrement32(&nextGlobalIdentifier);
+    _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : ++nextGlobalIdentifier;
     _scopeHandle.treeNode = self;
   }
   return self;
