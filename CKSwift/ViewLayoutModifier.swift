@@ -121,22 +121,6 @@ extension ComponentInflatable {
     ViewLayoutModifier(inflatable: self, directive: .ratio(ratio))
   }
 
-  public func padding(top: Dimension? = nil,
-                      left: Dimension? = nil,
-                      bottom: Dimension? = nil,
-                      right: Dimension? = nil) -> ViewLayoutModifier<Self> {
-    // TODO: nil should represent `default` and be contextual instead of `0`
-    ViewLayoutModifier(
-      inflatable: self,
-      directive: .padding(
-        top: top ?? 0,
-        left: left ?? 0,
-        bottom: bottom ?? 0,
-        right: right ?? 0
-      )
-    )
-  }
-
   public func padding(top: CGFloat = 0,
                       left: CGFloat = 0,
                       bottom: CGFloat = 0,
@@ -153,12 +137,29 @@ extension ComponentInflatable {
   }
 
   public func padding(_ insets: UIEdgeInsets) -> ViewLayoutModifier<Self> {
-    self.padding(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
+    padding(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
   }
 
-  // TODO: Padding with Edge set API
-
-  public func padding(_ length: Dimension? = nil) -> ViewLayoutModifier<Self> {
+  public func padding(_ length: CGFloat = 0) -> ViewLayoutModifier<Self> {
     padding(top: length, left: length, bottom: length, right: length)
+  }
+
+  public func relativePadding(top: CGFloat = 0,
+                              left: CGFloat = 0,
+                              bottom: CGFloat = 0,
+                              right: CGFloat = 0) -> ViewLayoutModifier<Self> {
+    ViewLayoutModifier(
+      inflatable: self,
+      directive: .padding(
+        top: .percent(top),
+        left: .percent(left),
+        bottom: .percent(bottom),
+        right: .percent(right)
+      )
+    )
+  }
+
+  public func relativePadding(_ length: CGFloat = 0) -> ViewLayoutModifier<Self> {
+    relativePadding(top: length, left: length, bottom: length, right: length)
   }
 }
