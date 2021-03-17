@@ -232,7 +232,7 @@ namespace CKRender {
         ThreadLocalStorageSupport(const CKComponentScopePair& pair) : _pair(pair), _threadLocalScope(CKThreadLocalComponentScope::currentScope()) {
           if (auto const threadLocalScope = _threadLocalScope) {
             // Push the new pair into the thread local.
-            threadLocalScope->push(pair);
+            threadLocalScope->push(_pair);
           } else {
             RCCFailAssert(@"No TLS while building a render component!?");
           }
