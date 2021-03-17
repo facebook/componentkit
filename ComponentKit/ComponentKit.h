@@ -73,6 +73,7 @@
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKComponentHostingViewDelegate.h>
 #import <ComponentKit/CKComponentHostingViewProtocol.h>
+#import <ComponentKit/CKComponentHostingViewWithLifecycle.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentLayoutBaseline.h>
 #import <ComponentKit/CKComponentProtocol.h>

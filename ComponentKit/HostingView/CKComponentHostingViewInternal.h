@@ -15,6 +15,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKComponentHostingViewProtocol.h>
+#import <ComponentKit/CKComponentHostingViewWithLifecycle.h>
 #import <RenderCore/RCDimension.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
@@ -35,7 +36,7 @@ struct CKComponentHostingViewOptions {
   CK::Optional<CGSize> initialSize;
 };
 
-@interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> () <CKComponentHostingViewProtocol>
+@interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> () <CKComponentHostingViewProtocol, CKComponentHostingViewWithLifecycle>
 
 - (instancetype)initWithComponentProviderFunc:(CKComponent *(*)(ModelType model, ContextType context))componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
