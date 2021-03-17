@@ -85,7 +85,7 @@
     [_removedSections isEqualToIndexSet:obj.removedSections] &&
     [_movedItems isEqualToDictionary:obj.movedItems] &&
     [_insertedSections isEqualToIndexSet:obj.insertedSections] &&
-    [_insertedItems isEqual:obj.insertedItems];
+    [_insertedItems isEqualToDictionary:obj.insertedItems];
   }
 }
 
