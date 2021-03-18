@@ -123,6 +123,16 @@ struct PoolKeyHasher {
   if (it == _pool.end()) { // Avoid overhead of creating the item unless it already exists
     return nil;
   }
+  if (![it->first.first isContextValid:it->first.second]) {
+    // Context is invalid. This generally should not happen
+    // since invalid context == non reacreatable context
+    // But we still handle it to make sure that behaviour is
+    // well defined
+
+    // Remove views with invalid context from reuse pool
+    _pool.erase(it);
+    return nil;
+  }
   UIView *candidate = it->second.viewWithPreferredSuperview(preferredSuperview);
   if (candidate) {
     return candidate;
@@ -143,6 +153,13 @@ struct PoolKeyHasher {
   RCAssertNotNil(view, @"Must provide a view");
   RCAssertNotNil(controllerClass, @"Must provide a controller class");
   RCAssertNotNil(mayRelinquishBlock, @"Must provide a relinquish block");
+
+  // Shortcut for invalid contexts. If context is invalid
+  // by the time when it is being added to the pool, we should
+  // drop it immediately
+  if (![controllerClass isContextValid:context]) {
+    return;
+  }
 
   auto const addEntry = ^{
     auto &poolItem = _pendingPool[std::make_pair(controllerClass, context)];
@@ -165,6 +182,7 @@ struct PoolKeyHasher {
   RCDispatchMainDefaultMode(^{
     self->_enqueuedPendingPurge = NO;
     [self purgePendingPool];
+    [self dropViewsWithInvalidContext];
   });
 }
 
@@ -172,6 +190,12 @@ struct PoolKeyHasher {
 {
   RCAssertMainThread();
   for (const auto &it : _pendingPool) {
+    // Ignore items that already can't be reused to save some cycles
+    BOOL isContextValid = [it.first.first isContextValid:it.first.second];
+    if (!isContextValid) {
+      continue;
+    }
+
     // maximumPoolSize will be -1 by default
     NSInteger maximumPoolSize = [it.first.first maximumPoolSize:it.first.second];
 
@@ -181,6 +205,17 @@ struct PoolKeyHasher {
   _clearingPendingPool = YES;
   _pendingPool.clear();
   _clearingPendingPool = NO;
+}
+
+- (void)dropViewsWithInvalidContext {
+  RCAssertMainThread();
+  for (auto it = _pool.begin(); it != _pool.end();) {
+    if (![it->first.first isContextValid:it->first.second]) {
+      it = _pool.erase(it);
+    } else {
+      ++it;
+    }
+  }
 }
 
 @end

@@ -62,6 +62,17 @@
 + (NSInteger)maximumPoolSize:(ContextType)context;
 
 /**
+ Optionally override this to validate if context is still valid and related view can be reused.
+ If context becames invalid, it will be eventually removed from reuse pool.
+ Default implementaion returns YES.
+ This method should return NO, only when context can't be recreated anymore,
+ and view will be never reused.
+ WARNING: context invalidation must be one way process. If this function
+ returns YES for context that was previously invalid then behaviour is undefined.
+ */
++ (BOOL)isContextValid:(ContextType)context;
+
+/**
  The current stateful view owned by this controller, if any.
 
  - Do not override this method. (Override +newStatefulView instead.)

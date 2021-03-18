@@ -47,6 +47,10 @@
   return -1;
 }
 
++ (BOOL)isContextValid:(id)context {
+  return YES;
+}
+
 - (UIView *)statefulView
 {
   return _statefulView;

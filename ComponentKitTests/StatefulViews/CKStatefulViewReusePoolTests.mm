@@ -34,6 +34,22 @@
 
 @end
 
+@interface CKStatefulViewComponentInvalidatableContext: NSObject
+@property (assign, nonatomic) BOOL isValid;
+@end
+@implementation CKStatefulViewComponentInvalidatableContext
+@end
+
+@interface CKStatefulViewComponentWithInvalidContextController : CKStatefulViewComponentController
+@end
+@implementation CKStatefulViewComponentWithInvalidContextController
+
++ (BOOL)isContextValid:(CKStatefulViewComponentInvalidatableContext *)context {
+  return context.isValid;
+}
+
+@end
+
 @interface EnqueueOnDealloc: NSObject
 + (instancetype)newWithPool:(CKStatefulViewReusePool *)pool;
 @end
@@ -270,6 +286,95 @@
                                                    preferredSuperview:container2
                                                               context:nil];
   XCTAssertTrue(dequeuedView2 != view2, @"Didn't expect view in container2 to be returned");
+}
+
+- (void)testInvalidContextEnqueue
+{
+  CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
+  CKStatefulViewComponentInvalidatableContext *context = [CKStatefulViewComponentInvalidatableContext new];
+
+  __block int calledBlockCount = 0;
+
+  UIView *container1 = [[UIView alloc] init];
+  CKTestStatefulView *view1 = [[CKTestStatefulView alloc] init];
+  [container1 addSubview:view1];
+  [pool enqueueStatefulView:view1
+         forControllerClass:[CKStatefulViewComponentWithInvalidContextController class]
+                    context:context
+         mayRelinquishBlock:^BOOL{
+           return YES;
+         }];
+
+  UIView *container2 = [[UIView alloc] init];
+  CKTestStatefulView *view2 = [[CKTestStatefulView alloc] init];
+  [container2 addSubview:view2];
+  [pool enqueueStatefulView:view2
+         forControllerClass:[CKOtherStatefulViewComponentController class]
+                    context:nil
+         mayRelinquishBlock:^BOOL{
+           calledBlockCount++;
+           return YES;
+         }];
+
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return calledBlockCount == 1;
+  });
+
+  UIView *dequeuedView1 = [pool dequeueStatefulViewForControllerClass:[CKStatefulViewComponentWithInvalidContextController class]
+                                                  preferredSuperview:container1
+                                                             context:nil];
+  XCTAssertTrue(dequeuedView1 == nil, @"Expected nil to be returned, since context is invalid");
+
+  UIView *dequeuedView2 = [pool dequeueStatefulViewForControllerClass:[CKOtherStatefulViewComponentController class]
+                                                   preferredSuperview:container2
+                                                              context:nil];
+  XCTAssertTrue(dequeuedView2 == view2, @"View with valid context should be returned");
+}
+
+
+- (void)testInvalidContextAfterEnqueue
+{
+  CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
+  CKStatefulViewComponentInvalidatableContext *context = [CKStatefulViewComponentInvalidatableContext new];
+  context.isValid = YES;
+
+  __block int calledBlockCount = 0;
+
+  UIView *container1 = [[UIView alloc] init];
+  CKTestStatefulView *view1 = [[CKTestStatefulView alloc] init];
+  [container1 addSubview:view1];
+  [pool enqueueStatefulView:view1
+         forControllerClass:[CKStatefulViewComponentWithInvalidContextController class]
+                    context:context
+         mayRelinquishBlock:^BOOL{
+           return YES;
+         }];
+  context.isValid = NO;
+
+  UIView *container2 = [[UIView alloc] init];
+  CKTestStatefulView *view2 = [[CKTestStatefulView alloc] init];
+  [container2 addSubview:view2];
+  [pool enqueueStatefulView:view2
+         forControllerClass:[CKOtherStatefulViewComponentController class]
+                    context:nil
+         mayRelinquishBlock:^BOOL{
+           calledBlockCount++;
+           return YES;
+         }];
+
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return calledBlockCount == 1;
+  });
+
+  UIView *dequeuedView1 = [pool dequeueStatefulViewForControllerClass:[CKStatefulViewComponentWithInvalidContextController class]
+                                                  preferredSuperview:container1
+                                                             context:nil];
+  XCTAssertTrue(dequeuedView1 == nil, @"Expected nil to be returned, since context is invalid");
+
+  UIView *dequeuedView2 = [pool dequeueStatefulViewForControllerClass:[CKOtherStatefulViewComponentController class]
+                                                   preferredSuperview:container2
+                                                              context:nil];
+  XCTAssertTrue(dequeuedView2 == view2, @"View with valid context should be returned");
 }
 
 #pragma mark - Pending pool tests
