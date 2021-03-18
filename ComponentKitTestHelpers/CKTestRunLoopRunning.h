@@ -9,10 +9,9 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <RenderCore/CKDefines.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+CK_EXTERN_C_BEGIN
 
 /**
  Runs the current thread's run loop until the block returns YES or a timeout is reached.
@@ -21,6 +20,4 @@ extern "C" {
  */
 extern BOOL CKRunRunLoopUntilBlockIsTrue(BOOL (^block)(void));
 
-#ifdef __cplusplus
-}
-#endif
+CK_EXTERN_C_END

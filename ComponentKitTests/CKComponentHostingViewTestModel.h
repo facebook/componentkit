@@ -43,12 +43,8 @@ CK_INIT_UNAVAILABLE;
 
 @class CKComponent;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+CK_EXTERN_C_BEGIN
 
 CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel *model);
 
-#ifdef __cplusplus
-}
-#endif
+CK_EXTERN_C_END
