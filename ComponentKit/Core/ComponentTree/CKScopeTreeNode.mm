@@ -53,7 +53,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   return nil;
 }
 
-- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
+- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(Class)componentClass
                                                    identifier:(id<NSObject>)identifier
 {
   // Create **parent** based key counter.
