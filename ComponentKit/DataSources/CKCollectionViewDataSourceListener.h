@@ -10,8 +10,6 @@
 
 #import <ComponentKit/CKDefines.h>
 
-#if CK_NOT_SWIFT
-
 @class CKCollectionViewDataSource;
 @class CKDataSourceAppliedChanges;
 @class CKDataSourceState;
@@ -33,5 +31,3 @@
          withState:(CKDataSourceState *)state;
 
 @end
-
-#endif

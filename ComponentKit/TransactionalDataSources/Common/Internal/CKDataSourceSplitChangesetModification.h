@@ -10,8 +10,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceStateModifying.h>
+
+#if CK_NOT_SWIFT
 
 @class CKDataSourceChangeset;
 
@@ -28,3 +31,5 @@
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 
 @end
+
+#endif

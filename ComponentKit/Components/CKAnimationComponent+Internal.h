@@ -9,6 +9,9 @@
  */
 
 #import <ComponentKit/CKAnimationComponent.h>
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
 
 @interface CKAnimationComponent (Internal)
 
@@ -23,3 +26,5 @@
          animationOnFinalUnmount:(CAAnimation *)animationOnFinalUnmount;
 
 @end
+
+#endif

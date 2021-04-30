@@ -12,6 +12,8 @@
 
 #import <ComponentKit/CKDimension.h>
 
+#if CK_NOT_SWIFT
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CKDimension_SwiftBridge ()
@@ -23,3 +25,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

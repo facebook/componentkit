@@ -8,9 +8,12 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKSizeRange_SwiftBridge.h>
 
 #import <ComponentKit/CKSizeRange.h>
+
+#if CK_NOT_SWIFT
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,3 +26,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

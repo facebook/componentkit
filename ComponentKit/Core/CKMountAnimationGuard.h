@@ -9,6 +9,9 @@
  */
 
 #import <QuartzCore/QuartzCore.h>
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
 
 /** Used by CKComponent internally to block animations when configuring a new or recycled view */
 class CKMountAnimationGuard {
@@ -73,3 +76,5 @@ private:
     return NO;
   }
 };
+
+#endif

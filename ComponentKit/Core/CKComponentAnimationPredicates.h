@@ -8,8 +8,14 @@
 *
 */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <unordered_set>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
 
 auto CKComponentAnimationPredicates() -> std::unordered_set<CKMountablePredicate>;
+
+#endif
