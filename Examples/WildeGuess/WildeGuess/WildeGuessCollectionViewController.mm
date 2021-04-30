@@ -19,7 +19,7 @@
 #import "QuoteContext.h"
 #import "QuotesPage.h"
 
-@interface WildeGuessCollectionViewController () <CKComponentProvider, UICollectionViewDelegateFlowLayout>
+@interface WildeGuessCollectionViewController () <UICollectionViewDelegateFlowLayout>
 @end
 
 @implementation WildeGuessCollectionViewController
