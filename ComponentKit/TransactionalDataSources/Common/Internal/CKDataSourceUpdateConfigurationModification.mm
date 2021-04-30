@@ -68,14 +68,14 @@ using namespace CKComponentControllerHelper;
                                                boundsAnimation:[item boundsAnimation]];
       } else {
         newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, _configuration, [item model], context);
-        for (const auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
-                                                                                                     item.scopeRoot,
-                                                                                                     &CKComponentControllerInitializeEventPredicate)) {
+        for (auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                               item.scopeRoot,
+                                                                                               &CKComponentControllerInitializeEventPredicate)) {
           [addedComponentControllers addObject:componentController];
         }
-        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
-                                                                                                       item.scopeRoot,
-                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
+        for (auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                 item.scopeRoot,
+                                                                                                 &CKComponentControllerInvalidateEventPredicate)) {
           [invalidComponentControllers addObject:componentController];
         }
       }

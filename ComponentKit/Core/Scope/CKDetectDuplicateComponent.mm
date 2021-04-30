@@ -51,7 +51,7 @@ CKDuplicateComponentInfo CKFindDuplicateComponent(const CKComponentLayout &layou
       [previouslySeenComponent addObject:component];
     }
     if (componentLayout.children) {
-      for (const auto childComponentLayout : *componentLayout.children) {
+      for (auto childComponentLayout : *componentLayout.children) {
         queue.push(childComponentLayout.layout);
         [componentsToParentComponents setObject:componentLayout.component forKey:childComponentLayout.layout.component];
       }
