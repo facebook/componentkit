@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 
 struct CKComponentContextPreviousState {
-  Class key;
+  id key;
   id originalValue;
   id newValue;
 };
