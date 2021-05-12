@@ -734,7 +734,6 @@
 		D4144B6E25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4144B6C25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4144B9B25E5200B00AA8328 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4144B8625E5200B00AA8328 /* ViewModel.swift */; };
 		D4144B9C25E5200B00AA8328 /* ViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4144B9125E5200B00AA8328 /* ViewModelState.swift */; };
-		D4144B9D25E5200B00AA8328 /* ScopeHandleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4144B9A25E5200B00AA8328 /* ScopeHandleLocation.swift */; };
 		D4171B52252DBD660082CF96 /* Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4171B51252DBD660082CF96 /* Gestures.swift */; };
 		D4171BA5252DCA0D0082CF96 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4171BA4252DCA0D0082CF96 /* Action.swift */; };
 		D4171BBB252DCA700082CF96 /* CKAction_SwiftBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1058,7 +1057,6 @@
 		D4E807B6257E7FDC003C0804 /* CKDeflatedComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4E807BF257E7FED003C0804 /* CKDeflatedComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4EAA5552513A09400F32DC1 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5542513A09400F32DC1 /* State.swift */; };
-		D4EAA5572513A0BE00F32DC1 /* ScopeHandleLinkable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */; };
 		D4EAA55B2513A23B00F32DC1 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA55A2513A23B00F32DC1 /* Binding.swift */; };
 		D4EAA55F2513A2BF00F32DC1 /* ViewLifecycleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAA55E2513A2BF00F32DC1 /* ViewLifecycleModifier.swift */; };
 		D4EAA5622514F6FC00F32DC1 /* CKSizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1083,6 +1081,18 @@
 		D4F543DF2507913D008F17A8 /* CKSwiftComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4F543DC2507913D008F17A8 /* CKSwiftComponent.mm */; };
 		D4F543E02507913D008F17A8 /* CKSwiftComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4F543DC2507913D008F17A8 /* CKSwiftComponent.mm */; };
 		D4F543EC25079578008F17A8 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F543EB25079578008F17A8 /* View.swift */; };
+		D4FB9AFC264BDBD900283B4B /* RCComputeRootLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4FB9AF0264BDBD900283B4B /* RCComputeRootLayout.mm */; };
+		D4FB9AFD264BDBD900283B4B /* RCComputeRootLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4FB9AF0264BDBD900283B4B /* RCComputeRootLayout.mm */; };
+		D4FB9AFE264BDBD900283B4B /* RCComputeRootLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FB9AFB264BDBD900283B4B /* RCComputeRootLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4FB9AFF264BDBD900283B4B /* RCComputeRootLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FB9AFB264BDBD900283B4B /* RCComputeRootLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4FB9B12264BDC0A00283B4B /* CKChangesetUpdateConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FB9B10264BDC0A00283B4B /* CKChangesetUpdateConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4FB9B13264BDC0A00283B4B /* CKChangesetUpdateConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FB9B10264BDC0A00283B4B /* CKChangesetUpdateConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4FB9B14264BDC0A00283B4B /* CKComponent+LayoutLifecycle.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FB9B11264BDC0A00283B4B /* CKComponent+LayoutLifecycle.h */; };
+		D4FB9B15264BDC0A00283B4B /* CKComponent+LayoutLifecycle.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FB9B11264BDC0A00283B4B /* CKComponent+LayoutLifecycle.h */; };
+		D4FB9B2F264BDC7100283B4B /* CKComponentHostingViewWithLifecycle.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FB9B2E264BDC7100283B4B /* CKComponentHostingViewWithLifecycle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4FB9B30264BDC7100283B4B /* CKComponentHostingViewWithLifecycle.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FB9B2E264BDC7100283B4B /* CKComponentHostingViewWithLifecycle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4FB9B4B264BDCDD00283B4B /* TreeNodeLinkable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB9B49264BDCDC00283B4B /* TreeNodeLinkable.swift */; };
+		D4FB9B4C264BDCDD00283B4B /* TreeNodeValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB9B4A264BDCDD00283B4B /* TreeNodeValueStore.swift */; };
 		D4FBC0F02437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4FBC0F12437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D601E93724FFECC8004007C0 /* CKTransitionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */; };
@@ -2017,7 +2027,6 @@
 		D4144B6C25E51FD200AA8328 /* CKComponentBasedAccessibilityMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentBasedAccessibilityMode.h; sourceTree = "<group>"; };
 		D4144B8625E5200B00AA8328 /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		D4144B9125E5200B00AA8328 /* ViewModelState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelState.swift; sourceTree = "<group>"; };
-		D4144B9A25E5200B00AA8328 /* ScopeHandleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScopeHandleLocation.swift; sourceTree = "<group>"; };
 		D4171B51252DBD660082CF96 /* Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gestures.swift; sourceTree = "<group>"; };
 		D4171BA4252DCA0D0082CF96 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		D4171BB8252DCA6F0082CF96 /* CKAction_SwiftBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAction_SwiftBridge.h; sourceTree = "<group>"; };
@@ -2108,7 +2117,6 @@
 		D4BC57C423E387510075D688 /* CKSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKSwift.xcconfig; sourceTree = "<group>"; };
 		D4E807AB257E7FDC003C0804 /* CKDeflatedComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDeflatedComponentContext.h; sourceTree = "<group>"; };
 		D4EAA5542513A09400F32DC1 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
-		D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScopeHandleLinkable.swift; sourceTree = "<group>"; };
 		D4EAA5582513A18C00F32DC1 /* SwiftComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftComponent.swift; sourceTree = "<group>"; };
 		D4EAA55A2513A23B00F32DC1 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		D4EAA55E2513A2BF00F32DC1 /* ViewLifecycleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLifecycleModifier.swift; sourceTree = "<group>"; };
@@ -2130,6 +2138,13 @@
 		D4F543DB2507913D008F17A8 /* CKSwiftComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKSwiftComponent.h; sourceTree = "<group>"; };
 		D4F543DC2507913D008F17A8 /* CKSwiftComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSwiftComponent.mm; sourceTree = "<group>"; };
 		D4F543EB25079578008F17A8 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
+		D4FB9AF0264BDBD900283B4B /* RCComputeRootLayout.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RCComputeRootLayout.mm; sourceTree = "<group>"; };
+		D4FB9AFB264BDBD900283B4B /* RCComputeRootLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCComputeRootLayout.h; sourceTree = "<group>"; };
+		D4FB9B10264BDC0A00283B4B /* CKChangesetUpdateConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKChangesetUpdateConfiguration.h; sourceTree = "<group>"; };
+		D4FB9B11264BDC0A00283B4B /* CKComponent+LayoutLifecycle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+LayoutLifecycle.h"; sourceTree = "<group>"; };
+		D4FB9B2E264BDC7100283B4B /* CKComponentHostingViewWithLifecycle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentHostingViewWithLifecycle.h; sourceTree = "<group>"; };
+		D4FB9B49264BDCDC00283B4B /* TreeNodeLinkable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeNodeLinkable.swift; sourceTree = "<group>"; };
+		D4FB9B4A264BDCDD00283B4B /* TreeNodeValueStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeNodeValueStore.swift; sourceTree = "<group>"; };
 		D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKReusableComponentProtocol.h; sourceTree = "<group>"; };
 		D601E93524FFECC8004007C0 /* CKTransitionComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransitionComponent.mm; sourceTree = "<group>"; };
 		D601E93624FFECC8004007C0 /* CKTransitionComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKTransitionComponent.h; sourceTree = "<group>"; };
@@ -2445,6 +2460,8 @@
 		723958B1238E9B21005B570A /* RenderCore */ = {
 			isa = PBXGroup;
 			children = (
+				D4FB9AFB264BDBD900283B4B /* RCComputeRootLayout.h */,
+				D4FB9AF0264BDBD900283B4B /* RCComputeRootLayout.mm */,
 				51557C892541CABD00E47E6B /* RCComponentBasedAccessibilityMode.h */,
 				D48F3236245C0C4900A097A1 /* RCComponentCoalescingMode.h */,
 				D43188D123E20A980024AA12 /* Info.plist */,
@@ -2977,6 +2994,8 @@
 				23B65AB8213FF9300049FFAC /* Render */,
 				D6B4182A23EABF880037E475 /* Swift */,
 				722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */,
+				D4FB9B10264BDC0A00283B4B /* CKChangesetUpdateConfiguration.h */,
+				D4FB9B11264BDC0A00283B4B /* CKComponent+LayoutLifecycle.h */,
 				238695661FE0571D00D4DAE2 /* CKComponentControllerProtocol.h */,
 				40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */,
 				7FF5435D1F1F6DF700EFEFDD /* CKComponentControllerEvents.h */,
@@ -3133,6 +3152,7 @@
 		D0B47B3A1CBD926700BB33CE /* HostingView */ = {
 			isa = PBXGroup;
 			children = (
+				D4FB9B2E264BDC7100283B4B /* CKComponentHostingViewWithLifecycle.h */,
 				A2A89C3A2011C0FC009D0377 /* CKInspectableView.h */,
 				D6CDB13323EEEF6E000EFB93 /* CKBlockSizeRangeProvider.h */,
 				D6CDB13423EEEF6E000EFB93 /* CKBlockSizeRangeProvider.mm */,
@@ -3473,12 +3493,12 @@
 				D42AF58B2519045E00F0BBA8 /* ComponentBuilder.swift */,
 				D42AF5892519041F00F0BBA8 /* ComponentView.swift */,
 				D42AF57D251903DA00F0BBA8 /* ViewConfigurationRepresentable.swift */,
+				D4FB9B49264BDCDC00283B4B /* TreeNodeLinkable.swift */,
+				D4FB9B4A264BDCDD00283B4B /* TreeNodeValueStore.swift */,
 				D4EAA5542513A09400F32DC1 /* State.swift */,
-				D4144B9A25E5200B00AA8328 /* ScopeHandleLocation.swift */,
 				D4144B8625E5200B00AA8328 /* ViewModel.swift */,
 				D4144B9125E5200B00AA8328 /* ViewModelState.swift */,
 				D4EAA55A2513A23B00F32DC1 /* Binding.swift */,
-				D4EAA5562513A0BE00F32DC1 /* ScopeHandleLinkable.swift */,
 				D4BC57C423E387510075D688 /* CKSwift.xcconfig */,
 				D6BA03BB24144B8400D13A21 /* ComponentHostingViewController.swift */,
 				D4BC578323E37A1B0075D688 /* Info.plist */,
@@ -3563,6 +3583,7 @@
 				D4BC574D23E3765C0075D688 /* CKViewConfiguration.h in Headers */,
 				03B8B4D91D2A346F00EDFF59 /* CKComponentAnnouncerBase.h in Headers */,
 				72F0729423903A7C00338AB0 /* CKSizeAssert.h in Headers */,
+				D4FB9B13264BDC0A00283B4B /* CKChangesetUpdateConfiguration.h in Headers */,
 				2322A216224504B1006BFCD2 /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */,
 				2327615222EB069F007FF24A /* CKSystraceListener.h in Headers */,
 				D44B215424B73DFE0019E851 /* CKIdValueWrapper.h in Headers */,
@@ -3715,6 +3736,7 @@
 				D6EF79FC23ECC6E600230005 /* RCDimension_SwiftBridge.h in Headers */,
 				03B8B5361D2A346F00EDFF59 /* CKComponentScopeTypes.h in Headers */,
 				03B8B53A1D2A346F00EDFF59 /* CKComponentRootViewInternal.h in Headers */,
+				D4FB9B30264BDC7100283B4B /* CKComponentHostingViewWithLifecycle.h in Headers */,
 				D407201325E675A600FE9BC7 /* CKBuildComponentTreeParams.h in Headers */,
 				2322A20B224504AE006BFCD2 /* CKCollectionViewDataSourceListener.h in Headers */,
 				72647CAE2368D0300072F330 /* CKComponentAction.h in Headers */,
@@ -3726,6 +3748,7 @@
 				722A1C3522FDA1BD009A5B22 /* CKCategorizable.h in Headers */,
 				D6683A5123B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h in Headers */,
 				23B65ACA213FF9300049FFAC /* CKRenderComponent.h in Headers */,
+				D4FB9B15264BDC0A00283B4B /* CKComponent+LayoutLifecycle.h in Headers */,
 				03B8B5401D2A346F00EDFF59 /* CKComponentScopeRoot.h in Headers */,
 				D48D24E424B88B6600E3BFC4 /* CKWritingDirection.h in Headers */,
 				2DCA4E731D889D1500AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */,
@@ -3824,6 +3847,7 @@
 				03DED2C02226015900CD63FF /* CKDataSourceSplitChangesetModification.h in Headers */,
 				72CF431F233D068700A82419 /* CKDataSourceChangesetApplicator.h in Headers */,
 				23309AA42045C5F300833BDB /* CKRenderComponentProtocol.h in Headers */,
+				D4FB9B2F264BDC7100283B4B /* CKComponentHostingViewWithLifecycle.h in Headers */,
 				D0B47D431CBD948E00BB33CE /* CKDataSourceInternal.h in Headers */,
 				D6EF79FF23ECC6E600230005 /* RCDimension_SwiftBridge+Internal.h in Headers */,
 				D0B47D4F1CBD948E00BB33CE /* CKDataSourceUpdateStateModification.h in Headers */,
@@ -3845,6 +3869,7 @@
 				D63F9F8120AAF31A003F3887 /* CKIndexSetDescription.h in Headers */,
 				583B0517257A440200C3AF08 /* SizingComponentBuilder.h in Headers */,
 				D0B47D3C1CBD948E00BB33CE /* CKStatefulViewComponentController.h in Headers */,
+				D4FB9B14264BDC0A00283B4B /* CKComponent+LayoutLifecycle.h in Headers */,
 				D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */,
 				60EFF4B42113555C00CA7C68 /* CKStatelessComponent.h in Headers */,
 				D48D9D3E2342606B003DDC41 /* CKTransitions.h in Headers */,
@@ -3958,6 +3983,7 @@
 				D0B47D2A1CBD948E00BB33CE /* CKComponentFlexibleSizeRangeProvider.h in Headers */,
 				72F0729323903A7C00338AB0 /* CKSizeAssert.h in Headers */,
 				D68F8738242018D600C16A2A /* CKExceptionInfo.h in Headers */,
+				D4FB9B12264BDC0A00283B4B /* CKChangesetUpdateConfiguration.h in Headers */,
 				D4BC575823E3765C0075D688 /* ComponentMountContext.h in Headers */,
 				D0B47D141CBD948E00BB33CE /* CKComponentBoundsAnimation+UICollectionView.h in Headers */,
 				D0B47D3B1CBD948E00BB33CE /* CKStatefulViewComponent.h in Headers */,
@@ -4106,6 +4132,7 @@
 			files = (
 				D431885E23E205F40024AA12 /* CKPropBitmap.h in Headers */,
 				D431886123E205F40024AA12 /* CKRequired.h in Headers */,
+				D4FB9AFE264BDBD900283B4B /* RCComputeRootLayout.h in Headers */,
 				D431886423E205F40024AA12 /* CKCasting.h in Headers */,
 				D431886723E205F40024AA12 /* RCDimension.h in Headers */,
 				D431886C23E205F40024AA12 /* RCDispatch.h in Headers */,
@@ -4196,6 +4223,7 @@
 				D431883A23E205F00024AA12 /* CKOptional.h in Headers */,
 				D431884523E205F00024AA12 /* RCEqualityHelpers.h in Headers */,
 				D431882F23E205F00024AA12 /* CKDefines.h in Headers */,
+				D4FB9AFF264BDBD900283B4B /* RCComputeRootLayout.h in Headers */,
 				D431885523E205F00024AA12 /* CKMountableHelpers.h in Headers */,
 				D431884123E205F00024AA12 /* CKSizeRange.h in Headers */,
 				D431884323E205F00024AA12 /* RCContainerWrapper.h in Headers */,
@@ -5328,6 +5356,7 @@
 			files = (
 				D431889B23E2060F0024AA12 /* CKMountedObjectForView.mm in Sources */,
 				D431889D23E2060F0024AA12 /* RCLayout.mm in Sources */,
+				D4FB9AFC264BDBD900283B4B /* RCComputeRootLayout.mm in Sources */,
 				D431889223E2060F0024AA12 /* CKSizeRange.mm in Sources */,
 				D431889423E2060F0024AA12 /* RCEqualityHelpers.mm in Sources */,
 				D431889723E2060F0024AA12 /* CKComponentViewAttribute.mm in Sources */,
@@ -5365,6 +5394,7 @@
 				D431888123E2060E0024AA12 /* RCDimension.mm in Sources */,
 				D431888323E2060E0024AA12 /* RCDispatch.mm in Sources */,
 				D431888523E2060E0024AA12 /* CKWeakObjectContainer.mm in Sources */,
+				D4FB9AFD264BDBD900283B4B /* RCComputeRootLayout.mm in Sources */,
 				D431888023E2060E0024AA12 /* RCComponentSize.mm in Sources */,
 				728D25E123E885830016D672 /* RCAssociatedObject.mm in Sources */,
 				D431888823E2060E0024AA12 /* ComponentViewManager.mm in Sources */,
@@ -5388,15 +5418,15 @@
 				D4171B52252DBD660082CF96 /* Gestures.swift in Sources */,
 				D42AF58A2519041F00F0BBA8 /* ComponentView.swift in Sources */,
 				D4F543C9250784A2008F17A8 /* Dimension.swift in Sources */,
+				D4FB9B4C264BDCDD00283B4B /* TreeNodeValueStore.swift in Sources */,
 				D4F543EC25079578008F17A8 /* View.swift in Sources */,
 				D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */,
-				D4EAA5572513A0BE00F32DC1 /* ScopeHandleLinkable.swift in Sources */,
 				D4144B9B25E5200B00AA8328 /* ViewModel.swift in Sources */,
 				D4EAA5552513A09400F32DC1 /* State.swift in Sources */,
 				D42B76272516856200DAC4D5 /* FlexboxComponent.swift in Sources */,
 				D4B29A11251A1AE1006EFEBA /* Animation.swift in Sources */,
+				D4FB9B4B264BDCDD00283B4B /* TreeNodeLinkable.swift in Sources */,
 				D42B76162516361600DAC4D5 /* ViewAnimationModifier.swift in Sources */,
-				D4144B9D25E5200B00AA8328 /* ScopeHandleLocation.swift in Sources */,
 				D42B76142516233200DAC4D5 /* ViewLayoutModifier.swift in Sources */,
 				D4B299182519F404006EFEBA /* SwiftComponent.swift in Sources */,
 				D4144B9C25E5200B00AA8328 /* ViewModelState.swift in Sources */,

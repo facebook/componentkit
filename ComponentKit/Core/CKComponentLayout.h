@@ -17,7 +17,7 @@
 #import <ComponentKit/RCLayout.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
-#import <RenderCoreLayoutCaching/RCComputeRootLayout.h>
+#import <RenderCore/RCComputeRootLayout.h>
 
 @protocol CKAnalyticsListener;
 @class CKComponentScopeRoot;

@@ -12,7 +12,7 @@
 
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMutex.h>
-#import <RenderCoreLayoutCaching/RCComputeRootLayout.h>
+#import <RenderCore/RCComputeRootLayout.h>
 
 #import "CKComponentInternal.h"
 #import "CKComponentCreationValidation.h"
