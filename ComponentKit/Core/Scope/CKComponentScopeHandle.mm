@@ -44,7 +44,7 @@
                componentTypeName:(const char *)componentTypeName
                     initialState:(id)initialState
 {
-  static std::atomic_int32_t nextGlobalIdentifier = 0;
+  static std::atomic_int32_t nextGlobalIdentifier;
   return [self initWithListener:listener
                globalIdentifier:++nextGlobalIdentifier
                  rootIdentifier:rootIdentifier

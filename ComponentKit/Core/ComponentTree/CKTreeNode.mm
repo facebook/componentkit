@@ -66,7 +66,7 @@ namespace TreeNode {
 - (instancetype)initWithPreviousNode:(CKTreeNode *)previousNode
                          scopeHandle:(CKComponentScopeHandle *)scopeHandle
 {
-  static std::atomic_int32_t nextGlobalIdentifier = 0;
+  static std::atomic_int32_t nextGlobalIdentifier;
   if (self = [super init]) {
     _scopeHandle = scopeHandle;
     _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : ++nextGlobalIdentifier;

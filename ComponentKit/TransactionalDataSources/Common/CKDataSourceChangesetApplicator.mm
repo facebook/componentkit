@@ -63,7 +63,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
 - (instancetype)initWithDataSource:(CKDataSource *)dataSource
                              queue:(dispatch_queue_t)queue
 {
-  static std::atomic_int32_t globalChangesetApplicatorId = 0;
+  static std::atomic_int32_t globalChangesetApplicatorId;
 
   if (self = [super init]) {
     _dataSource = dataSource;
