@@ -26,7 +26,7 @@
 
 #import "CKComponentHostingViewTestModel.h"
 
-typedef struct {
+typedef struct CKComponentHostingViewConfiguration {
   BOOL allowTapPassthrough;
   CKComponentHostingViewWrapperType wrapperType;
   id<CKAnalyticsListener> analyticsListener;
@@ -171,7 +171,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   view.delegate = self;
   [view updateContext:@"foo" mode:CKUpdateModeAsynchronous];
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _calledSizeDidInvalidate;
+    return self->_calledSizeDidInvalidate;
   }));
 }
 
@@ -391,8 +391,8 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     [hostingView layoutIfNeeded];
-    return _analyticsListenerSpy.didLayoutComponentTreeHitCount == 1
-    && _analyticsListenerSpy.didMountComponentHitCount == 1;
+    return self->_analyticsListenerSpy.didLayoutComponentTreeHitCount == 1
+    && self->_analyticsListenerSpy.didMountComponentHitCount == 1;
   }));
 }
 
@@ -425,7 +425,7 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
     XCTAssertEqual(currentTraitCollection.userInterfaceIdiom, hostingView.traitCollection.userInterfaceIdiom);
     [hostingView updateContext:nil mode:CKUpdateModeAsynchronous];
     CKRunRunLoopUntilBlockIsTrue(^BOOL{
-      return _analyticsListenerSpy.didBuildComponentTreeHitCount == 2;
+      return self->_analyticsListenerSpy.didBuildComponentTreeHitCount == 2;
     });
     XCTAssertEqual(currentTraitCollection.userInterfaceIdiom, hostingView.traitCollection.userInterfaceIdiom);
   }

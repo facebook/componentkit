@@ -62,7 +62,7 @@ public extension FlexboxComponent.Style {
   }
 }
 
-@_functionBuilder
+@resultBuilder
 public struct FlexboxChildrenBuilder {
   public static func buildExpression(_ child: FlexboxComponent.Child) -> FlexboxComponent.Child {
     child

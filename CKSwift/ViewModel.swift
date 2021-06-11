@@ -11,7 +11,7 @@
 import Foundation
 import ComponentKit
 
-protocol ScopeHandleAssignable : class {
+protocol ScopeHandleAssignable : AnyObject {
   func assign(handle: CKComponentScopeHandle)
 }
 

@@ -13,7 +13,7 @@ import ComponentKit
 
 // MARK: ComponentBuilder
 
-@_functionBuilder
+@resultBuilder
 public struct ComponentBuilder {
   // TODO: buildDo
 

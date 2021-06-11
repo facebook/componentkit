@@ -139,7 +139,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
                                                        userInfo:nil];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
-    return [_announcedChanges.firstObject isEqual:expectedAppliedChanges];
+    return [self->_announcedChanges.firstObject isEqual:expectedAppliedChanges];
   }));
   XCTAssertEqual(_syncModificationStartCounter, 0);
   XCTAssertEqual(_willGenerateChangeCounter, 1);
@@ -221,9 +221,9 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
                                              insertedIndexPaths:nil
                                                        userInfo:@{@"id": @3}];
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _announcedChanges.count == 3
-    && [_announcedChanges[1] isEqual:expectedAppliedChangesForSyncReload]
-    && [_announcedChanges[2] isEqual:expectedAppliedChangesForSecondAsyncReload];
+    return self->_announcedChanges.count == 3
+    && [self->_announcedChanges[1] isEqual:expectedAppliedChangesForSyncReload]
+    && [self->_announcedChanges[2] isEqual:expectedAppliedChangesForSecondAsyncReload];
   }));
   XCTAssertEqual(_syncModificationStartCounter, 2);
 }
@@ -415,7 +415,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
      applyChangeset:[[CKDataSourceChangesetBuilder dataSourceChangeset] build]
      mode:CKUpdateModeAsynchronous
      userInfo:@{}];
-    _didModifyPreviousStateBlock = nil;
+    self->_didModifyPreviousStateBlock = nil;
   };
   // Applying this changeset asynchronously triggers another changeset application in `_didModifyPreviousStateBlock`.
   [dataSource
@@ -423,7 +423,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
    mode:CKUpdateModeAsynchronous
    userInfo:@{}];
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _announcedChanges.count == 3;
+    return self->_announcedChanges.count == 3;
   });
   // Applying another changeset to make sure all asynchronous work is finished in background queue.
   [dataSource
@@ -431,7 +431,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
    mode:CKUpdateModeAsynchronous
    userInfo:@{}];
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _announcedChanges.count == 4;
+    return self->_announcedChanges.count == 4;
   });
   // `_willGenerateChangeCounter` matches the number of asynchronous changeset applications.
   XCTAssertEqual(_willGenerateChangeCounter, 3);
@@ -471,7 +471,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
      mode:CKUpdateModeAsynchronous
      userInfo:@{}];
     CKRunRunLoopUntilBlockIsTrue(^BOOL{
-      return _didGenerateChangeCounter == 1;
+      return self->_didGenerateChangeCounter == 1;
     });
     XCTAssertEqual(_currentTraitCollection.userInterfaceIdiom, UIUserInterfaceIdiomCarPlay);
   }

@@ -301,7 +301,7 @@
      userInfo:@{}
      qos:CKDataSourceQOSDefault];
     CKRunRunLoopUntilBlockIsTrue(^BOOL{
-      return _buildComponentCount == 1;
+      return self->_buildComponentCount == 1;
     });
     XCTAssertEqual(_currentTraitCollection.userInterfaceIdiom, UIUserInterfaceIdiomCarPlay);
   }

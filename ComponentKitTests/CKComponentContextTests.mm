@@ -221,7 +221,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   NSObject *o = [[NSObject alloc] init];
   CKComponentMutableContext<NSObject> context(o);
   const CKComponentContextContents contents = CKComponentContextHelper::fetchAll();
-  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
+  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[(id)[NSObject class]]];
   XCTAssertEqualObjects(contents.objects, expectedValues);
 }
 
@@ -251,7 +251,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 
   {
     CKComponentMutableContext<NSObject> context1(o1);
-    const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[[NSObject class]]];
+    const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[(id)[NSObject class]]];
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
 
     {
@@ -265,12 +265,12 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   CKComponentContextHelper::willBuildComponentTree(component1);
 
   // As there is a render component in the tree, o1 still need to stay in the store.
-  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[[NSObject class]]];
+  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[(id)[NSObject class]]];
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
 
   {
     CKComponentMutableContext<NSObject> context1(o2);
-    const auto expectedValues2 = [[NSDictionary alloc] initWithObjects:@[o2] forKeys:@[[NSObject class]]];
+    const auto expectedValues2 = [[NSDictionary alloc] initWithObjects:@[o2] forKeys:@[(id)[NSObject class]]];
     // Make sure we get the latest value from the current store.
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues2);
   }
@@ -290,7 +290,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   XCTAssertNil(CKComponentMutableContext<NSObject>::get());
   // Set initial values and make sure the value is available.
   NSObject *o = [[NSObject alloc] init];
-  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
+  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[(id)[NSObject class]]];
   {
     CKComponentInitialValuesContext initialValuesContext(initialValues);
     XCTAssertEqualObjects(CKComponentMutableContext<NSObject>::get(), o);
@@ -303,7 +303,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 {
   // Set initial values and make sure the value is available.
   NSObject *o = [[NSObject alloc] init];
-  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
+  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[(id)[NSObject class]]];
   {
     CKComponentInitialValuesContext initialValuesContext(initialValues);
     XCTAssertEqualObjects(CKComponentMutableContext<NSObject>::get(), o);
@@ -323,7 +323,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
 - (void)testFetchAllForInitialValues
 {
   NSObject *o = [[NSObject alloc] init];
-  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
+  const auto initialValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[(id)[NSObject class]]];
   {
     // Set initial values
     CKComponentInitialValuesContext initialValuesContext(initialValues);
@@ -331,7 +331,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
       // Push context
       NSString *s = @"1";
       CKComponentMutableContext<NSString> context(s);
-      const auto expectedValue = [[NSDictionary alloc] initWithObjects:@[o, s] forKeys:@[[NSObject class], [NSString class]]];
+      const auto expectedValue = [[NSDictionary alloc] initWithObjects:@[o, s] forKeys:@[(id)[NSObject class], (id)[NSString class]]];
       XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValue);
     }
     // Verify the initial values are being fetched correctly.
@@ -428,7 +428,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   NSObject *o = [[NSObject alloc] init];
   CKComponentContext<NSObject> context(o);
   const CKComponentContextContents contents = CKComponentContextHelper::fetchAll();
-  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[[NSObject class]]];
+  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o] forKeys:@[(id)[NSObject class]]];
   XCTAssertEqualObjects(contents.objects, expectedValues);
 }
 
@@ -460,7 +460,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
     component1 = [CKComponent new];
   }
 
-  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[[NSObject class]]];
+  const auto expectedValues = [[NSDictionary alloc] initWithObjects:@[o1] forKeys:@[(id)[NSObject class]]];
   {
     CKComponentContext<NSObject> context1(o1);
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues);
@@ -481,7 +481,7 @@ CK_LAYOUT_COMPONENT_INIT_UNAVAILABLE;
   {
     CKComponentContext<NSObject> context1(o2);
     // Make sure we get the latest value from the current store.
-    const auto expectedValues2 = [[NSDictionary alloc] initWithObjects:@[o2] forKeys:@[[NSObject class]]];
+    const auto expectedValues2 = [[NSDictionary alloc] initWithObjects:@[o2] forKeys:@[(id)[NSObject class]]];
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValues2);
   }
 

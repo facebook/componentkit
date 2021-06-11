@@ -34,20 +34,19 @@ function ci() {
     -destination "$4" \
     -configuration $5 \
     $6 \
-    -json \
-    -UseModernBuildSystem=NO
+    -json
 }
 
 function ios_ci() {
-  ci $1 $2 iphonesimulator "platform=iOS Simulator,name=iPhone 8" Release $3
+  ci $1 $2 iphonesimulator "platform=iOS Simulator,name=iPhone 8" Debug $3
 }
 
 function tvos_ci() {
-  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV" Release $3
+  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV" Debug $3
 }
 
 function carthage_bootstrap() {
-  carthage bootstrap --platform iOS --no-use-binaries || true
+  carthage bootstrap --platform iOS --no-use-binaries --use-xcframeworks || true
 }
 
 carthage_bootstrap

@@ -125,8 +125,8 @@ using namespace CKComponentControllerHelper;
                            @"Invalid section: %lu (>= %lu). Changeset: %@, user info: %@, state: %@",
                            (unsigned long)indexPath.section,
                            (unsigned long)newSections.count,
-                           _changeset,
-                           _userInfo,
+                           self->_changeset,
+                           self->_userInfo,
                            oldState);
     }
     NSMutableArray *const section = newSections[indexPath.section];
@@ -135,8 +135,8 @@ using namespace CKComponentControllerHelper;
                            @"Invalid item: %lu (>= %lu). Changeset: %@, user info: %@, state: %@",
                            (unsigned long)indexPath.item,
                            (unsigned long)section.count,
-                           _changeset,
-                           _userInfo,
+                           self->_changeset,
+                           self->_userInfo,
                            oldState);
     }
     CKDataSourceItem *const oldItem = section[indexPath.item];
@@ -146,7 +146,7 @@ using namespace CKComponentControllerHelper;
                                                                configuration:configuration
                                                                        model:model
                                                                      context:context
-                                                                 layoutCache:_treeLayoutCache ? _treeLayoutCache->find([[oldItem scopeRoot] globalIdentifier]) : nullptr
+                                                                 layoutCache:self->_treeLayoutCache ? self->_treeLayoutCache->find([[oldItem scopeRoot] globalIdentifier]) : nullptr
                                                                     itemType:CKDataSourceChangesetModificationItemTypeUpdate];
     [section replaceObjectAtIndex:indexPath.item withObject:item];
     for (auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
@@ -248,7 +248,7 @@ using namespace CKComponentControllerHelper;
 
   // Insert items
   const auto buildItem = ^CKDataSourceItem *(id model) {
-    const auto scopeRoot = CKComponentScopeRootWithPredicates(_stateListener,
+    const auto scopeRoot = CKComponentScopeRootWithPredicates(self->_stateListener,
                                                               configuration.analyticsListener,
                                                               configuration.componentPredicates,
                                                               configuration.componentControllerPredicates);
@@ -258,7 +258,7 @@ using namespace CKComponentControllerHelper;
                                        configuration:configuration
                                                model:model
                                              context:context
-                                         layoutCache:_treeLayoutCache ? _treeLayoutCache->find([scopeRoot globalIdentifier]) : nullptr
+                                         layoutCache:self->_treeLayoutCache ? self->_treeLayoutCache->find([scopeRoot globalIdentifier]) : nullptr
                                             itemType:CKDataSourceChangesetModificationItemTypeInsert];
   };
 

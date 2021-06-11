@@ -217,7 +217,7 @@
     {},
     {}
   };
-  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet setWithObject:c1]; });
+  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet setWithObject:self->c1]; });
 
   XCTAssertEqualObjects(as1.actualDidRemountCtx, as1.didRemountCtx);
   XCTAssertNil(as2.actualDidRemountCtx);
@@ -237,7 +237,7 @@
     {},
     {}
   };
-  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet setWithObject:c1]; });
+  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet setWithObject:self->c1]; });
 
   XCTAssertEqual(as1.cleanupCallCount, 1);
 }
@@ -254,7 +254,7 @@
     {},
     {}
   };
-  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet setWithObject:c1]; });
+  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet setWithObject:self->c1]; });
 
   transactionSpy->runAllCompletions();
 

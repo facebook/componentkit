@@ -87,7 +87,7 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
   const auto componentGenerator = [self createComponentGenerator];
   [componentGenerator generateComponentAsynchronously];
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _asyncComponentGenerationResult.hasValue();
+    return self->_asyncComponentGenerationResult.hasValue();
   });
 }
 

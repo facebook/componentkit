@@ -83,7 +83,7 @@ public struct ViewConfiguration {
 }
 
 #if swift(>=5.1)
-@_functionBuilder
+@resultBuilder
 public struct ViewConfigurationAttributeBuilder<View: UIView> {
   public enum Directive {
     case attribute(ViewConfiguration.Attribute<View>)

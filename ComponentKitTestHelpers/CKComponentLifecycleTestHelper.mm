@@ -78,7 +78,7 @@ using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
   [self updateWithStateWithoutMounting:state];
   if (_mountedView) {
     CKComponentBoundsAnimationApply(state.boundsAnimation, ^{
-      [self attachToView:_mountedView];
+      [self attachToView:self->_mountedView];
     }, nil);
   }
 }

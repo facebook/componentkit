@@ -165,6 +165,13 @@
 		03F1ABFD1D2B2A9B00867584 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		03F1ABFE1D2B2A9B00867584 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
 		03F1ABFF1D2B2A9B00867584 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
+		15AE249A2673389D00E7598C /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15AE24992673389D00E7598C /* FBSnapshotTestCase.xcframework */; };
+		15AE249B267338A900E7598C /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15AE24992673389D00E7598C /* FBSnapshotTestCase.xcframework */; };
+		15AE249C267338B400E7598C /* OCMock.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15AE24972673387700E7598C /* OCMock.xcframework */; };
+		15AE249D267338BC00E7598C /* OCMock.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15AE24972673387700E7598C /* OCMock.xcframework */; };
+		15AE24CA267344EC00E7598C /* RCFatal.h in Headers */ = {isa = PBXBuildFile; fileRef = 37CA309E25BAF51000E6F9C6 /* RCFatal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		15AE24D62673450000E7598C /* RCFatal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3762401125D1AEED0073040A /* RCFatal.mm */; };
+		15AE24D9267349C300E7598C /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04977E51CC4145E0046CBCC /* OCMock.framework */; };
 		18644AE51B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE11B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm */; };
 		18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */; };
 		18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */; };
@@ -256,7 +263,6 @@
 		400B0E5F1F71C63B006BDFEE /* CKDataSourceChangeset.mm in Sources */ = {isa = PBXBuildFile; fileRef = 400B0E5C1F71C63B006BDFEE /* CKDataSourceChangeset.mm */; };
 		400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5D1F71C63B006BDFEE /* CKDataSourceChangesetInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		400B0E611F71C63C006BDFEE /* CKDataSourceChangeset.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5E1F71C63B006BDFEE /* CKDataSourceChangeset.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		405230321F7EE79C005D227B /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4052302D1F7EE79C005D227B /* OCMock.framework */; platformFilter = ios; };
 		40AB33C81FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		40AB33C91FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		497824751BC570E000F29081 /* CKCollectionViewDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewDataSourceTests.mm */; };
@@ -503,11 +509,9 @@
 		A1AB4FA523350E45001F41DB /* CKComponentBoundsAnimationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */; };
 		A1AB4FE123350E45001F41DB /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
 		A1AB4FE223350E45001F41DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
-		A1AB4FE323350E45001F41DB /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4052302D1F7EE79C005D227B /* OCMock.framework */; };
 		A1AB4FE423350E45001F41DB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D891CBDA25A00BB33CE /* QuartzCore.framework */; };
 		A1AB4FE523350E45001F41DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		A1AB4FE623350E45001F41DB /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
-		A1AB4FE923350E45001F41DB /* OCMock.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4052302D1F7EE79C005D227B /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A1AB4FF023350E5C001F41DB /* CKComponentViewClassIdentifierPerfTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A1AB4FEF23350E5C001F41DB /* CKComponentViewClassIdentifierPerfTests.mm */; };
 		A1AB4FF423351602001F41DB /* CKInvocationPerfTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A1AB4FF323351602001F41DB /* CKInvocationPerfTests.mm */; };
 		A2100E0D1AE9751500281861 /* CKDataSourceUpdateConfigurationModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2100E0C1AE9751500281861 /* CKDataSourceUpdateConfigurationModificationTests.mm */; };
@@ -592,9 +596,6 @@
 		C58C31C4247305370009B8E7 /* CKDelayedInitialisationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = C58C31BE2473048F0009B8E7 /* CKDelayedInitialisationWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C58C31C9247D81EC0009B8E7 /* CKFatal.h in Headers */ = {isa = PBXBuildFile; fileRef = C58C31C8247D81EC0009B8E7 /* CKFatal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C58C31CA247D81F70009B8E7 /* CKFatal.h in Headers */ = {isa = PBXBuildFile; fileRef = C58C31C8247D81EC0009B8E7 /* CKFatal.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D000B81E1CC45440005A27CF /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D000B8101CC41535005A27CF /* FBSnapshotTestCase.framework */; };
-		D000B81F1CC45446005A27CF /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D000B8101CC41535005A27CF /* FBSnapshotTestCase.framework */; };
-		D000B8201CC45450005A27CF /* FBSnapshotTestCase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D000B8101CC41535005A27CF /* FBSnapshotTestCase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D023D12E1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D023D12D1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm */; };
 		D0B47ABC1CBD924100BB33CE /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
 		D0B47ABD1CBD924100BB33CE /* ComponentKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -808,9 +809,7 @@
 		D431881E23E2057E0024AA12 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
 		D431881F23E2057E0024AA12 /* RenderCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D431882323E2059F0024AA12 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
-		D431882423E2059F0024AA12 /* RenderCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D431882823E205A70024AA12 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431880023E2056C0024AA12 /* RenderCore.framework */; };
-		D431882923E205A70024AA12 /* RenderCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D431880023E2056C0024AA12 /* RenderCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D431882F23E205F00024AA12 /* CKDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = D431BCC223DAFCFF002144E7 /* CKDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883023E205F00024AA12 /* RCAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958E3238E9B21005B570A /* RCAssert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D431883123E205F00024AA12 /* CKNonNull.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958DC238E9B21005B570A /* CKNonNull.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -935,7 +934,6 @@
 		D44B215524B73DFE0019E851 /* CKIdValueWrapperInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D44B215024B73DFE0019E851 /* CKIdValueWrapperInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D44B215624B73DFE0019E851 /* CKIdValueWrapperInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D44B215024B73DFE0019E851 /* CKIdValueWrapperInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D44B31EC2517D03700674830 /* ComponentTextKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */; platformFilter = ios; };
-		D44B31ED2517D03700674830 /* ComponentTextKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D42B787A2517675100DAC4D5 /* ComponentTextKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D44B31FA2517D05800674830 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
 		D4548D55251773040038B9A4 /* ComponentTextKit.h in Headers */ = {isa = PBXBuildFile; fileRef = D4548D49251772C30038B9A4 /* ComponentTextKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D461755225177822004FC1A4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
@@ -1048,7 +1046,6 @@
 		D4BC579623E37A1B0075D688 /* CKSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D4BC578023E37A1B0075D688 /* CKSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4BC579E23E37A240075D688 /* CKSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC579D23E37A240075D688 /* CKSwift.swift */; };
 		D4BC57A123E383840075D688 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
-		D4BC57A223E383840075D688 /* ComponentKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4BC57BE23E3849A0075D688 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
 		D4BC57BF23E3849A0075D688 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
 		D4C1270A2517ACB6006AD1A4 /* CKSizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D4EAA5602514F6FC00F32DC1 /* CKSizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1070,7 +1067,6 @@
 		D4EEE0EE23E1E6D500D1ED7E /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE0ED23E1E6D500D1ED7E /* CoreText.framework */; };
 		D4EEE0F023E1E6DF00D1ED7E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE0EF23E1E6DF00D1ED7E /* QuartzCore.framework */; };
 		D4EEE0F423E1E6F800D1ED7E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE0F323E1E6F800D1ED7E /* UIKit.framework */; };
-		D4EEE0F823E1E91A00D1ED7E /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04977E51CC4145E0046CBCC /* OCMock.framework */; };
 		D4F2164A2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
 		D4F2164B2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
 		D4F543C7250784A2008F17A8 /* ComponentSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F543B9250784A2008F17A8 /* ComponentSize.swift */; };
@@ -1247,6 +1243,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = A27380191AFD144100E6F222;
 			remoteInfo = ComponentKitTestHelpers;
+		};
+		15AE24D7267349AD00E7598C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D04977D11CC4145E0046CBCC /* OCMock.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 817EB1151BD765130047E85A;
+			remoteInfo = "OCMock tvOS";
 		};
 		A1AB4F9E23350E45001F41DB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1442,7 +1445,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A1AB4FE923350E45001F41DB /* OCMock.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1454,7 +1456,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				D4BC579623E37A1B0075D688 /* CKSwift.framework in Embed Frameworks */,
-				D000B8201CC45450005A27CF /* FBSnapshotTestCase.framework in Embed Frameworks */,
 				D431881F23E2057E0024AA12 /* RenderCore.framework in Embed Frameworks */,
 				D0B47ABD1CBD924100BB33CE /* ComponentKit.framework in Embed Frameworks */,
 			);
@@ -1477,7 +1478,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D44B31ED2517D03700674830 /* ComponentTextKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1488,7 +1488,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D431882423E2059F0024AA12 /* RenderCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1499,7 +1498,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D431882923E205A70024AA12 /* RenderCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1510,7 +1508,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D4BC57A223E383840075D688 /* ComponentKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1526,6 +1523,8 @@
 		03DED2BC2226015900CD63FF /* CKDataSourceSplitChangesetModification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceSplitChangesetModification.mm; sourceTree = "<group>"; };
 		03DED2BD2226015900CD63FF /* CKDataSourceSplitChangesetModification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceSplitChangesetModification.h; sourceTree = "<group>"; };
 		03F1AC061D2B2A9B00867584 /* ComponentKitTestsAppleTV.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTestsAppleTV.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		15AE24972673387700E7598C /* OCMock.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OCMock.xcframework; path = Carthage/Build/OCMock.xcframework; sourceTree = SOURCE_ROOT; };
+		15AE24992673389D00E7598C /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = SOURCE_ROOT; };
 		18644AE11B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatefulViewComponentControllerTests.mm; sourceTree = "<group>"; };
 		18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatefulViewReusePoolTests.mm; sourceTree = "<group>"; };
 		18644AE31B3CB8E60028AF87 /* CKTestStatefulViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestStatefulViewComponent.h; sourceTree = "<group>"; };
@@ -2246,12 +2245,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D43188A723E208E30024AA12 /* RenderCore.framework in Frameworks */,
-				D4EEE0F823E1E91A00D1ED7E /* OCMock.framework in Frameworks */,
 				03F1ABFE1D2B2A9B00867584 /* ComponentKit.framework in Frameworks */,
 				03F1ABFB1D2B2A9B00867584 /* CoreGraphics.framework in Frameworks */,
 				03F1ABFC1D2B2A9B00867584 /* QuartzCore.framework in Frameworks */,
 				03F1ABFD1D2B2A9B00867584 /* UIKit.framework in Frameworks */,
 				03F1ABFF1D2B2A9B00867584 /* libComponentKitTestHelpers.a in Frameworks */,
+				15AE24D9267349C300E7598C /* OCMock.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2260,12 +2259,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D43188A123E2074F0024AA12 /* RenderCore.framework in Frameworks */,
-				A1AB4FE323350E45001F41DB /* OCMock.framework in Frameworks */,
 				A1AB4FE123350E45001F41DB /* ComponentKit.framework in Frameworks */,
 				A1AB4FE223350E45001F41DB /* CoreGraphics.framework in Frameworks */,
 				A1AB4FE423350E45001F41DB /* QuartzCore.framework in Frameworks */,
 				A1AB4FE523350E45001F41DB /* UIKit.framework in Frameworks */,
 				A1AB4FE623350E45001F41DB /* libComponentKitTestHelpers.a in Frameworks */,
+				15AE249D267338BC00E7598C /* OCMock.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2281,12 +2280,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D43188A323E207B20024AA12 /* RenderCore.framework in Frameworks */,
-				405230321F7EE79C005D227B /* OCMock.framework in Frameworks */,
 				D0B47D7E1CBD9E1400BB33CE /* ComponentKit.framework in Frameworks */,
 				D0B47D8C1CBDA25E00BB33CE /* CoreGraphics.framework in Frameworks */,
 				D0B47D8A1CBDA25A00BB33CE /* QuartzCore.framework in Frameworks */,
 				D0B47D881CBDA24900BB33CE /* UIKit.framework in Frameworks */,
 				A27380321AFD160600E6F222 /* libComponentKitTestHelpers.a in Frameworks */,
+				15AE249C267338B400E7598C /* OCMock.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2298,9 +2297,9 @@
 				D43188A223E2079E0024AA12 /* RenderCore.framework in Frameworks */,
 				D0B47D7F1CBD9E1900BB33CE /* ComponentKit.framework in Frameworks */,
 				D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */,
-				D000B81F1CC45446005A27CF /* FBSnapshotTestCase.framework in Frameworks */,
 				D0B47D921CBDA90000BB33CE /* UIKit.framework in Frameworks */,
 				A27380311AFD160200E6F222 /* libComponentKitTestHelpers.a in Frameworks */,
+				15AE249B267338A900E7598C /* FBSnapshotTestCase.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2312,9 +2311,9 @@
 				D43188A423E207C70024AA12 /* RenderCore.framework in Frameworks */,
 				D0B47D801CBD9E1D00BB33CE /* ComponentKit.framework in Frameworks */,
 				D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */,
-				D000B81E1CC45440005A27CF /* FBSnapshotTestCase.framework in Frameworks */,
 				D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */,
 				2D8270FC1E3F7581008C1A26 /* libComponentKitTestHelpers.a in Frameworks */,
+				15AE249A2673389D00E7598C /* FBSnapshotTestCase.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3368,6 +3367,8 @@
 		D0B47D811CBD9E7C00BB33CE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				15AE24992673389D00E7598C /* FBSnapshotTestCase.xcframework */,
+				15AE24972673387700E7598C /* OCMock.xcframework */,
 				D4EEE0F323E1E6F800D1ED7E /* UIKit.framework */,
 				D4EEE0F123E1E6E800D1ED7E /* TVUIKit.framework */,
 				D4EEE0EF23E1E6DF00D1ED7E /* QuartzCore.framework */,
@@ -4175,6 +4176,7 @@
 				D431886923E205F40024AA12 /* CKSizeRange.h in Headers */,
 				D431886B23E205F40024AA12 /* RCContainerWrapper.h in Headers */,
 				D431887923E205F40024AA12 /* ComponentMountContext.h in Headers */,
+				15AE24CA267344EC00E7598C /* RCFatal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4291,6 +4293,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				15AE24D8267349AD00E7598C /* PBXTargetDependency */,
 				035FD0661D83236600D28351 /* PBXTargetDependency */,
 			);
 			name = ComponentKitTestsAppleTV;
@@ -5354,6 +5357,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15AE24D62673450000E7598C /* RCFatal.mm in Sources */,
 				D431889B23E2060F0024AA12 /* CKMountedObjectForView.mm in Sources */,
 				D431889D23E2060F0024AA12 /* RCLayout.mm in Sources */,
 				D4FB9AFC264BDBD900283B4B /* RCComputeRootLayout.mm in Sources */,
@@ -5460,6 +5464,11 @@
 			isa = PBXTargetDependency;
 			target = A27380191AFD144100E6F222 /* ComponentKitTestHelpers */;
 			targetProxy = 035FD06F1D83238A00D28351 /* PBXContainerItemProxy */;
+		};
+		15AE24D8267349AD00E7598C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "OCMock tvOS";
+			targetProxy = 15AE24D7267349AD00E7598C /* PBXContainerItemProxy */;
 		};
 		A1AB4F9D23350E45001F41DB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5576,10 +5585,9 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				INFOPLIST_FILE = ComponentKit/Info.plist;
-				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ComponentKit;
 				SDKROOT = appletvos;
-				TVOS_DEPLOYMENT_TARGET = 9.1;
+				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Debug;
 		};
@@ -5590,20 +5598,16 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				INFOPLIST_FILE = ComponentKit/Info.plist;
-				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ComponentKit;
 				SDKROOT = appletvos;
-				TVOS_DEPLOYMENT_TARGET = 9.1;
+				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
 		};
 		03F1AC041D2B2A9B00867584 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentKitTests/ComponentKitTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5619,10 +5623,7 @@
 		03F1AC051D2B2A9B00867584 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentKitTests/ComponentKitTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5638,10 +5639,7 @@
 		A1AB4FEB23350E45001F41DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentKitPerfTests/ComponentKitPerfTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5656,10 +5654,7 @@
 		A1AB4FEC23350E45001F41DB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentKitPerfTests/ComponentKitPerfTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5701,10 +5696,7 @@
 		B342DC471AC23E8200ACAC53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentKitTests/ComponentKitTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5719,10 +5711,7 @@
 		B342DC481AC23E8200ACAC53 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentKitTests/ComponentKitTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5737,6 +5726,7 @@
 		B342DC921AC23EC300ACAC53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentKitApplicationTests/ComponentKitApplicationTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5752,6 +5742,7 @@
 		B342DC931AC23EC300ACAC53 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentKitApplicationTests/ComponentKitApplicationTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5767,10 +5758,7 @@
 		B342DCB11AC23F2A00ACAC53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentTextKitApplicationTests/ComponentTextKitApplicationTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5786,10 +5774,7 @@
 		B342DCB21AC23F2A00ACAC53 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				INFOPLIST_FILE = "ComponentTextKitApplicationTests/ComponentTextKitApplicationTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5835,7 +5820,8 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				EXCLUDED_ARCHS = i386;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -5852,10 +5838,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Checkouts/yoga/**";
 			};
 			name = Debug;
@@ -5893,7 +5880,8 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				EXCLUDED_ARCHS = i386;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -5903,10 +5891,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Checkouts/yoga/**";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -5926,6 +5915,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
@@ -5968,6 +5958,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
@@ -6084,7 +6075,6 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -6130,7 +6120,6 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -6368,6 +6357,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
@@ -6408,6 +6398,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;

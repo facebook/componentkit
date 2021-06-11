@@ -114,7 +114,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)_updateStates:(NSArray<id> *)states mode:(CKUpdateMode)mode
 {
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _state != nil;
+    return self->_state != nil;
   });
   CKDataSourceItem *const item = [_state objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   CKComponent *const component = (CKComponent *)[item rootLayout].component();
