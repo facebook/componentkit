@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "OCHamcrest",
+        "repositoryURL": "https://github.com/hamcrest/OCHamcrest",
+        "state": {
+          "branch": "main",
+          "revision": "226ebd75e474552f4f788052cd020e965d3f68db",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
