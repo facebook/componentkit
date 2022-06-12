@@ -207,17 +207,17 @@ void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, 
   // Then move them back to their current positions with animation:
   void (^restore)(void) = ^{
     [indexPathsToAnimatingViews enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UIView *view, BOOL *stop) {
-      UICollectionViewLayoutAttributes *attributes = [_collectionView layoutAttributesForItemAtIndexPath:indexPath];
+      UICollectionViewLayoutAttributes *attributes = [self->_collectionView layoutAttributesForItemAtIndexPath:indexPath];
       [view setBounds:attributes.bounds];
       [view setCenter:attributes.center];
     }];
     [indexPathsToAnimatingSupplementaryViews enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UIView *view, BOOL *stop) {
       UICollectionViewLayoutAttributes *attributes =
-      [_collectionView layoutAttributesForSupplementaryElementOfKind:indexPathsToSupplementaryElementKinds[indexPath] atIndexPath:indexPath];
+      [self->_collectionView layoutAttributesForSupplementaryElementOfKind:indexPathsToSupplementaryElementKinds[indexPath] atIndexPath:indexPath];
       [view setBounds:attributes.bounds];
       [view setCenter:attributes.center];
     }];
-    [_collectionView setContentOffset:CGPointMake(_collectionView.contentOffset.x + contentOffsetAdjustment.x, _collectionView.contentOffset.y + contentOffsetAdjustment.y)];
+    [self->_collectionView setContentOffset:CGPointMake(self->_collectionView.contentOffset.x + contentOffsetAdjustment.x, self->_collectionView.contentOffset.y + contentOffsetAdjustment.y)];
   };
   void (^completion)(BOOL) = ^(BOOL finished){
     for (UIView *v in snapshotViewsToRemoveAfterAnimation) {

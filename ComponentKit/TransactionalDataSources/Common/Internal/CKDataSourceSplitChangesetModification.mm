@@ -281,7 +281,7 @@ using namespace CKComponentControllerHelper;
 
   // Insert items
   const auto buildItem = ^CKDataSourceItem *(id model) {
-    return CKBuildDataSourceItem(CKComponentScopeRootWithPredicates(_stateListener,
+    return CKBuildDataSourceItem(CKComponentScopeRootWithPredicates(self->_stateListener,
                                                                     configuration.analyticsListener,
                                                                     configuration.componentPredicates,
                                                                     configuration.componentControllerPredicates), {},

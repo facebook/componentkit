@@ -627,12 +627,12 @@ static const NSUInteger kBackgroundThreadStackSizeInBytes = 1024 * 1024 * 2; // 
     CKSystraceScope applyModificationScope(asyncApplyModification);
     // If the first object in _pendingAsynchronousModifications is not still the modification,
     // it may have been canceled; don't apply it.
-    if ([_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {
-      [_pendingAsynchronousModifications removeObjectAtIndex:0];
+    if ([self->_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {
+      [self->_pendingAsynchronousModifications removeObjectAtIndex:0];
       [self _synchronouslyApplyChange:change qos:modificationPair.modification.qos];
     }
 
-    _processingAsynchronousModification = NO;
+    self->_processingAsynchronousModification = NO;
     [self _startAsynchronousModificationIfNeeded];
   });
 }

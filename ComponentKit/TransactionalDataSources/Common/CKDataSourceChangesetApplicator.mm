@@ -195,13 +195,13 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
       for (NSIndexPath *insertedIndex in [change.appliedChanges insertedIndexPaths]) {
         if ([newState numberOfSections] > insertedIndex.section && [newState numberOfObjectsInSection:insertedIndex.section] > insertedIndex.row) {
           CKDataSourceItem *insertedItem = [newState objectAtIndexPath:insertedIndex];
-          _treeLayoutCache->update([[insertedItem scopeRoot] globalIdentifier], insertedItem.rootLayout.cache());
+          self->_treeLayoutCache->update([[insertedItem scopeRoot] globalIdentifier], insertedItem.rootLayout.cache());
         }
       }
       for (NSIndexPath *updatedIndex in [change.appliedChanges finalUpdatedIndexPaths]) {
         if ([newState numberOfSections] > updatedIndex.section && [newState numberOfObjectsInSection:updatedIndex.section] > updatedIndex.row) {
           CKDataSourceItem *updatedItem = [newState objectAtIndexPath:updatedIndex];
-          _treeLayoutCache->update([[updatedItem scopeRoot] globalIdentifier], updatedItem.rootLayout.cache());
+          self->_treeLayoutCache->update([[updatedItem scopeRoot] globalIdentifier], updatedItem.rootLayout.cache());
         }
       }
     }
@@ -241,14 +241,14 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
 - (void)setViewPort:(CKDataSourceViewport)viewport
 {
   dispatch_async(_queue, ^{
-    _viewport = viewport;
+    self->_viewport = viewport;
   });
 }
 
 - (void)setTraitCollection:(UITraitCollection *)traitCollection
 {
   dispatch_async(_queue, ^{
-    _traitCollection = [traitCollection copy];
+    self->_traitCollection = [traitCollection copy];
   });
 }
 

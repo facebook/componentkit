@@ -165,6 +165,7 @@ namespace OptionalDetail {
 
     constexpr Storage() : HasValue<sizeof(T)>{false}, value{} {}
     Storage(const Storage &) = default;
+    Storage& operator=(const Storage&) = default;
 
     void clear() {
       this->hasValue = false;

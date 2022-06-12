@@ -309,14 +309,14 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
   // Wait until the end of the run loop so that if multiple async updates are triggered we don't thrash.
   dispatch_async(dispatch_get_main_queue(), ^{
-    if (!_scheduledAsynchronousComponentUpdate) {
+    if (!self->_scheduledAsynchronousComponentUpdate) {
       // A synchronous update was either scheduled or completed, so we can skip the async update.
       return;
     }
     // Sync trait collection in `componentGenerator` before building the next generation.
-    [_componentGenerator updateTraitCollection:self.traitCollection];
-    [_componentGenerator updateAccessibilityStatus:CK::Component::Accessibility::IsAccessibilityEnabled()];
-    [_componentGenerator generateComponentAsynchronously];
+    [self->_componentGenerator updateTraitCollection:self.traitCollection];
+    [self->_componentGenerator updateAccessibilityStatus:CK::Component::Accessibility::IsAccessibilityEnabled()];
+    [self->_componentGenerator generateComponentAsynchronously];
   });
 }
 

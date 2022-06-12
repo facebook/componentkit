@@ -189,7 +189,7 @@
                                                                                        drawParameters:drawParameters];
   ck_async_transaction_operation_completion_block_t completionBlock = ^(id<NSObject> value, BOOL canceled) {
     RCCAssertMainThread();
-    if (!canceled && (_displaySentinel == displaySentinelValue)) {
+    if (!canceled && (self->_displaySentinel == displaySentinelValue)) {
       [self didDisplayAsynchronously:value withDrawParameters:drawParameters];
       self.contents = value;
     }
