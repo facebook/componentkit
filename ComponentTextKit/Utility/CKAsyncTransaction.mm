@@ -87,11 +87,11 @@
   CKAsyncTransactionOperation *operation = [[CKAsyncTransactionOperation alloc] initWithOperationCompletionBlock:completion];
   [_operations addObject:operation];
   dispatch_group_async(_group, queue, ^{
-    if (_state != CKAsyncTransactionStateCanceled) {
-      dispatch_group_enter(_group);
+    if (self->_state != CKAsyncTransactionStateCanceled) {
+      dispatch_group_enter(self->_group);
       block(^(id<NSObject> value){
         operation.value = value;
-        dispatch_group_leave(_group);
+        dispatch_group_leave(self->_group);
       });
     }
   });
@@ -109,7 +109,7 @@
   CKAsyncTransactionOperation *operation = [[CKAsyncTransactionOperation alloc] initWithOperationCompletionBlock:completion];
   [_operations addObject:operation];
   dispatch_group_async(_group, queue, ^{
-    if (_state != CKAsyncTransactionStateCanceled) {
+    if (self->_state != CKAsyncTransactionStateCanceled) {
       operation.value = block();
     }
   });
@@ -145,12 +145,12 @@
   } else {
     RCAssert(_group != NULL, @"If there are operations, dispatch group should have been created");
     dispatch_group_notify(_group, _callbackQueue, ^{
-      BOOL isCanceled = (_state == CKAsyncTransactionStateCanceled);
-      for (CKAsyncTransactionOperation *operation in _operations) {
+      BOOL isCanceled = (self->_state == CKAsyncTransactionStateCanceled);
+      for (CKAsyncTransactionOperation *operation in self->_operations) {
         [operation callAndReleaseCompletionBlock:isCanceled];
       }
-      if (_completionBlock) {
-        _completionBlock(self, isCanceled);
+      if (self->_completionBlock) {
+        self->_completionBlock(self, isCanceled);
       }
     });
   }

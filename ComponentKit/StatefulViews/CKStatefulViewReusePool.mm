@@ -162,7 +162,7 @@ struct PoolKeyHasher {
   }
 
   auto const addEntry = ^{
-    auto &poolItem = _pendingPool[std::make_pair(controllerClass, context)];
+    auto &poolItem = self->_pendingPool[std::make_pair(controllerClass, context)];
     poolItem.addEntry({view, mayRelinquishBlock});
   };
   if (!_clearingPendingPool) {

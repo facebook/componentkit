@@ -425,11 +425,11 @@ static std::vector<CKComponentController *> _addedComponentControllersBetweenSco
   RCAssertMainThread();
 
   const auto enqueueStateUpdate = ^{
-    _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
+    self->_inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
       inputs.stateUpdates[handle].push_back(stateUpdate);
       [[inputs.scopeRoot analyticsListener] didReceiveStateUpdateFromScopeHandle:handle rootIdentifier:rootIdentifier];
     });
-    [_delegate componentGenerator:self didReceiveComponentStateUpdateWithMode:mode];
+    [self->_delegate componentGenerator:self didReceiveComponentStateUpdateWithMode:mode];
   };
   if (_affinedQueue == dispatch_get_main_queue()) {
     enqueueStateUpdate();
