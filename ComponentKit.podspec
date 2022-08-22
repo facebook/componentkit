@@ -20,5 +20,5 @@ Pod::Spec.new do |s|
   }
   s.dependency 'RenderCore', s.version.to_s
   s.dependency 'ComponentTextKit', s.version.to_s
-  s.dependency 'Yoga', '~> 1.14'
+  s.dependency 'Yoga', '~> 1.19'
 end
