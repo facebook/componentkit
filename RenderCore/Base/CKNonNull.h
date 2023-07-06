@@ -15,6 +15,7 @@
 #if CK_NOT_SWIFT
 
 #import <RenderCore/RCAssert.h>
+#import <utility>
 
 namespace CK {
 
