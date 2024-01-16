@@ -85,15 +85,30 @@ static CK::TextKit::Renderer::Cache *rasterContentsCache()
 
 - (id)willDisplayAsynchronouslyWithDrawParameters:(id<NSObject>)drawParameters
 {
-  return rasterContentsCache()->objectForKey({_renderer.attributes, _renderer.constrainedSize});
+  NSInteger userInterfaceStyle = 1;
+  if (@available(iOS 13.0, *)) {
+    UIView *view = (UIView *)self.delegate;
+    if ([view isKindOfClass:UIView.class]) {
+      userInterfaceStyle = (NSInteger)view.traitCollection.userInterfaceStyle;
+    }
+  }
+  return rasterContentsCache()->objectForKey({userInterfaceStyle, _renderer.attributes, _renderer.constrainedSize});
 }
 
 - (void)didDisplayAsynchronously:(id)newContents withDrawParameters:(id<NSObject>)drawParameters
 {
   if (newContents) {
+    NSInteger userInterfaceStyle = 1;
+    if (@available(iOS 13.0, *)) {
+      UIView *view = (UIView *)self.delegate;
+      if ([view isKindOfClass:UIView.class]) {
+        userInterfaceStyle = (NSInteger)view.traitCollection.userInterfaceStyle;
+      }
+    }
+
     CGImageRef imageRef = (__bridge CGImageRef)newContents;
     NSUInteger bytes = CGImageGetBytesPerRow(imageRef) * CGImageGetHeight(imageRef);
-    rasterContentsCache()->cacheObject({_renderer.attributes, _renderer.constrainedSize}, newContents, bytes);
+    rasterContentsCache()->cacheObject({userInterfaceStyle, _renderer.attributes, _renderer.constrainedSize}, newContents, bytes);
   }
 }
 
