@@ -26,12 +26,13 @@ namespace CK {
     }
 
     namespace Renderer {
-      Key::Key(CKTextKitAttributes a, CGSize cs) : attributes(a), constrainedSize(cs) {
+      Key::Key(NSInteger u, CKTextKitAttributes a, CGSize cs) : userInterfaceStyle(u), attributes(a), constrainedSize(cs) {
         // Precompute hash to avoid paying cost every time getHash is called.
         NSUInteger subhashes[] = {
           attributes.hash(),
           std::hash<CGFloat>()(constrainedSize.width),
-          std::hash<CGFloat>()(constrainedSize.height)
+          std::hash<CGFloat>()(constrainedSize.height),
+          std::hash<NSInteger>()(userInterfaceStyle)
         };
         hash = RCIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
       }

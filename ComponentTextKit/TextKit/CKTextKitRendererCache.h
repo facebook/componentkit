@@ -67,10 +67,11 @@ namespace CK {
        */
       struct Key {
 
+        NSInteger userInterfaceStyle;
         CKTextKitAttributes attributes;
         CGSize constrainedSize;
 
-        Key(CKTextKitAttributes a, CGSize cs);
+        Key(NSInteger userInterfaceStyle, CKTextKitAttributes a, CGSize cs);
 
         size_t hash;
 
@@ -79,7 +80,8 @@ namespace CK {
           // These comparisons are in a specific order to reduce the overall cost of this function.
           return hash == other.hash
           && CGSizeEqualToSize(constrainedSize, other.constrainedSize)
-          && attributes == other.attributes;
+          && attributes == other.attributes
+          && userInterfaceStyle == other.userInterfaceStyle;
         }
       };
 
